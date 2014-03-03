@@ -1,0 +1,55 @@
+<html>
+<script src="d3.v2.min.js"></script>
+<style>
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-size: 18;
+}
+
+.curve {
+  stroke-width: 4px;
+}
+
+.dropline {
+  stroke-dasharray: 10,10;
+  stroke-width: 2px;
+}
+
+.price {
+  fill: grey;
+  stroke: lightgrey;
+  stroke-width: 4px;
+  stroke-dasharray: 10,10;
+}
+
+.curveDragger, .priceDragger {
+  fill: blue;
+  stroke: white;
+  stroke-width: 30px;
+}
+
+#graph {
+  width: 800px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+</style><body>
+<div id="graph">
+</div>
+<script src="graph_colors.js"></script>
+<script src="graph_parameters.js"></script>
+<script src="graph_axes.js"></script>
+<script src="supply_and_demand.js"></script>
+</body>
+</html>
