@@ -1,7 +1,12 @@
 <html>
 <script src="javascripts/d3.v2.min.js"></script>
 <link rel='stylesheet' href='/stylesheets/style.css' />
-<body>
+<script type="text/javascript">
+   function blockMove() {
+      event.preventDefault() ;
+}
+</script>
+<body ontouchmove="blockMove()">
 <div id="graph">
 </div>
 <script src="javascripts/graph_colors.js"></script>
