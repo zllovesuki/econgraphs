@@ -1,25 +1,12 @@
 {
-  "name": "econgraphs",
-  "version": "0.0.0",
-  "description": "Simple interactive graphs for econ teachers",
-  "main": "web.js",
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cmakler/econgraphs.git"
-  },
-  "keywords": [
-    "econ"
-  ],
-  "author": "Chris Makler",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/cmakler/econgraphs/issues"
-  },
-  "homepage": "https://github.com/cmakler/econgraphs",
   "dependencies": {
-    "express": "^3.4.8"
+    "express": "3.4.8",
+    "ejs": "*"
   }
 }
