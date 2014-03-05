@@ -28,100 +28,42 @@ function maxQuantityForCurve(curveParams) {
   }
 }
 
-update();
+function update(vis,scope){
 
-function update(){
+  price = scope.price;
+  supply = scope.supply;
+  demand = scope.demand;
+
+  priceData = [price];
+  curveData = [demand,supply];
 
   /*
   Keep curves on graph
   */
 
-  if (price[0] > maxPrice) { price[0] = maxPrice}; // Don't allow the price to go above maximum price
-  if (price[0] < minPrice) { price[0] = minPrice}; // Don't allow the price to go below minimum price
-  if (maxQuantityForCurve(curves[0]) > maxQuantity) {curves[0].intercept = maxQuantity};
-  if (minQuantityForCurve(curves[0]) < minQuantity) {curves[0].intercept = minQuantity - priceAxisLength*curves[0].slope};
-  if (minQuantityForCurve(curves[1]) < minQuantity) {curves[1].intercept = minQuantity};
-  if (maxQuantityForCurve(curves[1]) > maxQuantity) {curves[1].intercept = maxQuantity - priceAxisLength*curves[1].slope};
+  if (price > maxPrice) { price = maxPrice}; // Don't allow the price to go above maximum price
+  if (price < minPrice) { price = minPrice}; // Don't allow the price to go below minimum price
+  if (maxQuantityForCurve(demand) > maxQuantity) {demand.intercept = maxQuantity};
+  if (minQuantityForCurve(demand) < minQuantity) {demand.intercept = minQuantity - priceAxisLength*demand.slope};
+  if (minQuantityForCurve(supply) < minQuantity) {supply.intercept = minQuantity};
+  if (maxQuantityForCurve(supply) > maxQuantity) {supply.intercept = maxQuantity - priceAxisLength*supply.slope};
 
   /*
   Establish equilibrium price. If close, snap to equilibrium.
   */
 
-  var pe = equilibriumPrice(curves)
-  if (Math.pow(y(price[0]) - y(pe), 2) < 10) { price[0] = pe }; // Snap to equilibrium
+  var pe = equilibriumPrice(curveData)
+  if (Math.pow(y(price) - y(pe), 2) < 10) { price[0] = pe }; // Snap to equilibrium
   
-
-  /*
-  Establish drag behavior using larger targets than the shown durves
-  */
-
-  var dragIntercept = d3.behavior.drag()
-      .on("dragstart", function(d) {
-            this.__origin__ = d.intercept;
-          })
-      .on("drag", function(d) {
-            d.intercept = this.__origin__ += d3.event.dx*quantityAxisLength/width;
-            update();
-          })
-      .on("dragend", function() {
-            delete this.__origin__;
-          });
-
-  var dragPrice = d3.behavior.drag()
-      .on("dragstart", function(d) {
-            this.__origin__ = d;
-          })
-      .on("drag", function(d) {
-            price[0] = this.__origin__ -= d3.event.dy*priceAxisLength/height;
-            update();
-          })
-      .on("dragend", function() {
-              delete this.__origin__;
-          });
-    
-
-  var curveDraggers = vis.selectAll("line.curveDragger").data(curves)
-
-      // set marker as line with class "demand"
-      curveDraggers.enter().append("svg:line")
-        .attr("class","curveDragger")
-        .call(dragIntercept);
-
-      // update coordinates
-      curveDraggers
-        .attr("x1", function(d) { return x(quantityAtPrice(minPrice,d))})
-        .attr("y1", function(d) { return y(minPrice)})
-        .attr("x2", function(d) { return x(quantityAtPrice(maxPrice,d))})
-        .attr("y2", function(d) { return y(maxPrice)})
-
-  var priceDragger = vis.selectAll("line.priceDragger").data(price);
-
-      // set marker as thick invisible line with class PriceDragger
-      priceDragger.enter()
-        .append("svg:line")
-          .attr("class","priceDragger")
-          .call(dragPrice)
-
-          // set line to extend from left boundary to right boundary
-          .attr("x1", x(0.05*quantityAxisLength) )
-          .attr("x2", x(maxQuantity) );
-
-      // update vertical coordinate to current price
-      priceDragger
-        .attr("y1", function(d) { return y(d) })
-        .attr("y2", function(d) { return y(d) });
-    
-
   /* 
   Draw supply and demand curves
   */
 
-  var curveLineIndicators = vis.selectAll("line.curve").data(curves)
+  var curveLineIndicators = vis.selectAll("line.curve").data(curveData)
 
       // set marker as line with class "demand"
       curveLineIndicators.enter().append("svg:line")
-        .attr("class","curve")
-        .call(dragIntercept);
+        .attr("class","curve");
 
       // update coordinates
       curveLineIndicators
@@ -132,7 +74,7 @@ function update(){
         .attr("style", function(d) { return setColor(d.color)})
 
 
-  var curveTextLabels = vis.selectAll("text.curveLabel").data(curves)
+  var curveTextLabels = vis.selectAll("text.curveLabel").data(curveData)
 
       // set text
       curveTextLabels.enter().append("svg:text")
@@ -152,13 +94,12 @@ function update(){
   Draw line for price
   */
 
-  var priceLineIndicator = vis.selectAll("line.price").data(price);
+  var priceLineIndicator = vis.selectAll("line.price").data(priceData);
 
       // set marker as horizontal line with class price
       priceLineIndicator.enter()
         .append("svg:line")
           .attr("class","price")
-          .call(dragPrice)
           // set line to extend from left boundary to right boundary
           .attr("x1", -35 )
           .attr("x2", x(maxQuantity) )
@@ -172,7 +113,7 @@ function update(){
   Label price line
   */
 
-  var priceAxisLabel = vis.selectAll("text.priceAxisLabel").data(price)
+  var priceAxisLabel = vis.selectAll("text.priceAxisLabel").data(priceData)
 
       // set text to display along axis
       priceAxisLabel.enter().append("svg:text")
@@ -191,7 +132,7 @@ function update(){
   Draw dots for quantity demanded and supplied at price
   */
 
-  var quantityIndicators = vis.selectAll("circle.quantity").data(curves);
+  var quantityIndicators = vis.selectAll("circle.quantity").data(curveData);
 
       // set marker as circle with class "quantity"
       quantityIndicators.enter()
@@ -208,7 +149,7 @@ function update(){
   Draw dropline for quantities demanded and supplied at price
   */
 
-  var droplines = vis.selectAll("line.dropline").data(curves);
+  var droplines = vis.selectAll("line.dropline").data(curveData);
 
       // set marker as line with class "dropline"
       droplines.enter()
@@ -226,7 +167,7 @@ function update(){
   Label quantities supplied and demanded
   */
 
-  var quantityAxisLabels = vis.selectAll("text.quantityAxisLabel").data(curves)
+  var quantityAxisLabels = vis.selectAll("text.quantityAxisLabel").data(curveData)
 
       // set text to display along axis
       quantityAxisLabels.enter().append("svg:text")
@@ -260,7 +201,7 @@ function update(){
   Add colors
   */
 
-  if(price[0] == pe){
+  if(price == pe){
 
       // color everything green if at equilibrium
       quantityIndicators.attr("style", setColor(equilibriumColor));
