@@ -1,17 +1,20 @@
-<html>
-<script src="javascripts/d3.v2.min.js"></script>
+<html ng-app="econgraphsApp">
+<script src="lib/d3.v2.min.js"></script>
+<script src="lib/angular.min.js"></script>
 <link rel='stylesheet' href='/stylesheets/style.css' />
+<script src="javascripts/graph_colors.js"></script>
+<script src="javascripts/graph_axes.js"></script>
+<script src="javascripts/supply_and_demand.js"></script>
+<script src="javascripts/controller.js"></script>
 <script type="text/javascript">
    function blockMove() {
       event.preventDefault() ;
 }
 </script>
 <body ontouchmove="blockMove()">
-<div id="graph">
+<div ng-controller="Controller">
+	<div>Price: <input type="range" min="10" max="90" step="1" ng-model="price"> {{ price }}</div>
+	<div id="graph"></div>
 </div>
-<script src="javascripts/graph_colors.js"></script>
-<script src="javascripts/graph_parameters.js"></script>
-<script src="javascripts/graph_axes.js"></script>
-<script src="javascripts/supply_and_demand.js"></script>
 </body>
 </html>
