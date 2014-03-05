@@ -1,3 +1,13 @@
+// Establish general behavioral constants for this graph
+
+var r = "8px",
+    priceAxisLength = 100,
+    quantityAxisLength = 100,
+    maxPrice = 0.95*priceAxisLength,
+    minPrice = 0.05*priceAxisLength,
+    maxQuantity = 0.95*quantityAxisLength,
+    minQuantity = 0.05*quantityAxisLength;
+
 // Establish supply and demand functions
 
 function quantityAtPrice(p,params) {
