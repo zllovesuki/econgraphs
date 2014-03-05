@@ -1,8 +1,8 @@
 
 
 var margin = {top: 10, right: 100, bottom: 100, left: 100},
-    width = 800 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom,
+    width = 700 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom,
     priceAxisLength = 100,
     quantityAxisLength = 100;
 
