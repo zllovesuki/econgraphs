@@ -7,6 +7,10 @@ a {
   color: #00B7FF;
 }
 
+.mainPage {
+  margin-top: 100;
+}
+
 .axis text {
   font: 10px sans-serif;
 }

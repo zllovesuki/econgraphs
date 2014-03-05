@@ -2,15 +2,31 @@
 <script src="lib/d3.v2.min.js"></script>
 <script src="lib/angular.min.js"></script>
 <link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
 <script src="javascripts/graph_colors.js"></script>
 <script src="javascripts/graph_axes.js"></script>
 <script src="javascripts/supply_and_demand.js"></script>
+<script src="javascripts/price_indicator.js"></script>
+<script src="javascripts/quantity_indicators.js"></script>
 <script src="javascripts/controller.js"></script>
 <body>
-<div ng-controller="Controller">
+<div class="nav navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="navbar-header navbar-brand">econgraphs.org</div>
+</div>
+<div class="container-fluid mainPage" ng-controller="Controller">
+	<div class="row">
+		<div class="col-md-8">
+			<div id="graph"></div>
+		</div>
+		<div class="col-md-4">
+			<table>
+				<tr>
+
+			<div class="form-inline">Price:<input type="range" min="10" max="90" step="1" ng-model="price"></span><span> {{ price }}</span></div>
+		</div>
+	</div>
 	
-	<div id="graph"></div>
-	<div>Price: <input type="range" min="10" max="90" step="1" ng-model="price"> {{ price }}</div>
+	
 
 </div>
 </body>
