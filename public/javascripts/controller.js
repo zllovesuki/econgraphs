@@ -1,11 +1,31 @@
+// create module for custom directives
+var econgraphsApp = angular.module('econgraphsApp', []);
 
+// controller business logic
+econgraphsApp.controller('Controller', function($scope){
 
-var margin = {top: 10, right: 100, bottom: 100, left: 100},
+    $scope.price = 25;
+
+    $scope.supply = {
+      curveType: "supply",
+      intercept: 10, //quantity supplied when price is zero
+      slope: 0.6,     //increase in quantity supplied per unit increase in price
+      color: supplyColor
+    }
+
+    $scope.demand = {
+      curveType: "demand",
+      intercept: 80, //quantity demanded when price is zero
+      slope: -0.4,    //reduction in quantity demanded per unit increase in price
+      color: demandColor
+    }
+    
+    $scope.$watch("price",function(){
+        d3.select('svg').remove();      
+        var margin = {top: 10, right: 100, bottom: 100, left: 100},
     width = 800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom,
     r = "8px",
-    priceAxisLength = 100,
-    quantityAxisLength = 100,
     maxPrice = 0.95*priceAxisLength,
     minPrice = 0.05*priceAxisLength,
     maxQuantity = 0.95*quantityAxisLength,
@@ -51,3 +71,9 @@ var y_axis = vis.append("g")
         .attr("y", "-3em")
         .style("text-anchor", "middle")
         .text("Price");
+
+update(vis,$scope);
+        
+
+})});
+
