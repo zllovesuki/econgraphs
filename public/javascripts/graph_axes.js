@@ -36,7 +36,7 @@ function drawGraphAxes(id) {
             .attr("x", width / 2 )
             .attr("y", "4em")
             .style("text-anchor", "middle")
-            .text("Quantity");
+            .text("Quantity (Thousands of Units)");
 
     // Add y axis
     var y_axis = vis.append("g")
@@ -49,7 +49,7 @@ function drawGraphAxes(id) {
             .attr("x", -height / 2 )
             .attr("y", "-3em")
             .style("text-anchor", "middle")
-            .text("Price");
+            .text("Price (Dollars per Unit)");
 
     return vis;
 

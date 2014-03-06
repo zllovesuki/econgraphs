@@ -4,29 +4,7 @@ var econgraphsApp = angular.module('econgraphsApp', []);
 // controller business logic
 econgraphsApp.controller('Controller', function($scope){
 
-    function quantityAtPrice(p,params) {
-      return params.intercept + p*params.slope;
-    }
-
-    function equilibriumPrice(curves) {
-      return (curves[0].intercept - curves[1].intercept)/(curves[1].slope - curves[0].slope);
-    }
-
-    function minQuantityForCurve(curveParams) {
-      if (curveParams.curveType == "demand") {
-        return curveParams.intercept + priceAxisLength*curveParams.slope;
-      } else {
-        return curveParams.intercept;
-      }
-    }
-
-    function maxQuantityForCurve(curveParams) {
-      if (curveParams.curveType == "demand") {
-        return curveParams.intercept;
-      } else {
-        return curveParams.intercept + priceAxisLength*curveParams.slope;
-      }
-    }
+    
 
     $scope.price = 25;
 
