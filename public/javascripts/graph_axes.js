@@ -1,10 +1,11 @@
-
-
 var margin = {top: 10, right: 100, bottom: 100, left: 100},
     width = 700 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     priceAxisLength = 100,
     quantityAxisLength = 100;
+    minPrice = 5;
+    maxPrice = 95;
+    maxQuantity = 95;
 
 var x = d3.scale.linear()
             .range([0, width])
@@ -13,8 +14,10 @@ var x = d3.scale.linear()
 var y = d3.scale.linear()
             .range([height, 0])
             .domain([0, priceAxisLength]);
+    
 
 function drawGraphAxes(id) {
+
     var vis = d3.select(id)
             .append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -33,7 +36,7 @@ function drawGraphAxes(id) {
             .attr("x", width / 2 )
             .attr("y", "4em")
             .style("text-anchor", "middle")
-            .text("Quantity");
+            .text("Quantity (Thousands of Units)");
 
     // Add y axis
     var y_axis = vis.append("g")
@@ -46,7 +49,7 @@ function drawGraphAxes(id) {
             .attr("x", -height / 2 )
             .attr("y", "-3em")
             .style("text-anchor", "middle")
-            .text("Price");
+            .text("Price (Dollars per Unit)");
 
     return vis;
 
