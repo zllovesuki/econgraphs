@@ -4,9 +4,9 @@ var econgraphsApp = angular.module('econgraphsApp', []);
 // controller business logic
 econgraphsApp.controller('Controller', function($scope){
 
-    $scope.price = 25;
+    $scope.price = 30;
 
-    $scope.consumers = 20000;
+    $scope.consumers = 4000;
 
     $scope.supply = {
       curveType: "supply",
@@ -17,8 +17,8 @@ econgraphsApp.controller('Controller', function($scope){
 
     $scope.demand = {
       curveType: "demand",
-      intercept: 4, //quantity demanded when price is zero
-      slope: -0.04,    //reduction in quantity demanded per unit increase in price
+      intercept: 20, //quantity demanded when price is zero
+      slope: -0.2,    //reduction in quantity demanded per unit increase in price
       color: demandColor
     }
 
@@ -38,7 +38,7 @@ econgraphsApp.controller('Controller', function($scope){
 
     $scope.render = function(){
 
-        $scope.equilibriumPrice = ($scope.demand.intercept*$scope.consumers/1000 - $scope.supply.intercept)/($scope.supply.slope - $scope.demand.slope*$scope.consumers/1000);
+        $scope.equilibriumPrice = Math.round(($scope.demand.intercept*$scope.consumers/1000 - $scope.supply.intercept)/($scope.supply.slope - $scope.demand.slope*$scope.consumers/1000));
         $scope.price = snapToEquilibriumPrice($scope.price, $scope.equilibriumPrice);
         $scope.individualQuantityDemanded = quantityAtPrice($scope.price, $scope.demand, 1)
         $scope.quantityDemanded = quantityAtPrice($scope.price, $scope.demand, $scope.consumers/1000)
@@ -49,7 +49,7 @@ econgraphsApp.controller('Controller', function($scope){
         
         x = d3.scale.linear()
             .range([0, width])
-            .domain([0, 10]);
+            .domain([0, 20]);
 
         y = d3.scale.linear()
             .range([height, 0])

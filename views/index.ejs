@@ -18,36 +18,39 @@
 </div>
 <div class="container-fluid mainPage" ng-controller="Controller">
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-5">
 			<h4 class="text-center">Individual Demand</h4>
 			<hr/>
 			<div id="graph1"></div>
-			<p>At a price of ${{ price | number : 2}} per unit, individual consumers demand {{ quantityDemanded*1000/consumers | number : 2}} units each...</p>
+			
 		</div>
 		<div class="col-md-5">
 			<h4 class="text-center">Market Supply and Demand</h4>
 			<hr/>
 			<div id="graph2"></div>
-			<p>...and since there are {{consumers | number:0}} consumers in the market, the total quantity demanded is {{ quantityDemanded*1000/consumers | number : 2}} units per consumer x {{consumers | number:0}} consumers = {{ quantityDemanded*1000 | number : 0 }} units.</p>
-			<p>At the same price, producers in this market supply {{quantitySupplied*1000 | number:0}} units.</p>
-			<p ng-if="(quantityDemanded > quantitySupplied)">
-			  	Therefore, there is a shortage of {{ (quantityDemanded - quantitySupplied)*1000 | number:0 }} units.
-			</p>
-			<p ng-if="(quantityDemanded < quantitySupplied)">
-			    Therefore, there is a surplus of {{ (quantitySupplied - quantityDemanded)*1000 | number:0 }} units.
-			</p>
-			<p ng-if="(quantityDemanded == quantitySupplied)">
-			    Therefore, the market is in equilibrium.
-			</p>
+			
+			
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-2">
 			<div class="well">
-				<h5 class="text-center">Parameters</h5>
-				<hr/>
-				<p class="form-inline">Price: ${{ price | number:2 }} per unit<input type="range" min="10" max="90" step="1" ng-model="price"></p>
-				<p>Number of consumers:  {{ consumers | number:0 }}<input type="range" min="10000" max="30000" step="100" ng-model="consumers"></p>
+				<p class="form-inline">Price: ${{ price }} per unit<input type="range" min="10" max="90" step="1" ng-model="price"></p>
+				<p>Number of consumers:  {{ consumers | number:0 }}<input type="range" min="2000" max="5000" step="50" ng-model="consumers"></p>
 			</div>
 		</div>
+	</div>
+	<div>
+		<p>At a price of ${{ price }} per unit, on average, each individual consumer will be willing and able to buy <i>q<sup>D</sup></i> = {{ quantityDemanded*1000/consumers | number : 1}} units.</p>
+		<p>Since there are {{consumers | number:0}} consumers in the market, the total quantity demanded is <i>Q<sup>D</sup></i> = {{ quantityDemanded*1000/consumers | number : 1}} units per consumer x {{consumers | number:0}} consumers = {{ quantityDemanded*1000 | number : 0 }} units.</p>
+		<p>At the same price, producers in this market supply <i>Q<sup>S</sup></i> = {{quantitySupplied*1000 | number:0}} units.</p>
+			<p ng-if="(price < equilibriumPrice)">
+			  	Therefore, this relatively low price results in a <b>shortage</b> (excess demand) of {{ (quantityDemanded - quantitySupplied)*1000 | number:0 }} units.
+			</p>
+			<p ng-if="(price > equilibriumPrice)">
+			    Therefore, this relatively high price results in a <b>surplus</b> (excess supply) of {{ (quantitySupplied - quantityDemanded)*1000 | number:0 }} units.
+			</p>
+			<p ng-if="(price == equilibriumPrice)">
+			    Because the quantity supplied {{ (quantityDemanded == quantitySupplied) ? "equals" : "is just about equal to" }} the quantity demanded in the market, competitive pressures are unlikely to drive the market price up or down; so we say the market is "in equilibrium."
+			</p>
 	</div>
 	
 	

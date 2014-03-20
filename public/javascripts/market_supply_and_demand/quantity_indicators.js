@@ -13,10 +13,13 @@ function updateQuantityDemanded(vis,data,market,at_equilibrium_price) {
 	quantity = market ? x(data.quantityDemanded) : x(data.individualQuantityDemanded);
 
 	show_as_equilbrium = (market && at_equilibrium_price);
+
+	if (show_as_equilibrium) {return}; // we only need to show one Q* if at equilibrium
+
 	quantity_label = market ? "Q" : "q"; // label individual quantity demanded as "q", market as "Q"
 	label_decoration = show_as_equilibrium ? "*" : "D";
 	color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(demandColor);
-	
+
 	drawDropline(vis,price,quantity,color,"demand");
 	drawQuantityIndicator(vis,price,quantity,color,"demand");
 	labelQuantity(vis,quantity,quantity_label,label_decoration,color);
@@ -30,7 +33,7 @@ function updateQuantitySupplied(vis,data,market,at_equilibrium_price) {
 	quantity = x(data.quantitySupplied);
 	
 	show_as_equilbrium = (market && at_equilibrium_price)
-	quantity_label = market ? "Q" : "q"; // label individual quantity demanded as "q", market as "Q"
+	quantity_label = market ? "Q" : "q"; // label individual quantity supplied as "q", market as "Q"
 	label_decoration = show_as_equilibrium ? "*" : "S"
 	color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(supplyColor);
 
