@@ -4,9 +4,9 @@ var econgraphsApp = angular.module('econgraphsApp', []);
 // controller business logic
 econgraphsApp.controller('Controller', function($scope){
 
-    
-
     $scope.price = 25;
+
+    $scope.consumers = 20000;
 
     $scope.supply = {
       curveType: "supply",
@@ -17,12 +17,10 @@ econgraphsApp.controller('Controller', function($scope){
 
     $scope.demand = {
       curveType: "demand",
-      intercept: 80, //quantity demanded when price is zero
-      slope: -0.4,    //reduction in quantity demanded per unit increase in price
+      intercept: 4, //quantity demanded when price is zero
+      slope: -0.04,    //reduction in quantity demanded per unit increase in price
       color: demandColor
     }
-
-    $scope.equilibriumPrice = ($scope.demand.intercept - $scope.supply.intercept)/($scope.supply.slope - $scope.demand.slope);
 
     var snapToEquilibriumPrice = function(p,pe) {
         var percent_difference_from_pe = Math.abs(p - pe)/pe;
@@ -35,20 +33,43 @@ econgraphsApp.controller('Controller', function($scope){
 
     $scope.$watch("price",function(){ $scope.render() });
 
+    $scope.$watch("consumers",function(){ $scope.render() });
+
+
     $scope.render = function(){
 
+        $scope.equilibriumPrice = ($scope.demand.intercept*$scope.consumers/1000 - $scope.supply.intercept)/($scope.supply.slope - $scope.demand.slope*$scope.consumers/1000);
         $scope.price = snapToEquilibriumPrice($scope.price, $scope.equilibriumPrice);
-        $scope.quantityDemanded = quantityAtPrice($scope.price, $scope.demand)
-        $scope.quantitySupplied = quantityAtPrice($scope.price, $scope.supply)
+        $scope.individualQuantityDemanded = quantityAtPrice($scope.price, $scope.demand, 1)
+        $scope.quantityDemanded = quantityAtPrice($scope.price, $scope.demand, $scope.consumers/1000)
+        $scope.quantitySupplied = quantityAtPrice($scope.price, $scope.supply, 1)
 
         d3.select('svg').remove();
         d3.select('svg').remove();
-        var vis1 = drawGraphAxes("#graph1");
-        updateMarketCurves(vis1,$scope);
-        updatePrice(vis1,$scope);
-        var vis2 = drawGraphAxes("#graph2");
-        updateMarketCurves(vis2,$scope);
-        updatePrice(vis2,$scope);    
+        
+        x = d3.scale.linear()
+            .range([0, width])
+            .domain([0, 10]);
+
+        y = d3.scale.linear()
+            .range([height, 0])
+            .domain([0, 100]);
+
+        var vis1 = drawGraphAxes("#graph1","Quantity (Units)","Price (Dollars per Unit)");
+        updateMarketCurves(vis1,$scope,false,true,false);
+        updatePrice(vis1,$scope,false,true,false);
+        
+        x = d3.scale.linear()
+            .range([0, width])
+            .domain([0, 100]);
+
+        y = d3.scale.linear()
+            .range([height, 0])
+            .domain([0, 100]);
+
+        var vis2 = drawGraphAxes("#graph2","Quantity (Thousands of Units)","Price (Dollars per Unit)",100,100);
+        updateMarketCurves(vis2,$scope,true,true,true);
+        updatePrice(vis2,$scope,true,true,true);    
 
 }});
 

@@ -1,5 +1,5 @@
-function quantityAtPrice(p,params) {
-      return params.intercept + p*params.slope;
+    function quantityAtPrice(p,params,number) {
+      return (params.intercept + p*params.slope)*number;
     }
 
     function equilibriumPrice(curves) {
@@ -23,42 +23,40 @@ function quantityAtPrice(p,params) {
     }
 
 // Establish general behavioral constants for this graph
-function updateMarketCurves(vis,data) {
+function updateMarketCurves(vis,data,show_supply,show_demand,market) {
 
-  updateSupplyCurve(vis,data);
-  updateDemandCurve(vis,data);
+  if(show_supply) updateSupplyCurve(vis,data,market);
+  if(show_demand) updateDemandCurve(vis,data,market);
 
 }
 
-function updateDemandCurve(vis,data) {
+function updateDemandCurve(vis,data,market) {
 
-  intercept = data.demand.intercept;
-  slope = data.demand.slope;
+  number = market ? data.consumers/1000 : 1;
   color = setColor(demandColor);
   points = [
-    { x : x(quantityAtPrice(maxPrice, data.demand)),
+    { x : x(quantityAtPrice(maxPrice, data.demand, number)),
       y : y(maxPrice)},
-    { x : x(quantityAtPrice(minPrice, data.demand)),
+    { x : x(quantityAtPrice(minPrice, data.demand, number)),
       y : y(minPrice)}];
   label_delta = 15;
   
   drawCurve(vis,points,label_delta,color,"demand");
-  updateQuantityDemanded(vis,data);
 
 }
 
-function updateSupplyCurve(vis,data) {
+function updateSupplyCurve(vis,data,market) {
 
+  number = 1; // can update later if have number of firms as a variable
   color = setColor(supplyColor);
   points = [
-    { x : x(quantityAtPrice(minPrice, data.supply)),
+    { x : x(quantityAtPrice(minPrice, data.supply, number)),
       y : y(minPrice)},
-    { x : x(quantityAtPrice(maxPrice, data.supply)),
+    { x : x(quantityAtPrice(maxPrice, data.supply, number)),
       y : y(maxPrice)}];
   label_delta = -5;
   
   drawCurve(vis,points,label_delta,color,"supply");
-  updateQuantitySupplied(vis,data);
 
 }
 

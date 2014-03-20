@@ -19,15 +19,17 @@
 <div class="container-fluid mainPage" ng-controller="Controller">
 	<div class="row">
 		<div class="col-md-4">
-			<div id="graph1"></div>
-		</div>
-		<div class="col-md-4">
-			<div id="graph2"></div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-inline">Price: <input type="range" min="10" max="90" step="1" ng-model="price"> {{ price }}</div>
+			<h4 class="text-center">Individual Demand</h4>
 			<hr/>
-			<p>At a price of ${{ price }} per unit, consumers demand {{quantityDemanded*1000 | number:0}} units and producers supply {{quantitySupplied*1000 | number:0}} units.</p>
+			<div id="graph1"></div>
+			<p>At a price of ${{ price | number : 2}} per unit, individual consumers demand {{ quantityDemanded*1000/consumers | number : 2}} units each...</p>
+		</div>
+		<div class="col-md-5">
+			<h4 class="text-center">Market Supply and Demand</h4>
+			<hr/>
+			<div id="graph2"></div>
+			<p>...and since there are {{consumers | number:0}} consumers in the market, the total quantity demanded is {{ quantityDemanded*1000/consumers | number : 2}} units per consumer x {{consumers | number:0}} consumers = {{ quantityDemanded*1000 | number : 0 }} units.</p>
+			<p>At the same price, producers in this market supply {{quantitySupplied*1000 | number:0}} units.</p>
 			<p ng-if="(quantityDemanded > quantitySupplied)">
 			  	Therefore, there is a shortage of {{ (quantityDemanded - quantitySupplied)*1000 | number:0 }} units.
 			</p>
@@ -37,6 +39,14 @@
 			<p ng-if="(quantityDemanded == quantitySupplied)">
 			    Therefore, the market is in equilibrium.
 			</p>
+		</div>
+		<div class="col-md-3">
+			<div class="well">
+				<h5 class="text-center">Parameters</h5>
+				<hr/>
+				<p class="form-inline">Price: ${{ price | number:2 }} per unit<input type="range" min="10" max="90" step="1" ng-model="price"></p>
+				<p>Number of consumers:  {{ consumers | number:0 }}<input type="range" min="10000" max="30000" step="100" ng-model="consumers"></p>
+			</div>
 		</div>
 	</div>
 	

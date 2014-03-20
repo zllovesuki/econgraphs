@@ -1,36 +1,42 @@
 // update both quantity demanded and quantity supplied indicators
-function updateQuantityIndicators(vis,data){
+function updateQuantityIndicators(vis,data,show_supply,show_demand,market,at_equilibrium_price){
 	
-	updateQuantityDemanded(vis,data);
-	updateQuantitySupplied(vis,data);
+	if(show_demand) updateQuantityDemanded(vis,data,market,at_equilibrium_price);
+	if(show_supply) updateQuantitySupplied(vis,data,market,at_equilibrium_price);
     
 }
 
 // update quantity demanded indicator
-function updateQuantityDemanded(vis,data) {
+function updateQuantityDemanded(vis,data,market,at_equilibrium_price) {
 
 	price = y(data.price);
-	quantity = x(data.quantityDemanded);
-	label = (data.price == data.equilibriumPrice) ? "Q*" : "QD"
-	color = (data.price == data.equilibriumPrice) ? setColor(equilibriumColor) : setColor(demandColor);
+	quantity = market ? x(data.quantityDemanded) : x(data.individualQuantityDemanded);
+
+	show_as_equilbrium = (market && at_equilibrium_price);
+	quantity_label = market ? "Q" : "q"; // label individual quantity demanded as "q", market as "Q"
+	label_decoration = show_as_equilibrium ? "*" : "D";
+	color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(demandColor);
 	
 	drawDropline(vis,price,quantity,color,"demand");
 	drawQuantityIndicator(vis,price,quantity,color,"demand");
-	labelQuantity(vis,quantity,label);
+	labelQuantity(vis,quantity,quantity_label,label_decoration,color);
 
 }
 
 // update quantity supplied indicator
-function updateQuantitySupplied(vis,data) {
+function updateQuantitySupplied(vis,data,market,at_equilibrium_price) {
 
 	price = y(data.price);
 	quantity = x(data.quantitySupplied);
-	label = (data.price == data.equilibriumPrice) ? "Q*" : "QS"
-	color = (data.price == data.equilibriumPrice) ? setColor(equilibriumColor) : setColor(supplyColor);
+	
+	show_as_equilbrium = (market && at_equilibrium_price)
+	quantity_label = market ? "Q" : "q"; // label individual quantity demanded as "q", market as "Q"
+	label_decoration = show_as_equilibrium ? "*" : "S"
+	color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(supplyColor);
 
 	drawDropline(vis,price,quantity,color,"supply");
 	drawQuantityIndicator(vis,price,quantity,color,"supply");
-	labelQuantity(vis,quantity,label);
+	labelQuantity(vis,quantity,quantity_label,label_decoration,color);
 
 }
 
@@ -64,7 +70,7 @@ function drawDropline(vis,price,quantity,color,className) {
 }
 
 // label a quantity
-function labelQuantity(vis,quantity,label,color) {
+function labelQuantity(vis,quantity,quantity_label,label_decoration,color) {
 
 	var axisLabelCoordinate = height + 40;
 
@@ -73,7 +79,17 @@ function labelQuantity(vis,quantity,label,color) {
         .attr("x", quantity)
         .attr("y", axisLabelCoordinate)
         .attr("text-anchor","middle")
-        .text(label);
+        .attr("font-style","oblique")
+        .text(quantity_label);
+
+    vis.append("svg:text")
+    	.attr("class","quantityAxisLabelDecoration")
+    	.attr("x", quantity + 6)
+    	.attr("y", axisLabelCoordinate - 4)
+    	.attr("text-anchor","start")
+    	.attr("font-style","oblique")
+        .attr("font-size",10)
+        .text(label_decoration);
 
 }
 
