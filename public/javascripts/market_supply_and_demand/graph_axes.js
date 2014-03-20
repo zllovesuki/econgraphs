@@ -1,8 +1,6 @@
-var margin = {top: 10, right: 100, bottom: 100, left: 100},
+var margin = {top: 10, right: 100, bottom: 100, left: 70},
     width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
-    priceAxisLength = 100,
-    quantityAxisLength = 100;
     minPrice = 5;
     maxPrice = 95;
     maxQuantity = 95;
@@ -38,7 +36,7 @@ function drawGraphAxes(id,x_label,y_label,x_axis_length,y_axis_length) {
         y_axis.append("text")
             .attr("transform","rotate(-90)")
             .attr("x", -height / 2 )
-            .attr("y", "-3em")
+            .attr("y", "-4em")
             .style("text-anchor", "middle")
             .text(y_label);
 
