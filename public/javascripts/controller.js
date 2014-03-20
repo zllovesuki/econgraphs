@@ -42,9 +42,13 @@ econgraphsApp.controller('Controller', function($scope){
         $scope.quantitySupplied = quantityAtPrice($scope.price, $scope.supply)
 
         d3.select('svg').remove();
-        var vis = drawGraphAxes("#graph");
-        updateMarketCurves(vis,$scope);
-        updatePrice(vis,$scope);    
+        d3.select('svg').remove();
+        var vis1 = drawGraphAxes("#graph1");
+        updateMarketCurves(vis1,$scope);
+        updatePrice(vis1,$scope);
+        var vis2 = drawGraphAxes("#graph2");
+        updateMarketCurves(vis2,$scope);
+        updatePrice(vis2,$scope);    
 
 }});
 
