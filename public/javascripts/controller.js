@@ -5,33 +5,14 @@ var econgraphsApp = angular.module('econgraphsApp', []);
 econgraphsApp.controller('Controller', function($scope){
 
     $scope.price = 30;
-
     $scope.consumers = 4000;
-
     $scope.income = 400;
-
     $scope.alpha = 50;
 
-    $scope.supply = {
-      curveType: "supply",
-      intercept: 10, //quantity supplied when price is zero
-      slope: 0.6,     //increase in quantity supplied per unit increase in price
-      color: supplyColor
-    }
-
-    $scope.demand = {
-      curveType: "demand",
-      intercept: 20, //quantity demanded when price is zero
-      slope: -0.2,    //reduction in quantity demanded per unit increase in price
-      color: demandColor
-    }
 
     $scope.$watch("price",function(){ $scope.render() });
-
     $scope.$watch("consumers",function(){ $scope.render() });
-
     $scope.$watch("income",function(){ $scope.render() });
-
     $scope.$watch("alpha",function(){ $scope.render() });
 
     $scope.render = function(){
@@ -39,7 +20,10 @@ econgraphsApp.controller('Controller', function($scope){
         $scope.equilibriumPrice = equilibriumPrice($scope);
         $scope.individualQuantityDemanded = quantityDemandedAtPrice($scope.price, $scope, 1);
         $scope.quantityDemanded = $scope.individualQuantityDemanded * $scope.consumers/1000;
+        $scope.shownQuantityDemanded = Math.round($scope.individualQuantityDemanded*10,0)*$scope.consumers/10;
         $scope.quantitySupplied = quantitySuppliedAtPrice($scope.price, $scope, 1)
+        $scope.shownQuantitySupplied = $scope.quantitySupplied * 1000;
+        
 
         d3.select('svg').remove();
         d3.select('svg').remove();
