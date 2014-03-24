@@ -1,9 +1,20 @@
-    function quantityAtPrice(p,params,number) {
-      return (params.intercept + p*params.slope)*number;
+    function quantityDemandedAtPrice(p,data,number) {
+      return (number * data.alpha * data.income) / (100 * p)
     }
 
-    function equilibriumPrice(curves) {
-      return (curves[0].intercept - curves[1].intercept)/(curves[1].slope - curves[0].slope);
+    function quantitySuppliedAtPrice(p,data,number) {
+      return (10 + p*0.6)*number; // hard coded for now
+    }
+
+    function equilibriumPrice(data) {
+      for(p = minPrice; p <= maxPrice; p++) {
+        qd = quantityDemandedAtPrice(p, data, data.consumers/1000);
+        qs = quantitySuppliedAtPrice(p, data, 1);
+        var percent_difference = Math.abs(qd - qs)/qd;
+        if(percent_difference < 0.05) {return p}
+      };
+      return 0;
+  
     }
 
     function minQuantityForCurve(curveParams) {
@@ -33,12 +44,12 @@ function updateMarketCurves(vis,data,show_supply,show_demand,market) {
 function updateDemandCurve(vis,data,market) {
 
   number = market ? data.consumers/1000 : 1;
-  color = setColor(demandColor);
-  points = [
-    { x : x(quantityAtPrice(maxPrice, data.demand, number)),
-      y : y(maxPrice)},
-    { x : x(quantityAtPrice(minPrice, data.demand, number)),
-      y : y(minPrice)}];
+  color = demandColor;
+  points = []
+  for(p = minPrice; p <= maxPrice; p += 0.25) {
+    qd = quantityDemandedAtPrice(p, data, number);
+    if (x(qd) <= width) { points.push({ x : x(qd),y : y(p)}) };
+  };
   label_delta = 15;
   
   drawCurve(vis,points,label_delta,color,"demand");
@@ -48,34 +59,36 @@ function updateDemandCurve(vis,data,market) {
 function updateSupplyCurve(vis,data,market) {
 
   number = 1; // can update later if have number of firms as a variable
-  color = setColor(supplyColor);
-  points = [
-    { x : x(quantityAtPrice(minPrice, data.supply, number)),
-      y : y(minPrice)},
-    { x : x(quantityAtPrice(maxPrice, data.supply, number)),
-      y : y(maxPrice)}];
+  color = supplyColor;
+  points = []
+  for(p = maxPrice; p >= minPrice; p -= 0.25) {
+    points.push({ x : x(quantitySuppliedAtPrice(p, data, number)),
+      y : y(p)})
+  };
   label_delta = -5;
   
   drawCurve(vis,points,label_delta,color,"supply");
 
 }
 
+var curveFunction = d3.svg.line()
+    .x(function(d) {return d.x;}).y(function(d) {return d.y;}).interpolate("linear");
+
 function drawCurve(vis,points,label_delta,color,className) {
 
   // draw curve
-  vis.append("svg:line")
+  vis.append("svg:path")
     .attr("class", className + " curve")
-    .attr("x1", points[0].x)
-    .attr("y1", points[0].y)
-    .attr("x2", points[1].x)
-    .attr("y2", points[1].y)
-    .attr("style", color)
+    .attr("d", curveFunction(points))
+    .attr("stroke",color)
+    .attr("fill","none")
+    
 
   // label curve
   vis.append("svg:text")
     .attr("class","curveLabel")
-    .attr("x", points[1].x)
-    .attr("y", points[1].y + label_delta)
+    .attr("x", points[0].x)
+    .attr("y", points[0].y + label_delta)
     .text(className);
 
 }
