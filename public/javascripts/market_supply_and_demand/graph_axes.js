@@ -1,9 +1,8 @@
 var margin = {top: 10, right: 100, bottom: 100, left: 70},
     width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
-    minPrice = 5;
-    maxPrice = 95;
-    maxQuantity = 95;
+    minPrice = 5,
+    maxPrice = 55;
 
 function drawGraphAxes(id,x_label,y_label,x_axis_length,y_axis_length) {
 
