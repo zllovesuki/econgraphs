@@ -1,38 +1,61 @@
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 
-var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
-var http = require('http');
-var path = require('path');
+var express = require('express'),
+  routes = require('./routes'),
+  api = require('./routes/api'),
+  http = require('http'),
+  path = require('path');
 
-var app = express();
+var app = module.exports = express();
+
+
+/**
+ * Configuration
+ */
 
 // all environments
 app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.favicon());
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
-app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(app.router);
 
 // development only
-if ('development' == app.get('env')) {
+if (app.get('env') === 'development') {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
+// production only
+if (app.get('env') === 'production') {
+  // TODO
+}
 
-http.createServer(app).listen(app.get('port'), function(){
+
+/**
+ * Routes
+ */
+
+// serve index and view partials
+app.get('/', routes.index);
+app.get('/partials/:name', routes.partials);
+
+// JSON API
+app.get('/api/name', api.name);
+
+// redirect all others to the index (HTML5 history)
+app.get('*', routes.index);
+
+
+/**
+ * Start Server
+ */
+
+http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
