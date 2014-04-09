@@ -1,70 +1,13 @@
 <html ng-app="econgraphsApp">
-<head>
-	<title><%= title %></title>
-	<script src="lib/d3.v2.min.js"></script>
-	<script src="lib/angular.min.js"></script>
-	<link rel='stylesheet' href='/stylesheets/style.css' />
-	<link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
-	<script src="javascripts/graph_colors.js"></script>
-	<script src="javascripts/market_supply_and_demand/graph_axes.js"></script>
-	<script src="javascripts/market_supply_and_demand/supply_and_demand.js"></script>
-	<script src="javascripts/market_supply_and_demand/price_indicator.js"></script>
-	<script src="javascripts/market_supply_and_demand/quantity_indicators.js"></script>
-	<script src="javascripts/controller.js"></script>
-</head>
+<% include header %>
 <body>
-<div class="nav navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="navbar-header navbar-brand">econgraphs.org</div>
-</div>
+<% include navbar %>
 <div class="container-fluid mainPage" ng-controller="Controller">
-	<div class="row">
-		<div class="col-md-9">
-			<div class="row">
-				<div class="col-md-6">
-					<h4 class="text-center">Individual Demand</h4>
-					<hr/>
-					<div id="graph1"></div>
-					<div>
-						<p>This model assumes that consumers will spend a constant fraction of their income on this good. Specifically, it assumes that consumers' income is ${{ income }}, and that they spend {{alpha}}% of that (or ${{alpha*income/100}}) on this good, regardless of the price.</p>
-
-						<p>At a price of ${{ price }} per unit, therefore, a "representative" individual consumer will choose to buy <i>q<sup>D</sup></i> = ${{alpha*income/100}} / ${{price}} per unit = {{ quantityDemanded*1000/consumers | number : 1}} units.</p>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<h4 class="text-center">Market Supply and Demand</h4>
-					<hr/>
-					<div id="graph2"></div>
-					<div>
-						<p>Since there are {{consumers | number:0}} consumers in the market, the total quantity demanded is <i>Q<sup>D</sup></i> = {{ individualQuantityDemanded | number : 1}} units per consumer x {{consumers | number:0}} consumers = {{ shownQuantityDemanded | number : 0 }} units.</p>
-						<p>At the same price, producers in this market supply <i>Q<sup>S</sup></i> = {{shownQuantitySupplied | number:0}} units.</p>
-							<p ng-if="(price < equilibriumPrice)">
-							  	Therefore, this relatively low price results in a <b>shortage</b> (excess demand) of {{ shownQuantityDemanded - shownQuantitySupplied | number:0 }} units.
-							</p>
-							<p ng-if="(price > equilibriumPrice)">
-							    Therefore, this relatively high price results in a <b>surplus</b> (excess supply) of {{ shownQuantitySupplied - shownQuantityDemanded | number:0 }} units.
-							</p>
-							<p ng-if="(price == equilibriumPrice)">
-							    Because the quantity supplied {{ (shownQuantityDemanded == shownQuantitySupplied) ? "equals" : "is just about equal to" }} the quantity demanded in the market, competitive pressures are unlikely to drive the market price up or down; so we say the market is "in equilibrium."
-							</p>
-					</div>
-				</div>
-			</div>
-			
-		</div>
-		
-		<div class="col-md-3">
-			<div class="well">
-				<p>Price: ${{ price }} per unit<input type="range" min="10" max="50" step="1" ng-model="price"></p>
-				<p>Income: ${{ income }}<input type="range" min="100" max="500" step="10" ng-model="income"></p>
-				<p>Fraction of income spent on this: {{ alpha }}%<input type="range" min="0" max="100" step="1" ng-model="alpha"></p>
-				<p>Number of consumers:  {{ consumers | number:0 }}<input type="range" min="2000" max="5000" step="50" ng-model="consumers"></p>
-			</div>
-		</div>
-	</div>
-	
-	
-	
-
+	<h1>EconGraphs</h1>
+	<hr/>
+	<h3><a href="demand">Individual and Market Demand</a></h3>
+	<p>See how various factors shift individual and market demand curves.</p>
 </div>
+<% include footer %>
 </body>
 </html>
