@@ -19,12 +19,12 @@
  *      y_axis : {title: "Price", min: 0, max: 10, ticks: 5} <-- y axis information
  *   }
  *
- * and returns the x and y scales as functions, as well as the visualization object itself:
+ * and returns the x and y scales as functions, as well as the visualization d3 object itself:
  *
  *   {
  *      x : [d3.scale object],
  *      y : [d3.scale object],
- *      graph : [d3 object],
+ *      vis : [d3 object],
  *      width : 500,
  *      height: 700
  *   }
@@ -34,7 +34,7 @@
 
 function createGraph(graph_data) {
 
-    var graph_width, graph_height, x, y, graph, x_axis, y_axis;
+    var graph_width, graph_height, x, y, graph;
 
     // The width and height of the drawn graph are the width and height of the alloted space, minus the margins.
     graph_width = graph_data.dimensions.width - graph_data.margin.left - graph_data.margin.right;
@@ -43,45 +43,45 @@ function createGraph(graph_data) {
     // Create the D3 scales for the x and y dimensions
     x = d3.scale.linear()
             .range([0, graph_width])
-            .domain([graph_data.x_axis.min, graph_data.x_axis.max]),
+            .domain([graph_data.x_axis.min, graph_data.x_axis.max]);
     y = d3.scale.linear()
             .range([graph_height, 0])
             .domain([graph_data.y_axis.min, graph_data.y_axis.max]);
 
     // Create the D3 visualization object
-    graph = d3.select(graph_data.id)
+    vis = d3.select("#" + graph_data.id)
             .append("svg")
             .attr("width", graph_data.dimensions.width)
             .attr("height", graph_data.dimensions.height)
             .append("g")
-            .attr("transform", "translate(" + graph_data.margin.left + "," + graph_data.margin.top + ")");
+            .attr("transform", "translate(" + graph_data.margin.left + "," + graph_data.margin.top + ")")
 
-    // Add x axis
-    x_axis = graph.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + graph_height + ")")
-            .call(d3.svg.axis().scale(x).orient("bottom"));
+            // Add x axis
+            .append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + graph_height + ")")
+                .call(d3.svg.axis().scale(x).orient("bottom"))
 
-    // Label x axis
-    x_axis.append("text")
-            .attr("x", graph_width / 2 )
-            .attr("y", "4em")
-            .style("text-anchor", "middle")
-            .text(graph_data.x_axis.title);
+                // Label x axis
+                .append("text")
+                    .attr("x", graph_width / 2 )
+                    .attr("y", "4em")
+                    .style("text-anchor", "middle")
+                    .text(graph_data.x_axis.title)
 
-    // Add y axis
-    y_axis = graph.append("g")
-            .attr("class", "y axis")
-            .call(d3.svg.axis().scale(y).orient("left"));
+            // Add y axis
+            .append("g")
+                .attr("class", "y axis")
+                .call(d3.svg.axis().scale(y).orient("left"))
 
-    // Label y axis
-    y_axis.append("text")
-            .attr("transform","rotate(-90)")
-            .attr("x", -graph_height / 2 )
-            .attr("y", "-4em")
-            .style("text-anchor", "middle")
-            .text(graph_data.y_axis.title);
+                // Label y axis
+                .append("text")
+                        .attr("transform","rotate(-90)")
+                        .attr("x", -graph_height / 2 )
+                        .attr("y", "-4em")
+                        .style("text-anchor", "middle")
+                        .text(graph_data.y_axis.title);
 
-    return { x : x, y : y, graph : graph, width : graph_width, height: graph_height};
+    return { x : x, y : y, vis : vis, width : graph_width, height: graph_height};
 
 }

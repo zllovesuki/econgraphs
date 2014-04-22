@@ -1,10 +1,10 @@
 // create module for custom directives
-var econgraphsApp = angular.module('econgraphsApp', []);
+var econGraphsApp = angular.module('econGraphsApp', []);
 
 // controller business logic
-econgraphsApp.controller('Controller', function($scope){
+econGraphsApp.controller('Controller', function($scope){
 
-    $scope.price = 30;
+    $scope.price = 20;
     $scope.consumers = 4000;
     $scope.income = 400;
     $scope.alpha = 50;
@@ -20,7 +20,7 @@ econgraphsApp.controller('Controller', function($scope){
         $scope.equilibriumPrice = equilibriumPrice($scope);
         $scope.individualQuantityDemanded = quantityDemandedAtPrice($scope.price, $scope, 1);
         $scope.quantityDemanded = $scope.individualQuantityDemanded * $scope.consumers/1000;
-        $scope.shownQuantityDemanded = Math.round($scope.individualQuantityDemanded*10,0)*$scope.consumers/10;
+        $scope.shownQuantityDemanded = Math.round($scope.individualQuantityDemanded*10)*$scope.consumers/10;
         $scope.quantitySupplied = quantitySuppliedAtPrice($scope.price, $scope, 1)
         $scope.shownQuantitySupplied = $scope.quantitySupplied * 1000;
         
@@ -29,8 +29,8 @@ econgraphsApp.controller('Controller', function($scope){
         d3.select('svg').remove();
 
         var individual_demand_graph_data = {
-            id : "myGraph1",
-            dimensions : {height: 500, width: 700},
+            id : "graph1",
+            dimensions : {height: 500, width: 500},
             margin : {top: 10, right: 100, bottom: 100, left: 70},
             x_axis : {title: "Quantity (Units)", min: 0, max: 20, ticks: 10},
             y_axis : {title: "Price (Dollars per unit)", min: 0, max: 60, ticks: 10}
@@ -41,10 +41,10 @@ econgraphsApp.controller('Controller', function($scope){
         updatePrice(individual_demand_graph,$scope,false,true,false);
 
         var market_graph_data = {
-            id : "myGraph1",
-            dimensions : {height: 500, width: 700},
+            id : "graph2",
+            dimensions : {height: 500, width: 500},
             margin : {top: 10, right: 100, bottom: 100, left: 70},
-            x_axis : {title: "Quantity (Units)", min: 0, max: 20, ticks: 10},
+            x_axis : {title: "Quantity (Units)", min: 0, max: 100, ticks: 10},
             y_axis : {title: "Price (Dollars per unit)", min: 0, max: 60, ticks: 10}
         };
 
