@@ -12,7 +12,8 @@ function drawDot(graph,x,y,color,className) {
         .attr("r",r)
         .attr("cx", x_coord)
         .attr("cy", y_coord)
-        .attr("style", color);
+        .attr("stroke", color)
+        .attr("fill", color);
 
 }
 
@@ -24,12 +25,13 @@ function drawVerticalDropline(graph,x,y,color,className) {
         y_coord = (y == "max") ? 0 : graph.y(y);
 
     graph.vis.append("svg:line")
-        .attr("class", className + " dropline")
+        .attr("class", className + ' dropline')
         .attr("x1", x_coord)
         .attr("y1", graph.height + 25) // drop a little below the axis
         .attr("x2", x_coord)
         .attr("y2", y_coord)
-        .attr("style", color);
+        .attr("stroke", color)
+        .attr("fill", color);
 
 }
 
@@ -40,12 +42,13 @@ function drawHorizontalDropline(graph,x,y,color,className) {
         y_coord = graph.y(y);
 
     graph.vis.append("svg:line")
-        .attr("class","price")
+        .attr("class",className + ' dropline')
         // set line to extend from left boundary to right boundary
         .attr("x1", -35 )
         .attr("x2", x_coord)
         .attr("y1", y_coord)
         .attr("y2", y_coord)
-        .attr("style", color);
+        .attr("stroke", color)
+        .attr("fill", color);
 
 }

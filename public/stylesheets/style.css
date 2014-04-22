@@ -34,10 +34,3 @@ a {
   stroke-dasharray: 10,10;
   stroke-width: 2px;
 }
-
-.price {
-  fill: grey;
-  stroke: lightgrey;
-  stroke-width: 4px;
-  stroke-dasharray: 10,10;
-}

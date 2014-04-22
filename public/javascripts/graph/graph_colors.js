@@ -4,8 +4,4 @@ var supplyColor = "#D67E2C",
     priceColor = "#CCCCCC",
     equilibriumColor = "#469449";
 
-function setColor(color) {
-      return "stroke:" + color + "; fill:" + color
-    }
-
     
