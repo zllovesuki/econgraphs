@@ -41,17 +41,3 @@ a {
   stroke-width: 4px;
   stroke-dasharray: 10,10;
 }
-
-.curveDragger, .priceDragger {
-  fill: blue;
-  stroke: white;
-  stroke-width: 30px;
-}
-
-.equationTable tr td {
-  padding: 1px 3px 1px 3px;
-}
-
-.equationTable tr td:first-child {
-  text-align: right;
-}

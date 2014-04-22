@@ -8,16 +8,7 @@ function updatePrice(graph,data,show_supply,show_demand,market){
       show_as_equilibrium = (market && at_equilibrium_price),
       color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(priceColor);
 
-  // Draw line for price
-  
-  graph.vis.append("svg:line")
-        .attr("class","price")
-        // set line to extend from left boundary to right boundary
-        .attr("x1", -35 )
-        .attr("x2", graph.width)
-        .attr("y1", price)
-        .attr("y2", price)
-        .attr("style", color);
+  drawHorizontalDropline(graph,"max",data.price,color,"price")
 
   // Draw axis label
 
