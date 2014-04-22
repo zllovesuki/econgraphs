@@ -1,44 +1,87 @@
-var margin = {top: 10, right: 100, bottom: 100, left: 70},
+/* var margin = {top: 10, right: 100, bottom: 100, left: 70},
     width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     minPrice = 5,
-    maxPrice = 55;
+    maxPrice = 55; */
 
-function drawGraphAxes(id,x_label,y_label,x_axis_length,y_axis_length) {
+/**
+ * Created by cmakler on 4/15/14.
+ */
 
-    var vis = d3.select(id)
+/**
+ * This expects graph_data of the form
+ *
+ *   {
+ *      id : "myGraph1", <-- id of the div where the graph belongs
+ *      dimensions : {height: 500, width: 700}, <-- graph dimension in pixels
+ *      margin : {top: 10, right: 100, bottom: 100, left: 70}, <-- position of axes within overall graph area
+ *      x_axis : {title: "Quantity", min: 0, max: 100, ticks: 10}, <-- x axis information
+ *      y_axis : {title: "Price", min: 0, max: 10, ticks: 5} <-- y axis information
+ *   }
+ *
+ * and returns the x and y scales as functions, as well as the visualization object itself:
+ *
+ *   {
+ *      x : [d3.scale object],
+ *      y : [d3.scale object],
+ *      graph : [d3 object],
+ *      width : 500,
+ *      height: 700
+ *   }
+ *
+ * d3 object. Note that there may be a way to query the d3 object for its scale; TODO see how to do this.
+ */
+
+function createGraph(graph_data) {
+
+    var graph_width, graph_height, x, y, graph, x_axis, y_axis;
+
+    // The width and height of the drawn graph are the width and height of the alloted space, minus the margins.
+    graph_width = graph_data.dimensions.width - graph_data.margin.left - graph_data.margin.right;
+    graph_height = graph_data.dimensions.height - graph_data.margin.top - graph_data.margin.bottom;
+
+    // Create the D3 scales for the x and y dimensions
+    x = d3.scale.linear()
+            .range([0, graph_width])
+            .domain([graph_data.x_axis.min, graph_data.x_axis.max]),
+    y = d3.scale.linear()
+            .range([graph_height, 0])
+            .domain([graph_data.y_axis.min, graph_data.y_axis.max]);
+
+    // Create the D3 visualization object
+    graph = d3.select(graph_data.id)
             .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("width", graph_data.dimensions.width)
+            .attr("height", graph_data.dimensions.height)
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + graph_data.margin.left + "," + graph_data.margin.top + ")");
 
     // Add x axis
-    var x_axis = vis.append("g")
+    x_axis = graph.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
+            .attr("transform", "translate(0," + graph_height + ")")
             .call(d3.svg.axis().scale(x).orient("bottom"));
 
-        // Label x axis
-        x_axis.append("text")
-            .attr("x", width / 2 )
+    // Label x axis
+    x_axis.append("text")
+            .attr("x", graph_width / 2 )
             .attr("y", "4em")
             .style("text-anchor", "middle")
-            .text(x_label);
+            .text(graph_data.x_axis.title);
 
     // Add y axis
-    var y_axis = vis.append("g")
+    y_axis = graph.append("g")
             .attr("class", "y axis")
             .call(d3.svg.axis().scale(y).orient("left"));
 
-        // Label y axis
-        y_axis.append("text")
+    // Label y axis
+    y_axis.append("text")
             .attr("transform","rotate(-90)")
-            .attr("x", -height / 2 )
+            .attr("x", -graph_height / 2 )
             .attr("y", "-4em")
             .style("text-anchor", "middle")
-            .text(y_label);
+            .text(graph_data.y_axis.title);
 
-    return vis;
+    return { x : x, y : y, graph : graph, width : graph_width, height: graph_height};
 
 }

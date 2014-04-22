@@ -27,30 +27,30 @@ econgraphsApp.controller('Controller', function($scope){
 
         d3.select('svg').remove();
         d3.select('svg').remove();
+
+        var individual_demand_graph_data = {
+            id : "myGraph1",
+            dimensions : {height: 500, width: 700},
+            margin : {top: 10, right: 100, bottom: 100, left: 70},
+            x_axis : {title: "Quantity (Units)", min: 0, max: 20, ticks: 10},
+            y_axis : {title: "Price (Dollars per unit)", min: 0, max: 60, ticks: 10}
+        };
         
-        x = d3.scale.linear()
-            .range([0, width])
-            .domain([0, 20]);
+        var individual_demand_graph = createGraph(individual_demand_graph_data);
+        updateMarketCurves(individual_demand_graph,$scope,false,true,false);
+        updatePrice(individual_demand_graph,$scope,false,true,false);
 
-        y = d3.scale.linear()
-            .range([height, 0])
-            .domain([0, 60]);
+        var market_graph_data = {
+            id : "myGraph1",
+            dimensions : {height: 500, width: 700},
+            margin : {top: 10, right: 100, bottom: 100, left: 70},
+            x_axis : {title: "Quantity (Units)", min: 0, max: 20, ticks: 10},
+            y_axis : {title: "Price (Dollars per unit)", min: 0, max: 60, ticks: 10}
+        };
 
-        var vis1 = drawGraphAxes("#graph1","Quantity (Units)","Price (Dollars per Unit)");
-        updateMarketCurves(vis1,$scope,false,true,false);
-        updatePrice(vis1,$scope,false,true,false);
-        
-        x = d3.scale.linear()
-            .range([0, width])
-            .domain([0, 100]);
-
-        y = d3.scale.linear()
-            .range([height, 0])
-            .domain([0, 60]);
-
-        var vis2 = drawGraphAxes("#graph2","Quantity (Thousands of Units)","Price (Dollars per Unit)",100,100);
-        updateMarketCurves(vis2,$scope,true,true,true);
-        updatePrice(vis2,$scope,true,true,true);
+        var market_graph = createGraph(market_graph_data);
+        updateMarketCurves(market_graph,$scope,true,true,true);
+        updatePrice(market_graph,$scope,true,true,true);
 
 }});
 

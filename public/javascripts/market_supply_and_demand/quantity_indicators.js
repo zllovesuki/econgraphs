@@ -9,16 +9,15 @@ function updateQuantityIndicators(vis,data,show_supply,show_demand,market,at_equ
 // update quantity demanded indicator
 function updateQuantityDemanded(vis,data,market,at_equilibrium_price) {
 
-	price = y(data.price);
-	quantity = market ? x(data.quantityDemanded) : x(data.individualQuantityDemanded);
-
-	show_as_equilbrium = (market && at_equilibrium_price);
+	var price = vis.y(data.price),
+        quantity = market ? vis.x(data.quantityDemanded) : vis.x(data.individualQuantityDemanded),
+        show_as_equilbrium = (market && at_equilibrium_price);
 
 	if (show_as_equilibrium) {return}; // we only need to show one Q* if at equilibrium
 
-	quantity_label = market ? "Q" : "q"; // label individual quantity demanded as "q", market as "Q"
-	label_decoration = show_as_equilibrium ? "*" : "D";
-	color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(demandColor);
+	var quantity_label = market ? "Q" : "q", // label individual quantity demanded as "q", market as "Q"
+	    label_decoration = show_as_equilibrium ? "*" : "D",
+        color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(demandColor);
 
 	drawDropline(vis,price,quantity,color,"demand");
 	drawQuantityIndicator(vis,price,quantity,color,"demand");
@@ -29,12 +28,11 @@ function updateQuantityDemanded(vis,data,market,at_equilibrium_price) {
 // update quantity supplied indicator
 function updateQuantitySupplied(vis,data,market,at_equilibrium_price) {
 
-	price = y(data.price);
-	quantity = x(data.quantitySupplied);
-	
-	show_as_equilbrium = (market && at_equilibrium_price)
-	quantity_label = market ? "Q" : "q"; // label individual quantity supplied as "q", market as "Q"
-	label_decoration = show_as_equilibrium ? "*" : "S"
+	var price = vis.y(data.price),
+        quantity = vis.x(data.quantitySupplied),
+        show_as_equilbrium = (market && at_equilibrium_price),
+        quantity_label = market ? "Q" : "q", // label individual quantity supplied as "q", market as "Q"
+        label_decoration = show_as_equilibrium ? "*" : "S",
 	color = show_as_equilibrium ? setColor(equilibriumColor) : setColor(supplyColor);
 
 	drawDropline(vis,price,quantity,color,"supply");
