@@ -1,0 +1,23 @@
+<html ng-app="econGraphsApp">
+<% include header.ejs %>
+<body>
+<% include navbar.ejs %>
+<div class="container-fluid mainPage" ng-controller="IndifferenceCurvesController">
+	<div class="row">
+		<div class="col-md-9">
+            <div id="graph1"></div>
+            <div>This graph shows all points such that U(<i>x</i>,<i>y</i>) = <i>x</i><sup>{{alpha | number : 2}}</sup><i>y</i><sup>{{(1 - alpha) | number : 2}}</sup> = {{ u }}</div>
+		</div>
+		
+		<div class="col-md-3">
+			<div class="well">
+				<p>Preference for good X: {{ alpha | number : 2 }}<input type="range" min="0" max="1" step="0.01" ng-model="alpha"></p>
+				<p>Utility:  {{ u | number : 1 }}<input type="range" min="1" max="9" step="0.1" ng-model="u"></p>
+			</div>
+		</div>
+	</div>
+
+</div>
+<% include footer.ejs %>
+</body>
+</html>

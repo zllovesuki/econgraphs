@@ -1,8 +1,8 @@
-<html ng-app="econgraphsApp">
-<% include header %>
+<html ng-app="econGraphsApp">
+<% include header.ejs %>
 <body>
-<% include navbar %>
-<div class="container-fluid mainPage" ng-controller="Controller">
+<% include navbar.ejs %>
+<div class="container-fluid mainPage" ng-controller="SupplyAndDemandController">
 	<div class="row">
 		<div class="col-md-9">
 			<div class="row">
@@ -53,6 +53,6 @@
 	
 
 </div>
-<% include footer %>
+<% include footer.ejs %>
 </body>
 </html>

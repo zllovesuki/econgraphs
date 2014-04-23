@@ -1,13 +1,15 @@
-<html ng-app="econgraphsApp">
-<% include header %>
+<html ng-app="econGraphsApp">
+<% include header.ejs %>
 <body>
-<% include navbar %>
-<div class="container-fluid mainPage" ng-controller="Controller">
+<% include navbar.ejs %>
+<div class="container-fluid mainPage">
 	<h1>EconGraphs</h1>
 	<hr/>
 	<h3><a href="demand">Individual and Market Demand</a></h3>
 	<p>See how various factors shift individual and market demand curves.</p>
+    <h3><a href="indifference">Indifference Curves</a></h3>
+    <p>See how various factors shift individual and market demand curves.</p>
 </div>
-<% include footer %>
+<% include footer.ejs %>
 </body>
 </html>
