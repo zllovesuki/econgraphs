@@ -24,13 +24,13 @@
 
     <p>Since there are {{consumers | number:0}} consumers in the market, the total quantity demanded is <i>Q<sup>D</sup></i> = {{ individualQuantityDemanded | number : 1}} units per consumer x {{consumers | number:0}} consumers = {{ shownQuantityDemanded | number : 0 }} units.</p>
     <p>At the same price, producers in this market supply <i>Q<sup>S</sup></i> = {{shownQuantitySupplied | number:0}} units.</p>
-    <p ng-if="(price < equilibriumPrice)">
+    <p ng-if="shortage">
         Therefore, this relatively low price results in a <b>shortage</b> (excess demand) of {{ shownQuantityDemanded - shownQuantitySupplied | number:0 }} units.
     </p>
-    <p ng-if="(price > equilibriumPrice)">
+    <p ng-if="surplus">
         Therefore, this relatively high price results in a <b>surplus</b> (excess supply) of {{ shownQuantitySupplied - shownQuantityDemanded | number:0 }} units.
     </p>
-    <p ng-if="(price == equilibriumPrice)">
+    <p ng-if="inEquilibrium">
         Because the quantity supplied {{ (shownQuantityDemanded == shownQuantitySupplied) ? "equals" : "is just about equal to" }} the quantity demanded in the market, competitive pressures are unlikely to drive the market price up or down; so we say the market is "in equilibrium."
     </p>
 

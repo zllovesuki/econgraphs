@@ -66,6 +66,12 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
         // Quantity supplied by all firms in the market, as shown in text (multiplied by 1000)
         $scope.shownQuantitySupplied = $scope.quantitySupplied * 1000;
 
+        // Boolean indicating whether the current price results in a surplus
+        $scope.surplus = ($scope.price > $scope.equilibriumPrice());
+
+        // Boolean indicating whether the current price results in a shortage
+        $scope.shortage = ($scope.price < $scope.equilibriumPrice());
+
         // Boolean indicating whether the current price is an equilibrium price
         $scope.inEquilibrium = ($scope.price == $scope.equilibriumPrice());
 
@@ -82,10 +88,12 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
 econGraphsApp.controller('IndifferenceCurvesController',function($scope){
 
     $scope.alpha = 0.5;
-    $scope.u = 5;
+    $scope.x = 5;
+    $scope.y = 5;
 
     $scope.$watch("alpha",function(){ $scope.render() });
-    $scope.$watch("u",function(){ $scope.render() });
+    $scope.$watch("x",function(){ $scope.render() });
+    $scope.$watch("y",function(){ $scope.render() });
 
     $scope.render = function(){
 
@@ -96,7 +104,7 @@ econGraphsApp.controller('IndifferenceCurvesController',function($scope){
             dimensions : {height: 500, width: 500},
             margin : {top: 10, right: 100, bottom: 100, left: 70},
             x_axis : {title: "Units of Good X", min: 0, max: 10, ticks: 10},
-            y_axis : {title: "units of Good Y", min: 0, max: 10, ticks: 10}
+            y_axis : {title: "Units of Good Y", min: 0, max: 10, ticks: 10}
         };
 
         var indifference_curve_graph = createGraph(indifference_curve_graph_data);

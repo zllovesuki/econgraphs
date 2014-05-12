@@ -4,11 +4,13 @@
 
 {% block graph_title %}Indifference Curve Diagram{% endblock %}
 
-{% block graph_description %}
+{% block description %}
 
     {% raw %}
 
-    This graph shows all points such that U(<i>x</i>,<i>y</i>) = <i>x</i><sup>{{alpha | number : 2}}</sup><i>y</i><sup>{{(1 - alpha) | number : 2}}</sup> = {{ u }}
+    <p>This graph shows all points (<i>x</i>, <i>y</i>) such that <i>U</i>(<i>x</i>, <i>y</i>) = U({{ x }}, {{ y }}).</p>
+    <p>In this case, we're using the Cobb-Douglass utility function <i>U</i>(<i>x</i>, <i>y</i>) =  <i>x</i><sup>{{alpha | number : 2}}</sup><i>y</i><sup>{{(1 - alpha) | number : 2}}</sup>.</p>
+    <p>Therefore, the indifference curve shows all points (<i>x</i>, <i>y</i>) such that <i>x</i><sup>{{alpha | number : 2}}</sup><i>y</i><sup>{{(1 - alpha) | number : 2}}</sup> = {{ x }}<sup>{{alpha | number : 2}}</sup>{{ y }}<sup>{{(1 - alpha) | number : 2}}</sup>.</p>
 
     {% endraw %}
 
@@ -19,7 +21,9 @@
     {% raw %}
 
     <p>Preference for good X: {{ alpha | number : 2 }}<input type="range" min="0" max="1" step="0.01" ng-model="alpha"></p>
-				<p>Utility:  {{ u | number : 1 }}<input type="range" min="1" max="9" step="0.1" ng-model="u"></p>
+	<p>Units of good X:  {{ x | number : 1 }}<input type="range" min="1" max="9" step="0.1" ng-model="x"></p>
+    <p>Units of good Y:  {{ y | number : 1 }}<input type="range" min="1" max="9" step="0.1" ng-model="y"></p>
+
 
     {% endraw %}
 

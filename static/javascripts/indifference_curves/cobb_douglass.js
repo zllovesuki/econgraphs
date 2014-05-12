@@ -2,13 +2,14 @@
  * This expects a graph, graph data, and data of the form
  *
  *   {
- *      u : 5,
+ *      x : 5,
+ *      y : 5,
  *      alpha : 0.5
  *   }
  *
- * and draws an indifference curve showing the locus of all points (x,y) such that
+ * and draws an indifference curve showing the locus of all points (x',y') such that
  *
- *      ln U(x,y) = alpha * ln(x) + (1-alpha) * ln(y)
+ *      alpha * ln(x) + (1-alpha) * ln(y) = alpha * ln(x') + (1-alpha) * ln(y')
  *
  */
 
@@ -24,20 +25,18 @@ function otherGood(thisGood,u,alpha) {
     return Math.pow(uOverXtotheAlpha,oneOverOneMinusAlpha);
 }
 
-function drawIndifferenceCurveDim(graph,data) {
-
-}
-
 // Establish general behavioral constants for this graph
 function drawCobbDouglass(graph,data) {
 
     var points = [],
         plotted_x = 0.1,
-        prevent_infinite_loop = 0;
+        prevent_infinite_loop = 0,
+        u = Math.pow(data.x,data.alpha) * Math.pow(data.y,1 - data.alpha);
+
+    drawDot(graph,data.x,data.y,demandColor);
 
     while (graph.x(plotted_x) < graph.width) {
-        console.log('plotted x = ' + plotted_x + ', coordinate = ' + graph.x(plotted_x) + ', graph_width = ' + graph.width);
-        var y = otherGood(plotted_x,data.u,data.alpha);
+        var y = otherGood(plotted_x,u,data.alpha);
         if (graph.y(y) > 0) {
             points.push({ x: graph.x(plotted_x), y: graph.y(y)})
         }
@@ -56,7 +55,7 @@ function drawCobbDouglass(graph,data) {
     prevent_infinite_loop = 0;
     while (graph.y(plotted_y) > 0) {
         console.log('plotted y = ' + plotted_y + ', coordinate = ' + graph.y(plotted_y) + ', graph_height = ' + graph.height);
-        var x = otherGood(plotted_y,data.u,(1 - data.alpha));
+        var x = otherGood(plotted_y,u,(1 - data.alpha));
         if (graph.x(x) < graph.width) {
             points.push({ x: graph.x(x), y: graph.y(plotted_y)})
         }
