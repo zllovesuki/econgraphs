@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html ng-app="econGraphsApp">
 <head>
-    <title>{{ title }}</title>
-	<!--<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <title>EconGraphs</title>
+	<!-- Using local JS for now, these are the CDN's for when we're ready.
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.5/d3.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.0rc3/angular.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.0rc3/angular-route.js"></script>
@@ -60,6 +61,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graphs<b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="demand">Individual and Market Demand</a></li>
+             <li><a href="firm_supply">Firm Costs and Supply</a></li>
              <li><a href="indifference">Indifference Curves</a></li>
              <li class="divider"></li>
             <li><a href="#">More graphs coming soon...</a></li>
@@ -72,13 +74,15 @@
 {% block body %}
 {% endblock %}
 
+<script src="../static/javascripts/angular_app.js"></script>
 <script src="../static/javascripts/graph/graph.js"></script>
+<script src="../static/javascripts/graph/box.js"></script>
 <script src="../static/javascripts/graph/curve.js"></script>
 <script src="../static/javascripts/graph/graph_colors.js"></script>
 <script src="../static/javascripts/graph/dropline.js"></script>
 <script src="../static/javascripts/graph/label.js"></script>
 {% block js %}
 {% endblock %}
-<script src="../static/javascripts/angular_app.js"></script>
+
 </body>
 </html>

@@ -2,6 +2,11 @@
 var supplyColor = "#D67E2C",
     demandColor = "#383D96",
     priceColor = "#CCCCCC",
-    equilibriumColor = "#469449";
+    equilibriumColor = "#469449",
+    atcColor = "#0885A1",
+    avcColor = "#67BDAA",
+    lossColor = "AF363C",
+    profitColor = equilibriumColor;
+
 
     
