@@ -63,7 +63,7 @@ econGraphsApp.controller('FirmSupplyController', function($scope){
         }
 
         // Current average total cost
-        $scope.current_average_total_cost = $scope.average_total_cost($scope.quantity);
+        $scope.current_average_total_cost = $scope.average_total_cost($scope.quantity).round(2);
 
         // Function returning marginal cost of a given quantity (derivative of variable cost)
         $scope.marginal_cost = function(q) {
@@ -83,16 +83,16 @@ econGraphsApp.controller('FirmSupplyController', function($scope){
         $scope.profitOrLossColor = $scope.isProfit ? profitColor : lossColor;
 
         // Per-unit profit
-        $scope.unitProfitOrLoss = Math.abs($scope.price - Math.round($scope.current_average_total_cost))
+        $scope.unitProfitOrLoss = Math.abs($scope.price - $scope.current_average_total_cost)
 
         // Current profit or loss amount
-        $scope.profitOrLoss = $scope.unitProfitOrLoss * $scope.quantity;
+        $scope.profitOrLoss = ($scope.unitProfitOrLoss * $scope.quantity).toFixed(2);
 
         // Boolean of whether the firm is breaking even (profit/loss of less than 1% of cost)
         $scope.isBreakingEven = ($scope.profitOrLoss / $scope.current_total_cost) < 0.01
 
         // Displayed total cost (rounded ATC*q)
-        $scope.displayedTotalCost = Math.round($scope.current_average_total_cost) * $scope.quantity
+        $scope.displayedTotalCost = $scope.current_average_total_cost * $scope.quantity
 
         d3.select('svg').remove();
         d3.select('svg').remove();

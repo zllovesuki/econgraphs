@@ -34,7 +34,7 @@ function drawCostCurveGraph($scope,id) {
     // Indicate quantity supplied
     drawVerticalDropline(graph,$scope.quantity,$scope.price,supplyColor,"supply");
     drawDot(graph,$scope.quantity,$scope.price,priceColor,"supply");
-    drawDot(graph,$scope.quantity,Math.round($scope.current_average_total_cost),atcColor,"supply");
+    drawDot(graph,$scope.quantity,$scope.current_average_total_cost,atcColor,"supply");
     addLabel(graph,$scope.quantity,"axis",'q','s','','axisLabel');
 
     // Add box representing profit/loss unless firm is breaking even

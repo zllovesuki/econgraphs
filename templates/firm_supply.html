@@ -12,7 +12,7 @@
 
     <p>Note that because the firm has a fixed cost of ${{ fixed_cost | number:0 }}, its total cost of producing zero units is ${{ fixed_cost | number:0 }}.</p>
 
-    <p>If the firm produces {{ quantity | number:0 }} units, its total cost is ${{ displayedTotalCost | number:0 }} and its total revenue is ${{ current_total_revenue | number:0 }}. <span ng-if="!isBreakingEven">Therefore, the firm has a {{ profitOrLossLabel.toLowerCase() }} of ${{ profitOrLoss | number:0 }}.</span><span ng-if="isBreakingEven">Therefore, the firm is <span ng-if="profitOrLoss > 0">essentially</span> breaking even.</span></p>
+    <p>If the firm produces {{ quantity | number:0 }} units, its total cost is ${{ displayedTotalCost | number:2 }} and its total revenue is ${{ current_total_revenue | number:2 }}. <span ng-if="!isBreakingEven">Therefore, the firm has a {{ profitOrLossLabel.toLowerCase() }} of ${{ profitOrLoss | number:2 }}.</span><span ng-if="isBreakingEven">Therefore, the firm is <span ng-if="profitOrLoss > 0">essentially</span> breaking even.</span></p>
 
     {% endraw %}
 
@@ -26,7 +26,7 @@
 
     <p>This graph shows the firm's marginal cost (MC), average total cost (ATC), and average variable cost (AVC) curves.</p>
 
-    <p>If the firm produces q<sup>s</sup> = {{ quantity }} units, it can sell each unit for ${{ price }}, and its average total cost of producing each unit is ${{ current_average_total_cost | number:0 }}. <span ng-if="!isBreakingEven">Therefore, the firm makes a {{ profitOrLossLabel.toLowerCase() }} of ${{ unitProfitOrLoss | number: 0 }} on each unit; this is shown as the vertical difference between the horizontal line representing price, and the ATC curve.</span></p>
+    <p>If the firm produces q<sup>s</sup> = {{ quantity }} units, it can sell each unit for ${{ price | number:2 }}, and its average total cost of producing each unit is ${{ current_average_total_cost | number:2 }}. <span ng-if="!isBreakingEven">Therefore, the firm makes a {{ profitOrLossLabel.toLowerCase() }} of ${{ unitProfitOrLoss | number: 2 }} on each unit; this is shown as the vertical difference between the horizontal line representing price, and the ATC curve.</span></p>
 
 
     <p ng-if="!isBreakingEven">Its total {{ profitOrLossLabel.toLowerCase() }} is this amount multiplied by the quantity, which can be seen visually as the box labeled "{{ profitOrLossLabel}}.:"</p>
