@@ -37,9 +37,7 @@ function drawCobbDouglass(graph,data) {
 
     while (graph.x(plotted_x) < graph.width) {
         var y = otherGood(plotted_x,u,data.alpha);
-        if (graph.y(y) > 0) {
-            points.push({ x: graph.x(plotted_x), y: graph.y(y)})
-        }
+        points = addPointToCurve(points,plotted_x,y,graph)
         plotted_x += 0.1;
         if (prevent_infinite_loop > 1000) {console.log('needed to break loop on x dimension'); break;}
         prevent_infinite_loop++
@@ -56,9 +54,7 @@ function drawCobbDouglass(graph,data) {
     while (graph.y(plotted_y) > 0) {
         console.log('plotted y = ' + plotted_y + ', coordinate = ' + graph.y(plotted_y) + ', graph_height = ' + graph.height);
         var x = otherGood(plotted_y,u,(1 - data.alpha));
-        if (graph.x(x) < graph.width) {
-            points.push({ x: graph.x(x), y: graph.y(plotted_y)})
-        }
+        points = addPointToCurve(points,x,plotted_y,graph)
         plotted_y += 0.1;
         if (prevent_infinite_loop > 1000) {console.log('needed to break loop on y dimension'); break;}
         prevent_infinite_loop++
