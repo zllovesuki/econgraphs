@@ -11,18 +11,21 @@ function drawTotalCostAndRevenueGraph($scope,id) {
     var graph = createGraph(cost_curve_graph_data),
         tc_curve_points = [],
         tr_curve_points = [],
+        vc_curve_points = [],
         minQuantity = 0,
         maxQuantity = 95;
 
     // Generate points for three curves
     for(var q = maxQuantity; q >= minQuantity; q -= 0.5) {
         addPointToCurve(tc_curve_points,q,$scope.total_cost(q),graph);
+        addPointToCurve(vc_curve_points,q,$scope.variable_cost(q),graph);
         addPointToCurve(tr_curve_points,q,$scope.total_revenue(q),graph);
     }
 
     // Draw curves
     drawCurve(graph,tr_curve_points,0,priceColor,"TR");
-    drawCurve(graph,tc_curve_points,0,atcColor,"TC");
+    if($scope.showVariableCosts) {drawCurve(graph,vc_curve_points,6,avcColor,"VC")}
+    drawCurve(graph,tc_curve_points,-6,atcColor,"TC");
 
     // Indicate quantity supplied
     drawVerticalDropline(graph,$scope.quantity,Math.min($scope.current_total_revenue,$scope.current_total_cost),supplyColor,"TC");
