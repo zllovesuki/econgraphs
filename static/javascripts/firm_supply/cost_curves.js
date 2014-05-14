@@ -24,8 +24,8 @@ function drawCostCurveGraph($scope,id) {
 
     // Draw curves
     drawCurve(graph,mc_curve_points,0,supplyColor,"MC");
-    drawCurve(graph,atc_curve_points,-5,atcColor,"ATC");
-    drawCurve(graph,avc_curve_points,5,avcColor,"AVC");
+    drawCurve(graph,atc_curve_points,-6,atcColor,"ATC");
+    if($scope.showVariableCosts) {drawCurve(graph,avc_curve_points,6,avcColor,"AVC")}
 
     // Indicate price
     drawHorizontalDropline(graph,"max",$scope.price,priceColor,"price");
@@ -34,10 +34,10 @@ function drawCostCurveGraph($scope,id) {
     // Indicate quantity supplied
     drawVerticalDropline(graph,$scope.quantity,$scope.price,supplyColor,"supply");
     drawDot(graph,$scope.quantity,$scope.price,priceColor,"supply");
-    drawDot(graph,$scope.quantity,$scope.current_average_total_cost,atcColor,"supply");
+    if ($scope.quantity > 0) {drawDot(graph,$scope.quantity,$scope.current_average_total_cost,atcColor,"supply")}
     addLabel(graph,$scope.quantity,"axis",'q','s','','axisLabel');
 
-    // Add box representing profit/loss unless firm is breaking even
-    if(!$scope.isBreakingEven) {drawBox(graph,0,$scope.price,$scope.quantity,$scope.current_average_total_cost,$scope.profitOrLossColor,$scope.profitOrLossLabel)}
+    // Add box representing profit/loss unless firm is breaking even or shut down
+    if(!$scope.isBreakingEven && $scope.quantity > 0) {drawBox(graph,0,$scope.price,$scope.quantity,$scope.current_average_total_cost,$scope.profitOrLossColor,$scope.profitOrLossLabel)}
 
 }

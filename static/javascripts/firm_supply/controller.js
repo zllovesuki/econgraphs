@@ -9,6 +9,9 @@ econGraphsApp.controller('FirmSupplyController', function($scope){
     $scope.fixed_cost = 500;
     $scope.marginal_cost_parameter = 20; // see definition of cost function below
 
+    $scope.snapToOptimalQuantity = false;
+    $scope.showVariableCosts = false;
+
     $scope.linear_vc = 35;
     $scope.tertiary_vc = 0.01;
 
@@ -17,6 +20,8 @@ econGraphsApp.controller('FirmSupplyController', function($scope){
     $scope.$watch("price",function(){ $scope.render() });
     $scope.$watch("quantity",function(){ $scope.render() });
     $scope.$watch("fixed_cost",function(){ $scope.render() });
+    $scope.$watch("snapToOptimalQuantity",function(){ $scope.render() });
+    $scope.$watch("showVariableCosts",function(){ $scope.render() });
     $scope.$watch("marginal_cost_parameter",function(){ $scope.render() });
 
     $scope.render = function(){
@@ -93,6 +98,20 @@ econGraphsApp.controller('FirmSupplyController', function($scope){
 
         // Displayed total cost (rounded ATC*q)
         $scope.displayedTotalCost = $scope.current_average_total_cost * $scope.quantity
+
+        $scope.optimal_quantity = function() {
+            var q = 1;
+            while ($scope.marginal_cost(q) > $scope.marginal_cost(q + 1)) {q ++} // increase quantity as long as MC is decreasing
+            while ($scope.marginal_cost(q) < $scope.price) {q++} // increase quantity as long as MC < P
+            if ($scope.average_variable_cost(q) > $scope.price) { return 0 } // shut down if P < AVC
+            return q;
+        }
+
+        if($scope.snapToOptimalQuantity) {
+            $scope.quantity = $scope.optimal_quantity();
+        }
+
+        $scope.isShutDown = ($scope.quantity == 0)
 
         d3.select('svg').remove();
         d3.select('svg').remove();
