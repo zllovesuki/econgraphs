@@ -21,7 +21,7 @@ function drawIndividualDemandGraph($scope,id) {
     }
 
     // Draw demand curve
-    drawCurve(graph,points,label_delta,demandColor,"demand");
+    drawCurve(graph,points,label_delta,demandColor,"d");
 
     // Indicate price
     drawHorizontalDropline(graph,"max",$scope.price,priceColor,"price");

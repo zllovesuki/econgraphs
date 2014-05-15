@@ -1,0 +1,66 @@
+{% extends 'two_graph_layout.html' %}
+
+{% block controller %}CostCurvesController{% endblock %}
+
+{% block left_title %}Total Cost and Total Revenue{% endblock %}
+
+{% block left_description %}
+
+{% raw %}
+
+<p>This graph shows the total cost (TC) and total revenue (TR) for a firm if it produces different quantities of output.</p>
+
+<p>Note that because the firm has a fixed cost of ${{ firmSupplyParams.fixed_cost | number:0 }}, its total cost of producing zero units is ${{ firmSupplyParams.fixed_cost | number:0 }}.</p>
+
+<p ng-if="!isShutDown">If the firm produces {{ firmSupplyParams.quantity | number:0 }} units, its total cost is ${{ displayedTotalCost | number:2 }} and its total revenue is ${{ current_total_revenue | number:2 }}. <span ng-if="!isBreakingEven">Therefore, the firm has a {{ profitOrLossLabel.toLowerCase() }} of ${{ profitOrLoss | number:2 }}.</span><span ng-if="isBreakingEven">Therefore, the firm is <span ng-if="profitOrLoss > 0">essentially</span> breaking even.</span></p>
+
+<p ng-if="(isShutDown && snapToOptimalQuantity)">At a price of ${{ marketParams.price }}, the firm will choose to produce zero units, because the price is so low that the firm would lose more money by producing at all than by producing zero units (and paying its fixed costs). <span ng-if="showVariableCosts">(You can see this because the TR curve is always below the VC curve.)</span></p>
+
+{% endraw %}
+
+{% endblock %}
+
+{% block right_title %}Marginal and Average Costs{% endblock %}
+
+{% block right_description %}
+
+{% raw %}
+
+<p>This graph shows the firm's marginal cost (MC), average total cost (ATC), and average variable cost (AVC) curves.</p>
+
+<p ng-if="!isShutDown">If the firm produces q<sup>s</sup> = {{ firmSupplyParams.quantity }} units, it can sell each unit for ${{ marketParams.price | number:2 }}, and its average total cost of producing each unit is ${{ current_average_total_cost | number:2 }}. <span ng-if="!isBreakingEven">Therefore, the firm makes a {{ profitOrLossLabel.toLowerCase() }} of ${{ unitProfitOrLoss | number: 2 }} on each unit; this is shown as the vertical difference between the horizontal line representing price, and the ATC curve.</span></p>
+
+
+<p ng-if="!isBreakingEven">Its total {{ profitOrLossLabel.toLowerCase() }} is this amount multiplied by the quantity, which can be seen visually as the box labeled "{{ profitOrLossLabel }}."</p>
+
+<p ng-if="(isShutDown && showVariableCosts)">Again, because the price is so low, the AVC curve is always above the price curve, meaning that the firm cannot sell its product for an amount above the average variable cost of producing it; therefore the firm will "shut down" (produce zero units).</p>
+
+{% endraw %}
+
+{% endblock %}
+
+{% block controls %}
+
+{% raw %}
+
+<p>Fixed cost: {{ firmSupplyParams.fixed_cost }}<input type="range" min="0" max="1000" step="10" ng-model="firmSupplyParams.fixed_cost"></p>
+<p>Marginal cost level*:<input type="range" min="0" max="100" step="1" ng-model="firmSupplyParams.marginal_cost_parameter"></p>
+<p>Market price:  {{ marketParams.price }}<input type="range" min="5" max="55" step="1" ng-model="marketParams.price"></p>
+<p>Quantity supplied:  {{ firmSupplyParams.quantity }}<input type="range" min="5" max="95" step="1" ng-model="firmSupplyParams.quantity"></p>
+<hr/>
+<h6>OPTIONS</h6>
+<p><input type="checkbox" ng-model="displayOptions.snapToOptimalQuantity"> Set to optimal quantity</p>
+<p><input type="checkbox" ng-model="displayOptions.showVariableCosts"> Show VC and AVC curves</p>
+<hr/>
+<p>* This is a parameter that controls how quickly diminishing marginal returns occur in the production process; the effect of increasing this parameter is, generally speaking, to increase the marginal cost of producing each additional unit.</p>
+{% endraw %}
+
+{% endblock %}
+
+{% block js %}
+
+<script src="../static/javascripts/cost_curves/total_costs.js"></script>
+<script src="../static/javascripts/cost_curves/marginal_and_average_costs.js"></script>
+<script src="../static/javascripts/cost_curves/controller.js"></script>
+
+{% endblock %}
