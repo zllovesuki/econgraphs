@@ -2,11 +2,14 @@ function drawTotalCostAndRevenueGraph($scope,id) {
 
     var cost_curve_graph_data = {
         id : id,
-        dimensions : {height: 500, width: 500},
-        margin : {top: 10, right: 100, bottom: 100, left: 70},
+        dimensions : {height: 500, width: $("#" + id).width()},
+        margin : {top: 10, right: 50, bottom: 100, left: 70},
         x_axis : {title: "Quantity Produced (Units)", min: 0, max: 100, ticks: 10},
         y_axis : {title: "Total Cost and Revenue (Dollars)", min: 0, max: 5000, ticks: 10}
     };
+    
+    var quantity = $scope.firmSupplyParams.quantity,
+        showVC = $scope.displayOptions.showVariableCosts;
 
     var graph = createGraph(cost_curve_graph_data),
         tc_curve_points = [],
@@ -24,16 +27,16 @@ function drawTotalCostAndRevenueGraph($scope,id) {
 
     // Draw curves
     drawCurve(graph,tr_curve_points,0,priceColor,"TR");
-    if($scope.showVariableCosts) {drawCurve(graph,vc_curve_points,6,avcColor,"VC")}
+    if(showVC) {drawCurve(graph,vc_curve_points,6,avcColor,"VC")}
     drawCurve(graph,tc_curve_points,-6,atcColor,"TC");
 
     // Indicate quantity supplied
-    drawVerticalDropline(graph,$scope.quantity,Math.min($scope.current_total_revenue,$scope.current_total_cost),supplyColor,"TC");
-    drawDot(graph,$scope.quantity,$scope.current_total_revenue,priceColor,"TR");
-    drawDot(graph,$scope.quantity,$scope.current_total_cost,atcColor,"TC");
-    addLabel(graph,$scope.quantity,"axis",'q','s','','axisLabel');
+    drawVerticalDropline(graph,quantity,Math.min($scope.current_total_revenue,$scope.current_total_cost),supplyColor,"TC");
+    drawDot(graph,quantity,$scope.current_total_revenue,priceColor,"TR");
+    drawDot(graph,quantity,$scope.current_total_cost,atcColor,"TC");
+    addLabel(graph,quantity,"axis",'q','s','','axisLabel');
 
     // Indicate profit or loss if the firm isn't breaking even
-    if(!$scope.isBreakingEven) {drawSegment(graph,$scope.quantity,$scope.current_total_revenue,$scope.quantity,$scope.current_total_cost,profitColor,"profit",$scope.profitOrLossLabel,5,5,"Start")}
+    if(!$scope.isBreakingEven) {drawSegment(graph,quantity,$scope.current_total_revenue,quantity,$scope.current_total_cost,profitColor,"profit",$scope.profitOrLossLabel,5,5,"Start")}
 
 }

@@ -27,8 +27,17 @@ function createGraph(graph_data) {
     var graph_width, graph_height, x, y, vis;
 
     // The width and height of the drawn graph are the width and height of the alloted space, minus the margins.
-    graph_width = graph_data.dimensions.width - graph_data.margin.left - graph_data.margin.right;
+    graph_width = $("#" + graph_data.id).width() - graph_data.margin.left - graph_data.margin.right;
     graph_height = graph_data.dimensions.height - graph_data.margin.top - graph_data.margin.bottom;
+    graph_x_ticks = function() {
+        if (graph_width > 600) {
+            return 20;
+        } else if (graph_width < 250) {
+            return 5;
+        } else {
+            return 10;
+        }
+    }
 
     // Create the D3 scales for the x and y dimensions
     x = d3.scale.linear()
@@ -41,7 +50,7 @@ function createGraph(graph_data) {
     // Create the D3 visualization object
     vis = d3.select("#" + graph_data.id)
             .append("svg")
-                .attr("width", graph_data.dimensions.width)
+                .attr("width", $("#" + graph_data.id).width())
                 .attr("height", graph_data.dimensions.height)
                     .append("g")
                         .attr("transform", "translate(" + graph_data.margin.left + "," + graph_data.margin.top + ")");
@@ -50,7 +59,7 @@ function createGraph(graph_data) {
     vis.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + graph_height + ")")
-        .call(d3.svg.axis().scale(x).orient("bottom"))
+        .call(d3.svg.axis().scale(x).orient("bottom").ticks(graph_x_ticks()))
 
         // Label x axis
         .append("text")

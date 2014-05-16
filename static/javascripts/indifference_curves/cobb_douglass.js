@@ -26,24 +26,27 @@ function otherGood(thisGood,u,alpha) {
 }
 
 // Establish general behavioral constants for this graph
-function drawCobbDouglass(graph,data) {
+function drawCobbDouglass(graph,$scope) {
+
+    var allocation = $scope.allocation,
+        alpha = $scope.utilityParams.alpha;
 
     var points = [],
         plotted_x = 0.1,
         prevent_infinite_loop = 0,
-        u = Math.pow(data.x,data.alpha) * Math.pow(data.y,1 - data.alpha);
+        u = Math.pow(allocation.x,alpha) * Math.pow(allocation.y,1 - alpha);
 
-    drawDot(graph,data.x,data.y,demandColor);
+    drawDot(graph,allocation.x,allocation.y,demandColor);
 
     while (graph.x(plotted_x) < graph.width) {
-        var y = otherGood(plotted_x,u,data.alpha);
-        points = addPointToCurve(points,plotted_x,y,graph)
+        var calculated_y = otherGood(plotted_x,u,alpha);
+        points = addPointToCurve(points,plotted_x,calculated_y,graph)
         plotted_x += 0.1;
         if (prevent_infinite_loop > 1000) {console.log('needed to break loop on x dimension'); break;}
         prevent_infinite_loop++
     }
 
-    if(data.alpha < 1) {
+    if(alpha < 1) {
         drawCurve(graph, points.reverse(), 15, demandColor, "U");
     }
 
@@ -53,14 +56,14 @@ function drawCobbDouglass(graph,data) {
     prevent_infinite_loop = 0;
     while (graph.y(plotted_y) > 0) {
         console.log('plotted y = ' + plotted_y + ', coordinate = ' + graph.y(plotted_y) + ', graph_height = ' + graph.height);
-        var x = otherGood(plotted_y,u,(1 - data.alpha));
-        points = addPointToCurve(points,x,plotted_y,graph)
+        var calculated_x = otherGood(plotted_y,u,(1 - alpha));
+        points = addPointToCurve(points,calculated_x,plotted_y,graph)
         plotted_y += 0.1;
         if (prevent_infinite_loop > 1000) {console.log('needed to break loop on y dimension'); break;}
         prevent_infinite_loop++
     }
 
-    if(data.alpha > 0) {
+    if(alpha > 0) {
         drawCurve(graph, points, 15, demandColor, "");
     }
 

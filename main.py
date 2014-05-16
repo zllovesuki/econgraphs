@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, redirect
 
 app = Flask(__name__)
 
@@ -10,7 +10,10 @@ def index():
 
 @app.route('/<page_name>')
 def page(page_name):
-    return render_template(page_name + '.html', title=page_name)
+    try:
+        return render_template(page_name + '.html', title=page_name)
+    except:
+        return redirect('/')
 
 app.debug = True
 

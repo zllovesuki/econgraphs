@@ -1,0 +1,41 @@
+{% extends 'one_graph_layout.html' %}
+
+{% block controller %}SupplyAndDemandController{% endblock %}
+
+{% block graph_title %}Market Supply and Demand{% endblock %}
+
+{% block description %}
+
+    {% raw %}
+
+    <p>Description will go here. Price is </p>
+    {% endraw %}
+
+{% endblock %}
+
+{% block controls %}
+
+    {% raw %}
+
+
+    <p>Price: ${{ marketParams.price | number:2 }} per unit<input type="range" min="10" max="50" step="0.05" ng-model="marketParams.price"></p>
+    <p>Tax: ${{ marketParams.tax | number:2 }} per unit<input type="range" min="0" max="20" step="0.05" ng-model="marketParams.tax"></p>
+    <p>Demand level:  {{ demandParams.level | number : 0 }}<input type="range" min="10" max="90" step="1" ng-model="demandParams.level"></p>
+    <p>Demand elasticity:  {{ demandParams.elasticity | number : 2 }}<input type="range" min="1" max="100" step="1" ng-model="elasticityControls.demand"></p>
+    <p>Supply level:  {{ supplyParams.level | number : 0 }}<input type="range" min="10" max="90" step="1" ng-model="supplyParams.level"></p>
+    <p>Supply elasticity:  {{ supplyParams.elasticity | number : 2 }}<input type="range" min="1" max="100" step="1" ng-model="elasticityControls.supply"></p>
+    <hr/>
+    <h6>OPTIONS</h6>
+    <p><input type="checkbox" ng-model="displayOptions.snapToEquilibriumPrice"> Set price to equilibrium</p>
+
+
+    {% endraw %}
+
+{% endblock %}
+
+{% block js %}
+
+    <script src="../static/javascripts/supply_and_demand/market.js"></script>
+    <script src="../static/javascripts/supply_and_demand/controller.js"></script>
+
+{% endblock %}

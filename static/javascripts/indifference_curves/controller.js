@@ -4,13 +4,18 @@
 
 econGraphsApp.controller('IndifferenceCurvesController',function($scope){
 
-    $scope.alpha = 0.5;
-    $scope.x = 5;
-    $scope.y = 5;
+    $scope.utilityParams = {
+        alpha : 0.5
+    };
 
-    $scope.$watch("alpha",function(){ $scope.render() });
-    $scope.$watch("x",function(){ $scope.render() });
-    $scope.$watch("y",function(){ $scope.render() });
+    $scope.allocation = {
+        x : 5,
+        y : 5
+    };
+
+    $scope.$watchCollection("utilityParams",function(){ $scope.render() });
+    $scope.$watchCollection("allocation",function(){ $scope.render() });
+    window.onresize = function() { $scope.render()};
 
     $scope.render = function(){
 
