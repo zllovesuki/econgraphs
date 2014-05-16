@@ -44,37 +44,46 @@ function drawMarketGraph($scope,id) {
         }
         drawHorizontalDropline(graph,"max",price,equilibriumColor,"price");
 
-
         // Indicate equilibrium quantity
         drawVerticalDropline(graph,$scope.quantityDemanded,price_consumers_pay,equilibriumColor,"demand");
         drawDot(graph,$scope.quantityDemanded,price_consumers_pay,equilibriumColor,"demand");
         drawDot(graph,$scope.quantityDemanded,price,equilibriumColor,"supply");
         addLabel(graph,$scope.quantityDemanded,"axis",'Q','*','','axisLabel');
 
-    } else if($scope.equilibriumInRange) {
+    } else {
+
+        show_demand_point = (price_consumers_pay >= $scope.minPrice && price_consumers_pay <= $scope.maxPrice);
+        show_supply_point = (price >= $scope.minPrice && price <= $scope.maxPrice)
 
         // Indicate price
         drawHorizontalDropline(graph,"max",price,priceColor,"price");
         addLabel(graph,"axis",price,'P','','',"axisLabel");
 
-        // Indicate price consumers pay, if tax > 0
-        if($scope.marketParams.tax > 0) {
+        // Indicate price consumers pay, if tax > 0 and in range
+        if($scope.marketParams.tax > 0 && show_demand_point) {
             drawHorizontalDropline(graph,"max",price_consumers_pay,priceColor,"price");
             addLabel(graph,"axis",price_consumers_pay,'P','C','',"axisLabel");
         }
 
-        // Indicate quantity demanded
-        drawVerticalDropline(graph,$scope.quantityDemanded,price_consumers_pay,demandColor,"demand");
-        drawDot(graph,$scope.quantityDemanded,price_consumers_pay,demandColor,"demand");
-        addLabel(graph,$scope.quantityDemanded,"axis",'Q','D','','axisLabel');
+        // Indicate quantity demanded if in range
+        if(show_demand_point) {
+            drawVerticalDropline(graph,$scope.quantityDemanded,price_consumers_pay,demandColor,"demand");
+            drawDot(graph,$scope.quantityDemanded,price_consumers_pay,demandColor,"demand");
+            addLabel(graph,$scope.quantityDemanded,"axis",'Q','D','','axisLabel');
+        }
 
-        // Indicate quantity supplied
-        drawVerticalDropline(graph,$scope.quantitySupplied,price,supplyColor,"supply");
-        drawDot(graph,$scope.quantitySupplied,price,supplyColor,"supply");
-        addLabel(graph,$scope.quantitySupplied,"axis",'Q','S','','axisLabel');
+        // Indicate quantity supplied if in range
+        if(show_supply_point) {
+            drawVerticalDropline(graph,$scope.quantitySupplied,price,supplyColor,"supply");
+            drawDot(graph,$scope.quantitySupplied,price,supplyColor,"supply");
+            addLabel(graph,$scope.quantitySupplied,"axis",'Q','S','','axisLabel');
+        }
 
-        // Indicate shortage or surplus
-        drawSegment(graph,$scope.quantitySupplied,3,$scope.quantityDemanded,3,priceColor,"surplusOrShortage",($scope.surplus? "Surplus" : "Shortage"),0,15,"Middle")
+
+        // Indicate shortage or surplus if both supply and demand points are in range
+        if(show_demand_point && show_supply_point) {
+            drawSegment(graph,$scope.quantitySupplied,3,$scope.quantityDemanded,3,priceColor,"surplusOrShortage",($scope.surplus? "Surplus" : "Shortage"),0,15,"Middle")
+        }
 
     }
 

@@ -27,6 +27,7 @@ econGraphsApp.controller('IndividualAndMarketDemandController', function($scope)
     $scope.$watch("consumers",function(){ $scope.render() });
     $scope.$watch("income",function(){ $scope.render() });
     $scope.$watch("alpha",function(){ $scope.render() });
+    window.onresize = function() { $scope.render()};
 
     $scope.render = function(){
 

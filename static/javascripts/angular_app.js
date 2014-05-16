@@ -5,4 +5,4 @@ econGraphsApp.controller('Controller', function($scope){
 
     $scope.quantitativeAnalysis = true;
 
-});
+   });

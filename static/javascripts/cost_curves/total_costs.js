@@ -2,8 +2,8 @@ function drawTotalCostAndRevenueGraph($scope,id) {
 
     var cost_curve_graph_data = {
         id : id,
-        dimensions : {height: 500, width: 500},
-        margin : {top: 10, right: 100, bottom: 100, left: 70},
+        dimensions : {height: 500, width: $("#" + id).width()},
+        margin : {top: 10, right: 50, bottom: 100, left: 70},
         x_axis : {title: "Quantity Produced (Units)", min: 0, max: 100, ticks: 10},
         y_axis : {title: "Total Cost and Revenue (Dollars)", min: 0, max: 5000, ticks: 10}
     };

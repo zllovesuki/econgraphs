@@ -15,6 +15,7 @@ econGraphsApp.controller('IndifferenceCurvesController',function($scope){
 
     $scope.$watchCollection("utilityParams",function(){ $scope.render() });
     $scope.$watchCollection("allocation",function(){ $scope.render() });
+    window.onresize = function() { $scope.render()};
 
     $scope.render = function(){
 

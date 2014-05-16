@@ -26,6 +26,7 @@ econGraphsApp.controller('CostCurvesController', function($scope){
     $scope.$watchCollection("marketParams",function(){ $scope.render() });
     $scope.$watchCollection("firmSupplyParams",function(){ $scope.render() });
     $scope.$watchCollection("displayOptions",function(){ $scope.render() });
+    window.onresize = function() { $scope.render()};
 
     $scope.render = function(){
 

@@ -57,11 +57,9 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
     $scope.equilibriumPrice = function() {
 
         var p = $scope.minPrice;
-        $scope.equilibriumInRange = true;
 
         // Return immediately if the lowest price in range causes a surplus
         if ($scope.surplusAtPrice(p) > 0) {
-            $scope.equilibriumInRange = false;
             return null;
         }
 
@@ -74,7 +72,6 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
                 p+=0.01;
             }
         }
-        $scope.equilibriumInRange = false;
         return null;
 
     };
@@ -91,6 +88,7 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
     $scope.$watchCollection("marketParams",function(){ $scope.render() });
     $scope.$watchCollection("demandParams",function(){ $scope.render() });
     $scope.$watchCollection("supplyParams",function(){ $scope.render() });
+    window.onresize = function() { $scope.render()};
 
     $scope.render = function(){
 
@@ -109,7 +107,7 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
         $scope.shortage = $scope.surplusAtPrice($scope.marketParams.price) < 0 && !$scope.inEquilibrium;
 
         // Boolean indicating whether the current price is an equilibrium price
-        $scope.inEquilibrium = ((Math.abs(($scope.marketParams.price - $scope.equilibriumPrice())/$scope.equilibriumPrice()) < 0.01) && $scope.equilibriumInRange);
+        $scope.inEquilibrium = (Math.abs(($scope.marketParams.price - $scope.equilibriumPrice())/$scope.equilibriumPrice()) < 0.01);
 
 
         d3.select('svg').remove();
