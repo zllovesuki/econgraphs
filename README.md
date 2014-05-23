@@ -32,7 +32,11 @@ See [the development server documentation](https://developers.google.com/appengi
 for options when running dev_appserver.
 
 ## Licensing
-See [LICENSE](LICENSE)
+EconGraphs is published under the [MIT License](LICENSE).
+
+The MIT License is simple and easy to understand and it places almost no restrictions on what you can do with a jQuery project.
+
+You are free to use code from EconGraphs in any other project (even commercial projects) as long as the copyright header is left intact.
 
 ## Author
 Christopher Makler
