@@ -1,3 +1,5 @@
 .idea
 .idea/econgraphs.iml
 .idea/workspace.xml
+
+.idea/libraries/Google_App_Engine_SDK.xml
