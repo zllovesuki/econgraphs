@@ -10,7 +10,7 @@ function drawIndividualDemandGraph($scope,id) {
 
     var graph = createGraph(individual_demand_graph_data),
         domain = {y: true, min: 5, max: 55, step: 0.25},
-        range = {min: 1, max: 19},
+        range = {min: 0, max: 20},
         label = {text: "d", delta: 15};
 
     // Draw market demand curve
