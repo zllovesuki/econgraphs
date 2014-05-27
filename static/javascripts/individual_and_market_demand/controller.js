@@ -4,9 +4,6 @@
 
 econGraphsApp.controller('IndividualAndMarketDemandController', function($scope){
 
-    $scope.minPrice = 5;
-    $scope.maxPrice = 55;
-
     $scope.price = 20;
     $scope.consumers = 4000;
     $scope.income = 400;

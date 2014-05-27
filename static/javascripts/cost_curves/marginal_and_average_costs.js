@@ -14,23 +14,16 @@ function drawCostCurveGraph($scope,id) {
     var showVC = $scope.displayOptions.showVariableCosts;
 
     var graph = createGraph(cost_curve_graph_data),
-        mc_curve_points = [],
-        atc_curve_points = [],
-        avc_curve_points = [],
-        minQuantity = 5,
-        maxQuantity = 95;
-
-    // Generate points for three curves
-    for(var q = maxQuantity; q >= minQuantity; q -= 0.5) {
-        addPointToCurve(mc_curve_points,q,$scope.marginal_cost(q),graph);
-        addPointToCurve(atc_curve_points,q,$scope.average_total_cost(q),graph);
-        addPointToCurve(avc_curve_points,q,$scope.average_variable_cost(q),graph);
-    }
+        domain = {min: 5, max: 95, step: 1},
+        range = {min: 0, max: 60},
+        mc_label = {text: "MC", delta: 0, reverse: true},
+        avc_label = {text: "AVC", delta: 6, reverse: true},
+        atc_label = {text: "ATC", delta: -6, reverse: true};
 
     // Draw curves
-    drawCurve(graph,mc_curve_points,0,supplyColor,"MC");
-    drawCurve(graph,atc_curve_points,-6,atcColor,"ATC");
-    if(showVC) {drawCurve(graph,avc_curve_points,6,avcColor,"AVC")}
+    drawFunction($scope.marginal_cost,domain,range,graph,supplyColor,mc_label);
+    drawFunction($scope.average_total_cost,domain,range,graph,atcColor,atc_label);
+    if(showVC) {drawFunction($scope.average_variable_cost,domain,range,graph,avcColor,avc_label)};
 
     // Indicate price
     drawHorizontalDropline(graph,"max",price,priceColor,"price");

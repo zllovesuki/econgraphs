@@ -13,23 +13,14 @@ function drawMarketGraph($scope,id) {
         price_firms_receive = $scope.price_firms_receive(price)
 
     var graph = createGraph(market_graph_data),
-        label_delta = 15,
-        demandPoints = [],
-        supplyPoints = [];
-
-    // Generate points for demand and supply curves
-    for(var p = $scope.minPrice; p <= $scope.maxPrice; p += 0.25) {
-
-        var qd = $scope.quantityDemandedAtPrice(p);
-        if (graph.x(qd) <= graph.width) { demandPoints.push({ x : graph.x(qd),y : graph.y(p)}) }
-
-        var qs = $scope.quantitySuppliedAtPrice(p);
-        if (graph.x(qs) <= graph.width) { supplyPoints.push({ x : graph.x(qs),y : graph.y(p)}) }
-    }
+        domain = {y: true, min: 5, max: 55, step: 0.25},
+        range = {min: 5, max: 195},
+        supplyLabel = {text: "S", reverse: true, delta: 15},
+        demandLabel = {text: "D", delta: 15};
 
     // Draw demand and supply curves
-    drawCurve(graph,demandPoints,label_delta,demandColor,"D");
-    drawCurve(graph,supplyPoints.reverse(),label_delta,supplyColor,"S");
+    drawFunction($scope.quantityDemandedAtPrice,domain,range,graph,demandColor,demandLabel);
+    drawFunction($scope.quantitySuppliedAtPrice,domain,range,graph,supplyColor,supplyLabel);
 
     if($scope.inEquilibrium) {
 
@@ -52,8 +43,8 @@ function drawMarketGraph($scope,id) {
 
     } else {
 
-        show_demand_point = (price_consumers_pay >= $scope.minPrice && price_consumers_pay <= $scope.maxPrice);
-        show_supply_point = (price >= $scope.minPrice && price <= $scope.maxPrice)
+        var show_demand_point = (price_consumers_pay >= domain.min && price_consumers_pay <= domain.max),
+            show_supply_point = (price >= domain.min && price <= domain.max);
 
         // Indicate price
         drawHorizontalDropline(graph,"max",price,priceColor,"price");

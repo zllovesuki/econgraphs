@@ -1,13 +1,23 @@
-function addPointToCurve(curve,x,y,graph) {
-    if (graph.y(y) <= graph.height && graph.y(y) >= 0 && graph.x(x) >= 0 && graph.x(x) <= graph.width) {
-        curve.push({ x : graph.x(x),y : graph.y(y)})
+function drawFunction(function_name,domain,range,graph,color,label) {
+    var curve = [];
+    for(var ind = domain.min; ind <= domain.max; ind += domain.step) {
+        var dep = function_name(ind);
+        if(dep >= range.min && dep <= range.max) {
+            if(domain.y) {
+                curve.push({ x : graph.x(dep),y : graph.y(ind)})
+            } else {
+                curve.push({ x : graph.x(ind),y : graph.y(dep)})
+            }
+        }
     }
-    return curve;
+    if(label.reverse) { curve = curve.reverse() }
+    drawCurve(graph,curve,label.delta,color,label.text)
 }
 
 var curveFunction = d3.svg.line()
     .x(function(d) {return d.x;}).y(function(d) {return d.y;}).interpolate("linear");
 
+// Draw the curve and label it
 function drawCurve(graph,points,label_delta,color,label) {
 
     if(points.length == 0) {
