@@ -1,8 +1,5 @@
 econGraphsApp.controller('SupplyAndDemandController', function($scope){
 
-    $scope.minPrice = 5;
-    $scope.maxPrice = 55;
-
     $scope.displayOptions = {
         snapToEquilibriumPrice : false
     }
@@ -56,7 +53,7 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
     // Maximum price at which quantity demanded is greater than or equal to quantity supplied
     $scope.equilibriumPrice = function() {
 
-        var p = $scope.minPrice;
+        var p = 5;
 
         // Return immediately if the lowest price in range causes a surplus
         if ($scope.surplusAtPrice(p) > 0) {
@@ -64,7 +61,7 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
         }
 
         // Increase price until the next highest price causes a surplus
-        while(p <= $scope.maxPrice) {
+        while(p <= 55) {
             if ($scope.surplusAtPrice(p + 0.01) > 0)
             {
                 return p;

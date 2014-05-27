@@ -9,28 +9,23 @@ function drawMarketGraph($scope,id) {
     };
 
     var graph = createGraph(market_graph_data),
-        label_delta = 15,
-        demandPoints = [];
-
-    // Generate points for demand and supply curves
-    for(var p = $scope.minPrice; p <= $scope.maxPrice; p += 0.25) {
-
-        var qd = $scope.quantityDemandedAtPrice(p);
-        if (graph.x(qd) <= graph.width) { demandPoints.push({ x : graph.x(qd),y : graph.y(p)}) }
-
-    }
+        domain = {y: true, min: 5, max: 55, step: 0.25},
+        range = {min: 5, max: 95},
+        label = {text: "D", delta: 15};
 
     // Draw market demand curve
-    drawCurve(graph,demandPoints,label_delta,demandColor,"D");
+    drawFunction($scope.quantityDemandedAtPrice,domain,range,graph,demandColor,label);
 
     // Indicate price
     drawHorizontalDropline(graph,"max",$scope.price,priceColor,"price");
     addLabel(graph,"axis",$scope.price,'P','','',"axisLabel");
 
-    // Indicate quantity demanded
-    drawVerticalDropline(graph,$scope.quantityDemanded,$scope.price,demandColor,"demand");
-    drawDot(graph,$scope.quantityDemanded,$scope.price,demandColor,"demand");
-    addLabel(graph,$scope.quantityDemanded,"axis",'Q','D','','axisLabel');
+    // Indicate quantity demanded if in range
+    if($scope.quantityDemanded >= range.min && $scope.quantityDemanded <= range.max) {
+        drawVerticalDropline(graph,$scope.quantityDemanded,$scope.price,demandColor,"demand");
+        drawDot(graph,$scope.quantityDemanded,$scope.price,demandColor,"demand");
+        addLabel(graph,$scope.quantityDemanded,"axis",'Q','D','','axisLabel');
+    }
 
 }
 
