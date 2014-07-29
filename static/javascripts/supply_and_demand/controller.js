@@ -1,12 +1,14 @@
 econGraphsApp.controller('SupplyAndDemandController', function($scope){
 
     $scope.displayOptions = {
-        snapToEquilibriumPrice : false
+        snapToEquilibriumPrice : false,
+        curveType : "Constant Elasticity"
     }
 
     $scope.marketParams = {
         price : 45,
-        tax : 0
+        tax_rate : 0,
+        consumer_fraction : 100
     };
 
     $scope.elasticityControls = {
@@ -14,35 +16,55 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
         supply : 60
     }
 
+    $scope.perfectly_inelastic_demand = function() {return ($scope.elasticityControls.demand == 100)};
+    $scope.perfectly_inelastic_supply = function() {return ($scope.elasticityControls.supply == 100)};
+
+
+    $scope.display_demand_elasticity = function() {
+        if($scope.perfectly_inelastic_demand()) { return "Perfectly Inelastic"}
+        else return Math.round($scope.demandParams.elasticity*100)/100;
+    }
+
+    $scope.display_supply_elasticity = function() {
+        if($scope.perfectly_inelastic_supply()) {return "Perfectly Inelastic"}
+        else return Math.round($scope.supplyParams.elasticity*100)/100;
+    }
+
     $scope.demandParams = {
-        level : 40,
+        q : 40,
         elasticity : ($scope.elasticityControls.demand - 100)/$scope.elasticityControls.demand,
-        perfectly_elastic_price : 30
+        p : 30
     };
+
 
     $scope.supplyParams = {
-        level : 60,
+        q : 60,
         elasticity : (100 - $scope.elasticityControls.supply)/$scope.elasticityControls.supply,
-        perfectly_elastic_price : 30
+        p : 30
     };
 
-    // Function returning quantity demanded/supplied for a given price, for constant elasticity function Q = A(P/B)^e
-    var quantityAtPrice = function(curveParams,price) {
-        return curveParams.level * Math.pow(price/curveParams.perfectly_elastic_price,curveParams.elasticity);
-    };
+    // Function returning market price plus tax paid by consumers
+    $scope.price_consumers_pay = function(p) { return p*(1 + $scope.marketParams.tax_rate*.01) };
 
-    $scope.price_consumers_pay = function(p) { return p*1 + $scope.marketParams.tax*1 };
-
+    // Function returning market price minus tax paid by firms
     $scope.price_firms_receive = function(p) { return p };
 
     // Function returning quantity demanded at a particular price (inclusive of taxes)
     $scope.quantityDemandedAtPrice = function(p) {
-        return quantityAtPrice($scope.demandParams,p);
+        if($scope.displayOptions.curveType == "Linear") {
+            return LinearQuantityAtPrice($scope.demandParams,p);
+        } else {
+            return CE_QuantityAtPrice($scope.demandParams,p);
+        }
     };
 
     // Function returning quantity supplied at a particular price (inclusive of taxes)
     $scope.quantitySuppliedAtPrice = function(p) {
-        return quantityAtPrice($scope.supplyParams,p);
+        if($scope.displayOptions.curveType == "Linear") {
+            return LinearQuantityAtPrice($scope.supplyParams,p);
+        } else {
+            return CE_QuantityAtPrice($scope.supplyParams,p);
+        }
     };
 
     // Function returning surplus at a given market price, given the implied (possibly different) prices consumers pay and firms receive
@@ -52,8 +74,17 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
 
     // Maximum price at which quantity demanded is greater than or equal to quantity supplied
     $scope.equilibriumPrice = function() {
+        if ($scope.displayOptions.curveType == "Linear") {
+            return LinearEquilibriumPrice($scope.demandParams, $scope.supplyParams, $scope.marketParams.tax_rate)
+        } else {
+            return CE_EquilibriumPrice($scope.demandParams, $scope.supplyParams, $scope.marketParams.tax_rate)
+        }
+        ;
+    }
 
-        var p = 5;
+        /*function() {
+
+        var p = 0;
 
         // Return immediately if the lowest price in range causes a surplus
         if ($scope.surplusAtPrice(p) > 0) {
@@ -71,7 +102,7 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
         }
         return null;
 
-    };
+    };*/
 
     $scope.$watchCollection("elasticityControls",function() {
 
@@ -91,8 +122,8 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
 
         if($scope.displayOptions.snapToEquilibriumPrice) {$scope.marketParams.price = $scope.equilibriumPrice()}
 
-        // Quantity demanded by all consumers at the current price, including tax
-        $scope.quantityDemanded = $scope.quantityDemandedAtPrice($scope.marketParams.price*1 + $scope.marketParams.tax*1);
+        // Quantity demanded by all consumers at the current price, including consumer_tax
+        $scope.quantityDemanded = $scope.quantityDemandedAtPrice($scope.price_consumers_pay($scope.marketParams.price));
 
         // Quantity supplied by all firms in the market at the current price
         $scope.quantitySupplied = $scope.quantitySuppliedAtPrice($scope.marketParams.price);

@@ -37,7 +37,7 @@ function createGraph(graph_data) {
         } else {
             return 10;
         }
-    }
+    };
 
     // Create the D3 scales for the x and y dimensions
     x = d3.scale.linear()

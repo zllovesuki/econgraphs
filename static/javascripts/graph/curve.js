@@ -1,8 +1,13 @@
+// Assumes x and y are numbers and xRange and yRange each have min and max properties
+function pointInPlottedArea(x,y,xRange,yRange) {
+    return (x >= xRange.min && x <= xRange.max && y >= yRange.min && y <= yRange.max)
+}
+
 function drawFunction(function_name,domain,range,graph,color,label) {
     var curve = [];
     for(var ind = domain.min; ind <= domain.max; ind += domain.step) {
         var dep = function_name(ind);
-        if(dep >= range.min && dep <= range.max) {
+        if(pointInPlottedArea(ind,dep,domain,range)) {
             if(domain.y) {
                 curve.push({ x : graph.x(dep),y : graph.y(ind)})
             } else {
