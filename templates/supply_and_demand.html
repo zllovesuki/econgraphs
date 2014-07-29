@@ -8,7 +8,7 @@
 
     {% raw %}
 
-    <p>Description will go here. Price is </p>
+    <p></p>
     {% endraw %}
 
 {% endblock %}
@@ -19,14 +19,28 @@
 
 
     <p>Price: ${{ marketParams.price | number:2 }} per unit<input type="range" min="10" max="50" step="0.05" ng-model="marketParams.price"></p>
-    <p>Tax: ${{ marketParams.tax | number:2 }} per unit<input type="range" min="0" max="20" step="0.05" ng-model="marketParams.tax"></p>
-    <p>Demand level:  {{ demandParams.level | number : 0 }}<input type="range" min="10" max="90" step="1" ng-model="demandParams.level"></p>
-    <p>Demand elasticity:  {{ demandParams.elasticity | number : 2 }}<input type="range" min="1" max="100" step="1" ng-model="elasticityControls.demand"></p>
-    <p>Supply level:  {{ supplyParams.level | number : 0 }}<input type="range" min="10" max="90" step="1" ng-model="supplyParams.level"></p>
-    <p>Supply elasticity:  {{ supplyParams.elasticity | number : 2 }}<input type="range" min="1" max="100" step="1" ng-model="elasticityControls.supply"></p>
+    <p>Tax rate: {{ marketParams.tax_rate | number:0 }}%<input type="range" min="0" max="30" step="0.05" ng-model="marketParams.tax_rate"></p>
+    <hr/>
+    <p>DEMAND</p>
+    <p>Passes through<br/>(Q: <input type="number" min="0" max="195" step="1" ng-model="demandParams.q">, P: <input type="number" min="0" max="55" step="1" ng-model="demandParams.p">)</p>
+    <p>Elasticity at that point:  {{ display_demand_elasticity() }}<input type="range" min="1" max="100" step="1" ng-model="elasticityControls.demand"></p>
+    <hr/>
+    <p>SUPPLY</p>
+    <p>Passes through<br/>(Q: <input type="number" min="0" max="195" step="1" ng-model="supplyParams.q">, P: <input type="number" min="0" max="55" step="1" ng-model="supplyParams.p">)</p>
+    <p>Elasticity at that point:  {{ display_supply_elasticity() }}<input type="range" min="1" max="100" step="1" ng-model="elasticityControls.supply"></p>
     <hr/>
     <h6>OPTIONS</h6>
     <p><input type="checkbox" ng-model="displayOptions.snapToEquilibriumPrice"> Set price to equilibrium</p>
+    <div>
+        <label class="radio-inline">
+            <input type="radio" ng-model="displayOptions.curveType" value="Constant Elasticity">
+            Constant Elasticity
+        </label>
+        <label class="radio-inline">
+            <input type="radio" ng-model="displayOptions.curveType" value="Linear">
+            Linear
+        </label>
+    </div>
 
 
     {% endraw %}
@@ -35,6 +49,7 @@
 
 {% block js %}
 
+    <script src="../static/javascripts/econ_functions/supply_and_demand_functions.js"></script>
     <script src="../static/javascripts/supply_and_demand/market.js"></script>
     <script src="../static/javascripts/supply_and_demand/controller.js"></script>
 

@@ -13,45 +13,51 @@ function drawMarketGraph($scope,id) {
         price_firms_receive = $scope.price_firms_receive(price)
 
     var graph = createGraph(market_graph_data),
-        domain = {y: true, min: 5, max: 55, step: 0.25},
-        range = {min: 5, max: 195},
+        domain = {y: true, min: 0, max: 55, step: 0.25},
+        range = {min: 0, max: 195},
         supplyLabel = {text: "S", reverse: true, delta: 15},
-        demandLabel = {text: "D", delta: 15};
+        demandLabel = {text: "D", reverse: true, delta: 5};
 
     // Draw demand and supply curves
     drawFunction($scope.quantityDemandedAtPrice,domain,range,graph,demandColor,demandLabel);
     drawFunction($scope.quantitySuppliedAtPrice,domain,range,graph,supplyColor,supplyLabel);
 
+    var show_demand_point = pointInPlottedArea(price_consumers_pay,$scope.quantityDemanded,domain,range),
+        show_supply_point = pointInPlottedArea(price,$scope.quantitySupplied,domain,range),
+        show_price = (price >= range.min && price <= range.max),
+        show_price_consumers_pay = (price_consumers_pay != price && price_consumers_pay >= range.min && price_consumers_pay <= range.max);
+
     if($scope.inEquilibrium) {
 
-        // Indicate equilibrium price
-        drawHorizontalDropline(graph,"max",price,equilibriumColor,"price");
-        addLabel(graph,"axis",price,'P','*','',"axisLabel");
+        // only show equilibrium if equilibrium price is in range
+        if(show_price) {
 
-        // Indicate price consumers pay, if tax > 0
-        if($scope.marketParams.tax > 0) {
-            drawHorizontalDropline(graph,"max",price_consumers_pay,equilibriumColor,"price");
-            addLabel(graph,"axis",price_consumers_pay,'P','C','',"axisLabel");
+             // Indicate equilibrium price
+            drawHorizontalDropline(graph,"max",price,equilibriumColor,"price");
+            addLabel(graph,"axis",price,'P','*','',"axisLabel");
+
+            // Indicate price consumers pay, if tax rate > 0
+            if(show_price_consumers_pay) {
+                drawHorizontalDropline(graph,"max",price_consumers_pay,equilibriumColor,"price");
+                addLabel(graph,"axis",price_consumers_pay,'P','C','',"axisLabel");
+            }
+
+            // Indicate equilibrium quantity
+            drawVerticalDropline(graph,$scope.quantityDemanded,price_consumers_pay,equilibriumColor,"demand");
+            drawDot(graph,$scope.quantityDemanded,price_consumers_pay,equilibriumColor,"demand");
+            drawDot(graph,$scope.quantityDemanded,price,equilibriumColor,"supply");
+            addLabel(graph,$scope.quantityDemanded,"axis",'Q','*','','axisLabel');
+
         }
-        drawHorizontalDropline(graph,"max",price,equilibriumColor,"price");
-
-        // Indicate equilibrium quantity
-        drawVerticalDropline(graph,$scope.quantityDemanded,price_consumers_pay,equilibriumColor,"demand");
-        drawDot(graph,$scope.quantityDemanded,price_consumers_pay,equilibriumColor,"demand");
-        drawDot(graph,$scope.quantityDemanded,price,equilibriumColor,"supply");
-        addLabel(graph,$scope.quantityDemanded,"axis",'Q','*','','axisLabel');
 
     } else {
-
-        var show_demand_point = (price_consumers_pay >= domain.min && price_consumers_pay <= domain.max),
-            show_supply_point = (price >= domain.min && price <= domain.max);
 
         // Indicate price
         drawHorizontalDropline(graph,"max",price,priceColor,"price");
         addLabel(graph,"axis",price,'P','','',"axisLabel");
 
-        // Indicate price consumers pay, if tax > 0 and in range
-        if($scope.marketParams.tax > 0 && show_demand_point) {
+        // Indicate price consumers pay, if tax rate > 0 and in range
+        if(show_price_consumers_pay) {
             drawHorizontalDropline(graph,"max",price_consumers_pay,priceColor,"price");
             addLabel(graph,"axis",price_consumers_pay,'P','C','',"axisLabel");
         }
