@@ -12,7 +12,10 @@ econGraphsApp.controller('ProductionPossibilitiesController', function($scope){
         units: 'Barrels',
         resources: 75,
         productivity: 2,
-        quantity: 150
+        quantity: 150,
+        production_function: function (r) {
+            return $scope.quantity_produced(r, $scope.good_x.productivity)
+        }
     };
 
     $scope.good_y = {
@@ -20,12 +23,20 @@ econGraphsApp.controller('ProductionPossibilitiesController', function($scope){
         units: 'Yards',
         resources: 75,
         productivity: 3,
-        quantity: 225
+        quantity: 225,
+        production_function: function (r) {
+            return $scope.quantity_produced(r, $scope.good_y.productivity)
+        }
     };
 
     $scope.allocation = {
         percent_resources_used : 100,
         percent_resources_x : 50
+    };
+
+    $scope.displayOptions = {
+        show_prod_function : false,
+        show_mpl : false
     };
 
     $scope.quantity_produced = function(resources,productivity) {
@@ -91,8 +102,18 @@ econGraphsApp.controller('ProductionPossibilitiesController', function($scope){
 
         d3.select('svg').remove();
         d3.select('svg').remove();
+        d3.select('svg').remove();
+        d3.select('svg').remove();
+        d3.select('svg').remove();
+        d3.select('svg').remove();
         drawResourceGraph($scope,"left_graph");
         drawProductionPossibilitiesGraph($scope, "right_graph");
+        if($scope.displayOptions.show_prod_function) {
+            drawProductionFunctionGraph($scope,"left_2_graph",$scope.good_x)
+        }
+        if ($scope.displayOptions.show_prod_function) {
+            drawProductionFunctionGraph($scope, "right_2_graph", $scope.good_y)
+        }
 
     }
 });

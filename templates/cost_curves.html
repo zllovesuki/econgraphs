@@ -45,6 +45,7 @@
 
 <p>Fixed cost: {{ firmSupplyParams.fixed_cost }}<input type="range" min="0" max="1000" step="10" ng-model="firmSupplyParams.fixed_cost"></p>
 <p>Marginal cost level*:<input type="range" min="0" max="100" step="1" ng-model="firmSupplyParams.marginal_cost_parameter"></p>
+    <slider min="0" max="100" value="firmSupplyParams.marginal_cost_parameter"></slider>
 <p>Market price:  {{ marketParams.price }}<input type="range" min="5" max="55" step="1" ng-model="marketParams.price"></p>
 <p>Quantity supplied:  {{ firmSupplyParams.quantity }}<input type="range" min="5" max="95" step="1" ng-model="firmSupplyParams.quantity"></p>
 <hr/>

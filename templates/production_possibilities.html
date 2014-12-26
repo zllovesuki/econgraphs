@@ -1,10 +1,15 @@
-{% extends 'two_graph_layout.html' %}
+{% extends 'six_graph_layout.html' %}
 
 {% block controller %}ProductionPossibilitiesController{% endblock %}
 
 {% block left_title %}Resource Allocation{% endblock %}
 
 {% block right_title %}Production Choice{% endblock %}
+
+{% block left_2_title %}<div ng-if="displayOptions.show_prod_function">Wine Production Function</div>{% endblock %}
+
+{% block right_2_title %}
+    <div ng-if="displayOptions.show_prod_function">Cloth Production Function</div>{% endblock %}
 
 {% block controls %}
 
@@ -40,6 +45,9 @@
 
 
 
+    <hr/>
+    <p><input type="checkbox" ng-model="displayOptions.show_prod_function"> Show production function</p>
+
     {% endraw %}
 
 {% endblock %}
@@ -48,6 +56,7 @@
 
     <script src="../static/javascripts/production_possibilities/resource_allocation.js"></script>
     <script src="../static/javascripts/production_possibilities/production_choice.js"></script>
+    <script src="../static/javascripts/production_possibilities/production_function.js"></script>
     <script src="../static/javascripts/production_possibilities/controller.js"></script>
 
 {% endblock %}

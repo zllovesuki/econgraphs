@@ -4,8 +4,8 @@ function drawResourceGraph($scope,id) {
         id : id,
         dimensions : {height: 400, width: 400},
         margin : {top: 10, right: 100, bottom: 100, left: 70},
-        x_axis : {title: $scope.resources.units + " producing " + $scope.good_x.name, min: 0, max: 200, ticks: 10},
-        y_axis : {title: $scope.resources.units + " producing " + $scope.good_y.name, min: 0, max: 200, ticks: 10}
+        x_axis : {title: $scope.resources.name + " Producing " + $scope.good_x.name, min: 0, max: 200, ticks: 10},
+        y_axis : {title: $scope.resources.name + " Producing " + $scope.good_y.name, min: 0, max: 200, ticks: 10}
     };
     
     var graph = createGraph(resource_graph_data),
