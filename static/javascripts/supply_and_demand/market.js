@@ -16,18 +16,20 @@ function drawMarketGraph($scope,id) {
         domain = {y: true, min: 0, max: 55, step: 0.25},
         range = {min: 0, max: 195},
         supplyLabel = {text: "S", reverse: true, delta: 15},
-        demandLabel = {text: "D", reverse: true, delta: 5};
+        demandLabel = {text: "D", reverse: true, delta: 5},
+        showDemand = $scope.displayOptions.showDemand,
+        showSupply = $scope.displayOptions.showSupply;
 
     // Draw demand and supply curves
-    drawFunction($scope.quantityDemandedAtPrice,domain,range,graph,demandColor,demandLabel);
-    drawFunction($scope.quantitySuppliedAtPrice,domain,range,graph,supplyColor,supplyLabel);
+    if(showDemand) {drawFunction($scope.quantityDemandedAtPrice,domain,range,graph,demandColor,demandLabel)}
+    if(showSupply) {drawFunction($scope.quantitySuppliedAtPrice,domain,range,graph,supplyColor,supplyLabel)};
 
-    var show_demand_point = pointInPlottedArea(price_consumers_pay,$scope.quantityDemanded,domain,range),
-        show_supply_point = pointInPlottedArea(price,$scope.quantitySupplied,domain,range),
+    var show_demand_point = (showDemand && pointInPlottedArea(price_consumers_pay,$scope.quantityDemanded,domain,range)),
+        show_supply_point = (showSupply && pointInPlottedArea(price,$scope.quantitySupplied,domain,range)),
         show_price = (price >= range.min && price <= range.max),
-        show_price_consumers_pay = (price_consumers_pay != price && price_consumers_pay >= range.min && price_consumers_pay <= range.max);
+        show_price_consumers_pay = (showDemand && price_consumers_pay != price && price_consumers_pay >= range.min && price_consumers_pay <= range.max);
 
-    if($scope.inEquilibrium) {
+    if($scope.inEquilibrium && showDemand && showSupply) {
 
         // only show equilibrium if equilibrium price is in range
         if(show_price) {

@@ -2,8 +2,10 @@ econGraphsApp.controller('SupplyAndDemandController', function($scope){
 
     $scope.displayOptions = {
         snapToEquilibriumPrice : false,
-        curveType : "Constant Elasticity"
-    }
+        curveType : "Constant Elasticity",
+        showDemand: true,
+        showSupply: true
+    };
 
     $scope.marketParams = {
         price : 45,

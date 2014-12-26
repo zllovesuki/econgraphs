@@ -117,8 +117,8 @@ econGraphsApp.controller('CostCurvesController', function($scope){
 
         $scope.isShutDown = ($scope.firmSupplyParams.quantity == 0);
 
-        d3.select('svg').remove();
-        d3.select('svg').remove();
+        //d3.select('svg').remove();
+        //d3.select('svg').remove();
 
         drawTotalCostAndRevenueGraph($scope,"left_graph");
         drawCostCurveGraph($scope,"right_graph");
