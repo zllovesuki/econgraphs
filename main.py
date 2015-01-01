@@ -16,13 +16,13 @@ def page(page_name):
         return redirect('/')
 
 
-@app.route('econ50/')
+@app.route('/econ50/')
 def econ50():
     return redirect(url_for('slides', slide_name=None))
 
 
-@app.route('econ50/slides/')
-@app.route('econ50/slides/<slide_name>')
+@app.route('/econ50/slides/')
+@app.route('/econ50/slides/<slide_name>')
 def slides(slide_name=None):
     if slide_name is None:
         return render_template('slides/index.html')
