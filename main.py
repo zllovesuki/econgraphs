@@ -20,6 +20,7 @@ def page(page_name):
 def econ50():
     return redirect(url_for('slides', slide_name=None))
 
+
 @app.route('econ50/slides/')
 @app.route('econ50/slides/<slide_name>')
 def slides(slide_name=None):
