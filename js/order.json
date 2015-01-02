@@ -14,7 +14,6 @@
             "reveal.min.js",
             "math.js",
             "papaparse.min.js",
-            "angular-iclicker.js",
             "reveal-initialize.js"
         ]
     },
@@ -23,6 +22,7 @@
         "order": [
             "app.js",
             "d3-helpers.js",
+            "clicker.js",
             "model.js",
             "math.js",
             "param.js",
