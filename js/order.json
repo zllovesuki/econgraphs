@@ -1,0 +1,61 @@
+[
+    {
+        "name": "head",
+        "order": [
+            "jquery-1.11.0.min.js",
+            "d3.min.js",
+            "angular.min.js",
+            "bootstrap.min.js"
+        ]
+    },
+    {
+        "name": "slides",
+        "order": [
+            "reveal.min.js",
+            "math.js",
+            "papaparse.min.js",
+            "angular-iclicker.js",
+            "reveal-initialize.js"
+        ]
+    },
+    {
+        "name": "app",
+        "order": [
+            "app.js",
+            "d3-helpers.js",
+            "model.js",
+            "math.js",
+            "param.js",
+            "function.js",
+            "slider.js",
+            "graph.js",
+            "axis.js",
+            "point.js",
+            "curve.js",
+            "line.js",
+            "area.js"
+        ]
+    },
+    {
+        "name": "kineticgraphs",
+        "order": [
+            "kg.js",
+            "monomial.js",
+            "polynomial.js",
+            "linear.js",
+            "min.js"
+        ]
+    },
+    {
+        "name": "econgraphs",
+        "order": [
+            "econgraphs.js",
+            "budget/budget.js",
+            "budget/simple.js",
+            "utility/utility.js",
+            "utility/cobbdouglas.js",
+            "utility/complements.js",
+            "utility/substitutes.js"
+        ]
+    }
+]

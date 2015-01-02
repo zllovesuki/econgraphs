@@ -2,15 +2,9 @@
 <html ng-app="econGraphsApp">
 <head>
     <title>EconGraphs</title>
-    <!-- Using local JS for now, these are the CDN's for when we're ready.
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.5/d3.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.0rc3/angular.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css" rel="stylesheet">-->
-    <script src="{{ url_for('jsbundle', bundle_name='head') }}"></script>
-    <link href="{{ url_for('static', filename='stylesheets/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='stylesheets/style.css') }}" rel="stylesheet" />
+    <script src="{{ url_for('static', filename='js/head.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
 </head>
 <body ng-controller="Controller">
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">

@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
@@ -7,29 +8,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html', title='EconGraphs')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html', title='About EconGraphs')
-
-@app.route('/js/<bundle_name>.js')
-def jsbundle(bundle_name):
-    bundles = {
-        'head': [
-            'static/lib/jquery-1.11.0.min.js',
-            'static/lib/d3.min.js',
-            'static/lib/angular.js',
-            'static/lib/bootstrap.min.js'
-            ],
-        'bar': 'bundle for bar'
-    }
-    result = ''
-    for fname in bundles[bundle_name]:
-        with open(fname) as infile:
-            result += "\n//" + fname + "\n"
-
-            for line in infile:
-                result += line
-    return result
 
 
 @app.route('/<page_name>')
