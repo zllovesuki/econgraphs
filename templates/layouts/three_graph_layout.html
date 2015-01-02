@@ -1,18 +1,23 @@
-{% extends 'layout.html' %}
+{% extends 'layouts/layout.html' %}
 {% block body %}
 
     <div class="container-fluid mainPage" ng-controller="{% block controller %}{% endblock %}">
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <h4 class="text-center">{% block left_title %}{% endblock %}</h4>
                         <hr/>
                         <div id="left_graph"></div>
                         <!--<div>{% block left_description %}{% endblock %}</div>-->
 
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <h4 class="text-center">{% block center_title %}{% endblock %}</h4>
+                        <hr/>
+                        <div id="center_graph"></div>
+                        <!--<div>{% block center_description %}{% endblock %}</div>-->
+                    </div><div class="col-md-4">
                         <h4 class="text-center">{% block right_title %}{% endblock %}</h4>
                         <hr/>
                         <div id="right_graph"></div>
@@ -20,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="well">
                     {% block controls %}{% endblock %}
                 </div>

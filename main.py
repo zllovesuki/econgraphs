@@ -7,14 +7,44 @@ app = Flask(__name__)
 def index():
     return render_template('index.html', title='EconGraphs')
 
+@app.route('/about')
+def about():
+    return render_template('about.html', title='About EconGraphs')
+
+@app.route('/js/<bundle_name>.js')
+def jsbundle(bundle_name):
+    bundles = {
+        'head': [
+            'static/lib/jquery-1.11.0.min.js',
+            'static/lib/d3.min.js',
+            'static/lib/angular.js',
+            'static/lib/bootstrap.min.js'
+            ],
+        'bar': 'bundle for bar'
+    }
+    result = ''
+    for fname in bundles[bundle_name]:
+        with open(fname) as infile:
+            result += "\n//" + fname + "\n"
+
+            for line in infile:
+                result += line
+    return result
+
 
 @app.route('/<page_name>')
 def page(page_name):
-    try:
-        return render_template(page_name + '.html', title=page_name)
-    except:
-        return redirect('/')
+    return redirect(url_for('graphs', graph_name=page_name))
 
+@app.route('/graphs/')
+@app.route('/graphs/<graph_name>')
+def graphs(graph_name=None):
+    if graph_name is None:
+        return render_template('graphs/index.html')
+    try:
+        return render_template('graphs/' + graph_name + '.html', title=graph_name)
+    except:
+        return redirect(url_for('graphs', graph_name=None))
 
 @app.route('/econ50/')
 def econ50():
