@@ -34,6 +34,10 @@ a {
     color: #00B7FF;
 }
 
+.mainPage {
+    margin-top: 65px;
+}
+
 .axis text {
     font: 14px sans-serif;
 }

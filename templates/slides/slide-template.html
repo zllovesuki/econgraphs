@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" ng-app="kineticGraphs">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>{{ course_name }} - Lecture {{ lecture_number }}</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script src="{{ url_for('static', filename='js/head.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/reveal.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/theme/simple.css') }}" rel="stylesheet" id="theme">
+    <link href="{{ url_for('static', filename='css/fonts/Lato-Thin.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/reveal-custom.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+
+</head>
+
+<body ng-controller="kgController">
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+
+{%  block slides %}
+{%  endblock %}
+
+</div>
+</div>
+
+<script src="{{ url_for('static', filename='js/slides.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lib/katex/katex.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kineticgraphs.js') }}"></script>
+<script src="{{ url_for('static', filename='js/econgraphs.js') }}"></script>
+
+</body>
+</html>

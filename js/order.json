@@ -57,5 +57,41 @@
             "utility/complements.js",
             "utility/substitutes.js"
         ]
+    },
+    {
+        "name": "econgraphs-v1",
+        "order": [
+            "helpers.js",
+            "angular_app.js",
+            "graph/graph.js",
+            "graph/box.js",
+            "graph/curve.js",
+            "graph/graph_colors.js",
+            "graph/dropline.js",
+            "graph/label.js",
+            "graph/function.js",
+            "econ_functions/supply_and_demand_functions.js",
+            "cost_curves/total_costs.js",
+            "cost_curves/marginal_and_average_costs.js",
+            "cost_curves/controller.js",
+            "as_ad/labor_market.js",
+            "as_ad/as_ad.js",
+            "as_ad/phillips.js",
+            "as_ad/controller.js",
+            "indifference_curves/cobb_douglass.js",
+            "indifference_curves/controller.js",
+            "individual_and_market_demand/individual_demand.js",
+            "individual_and_market_demand/market.js",
+            "individual_and_market_demand/controller.js",
+            "production_possibilities/resource_allocation.js",
+            "production_possibilities/production_choice.js",
+            "production_possibilities/production_function.js",
+            "production_possibilities/controller.js",
+            "structured_products/structured_products.js",
+            "structured_products/controller.js",
+            "supply_and_demand/market.js",
+            "supply_and_demand/controller.js"
+        ]
     }
 ]
+
