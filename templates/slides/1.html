@@ -1,10 +1,407 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-I'm slide 1. Dig it.
-</body>
-</html>
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+<section>
+    <h2>Econ 50</h2>
+    <br/>
+    <hr/>
+    <br/>
+
+    <h2>Lecture 1</h2>
+
+    <h1>Welcome to Econ 50!</h1>
+
+    <h1>Introduction to<br/>Constrained Optimization</h1>
+    <br/>
+    <hr/>
+    <br/>
+
+    <h3>January 5, 2014</h3>
+
+</section>
+<section>
+    <section>
+        <h1>Administrative Announcements</h1>
+
+        <h2>Class policies and upcoming deadlines</h2>
+    </section>
+    <section>
+        <h1>Welcome to Econ 50!</h1>
+        <ul>
+            <li class="fragment">Make sure you have a syllabus (and read it through!) and an information sheet</li>
+            <li class="fragment">Bring your clickers on Wednesday</li>
+            <li class="fragment">Section signups are now open on Coursework</li>
+            <li class="fragment">Office hours and sections will begin <i>next</i> week.</li>
+            <li class="fragment">Homework 1 will be due <i>next</i> Friday.</li>
+        </ul>
+        <aside class="notes">
+            This slide has fragments which are also stepped through in the notes window.
+        </aside>
+    </section>
+
+
+    <section id="two-week-view">
+        <div class="row" style="height:20%">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2"><p class="calendar-date">M</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">W</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">F</p>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="today-date">
+                    <p class="calendar-date">JAN 5</p>
+
+                    <p>Lecture 1: Constrained Optimization</p>
+
+                    <p><em>B&B Ch. 1</em></p>
+
+                    <p class="fragment highlight-red"><em>Read syllabus & info sheet!</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 6</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 7</p>
+
+                    <p>Lecture 2: Elasticity and Comp. Statics</p>
+
+                    <p><em>B&B Ch. 2</em></p>
+
+                    <p class="fragment highlight-red"><em>Bring i>clickers</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 8</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 9</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 12</p>
+
+                    <p>Lecture 3: Preferences, Ind. Curves</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+                    <p class="fragment highlight-red"><em>Last day to sign up for sections on Coursework</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 13</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 14</p>
+
+                    <p>Lecture 4: Utility Functions</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 15</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="section-date">
+                    <p class="calendar-date">JAN 16</p>
+
+                    <p>Sections</p>
+
+                    <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+</section>
+
+<section>
+    <section>
+        <h1>Review</h1>
+
+        <h2>From Econ 1 to Econ 50</h2>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-lg-5">
+                <h1>Econ 1</h1>
+                <hr/>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <h1>Econ 50</h1>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <p class="fragment">Marginal cost is the cost of producing an additional unit of output.</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <p class="fragment">Marginal cost is the derivative of the total cost function, $TC(q)$.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Changes to fixed costs do not affect marginal costs.</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">$$TC(q) = FC + VC(q) \\ \frac{dTC(q)}{dq} = 0 + \frac{dVC(q)}{dq}$$</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-lg-5">
+                <h1>Econ 1</h1>
+                <hr/>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <h1>Econ 50</h1>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <p class="fragment">A competitive firm maximizes profits by setting price equal to...<span
+                        class="fragment">marginal cost</span>.</p>
+                <hr/>
+                <p class="fragment">$$P = MC$$</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <p class="fragment">A competitive firm maximizes its profit function, which is:
+
+                <p>
+
+                <p class="fragment">$$\begin{align*}\pi(q) &= TR(q) - TC(q) \\ &= P \times q - TC(q)\end{align*}$$</p>
+                <hr/>
+                <p class="fragment">To do this, it takes the derivative of the profit function: $$\frac{d\pi(q)}{dq} = P
+                    - \frac{dTC(q)}{dq}$$</p>
+                <hr/>
+                <p class="fragment">Setting this equal to zero yields: $$P = \frac{dTC(q)}{dq}$$</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-lg-5">
+                <h1>Econ 1</h1>
+                <hr/>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <h1>Econ 50</h1>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <p class="fragment">The demand curve for a good shows the quantity demanded at each possible price of
+                    that good.</p>
+                <hr/>
+                <p class="fragment">$$Q(P) = 10 - P$$</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <p class="fragment">An agent with a given income will observe all prices in the market and choose a
+                    bundle of quantities.</p>
+                <hr/>
+                <p class="fragment">
+                    $$\begin{align*}q_{x}^{*}(p_{x},p_{y},I) &= \frac{I}{p_{x}} \frac{1}{1 + \frac{p_{x}}{p_{y}}}\\
+                    q_{y}^{*}(p_{x},p_{y},I) &= \frac{I}{p_{y}} \frac{1}{1 + \frac{p_{y}}{p_{x}}}\end{align*}$$
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Changes to income and the <br/>prices of other goods<br/>will <b>shift</b> the
+                    demand curve.</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Income and prices of other goods<br/>are <b>explicitly included</b><br/>in the
+                    demand functions.</p>
+            </div>
+        </div>
+
+    </section>
+
+</section>
+<section>
+    <section>
+        <h1>Looking Forward</h1>
+
+        <h2>Econ 50, 51, and 52</h2>
+    </section>
+    <section>
+        <h1>The “Classical Economic Model”</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-4">
+                <h3>Individuals</h3>
+
+                <h3>Firms</h3>
+            </div>
+            <div class="col-lg-4">
+                <h3>Markets</h3>
+
+                <h3>Regulators</h3>
+            </div>
+            <div class="col-lg-4">
+                <h3>Economies</h3>
+
+                <h3>Governments</h3>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-4">
+                <h3 class="fragment">Optimization</h3>
+                <ul>
+                    <li class="fragment">Utility Maximization</li>
+                    <li class="fragment">Profit Maximization</li>
+                    <li class="fragment">Intertemporal Choice</li>
+                    <li class="fragment">Labor Supply</li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h3 class="fragment">Interaction/<br/>Equilibrium</h3>
+                <ul>
+                    <li class="fragment">Partial Equilibrium</li>
+                    <li class="fragment">General Equilibrium</li>
+                    <li class="fragment">Strategic Interactions</li>
+                    <li class="fragment">Information Asymmetries</li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h3 class="fragment">Policy</h3>
+                <ul>
+                    <li class="fragment">Fiscal Policy</li>
+                    <li class="fragment">Monetary Policy</li>
+                    <li class="fragment">Trade Policy</li>
+                </ul>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-4">
+                <h3 class="fragment">Econ 50</h3>
+            </div>
+            <div class="col-lg-4">
+                <h3 class="fragment">Econ 51</h3>
+            </div>
+            <div class="col-lg-4">
+                <h3 class="fragment">Econ 52</h3>
+            </div>
+        </div>
+        <hr/>
+        <h2 class="fragment">Throughout: <em>Comparative Statics</em> - response to change</h2>
+
+    </section>
+    <section>
+        <h1>Microeconomists are people who are wrong about specific things.</h1>
+        <br/>
+
+        <h1>Macroeconomists are people who are wrong about things in general.</h1>
+        <br/>
+
+        <h2 class="fragment">...but what does it mean to be "wrong?"</h2>
+    </section>
+    <section>
+        <img src="{{ url_for('static', filename='images/econ50/lecture1/ferguson.jpg') }}">
+
+        <p><span class="fragment">Optimization? </span><span class="fragment">Equilibrium? </span><span
+                class="fragment">Policy?</span></p>
+
+    </section>
+    <section>
+        <h1>Beyond the Classical Model</h1>
+        <hr/>
+        <ul>
+            <li class="fragment">Behavioral economics</li>
+            <li class="fragment"><a href="http://ncase.me/polygons/" target="_blank">http://ncase.me/polygons/</a></li>
+        </ul>
+    </section>
+
+
+</section>
+<section>
+    <h1>10 minute break</h1>
+</section>
+<section>
+    <section>
+        <h3>Analytical Tool 1</h3>
+        <hr/>
+        <h1>Constrained Optimization</h1>
+    </section>
+</section>
+<section>
+    <section>
+        <h3>Analytical Tool 2</h3>
+        <hr/>
+        <h1>Comparative Statics</h1>
+    </section>
+</section>
+<section>
+    <section>
+        <h3>Looking Forward</h3>
+        <hr/>
+        <h1>What to Expect</h1>
+    </section>
+    <section>
+        <img src="{{ url_for('static', filename='images/econ50/lecture1/paint-the-fence.png') }}" alt="Paint the fence">
+
+        <p>What this class will feel like (a little)</p>
+    </section>
+    <section>
+        <img src="{{ url_for('static', filename='images/econ50/lecture1/crane.jpg') }}" alt="Karate master">
+
+        <p>What you'll feel like after this class (ok, maybe not)</p>
+    </section>
+</section>
+
+{% endblock %}

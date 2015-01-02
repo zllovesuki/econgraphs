@@ -1,24 +1,12 @@
-{% extends 'content_layout.html' %}
+{% extends 'layouts/content_layout.html' %}
 
 {% block content %}
 
     <div class="container-fluid mainPage">
 	<h1>EconGraphs</h1>
-	<hr/>
-        <h3><a href="production_possibilities">Production Possibilities</a></h3>
-
-        <p>See how resource constraints, productivity, and diminishing marginal returns combine to determine an economy's production possibilities frontier.</p>
-
-        <h3><a href="supply_and_demand">Supply and Demand</a></h3>
-	<p>Explore the basic model of microeconomics, including surpluses and shortages, shifts in supply and demand, elasticity, and the effects of a tax.</p>
-    <h3><a href="individual_and_market_demand">Individual and Market Demand</a></h3>
-	<p>See how various factors shift individual and market demand curves.</p>
-    <h3><a href="cost_curves">Cost Curves</a></h3>
-	<p>See how firms' cost curves influence their profit-maximizing quantity choice.</p>
-    <h3><a href="indifference">Indifference Curves</a></h3>
-    <p>Demonstration of Cobb-Douglass indifference curves.</p>
-     <h3><a href="as_ad_phillips">Behind the AS-AD Model</a></h3>
-    <p>Demonstration of interaction among AS-AD, labor market, and Phillips Curve.</p>
+	<p>Welcome to econgraphs.org.</p>
+    <p>Click <a href="{{ url_for('graphs',graph_name=None) }}">here</a> for dynamic graphs that can be used in any econ classroom.</p>
+    <p>Click <a href="{{ url_for('slides',slide_name=None) }}">here</a> for the slides for Econ 50 at Stanford.</p>
 </div>
 
 {% endblock %}

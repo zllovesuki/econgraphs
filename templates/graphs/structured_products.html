@@ -1,0 +1,32 @@
+{% extends 'layouts/one_graph_layout.html' %}
+
+{% block controller %}StructuredProductsController{% endblock %}
+
+{% block graph_title %}Structured Products{% endblock %}
+
+{% block description %}
+
+    {% raw %}
+
+    <p>Stuff</p>
+    {% endraw %}
+
+{% endblock %}
+
+{% block controls %}
+
+    {% raw %}
+
+
+    <p>Current Index Value: {{ productParams.current | number:0 }}<input type="range" min="10000" max="20000" step="100" ng-model="productParams.current"></p>
+    <div>Original Index Value: {{ productParams.original }}
+        <input type="range" min="10000" max="20000" step="100" ng-model="productParams.original"></div>
+    <hr/>
+    <p>Time to Maturity: {{ productParams.time | number:2 }} years<input type="range" min="0" max="10" step="0.25" ng-model="productParams.time"></p>
+    <p>Interest Rate: {{ productParams.rate | number:2 }}%<input type="range" min="0" max="10" step="0.25" ng-model="productParams.rate"></p>
+    <p>Dividend Yield: {{ productParams.dividend_percent | number:2 }}%<input type="range" min="0" max="5" step="0.1" ng-model="productParams.dividend_percent"></p>
+
+
+    {% endraw %}
+
+{% endblock %}

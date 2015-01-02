@@ -1,0 +1,52 @@
+{% extends 'layouts/two_graph_layout.html' %}
+
+{% block controller %}IndividualAndMarketDemandController{% endblock %}
+
+{% block left_title %}Individual Demand{% endblock %}
+
+{% block left_description %}
+
+    {% raw %}
+
+    <p>This model assumes that consumers will spend a constant fraction of their income on this good. Specifically, it assumes that consumers' income is ${{ income }}, and that they spend {{alpha}}% of that (or ${{alpha*income/100}}) on this good, regardless of the price.</p>
+
+    <p>At a price of ${{ price }} per unit, therefore, a "representative" individual consumer will choose to buy <i>q<sup>D</sup></i> = ${{alpha*income/100}} / ${{price}} per unit = {{ quantityDemanded*1000/consumers | number : 1}} units.</p>
+
+    {% endraw %}
+
+{% endblock %}
+
+{% block right_title %}Market Supply and Demand{% endblock %}
+
+{% block right_description %}
+
+    {% raw %}
+
+    <p>Since there are {{consumers | number:0}} consumers in the market, the total quantity demanded is <i>Q<sup>D</sup></i> = {{ individualQuantityDemanded | number : 1}} units per consumer x {{consumers | number:0}} consumers = {{ shownQuantityDemanded | number : 0 }} units.</p>
+    <p>At the same price, producers in this market supply <i>Q<sup>S</sup></i> = {{shownQuantitySupplied | number:0}} units.</p>
+    <p ng-if="shortage">
+        Therefore, this relatively low price results in a <b>shortage</b> (excess demand) of {{ shownQuantityDemanded - shownQuantitySupplied | number:0 }} units.
+    </p>
+    <p ng-if="surplus">
+        Therefore, this relatively high price results in a <b>surplus</b> (excess supply) of {{ shownQuantitySupplied - shownQuantityDemanded | number:0 }} units.
+    </p>
+    <p ng-if="inEquilibrium">
+        Because the quantity supplied {{ (shownQuantityDemanded == shownQuantitySupplied) ? "equals" : "is just about equal to" }} the quantity demanded in the market, competitive pressures are unlikely to drive the market price up or down; so we say the market is "in equilibrium."
+    </p>
+
+    {% endraw %}
+
+{% endblock %}
+
+{% block controls %}
+
+    {% raw %}
+
+    <p>Price: ${{ price }} per unit<input type="range" min="10" max="50" step="1" ng-model="price"></p>
+				<p>Income: ${{ income }}<input type="range" min="100" max="500" step="10" ng-model="income"></p>
+				<p>Fraction of income spent on this: {{ alpha }}%<input type="range" min="0" max="100" step="1" ng-model="alpha"></p>
+				<p>Number of consumers:  {{ consumers | number:0 }}<input type="range" min="2000" max="5000" step="50" ng-model="consumers"></p>
+
+    {% endraw %}
+
+{% endblock %}
