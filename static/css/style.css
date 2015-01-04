@@ -1,4 +1,17 @@
 @font-face {
+    font-family: 'News Cycle';
+    font-style: normal;
+    font-weight: 400;
+    src: local('NewsCycle Regular'), local('NewsCycle-Regular'), url(fonts/NewsCycle-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'News Cycle';
+    font-style: normal;
+    font-weight: 700;
+    src: local('NewsCycle Bold'), local('NewsCycle-Bold'), url(fonts/NewsCycle-Bold.ttf) format('truetype');
+}
+@font-face {
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
