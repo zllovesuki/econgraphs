@@ -18,13 +18,19 @@ kgAngular.service('D3Helpers', function () {
 
         circles = circles.data(data);
         circles.exit().remove();
-        circles.enter().append('circle').attr('r', 5);
+        circles.enter().append('circle').attr('r', 10);
         circles
             .attr('cx', function (d) {
                 return d.cx
             })
             .attr('cy', function (d) {
                 return d.cy
+            })
+            .attr('stroke', function(d) {
+                return d.color
+            })
+            .attr('fill', function (d) {
+                return d.color
             });
         return circles;
 
@@ -36,9 +42,8 @@ kgAngular.service('D3Helpers', function () {
         lines = lines.data(data);
         lines.exit().remove();
         lines.enter().append('line')
-            .attr('stroke-width', 2)
-            .attr('stroke', function (d) {
-                return d.color || '#666666'
+            .attr('class', function(d) {
+                return d.class
             });
         lines
             .attr('x1', function (d) {
@@ -52,6 +57,10 @@ kgAngular.service('D3Helpers', function () {
             })
             .attr('y2', function (d) {
                 return d.y2
+            })
+            .attr('stroke-width', 2)
+            .attr('stroke', function (d) {
+                return d.color || '#666666'
             });
 
         return lines;
@@ -63,16 +72,15 @@ kgAngular.service('D3Helpers', function () {
 
         curves = curves.data(data);
         curves.exit().remove();
-        curves.enter().append('svg:path')
+        curves.enter().append('svg:path').attr('fill','none');
+        curves
             .attr('stroke-width', 2)
             .attr('stroke', function (d) {
                 return d.color || '#666666'
             })
-            .attr('fill','none');
-        curves.attr('d', function (d) {
-            return d.points
-        });
-
+            .attr('d', function (d) {
+                return d.points
+            });
         return curves;
 
     };
@@ -333,6 +341,7 @@ kgAngular.directive('model', function () {
 
     return {
         restrict: 'E',
+        scope: true,
         controller: controller
     }
 
@@ -713,7 +722,7 @@ kgAngular.directive('point', function () {
                     if(xInDomain && yInDomain) {
 
                         shapes.circles.push({
-                            style: scope.style,
+                            color: scope.color,
                             cx: cx,
                             cy: cy
                         });
@@ -726,7 +735,8 @@ kgAngular.directive('point', function () {
 
                         // Add a vertical dropline unless droplines == horizontal
                         if (droplines != 'horizontal' && xInDomain) {
-                            shapes.lines.push({class: scope.style + ' dropline', x1: cx, y1: Math.max(cy,0), x2: cx, y2: graph.height + 25});
+                            shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
+                                x1: cx, y1: Math.max(cy,0), x2: cx, y2: graph.height + 25});
                             if (scope.xlabel != '') {
                                 shapes.texts.push({
                                     text: scope.xlabel,
@@ -739,7 +749,8 @@ kgAngular.directive('point', function () {
 
                         // Add a horizontal dropline unless droplines == vertical
                         if (droplines != 'vertical' && yInDomain) {
-                            shapes.lines.push({class: scope.style + ' dropline', x1: Math.min(cx,graph.width), y1: cy, x2: -25, y2: cy});
+                            shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
+                                x1: Math.min(cx,graph.width), y1: cy, x2: -25, y2: cy});
                             if (scope.ylabel != '') {
                                 shapes.texts.push({
                                     text: scope.ylabel,
@@ -763,7 +774,7 @@ kgAngular.directive('point', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { point: '&', droplines: '@', xlabel: '@', ylabel: '@', style: '@'}
+            scope: { point: '&', droplines: '@', xlabel: '@', ylabel: '@', color: '@'}
         }
     }
 );

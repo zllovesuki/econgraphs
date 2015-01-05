@@ -39,6 +39,7 @@ kgAngular.directive('model', function () {
 
     return {
         restrict: 'E',
+        scope: true,
         controller: controller
     }
 

@@ -37,13 +37,14 @@
 
         </h2>
         <hr/>
-        <h2 class="fragment">Mathematical Example: Constrained Optimization</h2>
+        <h2 class="fragment">Analytical Tool 1: Constrained Optimization</h2>
 
-        <h2 class="fragment">Mathematical Example: Comparative Statics</h2>
+        <h2 class="fragment">Analytical Tool 2: Comparative Statics</h2>
     </section>
     <section>
         <section>
             <h1>Motivation</h1>
+            <hr/>
 
             <h2>Photos from the <a
                     href="http://www.nytimes.com/interactive/2014/12/28/sunday-review/2014-year-in-pictures.html"
@@ -207,7 +208,7 @@
                 <ul>
                     <li class="fragment">On reserve in the library</li>
                     <li class="fragment">Background material for lecture - not written at the level of the course!</li>
-                    <li class="fragment">Source of homework problems</li>
+                    <li class="fragment">Source of (some) homework problems</li>
                     <li class="fragment">You may get the 4th edition, but <span class="fragment highlight-red">you are responsible for checking to see if the homework problems are identical!</span>
                     </li>
                 </ul>
@@ -218,7 +219,7 @@
         </div>
     </section>
     <section>
-        <h1>Overview</h1>
+        <h1>Rough Overview (Subject to Change)</h1>
 
         <p></p>
         <table class="table">
@@ -533,8 +534,7 @@
             </div>
             <div class="col-lg-2"></div>
             <div class="col-lg-5">
-                <p class="fragment">Consumers choose a bundle of goods, based on the price of all goods and their
-                    income.</p>
+                <p class="fragment">Consumers choose a bundle of goods, based on the prices of all goods.</p>
             </div>
         </div>
         <div class="row">
@@ -557,7 +557,6 @@
         </div>
     </section>
     <section>
-        <h1>Summary</h1>
         <table class="table" style="width:100%" align="center">
             <tr>
                 <td></td>
@@ -687,8 +686,9 @@
                     <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-drought.jpg') }}">
                 </div>
             </div>
-            <p class="fragment">Who are the people in these photos, and behind them? What are they optimizing?</p>
-            <p class="fragment">How are the people and institutions in these photos interacting with one another?</p>
+            <p class="fragment">Who are the people and institutions in these photos, and behind them?</p>
+            <p class="fragment">What are they optimizing? What constraints do they face?</p>
+            <p class="fragment">How are they interacting with one another? Are they in equilibrium?</p>
             <p class="fragment">How do - or could - government policies affect these situations?</p>
 
         </section>
@@ -709,6 +709,242 @@
             <hr/>
             <h1>Constrained Optimization</h1>
         </section>
+        <section>
+            <h2>The Fence Problem</h2>
+            <hr/>
+            <p>You are given 40 linear feet of fence and need to make a rectangular enclosure.</p>
+            <p>What is the length and
+                width that maximize the area of the enclosure?</p>
+            <hr/>
+            <div class="fragment">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>In words...</h3>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Formally...</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>Find the maximum of the objective function<br/><span rendered-math expression="A(L,W) = LW"></span></p>
+                </div>
+                <div class="col-lg-6">
+                    <table style="width:100%">
+                        <tr class="fragment">
+                            <td rendered-math expression="\displaystyle{\max_{(L,W)}}" width="30%" style="text-align: right"></td>
+                            <td rendered-math expression="LW"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>subject to the constraint<br/><span rendered-math expression="2L + 2W \le 40"></span>.</p>
+                </div>
+                <div class="col-lg-6">
+                    <table style="width:100%">
+                        <tr class="fragment">
+                            <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                            <td rendered-math expression="40 - 2L - 2W \ge 0"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </section>
+    <section>
+        {% raw %}
+        <model>
+            <!-- Model parameters -->
+            <param name="L" value="5"/>
+            <param name="W" value="15"/>
+            <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+            <div class="row-fluid">
+                <div class="col-lg-8">
+                    <graph height="700" width="700">
+                        <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                        <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                        <line fn="functions.b.updateParams({income:40, px:2, py:2})" color="blue"></line>
+                        <point point="[params.L,params.W]" droplines="both"
+                               color="{{(2*params.L + 2*params.W == 40) ? 'green' : (2*params.L + 2*params.W > 40) ? 'red' : 'orange'}}"></point>
+                    </graph>
+                </div>
+                <div class="col-lg-4">
+                    <div class="well">
+                        <p rendered-math expression="L = {{ params.L | number}}"></p>
+                        <slider value="params.L" min="0" max="40" precision="1"></slider>
+                        <p rendered-math expression="W = {{ params.W | number}}"></p>
+                        <slider value="params.W" min="0" max="40" precision="1"></slider>
+                    </div>
+                    <hr/>
+                    <table>
+                        <tr>
+                            <td rendered-math expression="A" align="right"></td>
+                            <td rendered-math expression="= L \times W"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math expression="= {{ params.L | number }} \times {{ params.W | number}}"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math expression="= {{ params.L*params.W | number }}"></td>
+                        </tr>
+                    </table>
+                    <hr/>
+                    <table>
+                        <tr>
+                            <td rendered-math expression="P" align="right"></td>
+                            <td rendered-math expression="= 2L + 2W"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math
+                                expression="= 2 \times {{ params.L | number }} + 2 \times {{ params.W | number}}"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math expression="= {{ 2*params.L + 2*params.W | number }}"></td>
+                        </tr>
+                    </table>
+                    <hr/>
+                    <p ng-if="(2*params.L + 2*params.W > 40)" style="color:red">Too much fence used!</p>
+                    <p ng-if="(2*params.L + 2*params.W < 40)" style="color:orange">Some fence left over!</p>
+                    <p ng-if="(2*params.L + 2*params.W == 40)" style="color:green">All available fence used!</p>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+    </section>
+        <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="L" value="5"/>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row-fluid">
+                    <div class="col-lg-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                            <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                            <line fn="functions.b.updateParams({income:40, px:2, py:2})" color="blue"></line>
+                            <point point="[params.L, 20 - params.L]" droplines="both" color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <p rendered-math expression="L = {{ params.L | number}}"></p>
+                            <slider value="params.L" min="0" max="20" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="W" align="right"></td>
+                                <td rendered-math expression="= \frac{1}{2}\left(40 - 2 \times L\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= \frac{1}{2}\left(40 - 2 \times {{ params.L }}\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ 20 - params.L | number}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="A" align="right"></td>
+                                <td rendered-math expression="= L \times W"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= {{ params.L | number }} \times {{ 20 - params.L | number}}"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ params.L*(20 - params.L) | number }}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="L" value="5"/>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row-fluid">
+                    <div class="col-lg-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                            <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                            <curve fn="functions.u.setLevel([params.L, 20 - params.L])"
+                                   color="green"></curve>
+                            <line fn="functions.b.updateParams({income:40, px:2, py:2})" color="blue"></line>
+                            <point point="[params.L, 20 - params.L]" droplines="both" color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <p rendered-math expression="L = {{ params.L | number}}"></p>
+                            <slider value="params.L" min="0" max="20" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="W" align="right"></td>
+                                <td rendered-math expression="= \frac{1}{2}\left(40 - 2 \times L\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= \frac{1}{2}\left(40 - 2 \times {{ params.L }}\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ 20 - params.L | number}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="A" align="right"></td>
+                                <td rendered-math expression="= L \times W"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= {{ params.L | number }} \times {{ 20 - params.L | number}}"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ params.L*(20 - params.L) | number }}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <p>The green curve shows all combinations of <span rendered-math
+                                                                           expression="L"></span> and <span
+                                rendered-math expression="W"></span> such that <span rendered-math expression="LW = {{ params.L * (20 - params.L) }}"></span>.</p>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
     </section>
     <section>
         <section>
@@ -716,6 +952,165 @@
             <hr/>
             <h1>Comparative Statics</h1>
         </section>
+        <section>
+            <h1>Comparative Statics and the Fence Problem</h1>
+            <hr/>
+            <p>How does the solution to the fence problem change<br/>if we change the amount of fence available?</p>
+            <p class="fragment">What is the marginal payoff (in terms of area) of extra fence?</p>
+            <hr/>
+            <div class="fragment">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3>Specific Problem</h3>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3>General Problem</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr>
+                                <td rendered-math expression="\displaystyle{\max_{(L,W)}}" width="30%"
+                                    style="text-align: right"></td>
+                                <td rendered-math expression="LW"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math expression="\displaystyle{\max_{(L,W)}}" width="30%"
+                                    style="text-align: right"></td>
+                                <td rendered-math expression="LW"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr>
+                                <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                                <td rendered-math expression="40 - 2L - 2W \ge 0"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                                <td rendered-math expression="F - 2L - 2W \ge 0"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="F" value="40"/>
+                <function name="bf" category="budget" form="SimpleBudgetConstraint"></function>
+                <div class="row-fluid">
+                    <div class="col-lg-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                            <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                            <line fn="functions.bf.updateParams({income:params.F, px:2, py:2})" color="blue"></line>
+                            <point point="[params.F*0.25, params.F*0.25]" droplines="both" color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <p rendered-math expression="F = {{ params.F | number}}"></p>
+                            <slider value="params.F" min="0" max="80" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="W" align="right"></td>
+                                <td rendered-math
+                                    expression="= \frac{F}{4} = \frac{ {{ params.F }} }{4} = {{ params.F * 0.25 | number:2}}"></td>
+                            </tr>
+                            <tr>
+                                <td rendered-math expression="L" align="right"></td>
+                                <td rendered-math
+                                    expression="= \frac{F}{4} = \frac{ {{ params.F }} }{4} = {{ params.F * 0.25 | number:2}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="A" align="right"></td>
+                                <td rendered-math
+                                    expression="= L \times W = \left(\frac{ {{ params.F }} }{4}\right)^2 = {{ params.F * params.F * 0.25 * 0.25 | number:2 }}"></td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>Solving the Lagrangian for general <i>F</i></h2>
+            <hr/>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="L(L,W,\lambda)" width="30%" style="text-align: right"></td>
+                    <td rendered-math expression="= LW + \lambda(F - 2L - 2W)"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">First order conditions (FOC)'s:</p>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial L}" width="30%" style="text-align: right"></td>
+                    <td rendered-math expression="= W - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow W = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L{L}(L,W,\lambda)}{\partial W}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= L - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow L = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial \lambda}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= F - 2L - 2W = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow 2L + 2W = F"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">Plug <span endered-math expression="W = 2\lambda"></span> and <span
+                    rendered-math expression="L = 2\lambda"></span> into the last equation, and we get
+            </p>
+            <div class="row">
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="2(2\lambda) + 2(2\lambda) = F \rightarrow \lambda = \frac{F}{8}"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="W = L = 2\lambda = \frac{F}{4}"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="A = WL = \left(\frac{F}{4}\right)^2 = \frac{F^2}{16}"></p>
+                </div>
+            </div>
+            <hr>
+            <p class="fragment">And the big payoff...</p>
+            <p>
+                <span class="fragment" rendered-math expression="\frac{dA^*(F)}{dF}"></span> <span class="fragment"
+                                                                                                  rendered-math
+                                                                                                  expression="= \frac{F}{8}"></span><span
+                    class="fragment"
+                    rendered-math
+                    expression="= \lambda"></span><span class="fragment" color="red">!!!!!</span>
+            </p></section>
+
     </section>
     <section>
         <section>
