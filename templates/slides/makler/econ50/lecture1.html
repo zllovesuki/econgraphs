@@ -945,12 +945,86 @@
             </model>
             {% endraw %}
         </section>
+        <section>
+            <h2>Using the Lagrangian Method</h2>
+            <hr/>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="L(L,W,\lambda)" width="30%" style="text-align: right"></td>
+                    <td rendered-math expression="= LW + \lambda(40 - 2L - 2W)"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">First order conditions (FOC)'s:</p>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial L}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= W - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow W = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial W}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= L - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow L = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial \lambda}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= 40 - 2L - 2W = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow 2L + 2W = 40"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">Plug <span rendered-math expression="L = 2\lambda"></span> and <span
+                    rendered-math expression="W = 2\lambda"></span> into the last equation, and we get
+            </p>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math
+                       expression="2(2\lambda) + 2(2\lambda) = 40 \rightarrow \lambda = 5"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="W = L = 2\lambda = 10"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math
+                       expression="A = LW = 10^2 = 100"></p>
+                </div>
+            </div>
+
+        </section>
     </section>
     <section>
         <section>
             <h3>Analytical Tool 2</h3>
             <hr/>
             <h1>Comparative Statics</h1>
+        </section>
+        <section>
+            <h2>What do we mean by Comparative Statics?</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">If some <b>exogenous variable</b> changes...</div>
+                <div class="col-lg-6 fragment">(e.g., the number of consumers in a market, or the price of some related good, or the average income of consumers in a market.)</div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">then the market equilibrium</div>
+                <div class="col-lg-6 fragment">(e.g., the price of houses in Palo Alto)</div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">or the answer to a constrained optimization problem</div>
+                <div class="col-lg-6 fragment">(e.g. the number of gallons of gasoline purchased by a particular consumer)</div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">will also change.</div>
+                <div class="col-lg-6 fragment"></div>
+            </div>
         </section>
         <section>
             <h1>Comparative Statics and the Fence Problem</h1>
@@ -1073,7 +1147,7 @@
                     <td class="fragment" rendered-math expression="\rightarrow W = 2\lambda"></td>
                 </tr>
                 <tr class="fragment">
-                    <td rendered-math expression="\frac{\partial L{L}(L,W,\lambda)}{\partial W}" width="30%"
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial W}" width="30%"
                         style="text-align: right"></td>
                     <td rendered-math expression="= L - 2\lambda = 0"></td>
                     <td class="fragment" rendered-math expression="\rightarrow L = 2\lambda"></td>
@@ -1086,8 +1160,8 @@
                 </tr>
             </table>
             <hr/>
-            <p class="fragment">Plug <span endered-math expression="W = 2\lambda"></span> and <span
-                    rendered-math expression="L = 2\lambda"></span> into the last equation, and we get
+            <p class="fragment">Plug <span rendered-math expression="L = 2\lambda"></span> and <span
+                    rendered-math expression="W = 2\lambda"></span> into the last equation, and we get
             </p>
             <div class="row">
                 <div class="col-lg-4">
@@ -1097,13 +1171,13 @@
                     <p class="fragment" rendered-math expression="W = L = 2\lambda = \frac{F}{4}"></p>
                 </div>
                 <div class="col-lg-4">
-                    <p class="fragment" rendered-math expression="A = WL = \left(\frac{F}{4}\right)^2 = \frac{F^2}{16}"></p>
+                    <p class="fragment" rendered-math expression="A = LW = \left(\frac{F}{4}\right)^2 = \frac{F^2}{16}"></p>
                 </div>
             </div>
             <hr>
             <p class="fragment">And the big payoff...</p>
             <p>
-                <span class="fragment" rendered-math expression="\frac{dA^*(F)}{dF}"></span> <span class="fragment"
+                <span class="fragment" rendered-math expression="\frac{dA}{dF}"></span> <span class="fragment"
                                                                                                   rendered-math
                                                                                                   expression="= \frac{F}{8}"></span><span
                     class="fragment"
