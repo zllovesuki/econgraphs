@@ -1,0 +1,1217 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 1</h2>
+
+        <h1>Welcome to Econ 50!</h1>
+
+        <h1>Introduction to<br/>Constrained Optimization</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>January 5, 2014</h3>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">A little motivation</h2>
+
+        <h2 class="fragment">Upcoming deadlines and class policies</h2>
+
+        <h2 class="fragment">Review: Econ 1</h2>
+
+        <h2 class="fragment">Looking Forward: 50, 51, 52</h2>
+        <hr/>
+        <h2 class="fragment">
+
+            10 minute break
+
+        </h2>
+        <hr/>
+        <h2 class="fragment">Analytical Tool 1: Constrained Optimization</h2>
+
+        <h2 class="fragment">Analytical Tool 2: Comparative Statics</h2>
+    </section>
+    <section>
+        <section>
+            <h1>Motivation</h1>
+            <hr/>
+
+            <h2>Photos from the <a
+                    href="http://www.nytimes.com/interactive/2014/12/28/sunday-review/2014-year-in-pictures.html"
+                    target="-_blank"><i>New York Times</i> 2014 Year in Pictures</a></h2>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-immigrants.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-explosion.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-detroit.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-ferguson.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-ebola.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-drought.jpg') }}">
+        </section>
+    </section>
+    <section>
+    <section>
+        <h1>Administrative Announcements</h1>
+
+        <h2>Upcoming deadlines; Class policies</h2>
+    </section>
+    <section>
+        <h1>Welcome to Econ 50!</h1>
+
+        <p></p>
+        <ul>
+            <li class="fragment">Make sure you have a syllabus (and read it through!) and an information sheet</li>
+            <li class="fragment">Bring your clickers on Wednesday</li>
+            <li class="fragment">Sign up for sections in Axess by next Monday - only sections 2-5</li>
+            <li class="fragment">Office hours and sections will begin <i>next</i> week.</li>
+            <li class="fragment">Homework 1 will be due <i>next</i> Friday.</li>
+        </ul>
+    </section>
+    <section id="two-week-view">
+        <div class="row" style="height:20%">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2"><p class="calendar-date">M</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">W</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">F</p>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="today-date">
+                    <p class="calendar-date">JAN 5</p>
+
+                    <p>Lecture 1: Constrained Optimization</p>
+
+                    <p><em>B&B Ch. 1</em></p>
+
+                    <p class="fragment highlight-red"><em>Read syllabus & info sheet!</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 6</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 7</p>
+
+                    <p>Lecture 2: Elasticity and Comp. Statics</p>
+
+                    <p><em>B&B Ch. 2</em></p>
+
+                    <p class="fragment highlight-red"><em>Bring i>clickers</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 8</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 9</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 12</p>
+
+                    <p>Lecture 3: Preferences, Ind. Curves</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+                    <p class="fragment highlight-red"><em>Last day to sign up for sections in Axess</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 13</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 14</p>
+
+                    <p>Lecture 4: Utility Functions</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 15</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="section-date">
+                    <p class="calendar-date">JAN 16</p>
+
+                    <p>Sections</p>
+
+                    <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+        <h1>Textbook</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-8">
+                <p>Besanko and Braeutigam</p>
+
+                <p><i>Microeconomics</i></p>
+
+                <p>5th Edition</p>
+                <hr/>
+                <ul>
+                    <li class="fragment">On reserve in the library</li>
+                    <li class="fragment">Background material for lecture - not written at the level of the course!</li>
+                    <li class="fragment">Source of (some) homework problems</li>
+                    <li class="fragment">You may get the 4th edition, but <span class="fragment highlight-red">you are responsible for checking to see if the homework problems are identical!</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <img src="{{ url_for('static',filename='images/econ50/lecture1/textbook-cover.jpg') }}"/>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h1>Rough Overview (Subject to Change)</h1>
+
+        <p></p>
+        <table class="table">
+            <tr class="fragment">
+                <td>Week 1</td>
+                <td>Constrained Optimization, Comparative Statics, Elasticity</td>
+                <td>Chapters 1 & 2</td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 2-5</td>
+                <td>Consumer Theory</td>
+                <td>Chapters 3-5</td>
+            </tr>
+            <tr class="fragment">
+                <td></td>
+                <td>~ Midterm: February 9 ~</td>
+                <td></td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 6-7</td>
+                <td>Producer Theory I: Cost Minimization</td>
+                <td>Chapters 6-8</td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 8-10</td>
+                <td>Producer Theory II: Profit Maximization</td>
+                <td>Chapters 9-11</td>
+            </tr>
+            <tr class="fragment">
+                <td></td>
+                <td>~ Final: March 18 ~</td>
+                <td></td>
+            </tr>
+
+        </table>
+    </section>
+    <section>
+        <h1>Lecture Notes</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-6">
+                <ul>
+                    <li class="fragment">Posted online after lecture</li>
+                    <li class="fragment">HTML based; use arrow keys to navigate, ESC to see map</li>
+                    <li class="fragment">Require modern browser (Firefox, Safari, Chrome) - please use Piazza if you
+                        have technical difficulties
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6 fragment">
+                <img src="{{ url_for('static',filename='images/econ50/lecture1/lazy-student-lecture-notes.jpg') }}"/>
+
+                <p>(not a good idea)</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h1>No Laptops in Lecture</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-6 fragment">
+                <img src="{{ url_for('static',filename='images/econ50/lecture1/laptop-vs-longhand.png') }}"/>
+
+                <p>Vox.com: <a href="http://www.vox.com/2014/6/4/5776804/note-taking-by-hand-versus-laptop"
+                               target="_blank">Why you should take notes by hand</a>
+                </p>
+            </div>
+            <div class="col-lg-6 fragment">
+                <img src="{{ url_for('static',filename='images/econ50/lecture1/lazy-student-laptop.jpg') }}"/>
+
+                <p>(no link necessary)</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h1>Class Technology</h1>
+        <hr/>
+        <ul>
+            <li class="fragment">We are a pilot class for the new post-Coursework LMS based on Canvas.</li>
+            <li class="fragment"><a href="https://classes.stanford.edu/courses/184/" target="_blank">https://classes.stanford.edu/courses/184/</a>
+            </li>
+            <li class="fragment"> Includes links to:
+                <ul>
+                    <li class="fragment">Lecture notes: <a href="http://econgraphs.org/slides/makler/econ50/"
+                                                           target="_blank">http://econgraphs.org/slides/makler/econ50/</a>
+                    </li>
+                    <li class="fragment">Piazza (for discussion): <a
+                            href="https://piazza.com/stanford/winter2015/econ50/home"
+                            target="_blank">https://piazza.com/stanford/winter2015/econ50/home</a>
+                    </li>
+                    <li class="fragment"><b>Please do not e-mail me or the TA's directly - post questions on Piazza
+                        instead.</b></li>
+                </ul>
+            </li>
+            <li class="fragment">We will be using i>clickers in class - <span class="fragment highlight-red">please bring one starting next week!</span>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h1>Homework</h1>
+        <hr/>
+        <ul>
+            <li class="fragment">This is a "problem-solving course" - homework is essential.</li>
+            <li class="fragment">Due Friday at the <b>beginning</b> of section, starting next week (Jan 12).</li>
+            <li class="fragment">If you have to miss section, may be submitted online or by fax by <span
+                    class="fragment highlight-red">10am Friday</span>.
+            </li>
+            <li class="fragment">No extensions will be given, but your lowest homework score is dropped.</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Grading</h1>
+
+        <p></p>
+        <table class="table">
+            <tr class="fragment">
+                <td>Homework</td>
+                <td>Due each Friday in section</td>
+                <td>25% of grade</td>
+            </tr>
+            <tr class="fragment">
+                <td>Midterm</td>
+                <td>Monday, February 9, in class</td>
+                <td>30% of grade</td>
+            </tr>
+            <tr class="fragment">
+                <td>Final Exam</td>
+                <td>Wednesday, March 18, 8:30-11:30am</td>
+                <td>45% of grade</td>
+            </tr>
+            <tr class="fragment">
+                <td>Class Participation</td>
+                <td>Lectures, sections, i>clickers</td>
+                <td>Used to tip the balance</td>
+            </tr>
+        </table>
+    </section>
+
+    </section>
+
+    <section>
+    <section>
+        <h1>Review</h1>
+
+        <h2>From Econ 1 to Econ 50</h2>
+    </section>
+    <section>
+        <h2>Difference 1: We take derivatives</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-5">
+                <h3>Econ 1</h3>
+                <hr/>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <h3>Econ 50</h3>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="fragment" rendered-math expression="TC = FC + VC"></div>
+
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <div class="fragment" rendered-math expression="TC(q) = FC + VC(q)"></div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Marginal cost is the cost of producing an additional unit of output.</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Marginal cost is the derivative of the total cost function: <span rendered-math
+                                                                                                      expression="MC(q) = TC'(q)"></span>.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Changes to fixed costs do not affect marginal costs.</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <hr/>
+                <div class="fragment" rendered-math expression="TC'(q) = 0 + VC'(q)"></div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Difference 2: We optimize with calculus</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-5">
+                <h3>Econ 1</h3>
+                <hr/>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <h3>Econ 50</h3>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <p class="fragment">A competitive firm maximizes profits by setting <span rendered-math class="fragment"
+                                                                                          expression="P = MC"></span>
+                </p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <p class="fragment">A competitive firm maximizes its profit function, which is:
+
+                <p>
+                <table style="width:100%">
+                    <tr class="fragment">
+                        <td rendered-math expression="\pi(q)" width="30%" style="text-align: right"></td>
+                        <td rendered-math expression="= TR(q) - TC(q)"></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td></td>
+                        <td rendered-math expression="= P \times q - TC(q)"></td>
+                    </tr>
+                </table>
+                <hr/>
+                <p class="fragment">To do this, it takes the derivative of the profit function:</p>
+                <table style="width:100%">
+                    <tr class="fragment">
+                        <td rendered-math expression="\pi'(q)" width="30%" style="text-align: right"></td>
+                        <td rendered-math expression="= P - TC'(q)"></td>
+                    </tr>
+                </table>
+                <hr/>
+                <p class="fragment">Setting this equal to zero yields:</p>
+                <table style="width:100%">
+                    <tr class="fragment">
+                        <td rendered-math expression="P" width="30%" style="text-align: right"></td>
+                        <td rendered-math expression="= TC'(q)"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Difference 3: We include more variables</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-5">
+                <h3>Econ 1</h3>
+                <hr/>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <h3>Econ 50</h3>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <p class="fragment">The demand curve for a good shows the quantity demanded at each possible price of
+                    that good, holding the prices of other goods constant.</p>
+                <hr/>
+                <p class="fragment" rendered-math expression="Q(P) = 10 - P"/></p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <p class="fragment">The demand function for a good shows the quantity demanded of that good, as a
+                    function of all relevant decision-making variables.</p>
+                <hr/>
+                <p class="fragment" rendered-math expression="q_{x}(p_{x},p_{y}) = 10 - p_{x} + \frac{1}{2}p_{y}"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Changes to the <br/>prices of other goods<br/>will <b>"shift"</b> the
+                    demand curve.</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Prices of other goods<br/>are <b>explicitly included</b><br/>in the
+                    demand function.</p>
+            </div>
+        </div>
+
+    </section>
+    <section>
+        <h2>Difference 4: We look at more choices</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-5">
+                <h3>Econ 1</h3>
+                <hr/>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <h3>Econ 50</h3>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <p class="fragment">Consumers choose one good, based on its price and other factors</p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <p class="fragment">Consumers choose a bundle of goods, based on the prices of all goods.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Marginal analysis looks at the change in one choice variable.</p>
+                <hr/>
+                <p class="fragment"><span rendered-math expression="MU = P"></span>, or <span rendered-math
+                                                                                              expression="\frac{MU}{P} = 1"></span>
+                </p>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+                <hr/>
+                <p class="fragment">Marginal analysis uses partial derivatives with respect to each choice variable.</p>
+                <hr/>
+                <p class="fragment" rendered-math
+                   expression="\frac{\partial u(x,y) / \partial x}{p_{x}} = \frac{\partial u(x,y) / \partial y}{p_{y}}"></p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <table class="table" style="width:100%" align="center">
+            <tr>
+                <td></td>
+                <td>Econ 1</td>
+                <td>Econ 50</td>
+            </tr>
+            <tr>
+                <td>Marginal analysis</td>
+                <td class="fragment">Words, stories</td>
+                <td class="fragment">Derivatives</td>
+            </tr>
+            <tr>
+                <td>Optimization</td>
+                <td class="fragment">Rules of thumb</td>
+                <td class="fragment">Set derivative(s) to zero</td>
+            </tr>
+            <tr>
+                <td>Exogenous variables</td>
+                <td class="fragment"><i>Ceteris paribus</i> assumption</td>
+                <td class="fragment">Multivariate functions</td>
+            </tr>
+            <tr>
+                <td>Endogenous ("choice") variables</td>
+                <td class="fragment">One at a time, using marginal analysis</td>
+                <td class="fragment">Many, using partial derivatives</td>
+            </tr>
+        </table>
+
+    </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Looking Forward</h1>
+
+            <h2>Econ 50, 51, and 52</h2>
+        </section>
+        <section>
+            <h1>The “Classical Economic Model”</h1>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3>Individuals,<br/>Firms</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Markets,<br/>Regulators</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Economies,<br/>Governments</h3>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3 class="fragment">Choice Theory/<br/>Optimization</h3>
+                    <ul>
+                        <li class="fragment">Utility Maximization</li>
+                        <li class="fragment">Profit Maximization</li>
+                        <li class="fragment">Intertemporal Choice</li>
+                        <li class="fragment">Labor Supply</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">Interaction/<br/>Equilibrium</h3>
+                    <ul>
+                        <li class="fragment">Partial Equilibrium</li>
+                        <li class="fragment">General Equilibrium</li>
+                        <li class="fragment">Strategic Interactions</li>
+                        <li class="fragment">Information Asymmetries</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">National<br/>Policy</h3>
+                    <ul>
+                        <li class="fragment">Fiscal Policy</li>
+                        <li class="fragment">Monetary Policy</li>
+                        <li class="fragment">International Trade</li>
+                        <li class="fragment">Economic Growth</li>
+                    </ul>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3 class="fragment">Econ 50</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">Econ 51</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">Econ 52</h3>
+                </div>
+            </div>
+            <hr/>
+            <h2 class="fragment">Throughout: <em>Comparative Statics</em> - response to change</h2>
+
+        </section>
+        <section>
+            <h1>Microeconomists are people who are wrong about specific things.</h1>
+            <br/>
+
+            <h1>Macroeconomists are people who are wrong about things in general.</h1>
+            <br/>
+
+            <h2 class="fragment">...but what does it mean to be "wrong?"</h2>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-immigrants.jpg') }}">
+                </div>
+                <div class="col-lg-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-explosion.jpg') }}">
+                </div>
+                <div class="col-lg-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-detroit.jpg') }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-ferguson.jpg') }}">
+                </div>
+                <div class="col-lg-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-ebola.jpg') }}">
+                </div>
+                <div class="col-lg-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-drought.jpg') }}">
+                </div>
+            </div>
+            <p class="fragment">Who are the people and institutions in these photos, and behind them?</p>
+            <p class="fragment">What are they optimizing? What constraints do they face?</p>
+            <p class="fragment">How are they interacting with one another? Are they in equilibrium?</p>
+            <p class="fragment">How do - or could - government policies affect these situations?</p>
+
+        </section>
+        <section>
+            <h1>Where we start</h1>
+            <hr/>
+            <h2>Analyze how individual decision-makers make choices.</h2>
+        </section>
+
+
+    </section>
+    <section>
+        <h1>10 minute break</h1>
+    </section>
+    <section>
+        <section>
+            <h3>Analytical Tool 1</h3>
+            <hr/>
+            <h1>Constrained Optimization</h1>
+        </section>
+        <section>
+            <h2>The Fence Problem</h2>
+            <hr/>
+            <p>You are given 40 linear feet of fence and need to make a rectangular enclosure.</p>
+            <p>What is the length and
+                width that maximize the area of the enclosure?</p>
+            <hr/>
+            <div class="fragment">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>In words...</h3>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Formally...</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>Find the maximum of the objective function<br/><span rendered-math expression="A(L,W) = LW"></span></p>
+                </div>
+                <div class="col-lg-6">
+                    <table style="width:100%">
+                        <tr class="fragment">
+                            <td rendered-math expression="\displaystyle{\max_{(L,W)}}" width="30%" style="text-align: right"></td>
+                            <td rendered-math expression="LW"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>subject to the constraint<br/><span rendered-math expression="2L + 2W \le 40"></span>.</p>
+                </div>
+                <div class="col-lg-6">
+                    <table style="width:100%">
+                        <tr class="fragment">
+                            <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                            <td rendered-math expression="40 - 2L - 2W \ge 0"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </section>
+    <section>
+        {% raw %}
+        <model>
+            <!-- Model parameters -->
+            <param name="L" value="5"/>
+            <param name="W" value="15"/>
+            <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+            <div class="row-fluid">
+                <div class="col-lg-8">
+                    <graph height="700" width="700">
+                        <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                        <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                        <line fn="functions.b.updateParams({income:40, px:2, py:2})" color="blue"></line>
+                        <point point="[params.L,params.W]" droplines="both"
+                               color="{{(2*params.L + 2*params.W == 40) ? 'green' : (2*params.L + 2*params.W > 40) ? 'red' : 'orange'}}"></point>
+                    </graph>
+                </div>
+                <div class="col-lg-4">
+                    <div class="well">
+                        <p rendered-math expression="L = {{ params.L | number}}"></p>
+                        <slider value="params.L" min="0" max="40" precision="1"></slider>
+                        <p rendered-math expression="W = {{ params.W | number}}"></p>
+                        <slider value="params.W" min="0" max="40" precision="1"></slider>
+                    </div>
+                    <hr/>
+                    <table>
+                        <tr>
+                            <td rendered-math expression="A" align="right"></td>
+                            <td rendered-math expression="= L \times W"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math expression="= {{ params.L | number }} \times {{ params.W | number}}"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math expression="= {{ params.L*params.W | number }}"></td>
+                        </tr>
+                    </table>
+                    <hr/>
+                    <table>
+                        <tr>
+                            <td rendered-math expression="P" align="right"></td>
+                            <td rendered-math expression="= 2L + 2W"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math
+                                expression="= 2 \times {{ params.L | number }} + 2 \times {{ params.W | number}}"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td rendered-math expression="= {{ 2*params.L + 2*params.W | number }}"></td>
+                        </tr>
+                    </table>
+                    <hr/>
+                    <p ng-if="(2*params.L + 2*params.W > 40)" style="color:red">Too much fence used!</p>
+                    <p ng-if="(2*params.L + 2*params.W < 40)" style="color:orange">Some fence left over!</p>
+                    <p ng-if="(2*params.L + 2*params.W == 40)" style="color:green">All available fence used!</p>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+    </section>
+        <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="L" value="5"/>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row-fluid">
+                    <div class="col-lg-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                            <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                            <line fn="functions.b.updateParams({income:40, px:2, py:2})" color="blue"></line>
+                            <point point="[params.L, 20 - params.L]" droplines="both" color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <p rendered-math expression="L = {{ params.L | number}}"></p>
+                            <slider value="params.L" min="0" max="20" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="W" align="right"></td>
+                                <td rendered-math expression="= \frac{1}{2}\left(40 - 2 \times L\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= \frac{1}{2}\left(40 - 2 \times {{ params.L }}\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ 20 - params.L | number}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="A" align="right"></td>
+                                <td rendered-math expression="= L \times W"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= {{ params.L | number }} \times {{ 20 - params.L | number}}"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ params.L*(20 - params.L) | number }}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="L" value="5"/>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row-fluid">
+                    <div class="col-lg-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                            <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                            <curve fn="functions.u.setLevel([params.L, 20 - params.L])"
+                                   color="green"></curve>
+                            <line fn="functions.b.updateParams({income:40, px:2, py:2})" color="blue"></line>
+                            <point point="[params.L, 20 - params.L]" droplines="both" color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <p rendered-math expression="L = {{ params.L | number}}"></p>
+                            <slider value="params.L" min="0" max="20" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="W" align="right"></td>
+                                <td rendered-math expression="= \frac{1}{2}\left(40 - 2 \times L\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= \frac{1}{2}\left(40 - 2 \times {{ params.L }}\right)"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ 20 - params.L | number}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="A" align="right"></td>
+                                <td rendered-math expression="= L \times W"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= {{ params.L | number }} \times {{ 20 - params.L | number}}"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ params.L*(20 - params.L) | number }}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <p>The green curve shows all combinations of <span rendered-math
+                                                                           expression="L"></span> and <span
+                                rendered-math expression="W"></span> such that <span rendered-math expression="LW = {{ params.L * (20 - params.L) }}"></span>.</p>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>Using the Lagrangian Method</h2>
+            <hr/>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="L(L,W,\lambda)" width="30%" style="text-align: right"></td>
+                    <td rendered-math expression="= LW + \lambda(40 - 2L - 2W)"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">First order conditions (FOC)'s:</p>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial L}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= W - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow W = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial W}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= L - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow L = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial \lambda}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= 40 - 2L - 2W = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow 2L + 2W = 40"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">Plug <span rendered-math expression="L = 2\lambda"></span> and <span
+                    rendered-math expression="W = 2\lambda"></span> into the last equation, and we get
+            </p>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math
+                       expression="2(2\lambda) + 2(2\lambda) = 40 \rightarrow \lambda = 5"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="W = L = 2\lambda = 10"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math
+                       expression="A = LW = 10^2 = 100"></p>
+                </div>
+            </div>
+
+        </section>
+    </section>
+    <section>
+        <section>
+            <h3>Analytical Tool 2</h3>
+            <hr/>
+            <h1>Comparative Statics</h1>
+        </section>
+        <section>
+            <h2>What do we mean by Comparative Statics?</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">If some <b>exogenous variable</b> changes...</div>
+                <div class="col-lg-6 fragment">(e.g., the number of consumers in a market, or the price of some related good, or the average income of consumers in a market.)</div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">then the market equilibrium</div>
+                <div class="col-lg-6 fragment">(e.g., the price of houses in Palo Alto)</div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">or the answer to a constrained optimization problem</div>
+                <div class="col-lg-6 fragment">(e.g. the number of gallons of gasoline purchased by a particular consumer)</div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">will also change.</div>
+                <div class="col-lg-6 fragment"></div>
+            </div>
+        </section>
+        <section>
+            <h1>Comparative Statics and the Fence Problem</h1>
+            <hr/>
+            <p>How does the solution to the fence problem change<br/>if we change the amount of fence available?</p>
+            <p class="fragment">What is the marginal payoff (in terms of area) of extra fence?</p>
+            <hr/>
+            <div class="fragment">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3>Specific Problem</h3>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3>General Problem</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr>
+                                <td rendered-math expression="\displaystyle{\max_{(L,W)}}" width="30%"
+                                    style="text-align: right"></td>
+                                <td rendered-math expression="LW"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math expression="\displaystyle{\max_{(L,W)}}" width="30%"
+                                    style="text-align: right"></td>
+                                <td rendered-math expression="LW"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr>
+                                <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                                <td rendered-math expression="40 - 2L - 2W \ge 0"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                                <td rendered-math expression="F - 2L - 2W \ge 0"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="F" value="40"/>
+                <function name="bf" category="budget" form="SimpleBudgetConstraint"></function>
+                <div class="row-fluid">
+                    <div class="col-lg-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="30" title="Length (L)"></axis>
+                            <axis dim="y" min="0" max="30" title="Width (W)"></axis>
+                            <line fn="functions.bf.updateParams({income:params.F, px:2, py:2})" color="blue"></line>
+                            <point point="[params.F*0.25, params.F*0.25]" droplines="both" color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <p rendered-math expression="F = {{ params.F | number}}"></p>
+                            <slider value="params.F" min="0" max="80" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="W" align="right"></td>
+                                <td rendered-math
+                                    expression="= \frac{F}{4} = \frac{ {{ params.F }} }{4} = {{ params.F * 0.25 | number:2}}"></td>
+                            </tr>
+                            <tr>
+                                <td rendered-math expression="L" align="right"></td>
+                                <td rendered-math
+                                    expression="= \frac{F}{4} = \frac{ {{ params.F }} }{4} = {{ params.F * 0.25 | number:2}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="A" align="right"></td>
+                                <td rendered-math
+                                    expression="= L \times W = \left(\frac{ {{ params.F }} }{4}\right)^2 = {{ params.F * params.F * 0.25 * 0.25 | number:2 }}"></td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>Solving the Lagrangian for general <i>F</i></h2>
+            <hr/>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="L(L,W,\lambda)" width="30%" style="text-align: right"></td>
+                    <td rendered-math expression="= LW + \lambda(F - 2L - 2W)"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">First order conditions (FOC)'s:</p>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial L}" width="30%" style="text-align: right"></td>
+                    <td rendered-math expression="= W - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow W = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial W}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= L - 2\lambda = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow L = 2\lambda"></td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math expression="\frac{\partial L(L,W,\lambda)}{\partial \lambda}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="= F - 2L - 2W = 0"></td>
+                    <td class="fragment" rendered-math expression="\rightarrow 2L + 2W = F"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">Plug <span rendered-math expression="L = 2\lambda"></span> and <span
+                    rendered-math expression="W = 2\lambda"></span> into the last equation, and we get
+            </p>
+            <div class="row">
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="2(2\lambda) + 2(2\lambda) = F \rightarrow \lambda = \frac{F}{8}"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="W = L = 2\lambda = \frac{F}{4}"></p>
+                </div>
+                <div class="col-lg-4">
+                    <p class="fragment" rendered-math expression="A = LW = \left(\frac{F}{4}\right)^2 = \frac{F^2}{16}"></p>
+                </div>
+            </div>
+            <hr>
+            <p class="fragment">And the big payoff...</p>
+            <p>
+                <span class="fragment" rendered-math expression="\frac{dA}{dF}"></span> <span class="fragment"
+                                                                                                  rendered-math
+                                                                                                  expression="= \frac{F}{8}"></span><span
+                    class="fragment"
+                    rendered-math
+                    expression="= \lambda"></span><span class="fragment" color="red">!!!!!</span>
+            </p></section>
+
+    </section>
+    <section>
+        <section>
+            <h3>Looking Forward</h3>
+            <hr/>
+            <h1>What to Expect</h1>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/paint-the-fence.png') }}"
+                 alt="Paint the fence">
+
+            <p>What this class will feel like (a little)</p>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/crane.jpg') }}" alt="Karate master">
+
+            <p>What you'll feel like after this class (ok, maybe not)</p>
+        </section>
+        <section>
+            <h1>For Wednesday</h1>
+            <hr/>
+            <h2>Read syllabus and info sheet</h2>
+
+            <h2>Read chapters 1 and 2</h2>
+
+            <h2>Bring i>clickers to class</h2>
+        </section>
+    </section>
+
+{% endblock %}

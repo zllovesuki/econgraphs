@@ -6,7 +6,7 @@
 	<h1>EconGraphs</h1>
 	<p>Welcome to econgraphs.org.</p>
     <p>Click <a href="{{ url_for('graphs',graph_name=None) }}">here</a> for dynamic graphs that can be used in any econ classroom.</p>
-    <p>Click <a href="{{ url_for('slides',slide_name=None) }}">here</a> for the slides for Econ 50 at Stanford.</p>
+    <p>Click <a href="{{ url_for('slides',prof_name='makler',course_name='econ50',slide_name=None) }}">here</a> for the slides for Econ 50 at Stanford.</p>
 </div>
 
 {% endblock %}

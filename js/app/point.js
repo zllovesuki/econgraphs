@@ -27,7 +27,7 @@ kgAngular.directive('point', function () {
                     if(xInDomain && yInDomain) {
 
                         shapes.circles.push({
-                            style: scope.style,
+                            color: scope.color,
                             cx: cx,
                             cy: cy
                         });
@@ -40,7 +40,8 @@ kgAngular.directive('point', function () {
 
                         // Add a vertical dropline unless droplines == horizontal
                         if (droplines != 'horizontal' && xInDomain) {
-                            shapes.lines.push({class: scope.style + ' dropline', x1: cx, y1: Math.max(cy,0), x2: cx, y2: graph.height + 25});
+                            shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
+                                x1: cx, y1: Math.max(cy,0), x2: cx, y2: graph.height + 25});
                             if (scope.xlabel != '') {
                                 shapes.texts.push({
                                     text: scope.xlabel,
@@ -53,7 +54,8 @@ kgAngular.directive('point', function () {
 
                         // Add a horizontal dropline unless droplines == vertical
                         if (droplines != 'vertical' && yInDomain) {
-                            shapes.lines.push({class: scope.style + ' dropline', x1: Math.min(cx,graph.width), y1: cy, x2: -25, y2: cy});
+                            shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
+                                x1: Math.min(cx,graph.width), y1: cy, x2: -25, y2: cy});
                             if (scope.ylabel != '') {
                                 shapes.texts.push({
                                     text: scope.ylabel,
@@ -77,7 +79,7 @@ kgAngular.directive('point', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { point: '&', droplines: '@', xlabel: '@', ylabel: '@', style: '@'}
+            scope: { point: '&', droplines: '@', xlabel: '@', ylabel: '@', color: '@'}
         }
     }
 );

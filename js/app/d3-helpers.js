@@ -5,13 +5,19 @@ kgAngular.service('D3Helpers', function () {
 
         circles = circles.data(data);
         circles.exit().remove();
-        circles.enter().append('circle').attr('r', 5);
+        circles.enter().append('circle').attr('r', 10);
         circles
             .attr('cx', function (d) {
                 return d.cx
             })
             .attr('cy', function (d) {
                 return d.cy
+            })
+            .attr('stroke', function(d) {
+                return d.color
+            })
+            .attr('fill', function (d) {
+                return d.color
             });
         return circles;
 
@@ -23,9 +29,8 @@ kgAngular.service('D3Helpers', function () {
         lines = lines.data(data);
         lines.exit().remove();
         lines.enter().append('line')
-            .attr('stroke-width', 2)
-            .attr('stroke', function (d) {
-                return d.color || '#666666'
+            .attr('class', function(d) {
+                return d.class
             });
         lines
             .attr('x1', function (d) {
@@ -39,6 +44,10 @@ kgAngular.service('D3Helpers', function () {
             })
             .attr('y2', function (d) {
                 return d.y2
+            })
+            .attr('stroke-width', 2)
+            .attr('stroke', function (d) {
+                return d.color || '#666666'
             });
 
         return lines;
@@ -50,16 +59,15 @@ kgAngular.service('D3Helpers', function () {
 
         curves = curves.data(data);
         curves.exit().remove();
-        curves.enter().append('svg:path')
+        curves.enter().append('svg:path').attr('fill','none');
+        curves
             .attr('stroke-width', 2)
             .attr('stroke', function (d) {
                 return d.color || '#666666'
             })
-            .attr('fill','none');
-        curves.attr('d', function (d) {
-            return d.points
-        });
-
+            .attr('d', function (d) {
+                return d.points
+            });
         return curves;
 
     };
