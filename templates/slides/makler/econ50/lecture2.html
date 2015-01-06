@@ -379,6 +379,77 @@
 
         </section>
         <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="P" value="2"/>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <div class="row-fluid">
+                    <div class="col-lg-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="15" title="Quantity (Q)"></axis>
+                            <axis dim="y" min="0" max="15" title="Price (P)"></axis>
+                            <line fn="functions.b.updateParams({income:12, px:1, py:2})" color="blue"></line>
+                            <point point="[12 - 2*params.P, params.P]" droplines="both" xlabel="Q" ylabel="P" color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <p rendered-math expression="P = \${{ params.P | number:2}}"></p>
+                            <slider value="params.P" min="0" max="6" precision="0.5"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="Q^D(P)" align="right"></td>
+                                <td rendered-math expression="= 12 - 2P"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= 12 - 2 \times {{ params.P | number }}"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ 12 - 2*params.P | number}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr style="height:100px">
+                                <td rendered-math expression="\displaystyle{\epsilon_{Q^D,P}}" align="right"></td>
+                                <td rendered-math expression="\displaystyle{= \frac{dQ^D(P)}{dP} \times \frac{P}{Q^D}}"></span>
+                                </td>
+                            </tr>
+                            <tr style="height:100px">
+                                <td></td>
+                                <td rendered-math
+                                        expression="\displaystyle{= -2 \times \frac{ {{ params.P | number }} }{ {{ 12 - 2*params.P | number}} } }"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <span ng-if="params.P == 6" rendered-math expression="= -\infty"></span>
+                                    <span ng-if="params.P < 6" rendered-math
+                                          expression="= {{ -2*params.P/(12 - 2*params.P) | number:2 }}"></span>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <hr/>
+                        <p>
+                            <span ng-if="params.P == 6">(perfectly elastic)</span>
+                            <span ng-if="params.P < 6 && params.P > 3">(elastic)</span>
+                            <span ng-if="params.P == 3">(unitary elastic)</span>
+                            <span ng-if="params.P < 3 && params.P > 0">(inelastic)</span>
+                            <span ng-if="params.P == 0">(perfectly inelastic)</span>
+                        </p>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
             <h2>Calculating Price Elasticity (Q as a function of P)</h2>
             <hr/>
             <div class="row">
