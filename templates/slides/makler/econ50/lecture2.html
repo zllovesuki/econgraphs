@@ -1,0 +1,476 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 2</h2>
+
+        <h1>Elasticity and Comparative Statics</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>January 7, 2014</h3>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Logistics and Context</h2>
+
+        <h2 class="fragment">Motivation: Elasticity and Startups</h2>
+        <h2 class="fragment">Comparative Statics with Supply and Demand</h2>
+        <h2 class="fragment">Elasticity: Measuring Comparative Statics</h2>
+        <hr/>
+        <h2 class="fragment">
+
+            10 minute break
+
+        </h2>
+        <hr/>
+        <h2 class="fragment">Calculating elasticity for different functional forms</h2>
+    </section>
+    <section>
+        <section>
+            <h1>Motivation</h1>
+            <hr/>
+
+            <h2>Elasticity: A Startup's Lifeblood</h2>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture2/uber-price-gouging.png') }}">
+            <p><a href="http://valleywag.gawker.com/the-weekend-uber-tried-to-rip-everyone-off-1484140137" target="_blank">- Gawker, December 16, 2013</a>
+            </p>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture2/freemium.png') }}">
+            <p><a href="https://hbr.org/2014/05/making-freemium-work" target="_blank">-
+                Harvard Business Review, May 2014</a></p>
+        </section>
+        <section>
+                <img src="{{ url_for('static', filename='images/econ50/lecture2/motley-fool-logo.jpg') }}">
+                <hr/>
+                <h2>Shouldn't Netflix, Inc. be Talking About This Risk?</h2>
+            <hr/>
+            <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 fragment" align="left">Netflix delivered strong earnings in the third quarter, but <b>fell about 700,000 new subscribers short
+                    of its own customer addition targets</b>. Share prices plunged more than 17% lower overnight, and have
+                    only trended even further down since then.</div>
+                <div class="col-md-4 fragment" align="left">
+                    At the time, Netflix leaders pinned the miss on a <b>price increase of $1 per month</b> for new customers.
+                    The change actually happened two quarters earlier, but <b>effects may have been masked</b> by the
+                    eyeball-magnet powers of Netflix original series <i>Orange Is the New Black</i> releasing a new season.
+                    </div>
+                <div class="col-md-4 fragment" align="left">
+                    ...[The Netflix CEO maintains] "We'll need several quarters to
+                        sort of process whether we're seeing <b>long term price elasticity, short term price elasticity, or
+                        if something else was going on</b> in the quarter in terms of affecting our growth versus
+                        expectations."
+                </div>
+            </div>
+            </div>
+            <hr/>
+            <p><a href="http://www.fool.com/investing/general/2015/01/05/shouldnt-netflix-inc-be-talking-about-this-risk.aspx">Motley Fool, January 5, 2014</a></p>
+        </section>
+    </section>
+    <section id="two-week-view">
+        <div class="row" style="height:20%">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2"><p class="calendar-date">M</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">W</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">F</p>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 5</p>
+
+                    <p>Lecture 1: Constrained Optimization</p>
+
+                    <p><em>B&B Ch. 1</em></p>
+
+                    <p><em>Read syllabus</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 6</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="today-date">
+                    <p class="calendar-date">JAN 7</p>
+
+                    <p>Lecture 2: Elasticity and Comp. Statics</p>
+
+                    <p><em>B&B Ch. 2</em></p>
+
+                    <p><em>Bring i>clickers</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 8</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 9</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 12</p>
+
+                    <p>Lecture 3: Preferences, Ind. Curves</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+                    <p class="fragment highlight-red"><em>Last day to sign up for sections in Axess</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 13</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 14</p>
+
+                    <p>Lecture 4: Utility Functions</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 15</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="section-date">
+                    <p class="calendar-date">JAN 16</p>
+
+                    <p>Sections</p>
+
+                    <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <section>
+            <h2>Review: Comparative Statics</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">If some <b>exogenous variable</b> changes...</div>
+                <div class="col-lg-6 fragment">(e.g., the number of consumers in a market, or the price of some related
+                    good, or the average income of consumers in a market.)
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">then the market equilibrium</div>
+                <div class="col-lg-6 fragment">(e.g., the price of houses in Palo Alto)</div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">or the answer to a constrained optimization problem</div>
+                <div class="col-lg-6 fragment">(e.g. the number of gallons of gasoline purchased by a particular
+                    consumer)
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-6 fragment">will also change.</div>
+                <div class="col-lg-6 fragment">...but by how much?<br/><span class="fragment" style="color:red"><b>Elasticity</b> is the measurement of this.</span></div>
+            </div>
+        </section>
+        <section>
+            <h2>B & B, Chapter 2</h2>
+            <hr/>
+            <p>In characterizing market equilibrium, remember the factors that cause changes in supply and/or demand.</p>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Comparative Statics in Diagrams</h1>
+            <hr/>
+            <ul>
+                <li class="fragment">Effect of a surge in market demand,<br/>for a more elastic and less elastic supply curve</li>
+                <li class="fragment">Effect of a surge in market demand,<br/>for a more elastic and less elastic supply curve</li>
+                <li class="fragment">Effect of changes in prices and income on an individual's consumption of a good.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Supply Elasticity and Changes in Demand</h2>
+        </section>
+        <section>
+            <h2>Demand Elasticity and Changes in Supply</h2>
+        </section>
+        <section>
+            <h2>Consumer Choice</h2>
+            <hr/>
+        </section>
+    </section>
+    <section>
+        <h1>10 minute break</h1>
+    </section>
+    <section>
+        <section>
+            <h2>Calculating Elasticities: The General Case</h2>
+            <hr/>
+            <p>Suppose <span
+                    rendered-math expression="y"></span> is a continuously differentiable function of <span
+                    rendered-math expression="x"></span>.</p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math expression="\displaystyle{\epsilon_{y,x}}" align="right"></td>
+                            <td style="width:200px" rendered-math
+                                expression="\displaystyle{= \frac{\%\Delta y}{\%\Delta x} }"></td>
+                            <td>Percent change in <span
+                                    rendered-math expression="y"></span> per 1% change in <span
+                                    rendered-math expression="x"></span></td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\Delta y / y}{\Delta x / x} }"></td>
+                            <td>By definition, <span rendered-math expression="\displaystyle{\%\Delta x = \frac{\Delta x}{x}}"></span>  and  <span rendered-math expression="\displaystyle{\%\Delta y = \frac{\Delta y}{y}}"></span></td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\Delta y}{\Delta x} \times \frac{x}{y} }"></td>
+                            <td>Rearranging terms</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div height="150px" class="fragment"><p>In the limit, as <span rendered-math expression="\Delta x \rightarrow 0"></span>:</p></div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math expression="\displaystyle{\epsilon_{y,x}}" align="right"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{dy}{dx} \times \frac{x}{y} }"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Calculating Price Elasticity (Q as a function of P)</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"><p>General formula:</p>
+                </div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math style="color:blue" expression="\displaystyle{\epsilon_{Q,P}}" align="right"></td>
+                            <td rendered-math style="color:blue"
+                                expression="\displaystyle{= \frac{\%\Delta Q}{\%\Delta P} }"></td>
+                            <td rendered-math style="color:darkgrey"
+                                expression="\displaystyle{= \frac{\Delta Q / Q}{\Delta P / P} }"></td>
+                            <td rendered-math style="color:darkgrey"
+                                expression="\displaystyle{= \frac{\Delta Q}{\Delta P} \times \frac{P}{Q} }"></td>
+                            <td rendered-math style="color:blue"
+                                expression="\displaystyle{\rightarrow \frac{dQ}{dP} \times \frac{P}{Q}}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <p>Calculate own-price elasticity for the specific linear demand: <span rendered-math expression="Q^D(P) = 12 - 2P"></span></p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math expression="\displaystyle{\epsilon_{Q^D(P),P}}" align="right"></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{=}"></span> <span class="fragment" rendered-math
+                                                    expression="\displaystyle{\frac{dQ^D(P)}{dP} \times \frac{P}{Q^D(P)}}"></span></td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{=}"></span> <span style="color:red"
+                                                                                  rendered-math
+                                                                                  expression="\displaystyle{-2}"></span> <span
+                                    rendered-math
+                                    expression="\displaystyle{\times \frac{P}{Q^D(P)}}"></span></td>
+                            <td>Since <span rendered-math style="color:red"
+                                   expression="\displaystyle{ \frac{dQ^D(P)}{dP} = -2}"></span></td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{=}"></span> <span rendered-math
+                                                                                  expression="\displaystyle{-2}"></span> <span
+                                    rendered-math
+                                    expression="\displaystyle{\times \frac{P}{12 - 2P}}"></span></td>
+                            <td>Since <span rendered-math expression="Q^D(P) = 12 - 2P"></span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>When is <span rendered-math expression="\epsilon"></span> perfectly inelastic?</p>
+                </div>
+                <div class="col-md-4">
+                    <p>When is <span rendered-math expression="\epsilon"></span> unitary elastic?</p>
+                </div>
+                <div class="col-md-4">
+                    <p>When it <span rendered-math expression="\epsilon"></span> perfectly elastic?</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="fragment" rendered-math expression="\epsilon = 0 \text{ when } P = 0"></p>
+                </div>
+                <div class="col-md-4">
+                    <p class="fragment" rendered-math expression="\epsilon = -1 \text{ when } P = 3"></p>
+                </div>
+                <div class="col-md-4">
+                    <p class="fragment" rendered-math
+                       expression="\epsilon \rightarrow -\infty \text{ as } P \rightarrow 6"></p>
+                </div>
+            </div>
+
+
+        </section>
+        <section>
+            <h2>Calculating Price Elasticity (Q as a function of P)</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"><p>General formula:</p>
+                </div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math style="color:blue" expression="\displaystyle{\epsilon_{Q,P}}"
+                                align="right"></td>
+                            <td rendered-math style="color:blue"
+                                expression="\displaystyle{= \frac{\%\Delta Q}{\%\Delta P} }"></td>
+                            <td rendered-math style="color:darkgrey"
+                                expression="\displaystyle{= \frac{\Delta Q / Q}{\Delta P / P} }"></td>
+                            <td rendered-math style="color:darkgrey"
+                                expression="\displaystyle{= \frac{\Delta Q}{\Delta P} \times \frac{P}{Q} }"></td>
+                            <td rendered-math style="color:blue"
+                                expression="\displaystyle{\rightarrow \frac{dQ}{dP} \times \frac{P}{Q}}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <p>Calculate own-price elasticity for general linear demand: <span rendered-math
+                                                                       expression="Q^D(P) = a - bP"></span></p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math expression="\displaystyle{\epsilon_{Q^D(P),P}}" align="right"></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{=}"></span> <span class="fragment" rendered-math
+                                                                                  expression="\displaystyle{\frac{dQ^D(P)}{dP} \times \frac{P}{Q^D(P)}}"></span>
+                            </td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{=}"></span> <span style="color:red"
+                                                                                  rendered-math
+                                                                                  expression="\displaystyle{-b}"></span> <span
+                                    rendered-math
+                                    expression="\displaystyle{\times \frac{P}{Q^D(P)}}"></span></td>
+                            <td>Since <span rendered-math style="color:red"
+                                            expression="\displaystyle{ \frac{dQ^D(P)}{dP} = -b}"></span></td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{=}"></span> <span rendered-math
+                                                                                  expression="\displaystyle{-b}"></span> <span
+                                    rendered-math
+                                    expression="\displaystyle{\times \frac{P}{a - bP}}"></span></td>
+                            <td>Since <span rendered-math expression="Q^D(P) = a - bP"></span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>When is it perfectly inelastic?</p>
+                </div>
+                <div class="col-md-4">
+                    <p>When is it unitary elastic?</p>
+                </div>
+                <div class="col-md-4">
+                    <p>When it is perfectly elastic?</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="fragment" rendered-math expression="\epsilon = 0 \text{ when } P = 0"></p>
+                </div>
+                <div class="col-md-4">
+                    <p class="fragment" rendered-math expression="\epsilon = -1 \text{ when } P = \frac{a}{2b}"></p>
+                </div>
+                <div class="col-md-4">
+                    <p class="fragment" rendered-math
+                       expression="\epsilon \rightarrow -\infty \text{ as } P \rightarrow \frac{a}{b}"></p>
+                </div>
+            </div>
+
+
+        </section>
+    <section>
+        <img src="{{ url_for('static', filename='images/econ50/lecture2/besanko_5e_fig_02_17.jpg') }}" width="60%" height="60%">
+
+        <p style="color:grey">Besanko & Braeutigam, <i>Microeconomics</i>, 5th ed., Figure 2.17</p>
+    </section>
+
+    </section>
+{% endblock %}
