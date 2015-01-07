@@ -12,7 +12,6 @@
         "name": "slides",
         "order": [
             "reveal.min.js",
-            "math.js",
             "papaparse.min.js",
             "reveal-initialize.js"
         ]

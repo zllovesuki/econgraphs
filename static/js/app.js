@@ -212,7 +212,7 @@ kgAngular.directive('clickerQuestion', function () {
         scope: true,
         transclude: true,
         replace: true,
-        template: "<div><div ng-transclude></div><hr/><div ng-if='currentFile'><button ng-click='update()'>Reveal</button><button ng-click='reset()'>Reset</button><p>{{count}}</p></div></div>",
+        template: "<div><div ng-transclude></div><hr/><div ng-if='currentFile'><button ng-click='update()'>Reveal</button><button ng-click='reset()'>Reset</button></div></div>",
         controller: function ($scope) {
 
             $scope.options = {}
@@ -243,8 +243,8 @@ kgAngular.directive('clickerQuestion', function () {
                     var studentResponse = data[i];
                     if (studentResponse.length > 2) {
 
-                        // Each student's most response to the last question is in the third-to-last column of the CSV
-                        var responseLetter = studentResponse[studentResponse.length - 3];
+                        // Each student's most response to the last question is in the seventh-to-last column of the CSV
+                        var responseLetter = studentResponse[studentResponse.length - 7];
                         if ($scope.count.hasOwnProperty(responseLetter)) {
                             $scope.count[responseLetter] += 1;
                         } else {
@@ -288,7 +288,7 @@ kgAngular.directive('clickerOption', function () {
         replace: true,
         transclude: true,
         require: '^clickerQuestion',
-        template: "<div class='col-lg-5 well'><h2>{{letter}}</h2><div ng-transclude style='height: 150px'></div><hr/><h3>{{ count }} ({{ frequency | number: 0}}%)</h3></div>",
+        template: "<table class='table'><tr style='height: 100px'><td style='width:50px'>{{letter}}</td><td style='width: 800px'><div ng-transclude></div></td><td>{{ count }} ({{ frequency | number: 0 }}%)</td></tr></table>",
         link: function (scope, element, attrs, ClickerCtrl) {
             scope.letter = attrs['letter'];
             scope.count = '-';

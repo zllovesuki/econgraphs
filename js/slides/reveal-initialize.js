@@ -16,11 +16,6 @@ Reveal.initialize({
     theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
     transition: 'default', // default/cube/page/concave/zoom/linear/fade/none
 
-    math: {
-        mathjax: 'js/lib/mathjax/MathJax.js',
-        config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
-    }
-
     // Parallax scrolling
     // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
     // parallaxBackgroundSize: '2100px 900px',
