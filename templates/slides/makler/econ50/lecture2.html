@@ -16,173 +16,330 @@
         <br/>
 
         <h3>January 7, 2014</h3>
+    <hr>
+        <br/>
+    <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
 
     </section>
     <section>
         <h1>Today's Agenda</h1>
         <hr/>
         <h2 class="fragment">Logistics and Context</h2>
-
-        <h2 class="fragment">Motivation: Elasticity and Startups</h2>
-        <h2 class="fragment">Comparative Statics with Supply and Demand</h2>
-        <h2 class="fragment">Elasticity: Measuring Comparative Statics</h2>
+        <h2 class="fragment">Motivation: Elasticity in Tech Industry News</h2>
+        <h2 class="fragment">Review: Comparative Statics with Supply and Demand</h2>
+        <h2 class="fragment">Quantifying Comparative Statics: Elasticity</h2>
         <hr/>
-        <h2 class="fragment">
-
-            10 minute break
-
-        </h2>
+        <h2 class="fragment">10 minute break</h2>
         <hr/>
-        <h2 class="fragment">Calculating elasticity for different functional forms</h2>
+        <h2 class="fragment">Calculating price elasticity of demand</h2>
+        <h2 class="fragment">Empirical estimates of the price elasticity of demand</h2>
+        <h2 class="fragment">Calculating other elasticities</h2>
+        <h2 class="fragment">Empirical estimates of other elasticities</h2>
     </section>
+    <section>
+        <section>
+            <h1>Logistics and Context</h1>
+            <hr/>
+            <h3>(and a quick review of what you missed last time if you're just joining us)</h3>
+        </section>
+        <section id="two-week-view">
+            <div class="row" style="height:20%">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-2"><p class="calendar-date">M</p>
+                    <hr/>
+                </div>
+                <div class="col-lg-2"><p class="calendar-date">T</p>
+                    <hr/>
+                </div>
+                <div class="col-lg-2"><p class="calendar-date">W</p>
+                    <hr/>
+                </div>
+                <div class="col-lg-2"><p class="calendar-date">T</p>
+                    <hr/>
+                </div>
+                <div class="col-lg-2"><p class="calendar-date">F</p>
+                    <hr/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-2">
+                    <div class="lecture-date">
+                        <p class="calendar-date">JAN 5</p>
+
+                        <p>Lecture 1: Constrained Optimization</p>
+
+                        <p><em>B&B Ch. 1</em></p>
+
+                        <p><em>Read syllabus</em></p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="empty-date">
+                        <p class="calendar-date">JAN 6</p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="today-date">
+                        <p class="calendar-date">JAN 7</p>
+                        <p>Lecture 2: Elasticity and Comp. Statics</p>
+                        <p><em>B&B Ch. 2</em></p>
+                        <p><em>Bring i>clickers</em></p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="empty-date">
+                        <p class="calendar-date">JAN 8</p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="lecture-date">
+                        <p class="calendar-date">JAN 9</p>
+                        <p class="fragment highlight-red"><i>Homework 1 Posted</i></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-2">
+                    <div class="lecture-date">
+                        <p class="calendar-date">JAN 12</p>
+                        <p>Lecture 3: Preferences, Ind. Curves</p>
+                        <p><em>B&B Ch. 3</em></p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="empty-date">
+                        <p class="calendar-date">JAN 13</p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="lecture-date">
+                        <p class="calendar-date">JAN 14</p>
+                        <p>Lecture 4: Utility Functions</p>
+                        <p><em>B&B Ch. 3</em></p>
+                        <p class="fragment highlight-red"><em>Last day to sign up for sections in Axess</em></p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="empty-date">
+                        <p class="calendar-date">JAN 15</p>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="section-date">
+                        <p class="calendar-date">JAN 16</p>
+                        <p>Sections</p>
+                        <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Recap: Class policies</h2>
+            <hr/>
+            <ul>
+                <li class="fragment">Textbook: Besanko and Braeutigam, <i>Microeconomics</i>, 5e.</li>
+                <li class="fragment"><a href="https://classes.stanford.edu/courses/184/" target="_blank">https://classes.stanford.edu/courses/184/</a>
+                </li>
+                <li class="fragment"> Includes links to:
+                    <ul>
+                        <li class="fragment">Lecture notes: <a href="http://econgraphs.org/slides/makler/econ50/"
+                                                               target="_blank">http://econgraphs.org/slides/makler/econ50/</a>
+                        </li>
+                        <li class="fragment">Piazza (for discussion): <a
+                                href="https://piazza.com/stanford/winter2015/econ50/home"
+                                target="_blank">https://piazza.com/stanford/winter2015/econ50/home</a>
+                        </li>
+                        <li class="fragment"><b>Please do not e-mail me or the TA's directly - post questions on Piazza
+                            instead.</b></li>
+                    </ul>
+                </li><li class="fragment">No electronics (including laptops) in class</li>
+                <li class="fragment">Bring i>clickers to class (count as class participation)</li>
+                <li class="fragment"><b>Sign up for section on Axess</b>, not Coursework. <b>This involves dropping the course and adding it back with a section.</b></li>
+                <li class="fragment">Sections, homework, and office hours begin <i>next</i> week</li>
+                <li class="fragment">I reward questions with candy...<br/><span class="fragment">but have inconsistent aim...</span><br/><span
+                        class="fragment">and this is a very long lecture hall.</span></li>
+            </ul>
+        </section>
+        <section>
+            <h1>Rough Overview (Subject to Change)</h1>
+            <p></p>
+            <table class="table">
+                <tr class="fragment">
+                    <td>Week 1</td>
+                    <td>Constrained Optimization, Comparative Statics, Elasticity</td>
+                    <td>Chapters 1 & 2</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Weeks 2-5</td>
+                    <td>Consumer Theory</td>
+                    <td>Chapters 3-5</td>
+                </tr>
+                <tr class="fragment">
+                    <td></td>
+                    <td>~ Midterm: February 9 ~</td>
+                    <td></td>
+                </tr>
+                <tr class="fragment">
+                    <td>Weeks 6-7</td>
+                    <td>Producer Theory I: Cost Minimization</td>
+                    <td>Chapters 6-8</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Weeks 8-10</td>
+                    <td>Producer Theory II: Profit Maximization</td>
+                    <td>Chapters 9-11</td>
+                </tr>
+                <tr class="fragment">
+                    <td></td>
+                    <td>~ Final: March 18 ~</td>
+                    <td></td>
+                </tr>
+
+            </table>
+        </section>
+        <section>
+            <h2>Comparison between Econ 1 and Econ 50</h2>
+            <table class="table" style="width:100%" align="center">
+                <tr>
+                    <td></td>
+                    <td>Econ 1</td>
+                    <td>Econ 50</td>
+                </tr>
+                <tr>
+                    <td>Marginal analysis</td>
+                    <td class="fragment">Discrete (one additional unit)</td>
+                    <td class="fragment">Derivatives</td>
+                </tr>
+                <tr>
+                    <td>Optimization</td>
+                    <td class="fragment">Rules of thumb (e.g., P = MC)</td>
+                    <td class="fragment">Set derivative(s) to zero</td>
+                </tr>
+                <tr>
+                    <td>Exogenous variables</td>
+                    <td class="fragment"><i>Ceteris paribus</i> assumption</td>
+                    <td class="fragment">Multivariate functions</td>
+                </tr>
+                <tr>
+                    <td>Endogenous ("choice") variables</td>
+                    <td class="fragment">One at a time, using marginal analysis</td>
+                    <td class="fragment">Many, using partial derivatives</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2>The “Classical Economic Model”</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3>Individuals,<br/>Firms</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Markets,<br/>Regulators</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Economies,<br/>Governments</h3>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3 class="fragment">Choice Theory/<br/>Optimization</h3>
+                    <ul>
+                        <li class="fragment">Utility Maximization</li>
+                        <li class="fragment">Profit Maximization</li>
+                        <li class="fragment">Intertemporal Choice</li>
+                        <li class="fragment">Labor Supply</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">Interaction/<br/>Equilibrium</h3>
+                    <ul>
+                        <li class="fragment">Partial Equilibrium</li>
+                        <li class="fragment">General Equilibrium</li>
+                        <li class="fragment">Strategic Interactions</li>
+                        <li class="fragment">Information Asymmetries</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">National<br/>Policy</h3>
+                    <ul>
+                        <li class="fragment">Fiscal Policy</li>
+                        <li class="fragment">Monetary Policy</li>
+                        <li class="fragment">International Trade</li>
+                        <li class="fragment">Economic Growth</li>
+                    </ul>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3 class="fragment">Econ 50</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">Econ 51</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="fragment">Econ 52</h3>
+                </div>
+            </div>
+            <hr/>
+            <h2 class="fragment">Throughout: <em>Comparative Statics</em> - response to change</h2>
+
+        </section>
+    </section>
+
+
     <section>
         <section>
             <h1>Motivation</h1>
             <hr/>
 
-            <h2>Elasticity: A Startup's Lifeblood</h2>
+            <h2>Elasticity in Tech Industry News</h2>
         </section>
         <section>
             <img src="{{ url_for('static', filename='images/econ50/lecture2/uber-price-gouging.png') }}">
-            <p><a href="http://valleywag.gawker.com/the-weekend-uber-tried-to-rip-everyone-off-1484140137" target="_blank">- Gawker, December 16, 2013</a>
+
+            <p><a href="http://valleywag.gawker.com/the-weekend-uber-tried-to-rip-everyone-off-1484140137"
+                  target="_blank">- Gawker, December 16, 2013</a>
             </p>
         </section>
         <section>
             <img src="{{ url_for('static', filename='images/econ50/lecture2/freemium.png') }}">
+
             <p><a href="https://hbr.org/2014/05/making-freemium-work" target="_blank">-
                 Harvard Business Review, May 2014</a></p>
         </section>
         <section>
-                <img src="{{ url_for('static', filename='images/econ50/lecture2/motley-fool-logo.jpg') }}">
-                <hr/>
-                <h2>Shouldn't Netflix, Inc. be Talking About This Risk?</h2>
+            <img src="{{ url_for('static', filename='images/econ50/lecture2/motley-fool-logo.jpg') }}">
             <hr/>
-            <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4 fragment" align="left">Netflix delivered strong earnings in the third quarter, but <b>fell about 700,000 new subscribers short
-                    of its own customer addition targets</b>. Share prices plunged more than 17% lower overnight, and have
-                    only trended even further down since then.</div>
-                <div class="col-md-4 fragment" align="left">
-                    At the time, Netflix leaders pinned the miss on a <b>price increase of $1 per month</b> for new customers.
-                    The change actually happened two quarters earlier, but <b>effects may have been masked</b> by the
-                    eyeball-magnet powers of Netflix original series <i>Orange Is the New Black</i> releasing a new season.
-                    </div>
-                <div class="col-md-4 fragment" align="left">
-                    ...[The Netflix CEO maintains] "We'll need several quarters to
-                        sort of process whether we're seeing <b>long term price elasticity, short term price elasticity, or
-                        if something else was going on</b> in the quarter in terms of affecting our growth versus
-                        expectations."
-                </div>
-            </div>
-            </div>
+            <h2>Shouldn't Netflix, Inc. be Talking About This Risk?</h2>
             <hr/>
-            <p><a href="http://www.fool.com/investing/general/2015/01/05/shouldnt-netflix-inc-be-talking-about-this-risk.aspx">Motley Fool, January 5, 2014</a></p>
+            <p class="fragment" align="left">Netflix delivered strong earnings in the third quarter, but <b>fell
+                about 700,000 new subscribers short
+                of its own customer addition targets</b>. Share prices plunged more than 17% lower overnight, and have
+                only trended even further down since then.</p>
+            <hr/>
+            <p class="fragment" align="left">
+                At the time, Netflix leaders pinned the miss on a <b>price increase of $1 per month</b> for new
+                customers.
+                The change actually happened two quarters earlier, but <b>effects may have been masked</b> by the
+                eyeball-magnet powers of Netflix original series <i>Orange Is the New Black</i> releasing a new season.
+            </p>
+            <hr/>
+            <p class="fragment" align="left">
+                ...[The Netflix CEO maintains] "We'll need several quarters to
+                sort of process whether we're seeing <b>long term price elasticity, short term price elasticity, or
+                if something else was going on</b> in the quarter in terms of affecting our growth versus
+                expectations."
+            </p>
+            <hr/>
+            <p>
+                <a href="http://www.fool.com/investing/general/2015/01/05/shouldnt-netflix-inc-be-talking-about-this-risk.aspx">Motley
+                    Fool, January 5, 2014</a></p>
         </section>
-    </section>
-    <section id="two-week-view">
-        <div class="row" style="height:20%">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-2"><p class="calendar-date">M</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">T</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">W</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">T</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">F</p>
-                <hr/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-2">
-                <div class="lecture-date">
-                    <p class="calendar-date">JAN 5</p>
-
-                    <p>Lecture 1: Constrained Optimization</p>
-
-                    <p><em>B&B Ch. 1</em></p>
-
-                    <p><em>Read syllabus</em></p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 6</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="today-date">
-                    <p class="calendar-date">JAN 7</p>
-
-                    <p>Lecture 2: Elasticity and Comp. Statics</p>
-
-                    <p><em>B&B Ch. 2</em></p>
-
-                    <p><em>Bring i>clickers</em></p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 8</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 9</p>
-                </div>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-2">
-                <div class="lecture-date">
-                    <p class="calendar-date">JAN 12</p>
-
-                    <p>Lecture 3: Preferences, Ind. Curves</p>
-
-                    <p><em>B&B Ch. 3</em></p>
-
-                    <p class="fragment highlight-red"><em>Last day to sign up for sections in Axess</em></p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 13</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="lecture-date">
-                    <p class="calendar-date">JAN 14</p>
-
-                    <p>Lecture 4: Utility Functions</p>
-
-                    <p><em>B&B Ch. 3</em></p>
-
-
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 15</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="section-date">
-                    <p class="calendar-date">JAN 16</p>
-
-                    <p>Sections</p>
-
-                    <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
-                </div>
-            </div>
-        </div>
     </section>
     <section>
         <section>
@@ -225,8 +382,22 @@
             <ul>
                 <li class="fragment">Effect of a surge in market demand,<br/>for a more elastic and less elastic supply curve</li>
                 <li class="fragment">Effect of a surge in market demand,<br/>for a more elastic and less elastic supply curve</li>
-                <li class="fragment">Effect of changes in prices and income on an individual's consumption of a good.</li>
+                <li class="fragment">Effect of changes in prices and income on an <i>individual household's</i> consumption of a good.</li>
             </ul>
+        </section>
+        <section>
+
+            <clicker-question>
+                <h2>Large fluctuations in market equilibrium <i>prices</i></h2>
+                <h2>are associated with situations in which</h2>
+                <h2>the supply and/or demand curves are:</h2>
+                    <clicker-option letter="A">Highly elastic</clicker-option>
+                    <clicker-option letter="B">Highly inelastic</clicker-option>
+                    <clicker-option letter="C">Linear</clicker-option>
+                    <clicker-option letter="D">Curved</clicker-option>
+                    <clicker-option letter="E">Horizontal</clicker-option>
+            </clicker-question>
+            <clicker-file></clicker-file>
         </section>
         <section>
             <h2>Supply Elasticity and Changes in Demand</h2>
@@ -331,22 +502,15 @@
                         <tr style="height:100px" class="fragment">
                             <td></td>
                             <td><span rendered-math
-                                      expression="\displaystyle{=}"></span> <span style="color:red"
-                                                                                  rendered-math
-                                                                                  expression="\displaystyle{-2}"></span> <span
-                                    rendered-math
-                                    expression="\displaystyle{\times \frac{P}{Q^D(P)}}"></span></td>
+                                      expression="\displaystyle{= \color{red}{-2} \times \frac{P}{Q^D(P)}}"></span></td>
                             <td>Since <span rendered-math style="color:red"
                                    expression="\displaystyle{ \frac{dQ^D(P)}{dP} = -2}"></span></td>
                         </tr>
                         <tr style="height:100px" class="fragment">
                             <td></td>
                             <td><span rendered-math
-                                      expression="\displaystyle{=}"></span> <span rendered-math
-                                                                                  expression="\displaystyle{-2}"></span> <span
-                                    rendered-math
-                                    expression="\displaystyle{\times \frac{P}{12 - 2P}}"></span></td>
-                            <td>Since <span rendered-math expression="Q^D(P) = 12 - 2P"></span></td>
+                                      expression="\displaystyle{= -2 \times \frac{P}{\color{green}{12 - 2P}}}"></span></td>
+                            <td>Since <span rendered-math style="color:green" expression="Q^D(P) = 12 - 2P"></span></td>
                         </tr>
                     </table>
                 </div>
@@ -490,22 +654,15 @@
                         <tr style="height:100px" class="fragment">
                             <td></td>
                             <td><span rendered-math
-                                      expression="\displaystyle{=}"></span> <span style="color:red"
-                                                                                  rendered-math
-                                                                                  expression="\displaystyle{-b}"></span> <span
-                                    rendered-math
-                                    expression="\displaystyle{\times \frac{P}{Q^D(P)}}"></span></td>
+                                      expression="\displaystyle{= \color{red}{-b} \times \frac{P}{Q^D(P)}}"></span></td>
                             <td>Since <span rendered-math style="color:red"
                                             expression="\displaystyle{ \frac{dQ^D(P)}{dP} = -b}"></span></td>
                         </tr>
                         <tr style="height:100px" class="fragment">
                             <td></td>
                             <td><span rendered-math
-                                      expression="\displaystyle{=}"></span> <span rendered-math
-                                                                                  expression="\displaystyle{-b}"></span> <span
-                                    rendered-math
-                                    expression="\displaystyle{\times \frac{P}{a - bP}}"></span></td>
-                            <td>Since <span rendered-math expression="Q^D(P) = a - bP"></span></td>
+                                      expression="\displaystyle{= -b \times \frac{P}{\color{green}{a - bP}}}"></span></td>
+                            <td>Since <span rendered-math style="color:green" expression="Q^D(P) = a - bP"></span></td>
                         </tr>
                     </table>
                 </div>
@@ -542,6 +699,114 @@
 
         <p style="color:grey">Besanko & Braeutigam, <i>Microeconomics</i>, 5th ed., Figure 2.17</p>
     </section>
+        <section>
+            <h2>Elasticity and Natural Logs</h2>
+            <hr/>
+            <p>A category of demand curves such that price elasticity is <i>constant</i>: <span rendered-math
+                                                                               expression="Q^D(P) = \frac{a}{P^b} = aP^{-b}"></span></p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math expression="\displaystyle{\epsilon_{Q^D(P),P}}" align="right"></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{= \frac{dQ^D(P)}{dP} \times \frac{P}{Q^D(P)}}"></span>
+                            </td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td width="400px"><span rendered-math
+                                      expression="\displaystyle{= \color{red}{-b \times aP^{-b-1}} \times \frac{P}{Q^D(P)}}"></span></td>
+                            <td>Since <span rendered-math style="color:red"
+                                            expression="\displaystyle{ \frac{dQ^D(P)}{dP} = -b \times aP^{-b-1}}"></span></td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{= -b \times aP^{-b-1} \times \frac{P}{\color{green}{aP^{-b}}}}"></span></td>
+                            <td>Since <span rendered-math style="color:green" expression="Q^D(P) = aP^{-b}"></span></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td></td>
+                            <td><span rendered-math
+                                      expression="= -b"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <p class="fragment">Note that if we take the natural log of both sides, and take the derivative of <span rendered-math
+                                                                                                    expression="\ln(Q)"></span> with respect to <span
+                    rendered-math
+                    expression="\ln(P)"></span>, we get the same result:</p>
+
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    <table>
+                        <tr style="height:75px" class="fragment">
+                            <td rendered-math expression="\ln(Q)" align="right"></td>
+                            <td><span rendered-math
+                                      expression="\displaystyle{= \ln(a) - b \ln(P)}"></span>
+                            </td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math expression="\displaystyle{ \frac{d\ln(Q)}{d\ln(P)}}" align="right"></td>
+                            <td><span rendered-math expression="= -b"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+        </section>
+    <section>
+        <h1>GENERAL, IMPORTANT RESULT</h1>
+        <hr/>
+        <p>Suppose <span
+                rendered-math expression="y"></span> is a continuously differentiable function of <span
+                rendered-math expression="x"></span>.</p>
+        <hr/>
+        <p>Then the elasticity of <span
+                rendered-math expression="y"></span> with respect to <span
+                rendered-math expression="x"></span> may be calculated as</p>
+        <hr/>
+        <p rendered-math expression="\displaystyle{\epsilon_{y,x} = \frac{d\ln(y)}{d\ln(x)}}"></p>
+        <hr/>
+        <p>(as long as <span
+                rendered-math expression="x"></span> and <span
+                rendered-math expression="y"></span> are both strictly positive)</p>
+        <hr/>
+        <p><i>You don't have to calculate elasticities in this way, but it often makes the math easier.</i></p>
+
+        <p><i>Most empirical work on estimating elasticity uses this method.</i></p>
+
+    </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Empirical Evidence on Price Elasticity of Demand</h1>
+        </section>
+        <section>
+            <p>Estimates of the Price Elasticity of Demand for Selected Food, Tobacco, and Liquor Products</p>
+            <img src="{{ url_for('static', filename='images/econ50/lecture2/besanko_5e_table_02_01.jpg') }}" scale="50%">
+        </section>
+        <section>
+            <p>Estimates of the Price Elasticity of Demand for Selected Modes of Transportation</p>
+            <img src="{{ url_for('static', filename='images/econ50/lecture2/besanko_5e_table_02_02.jpg') }}"
+                 scale="50%">
+        </section>
+        <section>
+            <p>Estimates of the Price Elasticity of Demand for Selected Makes of Automobiles, 1990</p>
+            <img src="{{ url_for('static', filename='images/econ50/lecture2/besanko_5e_table_02_03.jpg') }}"
+                 scale="50%">
+        </section>
+
 
     </section>
 {% endblock %}
