@@ -29,15 +29,13 @@
 
         <h2 class="fragment">Motivation: Elasticity in Tech Industry News</h2>
 
-        <h2 class="fragment">Review: Comparative Statics with Supply and Demand</h2>
-
-        <h2 class="fragment">Quantifying Comparative Statics: Elasticity</h2>
+        <h2 class="fragment">Price Elasticity of Demand</h2>
         <hr/>
         <h2 class="fragment">10 minute break</h2>
         <hr/>
-        <h2 class="fragment">Price Elasticity of Demand</h2>
+        <h2 class="fragment">Other Demand Elasticities</h2>
 
-        <h2 class="fragment">Other Elasticities</h2>
+        <h2 class="fragment">Supply Elasticity</h2>
 
         <h2 class="fragment">Elasticity in the Long and Short Run</h2>
     </section>
@@ -825,8 +823,19 @@
                     </table>
                 </div>
             </div>
-
-
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Consider a market in which there are 5 consumers,</h2>
+                <h2>each with demand <span rendered-math expression="q^D(P) = P^{-\frac{1}{4}}"></span>. </h2>
+                <h2>The price elasticity of <i>market</i> demand is:</h2>
+                <clicker-option letter="A"><span rendered-math expression="-5"></span></clicker-option>
+                <clicker-option letter="B"><span rendered-math expression="\displaystyle{-\frac{5}{4}}"></span></clicker-option>
+                <clicker-option letter="C"><span rendered-math expression="-1"></span></clicker-option>
+                <clicker-option letter="D"><span rendered-math expression="\displaystyle{-\frac{1}{4}}"></span></clicker-option>
+            </clicker-question>
+            <clicker-file></clicker-file>
+            <p class="fragment"><i>Note the connection between individual and market elasticities!</i></p>
         </section>
         <section>
             <h1>GENERAL, IMPORTANT RESULT</h1>
@@ -877,6 +886,140 @@
         </section>
         <section>
             <h2>Income and Cross-Price Elasticities of Demand</h2>
+            <hr/>
+            <p>A demand <i>function</i>, <span rendered-math expression="Q_{x}^D(P_{x},P{_y},I)"></span>,
+                <br/>shows how the quantity demanded for some good, <span rendered-math expression="X"></span>,
+                <br/>depends on its <i>own</i> price (<span
+                    rendered-math expression="P_{x}"></span>) and on other variables<br/>such as income (<span rendered-math
+                                                                                                           expression="I"></span>) and the prices of other goods (<span
+                    rendered-math expression="P_{y}"></span>)</p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>(Own) Price Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,P_{x}}}"></td>
+                            <td rendered-math expression="\displaystyle{= \frac{\%\Delta Q_{x}^D}{\%\Delta P_{x} }}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial P_{x}} \times \frac{P_{x}}{Q_{x}^D}}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <p>Cross Price Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,P_{y}}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\%\Delta Q_{x}^D}{\%\Delta P_{y} }}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial P_{y}} \times \frac{P_{y}}{Q_{x}^D}}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <p>Income Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,I}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\%\Delta Q_{x}^D}{\%\Delta I }}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial I} \times \frac{I}{Q_{x}^D}}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Example: <span rendered-math expression="\displaystyle{Q_{x}^D(P_{x},P{_y},I) = \frac{I}{P_{x} + P_{y}}}"></span></h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-5">
+                    <p>(Own) Price Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,P_{x}}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial P_{x}} \times \frac{P_{x}}{Q_{x}^D}}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= -\frac{I}{(P_{x} + P_{y})^2} \times \frac{P_{x}}{I / (P_{x} + P_{y})}}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= -\frac{P_{x}}{P_{x} + P_{y}}}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-5">
+                    <p>Cross Price Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,P_{y}}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial P_{y}} \times \frac{P_{y}}{Q_{x}^D}}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= -\frac{I}{(P_{x} + P_{y})^2} \times \frac{P_{y}(P_{x} + P_{y})}{I}}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= -\frac{P_{y}}{P_{x} + P_{y}}}"></td>
+                        </tr>
+                    </table>
+                </div>
+         </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <p>Income Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,I}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial I} \times \frac{I}{Q_{x}^D}}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= -\frac{1}{P_{x} + P_{y}} \times \frac{I(P_{x} + P_{y})}{I}}"></td>
+                            <td rendered-math expression="\displaystyle{=1}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
         </section>
         <section>
             <h2>Price Elasticity of Supply</h2>
