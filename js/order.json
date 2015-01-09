@@ -34,7 +34,8 @@
             "curve.js",
             "line.js",
             "area.js",
-            "rect.js"
+            "rect.js",
+            "label.js"
         ]
     },
     {

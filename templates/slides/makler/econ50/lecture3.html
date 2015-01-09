@@ -315,6 +315,7 @@
                                color="green"></point>
                         <point point="[params.BX, params.BY]" droplines="both" xlabel="Bx" ylabel="By"
                                color="red"></point>
+
                     </graph>
                 </div>
                 <div class="col-md-4">
@@ -358,6 +359,9 @@
                         <point point="[params.AX, params.AY]" droplines="both" label="A" xlabel="Ax" ylabel="Ay"></point>
                         <point point="[params.BX, params.BY]" droplines="both" label="B" xlabel="Bx" ylabel="By"
                                color="purple"></point>
+                        <label point="[0.5*(params.AX + 15), 0.5*(params.AY + 15)]" label="Preferred to A" show="params.showPreferred" color="darkgreen"></label>
+                        <label point="[0.5*(params.AX), 0.5*(params.AY)]" label="Dispreferred to A"
+                               show="params.showPreferred" color="darkred"></label>
                     </graph>
                 </div>
                 <div class="col-md-6">
@@ -376,7 +380,7 @@
                             </tr>
                             <tr>
                                 <td width="150">
-                                    <slider value="params.AX" min="0" max="15" precision="1"></slider>
+                                    <slider value="params.AX" min="3" max="12" precision="1"></slider>
                                 </td>
                                 <td></td>
                                 <td width="150">
@@ -396,7 +400,7 @@
                             </tr>
                             <tr>
                                 <td width="150">
-                                    <slider value="params.AY" min="0" max="15" precision="1"></slider>
+                                    <slider value="params.AY" min="1" max="14" precision="1"></slider>
                                 </td>
                                 <td></td>
                                 <td width="150">
