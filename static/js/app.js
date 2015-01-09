@@ -149,6 +149,9 @@ kgAngular.service('D3Helpers', function () {
             .attr("text-anchor", function (d) {
                 return d.anchor
             })
+            .attr("fill", function (d) {
+                return d.color
+            })
             .attr("font-size", 14)
             .attr("font-style", "oblique")
             .text(function (d) {
@@ -784,6 +787,8 @@ kgAngular.directive('point', function () {
 
                     var droplines = scope.droplines || 'none'; // set droplines to "none" by default
 
+                    var label = scope.label || 'none';
+
                     var x = p[0],
                         y = p[1];
 
@@ -804,6 +809,16 @@ kgAngular.directive('point', function () {
 
                     }
 
+                    if (label != 'none') {
+                        shapes.texts.push({
+                            text: scope.label,
+                            x: cx,
+                            y: cy + 5,
+                            anchor: 'middle',
+                            color: 'white'
+                        })
+                    }
+
                     // Add associated droplines and labels only if the each is in its dimension of the graph domain
 
                     if (droplines != 'none') {
@@ -817,7 +832,8 @@ kgAngular.directive('point', function () {
                                     text: scope.xlabel,
                                     x: cx,
                                     y: graph.height + 40,
-                                    anchor: 'middle'
+                                    anchor: 'middle',
+                                    color: scope.color
                                 })
                             }
                         }
@@ -831,7 +847,8 @@ kgAngular.directive('point', function () {
                                     text: scope.ylabel,
                                     x: -27,
                                     y: cy + 5,
-                                    anchor: 'end'
+                                    anchor: 'end',
+                                    color: scope.color
                                 })
                             }
                         }
@@ -849,7 +866,7 @@ kgAngular.directive('point', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { point: '&', droplines: '@', xlabel: '@', ylabel: '@', color: '@'}
+            scope: { point: '&', droplines: '@', label: '@', xlabel: '@', ylabel: '@', color: '@'}
         }
     }
 );
@@ -999,7 +1016,7 @@ kgAngular.directive('rect', function (D3Helpers) {
 
                 update: function (shapes, graph) {
 
-                    var show = (false != scope.show);
+                    var show = (scope.show() == true);
 
                     if(show) {
 

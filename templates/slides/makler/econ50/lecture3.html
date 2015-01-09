@@ -346,33 +346,17 @@
             <param name="AY" value="3"/>
             <param name="BX" value="8"/>
             <param name="BY" value="7"/>
-            <div class="row">
-                <div class="col-md-6">
-                    <p><span rendered-math>A \succ B</span> if <span rendered-math>A_x > B_x</span> and <span
-                            rendered-math>A_y > B_y</span></p>
 
-                    <p><span rendered-math>A \succeq B</span> if <span rendered-math>A_x \ge B_x</span> and <span
-                            rendered-math>A_y \ge B_y</span>.</p>
-                </div>
-                <div class="col-md-6">
-                    <p><span rendered-math>A \prec B</span> if <span rendered-math>A_x < B_x</span> and <span
-                            rendered-math>A_y < B_y</span></p>
-
-                    <p><span rendered-math>A \preceq B</span> if <span rendered-math>A_x \le B_x</span> and <span
-                            rendered-math>A_y \le B_y</span>.</p>
-                </div>
-
-            </div>
             <hr/>
             <div class="row">
                 <div class="col-md-6">
                     <graph height="500" width="500">
                         <axis dim="x" min="0" max="15" title="Good X"></axis>
                         <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                        <rect points="[[params.AX,params.AY],[0,0]]" color="red"></rect>
-                        <rect points="[[params.AX,params.AY],[15,15]]" color="green"></rect>
-                        <point point="[params.AX, params.AY]" droplines="both" xlabel="Ax" ylabel="Ay"></point>
-                        <point point="[params.BX, params.BY]" droplines="both" xlabel="Bx" ylabel="By"
+                        <rect points="[[params.AX,params.AY],[0,0]]" color="red" show="params.showPreferred"></rect>
+                        <rect points="[[params.AX,params.AY],[15,15]]" color="green" show="params.showPreferred"></rect>
+                        <point point="[params.AX, params.AY]" droplines="both" label="A" xlabel="Ax" ylabel="Ay"></point>
+                        <point point="[params.BX, params.BY]" droplines="both" label="B" xlabel="Bx" ylabel="By"
                                color="purple"></point>
                     </graph>
                 </div>
@@ -421,7 +405,68 @@
                             </tr>
                         </table>
 
-                        <toggle param="params.showB" init="true">{{ params.showB ? 'Hide point B' : 'Show point B' }}</toggle>
+                        <hr/>
+                        <p ng-if="(params.AX > params.BX && params.AY > params.BY)">
+                            <span rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>A_x > B_x</span>
+                            and <span rendered-math>A_y > B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX > params.BX && params.AY == params.BY)">
+                            <span rendered-math>A \succeq B</span><br/>
+                            since <span rendered-math>A_x > B_x</span>
+                            and <span rendered-math>A_y = B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX == params.BX && params.AY > params.BY)">
+                            <span rendered-math>A \succeq B</span><br/>
+                            since <span rendered-math>A_x = B_x</span>
+                            and <span rendered-math>A_y > B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX < params.BX && params.AY < params.BY)">
+                            <span rendered-math>A \prec B</span><br/>
+                            since <span rendered-math>A_x < B_x</span>
+                            and <span rendered-math>A_y < B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX < params.BX && params.AY == params.BY)">
+                            <span rendered-math>A \preceq B</span><br/>
+                            since <span rendered-math>A_x < B_x</span>
+                            and <span rendered-math>A_y = B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX == params.BX && params.AY == params.BY)">
+                            <span rendered-math>A \sim B</span><br/>
+                            since <span rendered-math>A_x = B_x</span>
+                            and <span rendered-math>A_y = B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX == params.BX && params.AY < params.BY)">
+                            <span rendered-math>A \preceq B</span><br/>
+                            since <span rendered-math>A_x = B_x</span>
+                            and <span rendered-math>A_y < B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX < params.BX && params.AY > params.BY)">
+                            We don't know if <span rendered-math>A \prec B</span> or <span
+                                rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>A_x < B_x</span>
+                            and <span rendered-math>A_y > B_y</span>.
+                        </p>
+
+                        <p ng-if="(params.AX > params.BX && params.AY < params.BY)">
+                            We don't know if <span rendered-math>A \prec B</span> or <span
+                                rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>A_x > B_x</span>
+                            and <span rendered-math>A_y < B_y</span>.
+                        </p>
+
+                        <hr/>
+                        <toggle param="params.showPreferred" init="false">{{ params.showPreferred ? 'Hide preferred/dispreferred' : 'Show preferred/dispreferred' }}
+                        </toggle>
+
+
                     </div>
                 </div>
             </div>

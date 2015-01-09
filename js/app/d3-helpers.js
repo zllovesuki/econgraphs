@@ -136,6 +136,9 @@ kgAngular.service('D3Helpers', function () {
             .attr("text-anchor", function (d) {
                 return d.anchor
             })
+            .attr("fill", function (d) {
+                return d.color
+            })
             .attr("font-size", 14)
             .attr("font-style", "oblique")
             .text(function (d) {

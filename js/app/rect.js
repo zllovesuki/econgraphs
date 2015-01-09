@@ -10,7 +10,7 @@ kgAngular.directive('rect', function (D3Helpers) {
 
                 update: function (shapes, graph) {
 
-                    var show = (false != scope.show);
+                    var show = (scope.show() == true);
 
                     if(show) {
 
