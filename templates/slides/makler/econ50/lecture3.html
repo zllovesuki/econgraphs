@@ -1,0 +1,452 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 3</h2>
+
+        <h1>Preferences and Indifference Curves</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>January 12, 2014</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Logistics and Context</h2>
+
+        <h2 class="fragment">Motivation: Holiday Gift Giving</h2>
+
+        <h2 class="fragment">Preferences</h2>
+
+        <h2 class="fragment">Indifference Curves</h2>
+        <hr/>
+        <h2 class="fragment">10 minute break</h2>
+        <hr/>
+        <h2 class="fragment">Marginal Rate of Substitution</h2>
+
+        <h2 class="fragment">Revealed Preference</h2>
+
+        <h2 class="fragment">Behavioral Economics</h2>
+    </section>
+    <section>
+        <h1>Logistics and Context</h1>
+    </section>
+    <section id="two-week-view">
+        <div class="row" style="height:20%">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2"><p class="calendar-date">M</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">W</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">F</p>
+                <hr/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="today-date">
+                    <p class="calendar-date">JAN 12</p>
+
+                    <p>Lecture 3: Preferences, Indifference Curves</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 13</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 14</p>
+
+                    <p>Lecture 4: Utility Functions</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+                    <p class="fragment highlight-red"><em>Last day for section sign-up!</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 15</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="section-date">
+                    <p class="calendar-date">JAN 16</p>
+
+                    <p>Sections</p>
+
+                    <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 19</p>
+
+                    <p class="fragment highlight-red">NO LECTURE - HOLIDAY</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 20</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 21</p>
+
+                    <p>Lecture 5: Budget constraints; optimal choice</p>
+
+                    <p><em>B&B Ch. 4</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 22</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="section-date">
+                    <p class="calendar-date">JAN 23</p>
+
+                    <p>Sections</p>
+
+                    <p class="fragment highlight-red"><em>Homework 2 Due</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h1>Rough Overview (Subject to Change)</h1>
+
+        <p></p>
+        <table class="table">
+            <tr class="fragment">
+                <td>Week 1</td>
+                <td>Constrained Optimization, Comparative Statics, Elasticity</td>
+                <td>Chapters 1 & 2</td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 2-5</td>
+                <td>Consumer Theory:<br/>Preferences, Utility, Choice, Behavior</td>
+                <td>Chapters 3-5</td>
+            </tr>
+            <tr class="fragment">
+                <td></td>
+                <td>~ Midterm: February 9 ~</td>
+                <td></td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 6-8</td>
+                <td>Producer Theory:<br/>Cost Minimization & Profit Maximization</td>
+                <td>Chapters 6-9</td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 9-10</td>
+                <td>Consumers & Producers Together:<br/>
+                    Perfectly Competitive Markets, Monopoly, Monopsony
+                </td>
+                <td>Chapters 10-11</td>
+            </tr>
+            <tr class="fragment">
+                <td></td>
+                <td>~ Final: March 18 ~</td>
+                <td></td>
+            </tr>
+
+        </table>
+    </section>
+
+    <section>
+        <h1>Motivation</h1>
+        <hr/>
+
+        <h2>How do we think about choices?</h2>
+    </section>
+    <section>
+        <h2 class="fragment">Harold Hamm offers $975 mln divorce check;</h2>
+        <h2 class="fragment">ex-wife rejects it</h2>
+        <img src="{{ url_for('static', filename='images/econ50/lecture3/billion-dollar-check.jpg') }}">
+
+        <p><a href="http://www.cnbc.com/id/102315179"
+              target="_blank">CNBC, January 6, 2015</a>
+        </p>
+    </section>
+
+    <section>
+    <h1>Preferences and Utility</h1>
+    <hr/>
+    <h2>Goal: develop a framework for analyzing <b>consumer choice</b>.</h2>
+    <hr/>
+    <h2>Assumption: given all available options,<br/>people choose the best things they can afford.</h2>
+    <hr/>
+    <h2>Next week, we'll define <b>afford</b>.<br/>This week, we'll work on defining <b>best things</b>.</h2>
+    </section>
+    <section>
+    <h2>Consumer Preferences: Vocabulary and Notation</h2>
+    <hr/>
+        <h2>We call the objects of consumer choice <b>bundles</b> or <b>baskets</b>.</h2>
+        <hr/>
+        <p>Given a choice between bundle <span rendered-math>A</span> and bundle <span rendered-math>B</span>, we say that:</p>
+    <table class="table">
+        <tr>
+            <td>Symbols</td>
+            <td>Meaning</td>
+            <td>Informally quantitative interpretation</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \succ B</td>
+            <td><span rendered-math>A</span> is <b>strictly preferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>more than</b> <span rendered-math>B</span>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \succeq B</td>
+            <td><span rendered-math>A</span> is <b>weakly preferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>at least as much as</b> <span rendered-math>B</span>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \sim B</td>
+            <td><b>Indifferent</b> between <span rendered-math>A</span> and <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> and <span rendered-math>B</span> <b>the same amount</b>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \preceq B</td>
+            <td><span rendered-math>A</span> is <b>weakly dispreferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>at most as much as</b> <span rendered-math>B</span>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \preceq B</td>
+            <td><span rendered-math>A</span> is <b>strictly dispreferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>less than</b> <span rendered-math>B</span>.</td>
+        </tr>
+    </table>
+    </section>
+    <section>
+        <h1>Consumer Preferences: Fundamental Assumptions</h1>
+        <hr/>
+        <table class="table">
+            <tr class="fragment">
+                <td>Preferences are <b>complete</b>.</td>
+                <td>Any two bundles can be compared.</td>
+                <td>For any <span rendered-math>A</span> and <span rendered-math>B</span>,<br/>either <span rendered-math>A \succeq B</span> or <span rendered-math>B \succeq A</span>.</td>
+            </tr>
+            <tr class="fragment">
+                <td>Preferences are <b>transitive</b>.</td>
+                <td>If you like <span rendered-math>A</span> at least as much as <span rendered-math>B</span>,<br/>and you like
+                    <span rendered-math>B</span> at least as much as <span rendered-math>C</span>,<br/>then you like
+                    <span rendered-math>A</span> at least as much as <span rendered-math>C</span>.</td>
+                <td>If <span rendered-math>A \succeq B</span> and <span rendered-math>B \succeq C</span>,<br/>then
+                    <span rendered-math>A \succeq C</span>.</td>
+            </tr>
+
+        </table>
+        <hr/>
+        <h2 class="fragment">Together, these assumptions mean that consumers can rank all possible consumption bundles in a coherent way.</h2>
+    </section>
+    <section>
+        <h2>How would you rank these bundles?</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies1.jpg') }}">
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies2.jpg') }}">
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies3.jpg') }}">
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies4.jpg') }}">
+            </div>
+        </div>
+    </section>
+    <section>
+    <h2>Preferences over Quantities</h2>
+    <hr/>
+    <p>One type of choice: how much of various goods?</p>
+    <hr/>
+        {% raw %}
+        <model>
+            <param name="AX" value="5"/>
+            <param name="AY" value="3"/>
+            <param name="BX" value="8"/>
+            <param name="BY" value="7"/>
+            <div class="row">
+                <div class="col-md-8">
+                    <graph height="600" width="600">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <point point="[params.AX, params.AY]" droplines="both" xlabel="Ax" ylabel="Ay"
+                               color="green"></point>
+                        <point point="[params.BX, params.BY]" droplines="both" xlabel="Bx" ylabel="By"
+                               color="red"></point>
+                    </graph>
+                </div>
+                <div class="col-md-4">
+                    <div class="well">
+                        <p rendered-math expression="A_{x} = {{ params.AX }}"></p>
+                        <slider value="params.AX" min="0" max="15" precision="1"></slider>
+                        <p rendered-math expression="A_{y} = {{ params.AY }}"></p>
+                        <slider value="params.AY" min="0" max="15" precision="1"></slider>
+                        <hr/>
+                        <p rendered-math expression="B_{x} = {{ params.BX }}"></p>
+                        <slider value="params.BX" min="0" max="15" precision="1"></slider>
+                        <p rendered-math expression="B_{y} = {{ params.BY }}"></p>
+                        <slider value="params.BY" min="0" max="15" precision="1"></slider>
+                    </div>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+    <section>
+        <h2>Possible assumption: "More is Better"</h2>
+        <hr/>
+
+
+        {% raw %}
+        <model>
+            <param name="AX" value="5"/>
+            <param name="AY" value="3"/>
+            <param name="BX" value="8"/>
+            <param name="BY" value="7"/>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><span rendered-math>A \succ B</span> if <span rendered-math>A_x > B_x</span> and <span
+                            rendered-math>A_y > B_y</span></p>
+
+                    <p><span rendered-math>A \succeq B</span> if <span rendered-math>A_x \ge B_x</span> and <span
+                            rendered-math>A_y \ge B_y</span>.</p>
+                </div>
+                <div class="col-md-6">
+                    <p><span rendered-math>A \prec B</span> if <span rendered-math>A_x < B_x</span> and <span
+                            rendered-math>A_y < B_y</span></p>
+
+                    <p><span rendered-math>A \preceq B</span> if <span rendered-math>A_x \le B_x</span> and <span
+                            rendered-math>A_y \le B_y</span>.</p>
+                </div>
+
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <rect points="[[params.AX,params.AY],[0,0]]" color="red"></rect>
+                        <rect points="[[params.AX,params.AY],[15,15]]" color="green"></rect>
+                        <point point="[params.AX, params.AY]" droplines="both" xlabel="Ax" ylabel="Ay"></point>
+                        <point point="[params.BX, params.BY]" droplines="both" xlabel="Bx" ylabel="By"
+                               color="purple"></point>
+                    </graph>
+                </div>
+                <div class="col-md-6">
+                    <div class="well">
+                        <table class="table">
+                            <tr>
+                                <td style="text-align:center" rendered-math expression="A_{x} = {{ params.AX }}" width="150"></td>
+                                <td style="text-align:center">
+                                    <span ng-if="params.AX > params.BX">></span>
+                                    <span
+                                            ng-if="params.AX == params.BX">=</span>
+                                    <span ng-if="params.AX < params.BX"><</span>
+
+                                </td>
+                                <td style="text-align:center;color:purple" rendered-math expression="B_{x} = {{ params.BX }}" width="150"></td>
+                            </tr>
+                            <tr>
+                                <td width="150">
+                                    <slider value="params.AX" min="0" max="15" precision="1"></slider>
+                                </td>
+                                <td></td>
+                                <td width="150">
+                                    <slider value="params.BX" min="0" max="15" precision="1"></slider>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="150" style="text-align:center" rendered-math expression="A_{y} = {{ params.AY }}"></td>
+                                <td style="text-align:center">
+                                    <span ng-if="params.AY > params.BY">></span>
+                                    <span
+                                        ng-if="params.AY == params.BY">=</span>
+                                    <span ng-if="params.AY < params.BY"><</span>
+
+                                </td>
+                                <td style="text-align:center; color:purple" width="150" rendered-math expression="B_{y} = {{ params.BY }}"></td>
+                            </tr>
+                            <tr>
+                                <td width="150">
+                                    <slider value="params.AY" min="0" max="15" precision="1"></slider>
+                                </td>
+                                <td></td>
+                                <td width="150">
+                                    <slider value="params.BY" min="0" max="15" precision="1"></slider>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <toggle param="params.showB" init="true">{{ params.showB ? 'Hide point B' : 'Show point B' }}</toggle>
+                    </div>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+
+
+    <section>
+        <clicker-question>
+            <h2>For a general downward-sloping</h2>
+
+            <h2>straight-line demand curve:</h2>
+            <clicker-option letter="A">Demand is equally elastic at every point.</clicker-option>
+            <clicker-option letter="B">Demand is most elastic toward the upper-left.</clicker-option>
+            <clicker-option letter="C">Demand is most elastic toward the lower-right.</clicker-option>
+            <clicker-option letter="D">None of the above is true (it depends on the precise functional form)!
+            </clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+
+    <section>
+        <h1>10 minute break</h1>
+    </section>
+
+{% endblock %}

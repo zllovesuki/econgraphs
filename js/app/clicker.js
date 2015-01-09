@@ -53,6 +53,9 @@ kgAngular.directive('clickerQuestion', function () {
                 // i starts at 5 because student data begins on the sixth line of the CSV
                 for (var i = 5; i < data.length; i++) {
                     var studentResponse = data[i];
+                    if (studentResponse.length == 1) {
+                        studentResponse = studentResponse[0].split(',');
+                    }
                     if (studentResponse.length > 2) {
 
                         // Each student's most response to the last question is in the seventh-to-last column of the CSV

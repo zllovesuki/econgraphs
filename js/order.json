@@ -27,12 +27,14 @@
             "param.js",
             "function.js",
             "slider.js",
+            "toggle.js",
             "graph.js",
             "axis.js",
             "point.js",
             "curve.js",
             "line.js",
-            "area.js"
+            "area.js",
+            "rect.js"
         ]
     },
     {

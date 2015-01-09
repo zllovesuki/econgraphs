@@ -6,8 +6,8 @@
 </head>
 <body>
 <h1>Econ 50 Lecture Notes</h1>
-<p><a href="{{ url_for('slides', course_name='econ50', prof_name='makler', slide_name='lecture1') }}">Lecture 1</a></p>
-
-<p><a href="{{ url_for('slides', course_name='econ50', prof_name='makler', slide_name='lecture2') }}">Lecture 2</a></p>
+{% for lecture in ['lecture1','lecture2','lecture3'] %}
+<p><a href="{{ url_for('slides', course_name='econ50', prof_name='makler', slide_name=lecture) }}">Lecture {{ loop.index }}</a></p>
+{% endfor %}
 </body>
 </html>

@@ -54,6 +54,36 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
+    this.drawRects = function (data, rects) {
+
+        rects = rects.data(data);
+        rects.exit().remove();
+        rects.enter().append('rect')
+            .attr('class', function (d) {
+                return d.class
+            })
+            .attr('fill-opacity', 0.3);;
+        rects
+            .attr('x', function (d) {
+                return d.x
+            })
+            .attr('y', function (d) {
+                return d.y
+            })
+            .attr('width', function (d) {
+                return d.width
+            })
+            .attr('height', function (d) {
+                return d.height
+            })
+            .attr('style', function(d) {
+                return 'fill:' + d.color
+            });
+
+        return rects;
+
+    };
+
 
     this.drawCurves = function (data,curves) {
 
@@ -75,19 +105,17 @@ kgAngular.service('D3Helpers', function () {
 
     this.drawAreas = function(data,areas) {
 
-
-
         areas = areas.data(data);
         areas.exit().remove();
         areas.enter().append('svg:path')
+            .attr('fill-opacity', 0.3);
+        areas
+            .attr('d', function (d) {
+                return d.points
+            })
             .attr('fill', function (d) {
                 return d.color
-            })
-            .attr('fill-opacity', 0.3);
-        areas.attr('d', function (d) {
-            return d.points
-        });
-
+            });
         return areas;
 
     };

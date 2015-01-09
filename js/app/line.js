@@ -18,7 +18,7 @@ kgAngular.directive('line', function () {
                         x2 = graph.x(points[1].x),
                         y2 = graph.y(points[1].y);
 
-                    shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color})
+                    shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});
 
                     return shapes;
 

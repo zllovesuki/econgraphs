@@ -67,6 +67,36 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
+    this.drawRects = function (data, rects) {
+
+        rects = rects.data(data);
+        rects.exit().remove();
+        rects.enter().append('rect')
+            .attr('class', function (d) {
+                return d.class
+            })
+            .attr('fill-opacity', 0.3);;
+        rects
+            .attr('x', function (d) {
+                return d.x
+            })
+            .attr('y', function (d) {
+                return d.y
+            })
+            .attr('width', function (d) {
+                return d.width
+            })
+            .attr('height', function (d) {
+                return d.height
+            })
+            .attr('style', function(d) {
+                return 'fill:' + d.color
+            });
+
+        return rects;
+
+    };
+
 
     this.drawCurves = function (data,curves) {
 
@@ -88,19 +118,17 @@ kgAngular.service('D3Helpers', function () {
 
     this.drawAreas = function(data,areas) {
 
-
-
         areas = areas.data(data);
         areas.exit().remove();
         areas.enter().append('svg:path')
+            .attr('fill-opacity', 0.3);
+        areas
+            .attr('d', function (d) {
+                return d.points
+            })
             .attr('fill', function (d) {
                 return d.color
-            })
-            .attr('fill-opacity', 0.3);
-        areas.attr('d', function (d) {
-            return d.points
-        });
-
+            });
         return areas;
 
     };
@@ -241,6 +269,9 @@ kgAngular.directive('clickerQuestion', function () {
                 // i starts at 5 because student data begins on the sixth line of the CSV
                 for (var i = 5; i < data.length; i++) {
                     var studentResponse = data[i];
+                    if (studentResponse.length == 1) {
+                        studentResponse = studentResponse[0].split(',');
+                    }
                     if (studentResponse.length > 2) {
 
                         // Each student's most response to the last question is in the seventh-to-last column of the CSV
@@ -356,13 +387,22 @@ kgAngular.directive('renderedMath',function() {
 
     function link(scope,el) {
 
-        function render() {
-            katex.render(scope.expression, el[0]);
+        if(scope.expression) {
+
+            function render() {
+                katex.render(scope.expression, el[0]);
+            }
+
+            scope.$on('redraw', render);
+
+            render();
+
+        } else {
+
+            katex.render(el[0].innerText, el[0])
+
         }
 
-        scope.$on('redraw', render);
-
-        render();
 
     }
 
@@ -519,6 +559,39 @@ kgAngular.directive('slider', function () {
         };
     });
 
+// toggle.js
+/**
+ * Created by cmakler on 01/09/15.
+ */
+
+'use strict';
+
+kgAngular.directive('toggle', function () {
+
+    function link(scope, el, attrs, ModelCtrl) {
+
+        if(scope.init == 'true') {
+            scope.param = true;
+        }
+
+        scope.toggle = function() {
+            scope.param = !scope.param;
+            ModelCtrl.update();
+        };
+
+    }
+
+    return {
+        link: link,
+        require: '^model',
+        restrict: 'E',
+        replace: true,
+        transclude: true,
+        template: "<button ng-click='toggle()')><span ng-transclude/></button>",
+        scope: { param: '=', init:'@' }
+    };
+});
+
 // graph.js
 /**
  * Created by cmakler on 10/31/14.
@@ -543,13 +616,13 @@ kgAngular.directive('graph', function (D3Helpers) {
         scope.$on('resize', resize);
 
         // These are D3 selectors for each type of shape on the graph
-        var circles, lines, curves, areas, texts, x_axis, y_axis, x_axis_label, y_axis_label;
+        var circles, lines, curves, rects, areas, texts, x_axis, y_axis, x_axis_label, y_axis_label;
 
         // Regenerate current definitions of plotted shapes from graph objects.
         function plotted_shapes () {
 
             // reset plotted shapes
-            var shapes = {lines: [], circles: [], curves: [], texts: [], areas: []};
+            var shapes = {lines: [], circles: [], curves: [], texts: [], rects: [], areas: []};
 
             // get current coordinates for shapes
             scope.graph_definition.objects.forEach(function (graph_object) {
@@ -567,6 +640,7 @@ kgAngular.directive('graph', function (D3Helpers) {
 
             // update the data for each of the D3 shape selectors
             areas = D3Helpers.drawAreas(data.areas, areas);
+            rects = D3Helpers.drawRects(data.rects, rects);
             lines = D3Helpers.drawLines(data.lines,lines);
             curves = D3Helpers.drawCurves(data.curves,curves);
             circles = D3Helpers.drawCircles(data.circles,circles);
@@ -605,6 +679,7 @@ kgAngular.directive('graph', function (D3Helpers) {
                 .attr("transform", "translate(" + scope.margin.left + "," + scope.margin.top + ")");
 
             areas = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.area');
+            rects = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.rect');
             curves = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.curve');
             lines = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.line');
             circles = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.circle');
@@ -860,7 +935,7 @@ kgAngular.directive('line', function () {
                         x2 = graph.x(points[1].x),
                         y2 = graph.y(points[1].y);
 
-                    shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color})
+                    shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});
 
                     return shapes;
 
@@ -907,6 +982,55 @@ kgAngular.directive('area', function (D3Helpers) {
             require: '^graph',
             restrict: 'E',
             scope: { fn: '&', ind: '@', color: '@' }
+        }
+    }
+);
+
+// rect.js
+/**
+ * Created by cmakler on 1/9/15.
+ */
+
+kgAngular.directive('rect', function (D3Helpers) {
+
+        function link(scope, element, attrs, graphCtrl) {
+
+            graphCtrl.addObject({
+
+                update: function (shapes, graph) {
+
+                    var show = (false != scope.show);
+
+                    if(show) {
+
+                        var p = (typeof scope.points == 'function') ? scope.points() : scope.points;
+
+                        var x1 = graph.x(p[0][0]),
+                            y1 = graph.y(p[0][1]),
+                            x2 = graph.x(p[1][0]),
+                            y2 = graph.y(p[1][1]);
+
+                        var x = Math.min(x1,x2),
+                            y = Math.min(y1,y2),
+                            width = Math.abs(x1 - x2),
+                            height = Math.abs(y1 - y2);
+
+                        shapes.rects.push({x: x, y: y, width: width, height:height , color: scope.color});
+
+                    }
+
+                    return shapes;
+
+                }
+            });
+
+        }
+
+        return {
+            link: link,
+            require: '^graph',
+            restrict: 'E',
+            scope: { points: '&', show: '&', color: '@' }
         }
     }
 );
