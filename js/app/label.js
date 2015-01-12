@@ -6,13 +6,14 @@ kgAngular.directive('label', function () {
 
         function link(scope, element, attrs, graphCtrl) {
 
+            // Show unless there is an attribute determining show/hide behavior
+            if(!attrs['show']) { scope.show = function(){return true} }
+
             graphCtrl.addObject({
 
                 update: function (shapes, graph) {
 
-                    var show = (scope.show() == true);
-
-                    if (show) {
+                    if (scope.show()) {
 
                         var p = (typeof scope.point == 'function') ? scope.point() : scope.point;
                         var l = (typeof scope.label == 'function') ? scope.label() : scope.label;

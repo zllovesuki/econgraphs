@@ -191,6 +191,26 @@ econgraphs.functions.utility = {
 
         };
 
+        // Given two bundles, evaluates whether agent prefers first or second, or is indifferent
+        u.bundlePreferred = function(bundles, t) {
+
+            var u1 = u.utility(bundles[0]),
+                u2 = u.utility(bundles[1]),
+                percentUilityDifference = (u2 - u1)/(0.5*(u1 + u2)),
+                tolerance = t || 0.01; // percent difference within which one is thought to be indifferent
+
+            if(percentUilityDifference > tolerance) {
+                return 2; //second bundle preferred
+            }
+
+            if(percentUilityDifference < -tolerance) {
+                return 1; //first bundle preferred
+            }
+
+            return 0; //indifferent between two bundles
+
+        };
+
         // Find the optimal bundle for a given income and prices
         u.optimalBundle = function (income, px, py) {
 
@@ -295,7 +315,7 @@ econgraphs.functions.utility.CobbDouglas = function () {
 
         };
 
-        u.area = function(xDomain,yDomain) {
+        u.preferred = {area: function(xDomain,yDomain) {
 
             xDomain = domainAsObject(xDomain);
             yDomain = domainAsObject(yDomain);
@@ -324,7 +344,42 @@ econgraphs.functions.utility.CobbDouglas = function () {
 
             return allPoints;
 
-        };
+        }};
+
+        u.dispreferred = {area: function (xDomain, yDomain) {
+
+            xDomain = domainAsObject(xDomain);
+            yDomain = domainAsObject(yDomain);
+
+            if (u.alpha == 0) {
+                return [
+                    {x: xDomain.min, y: u.yValue(xDomain.min)},
+                    {x: xDomain.min, y: yDomain.max},
+                    {x: xDomain.max, y: yDomain.max},
+                    {x: xDomain.max, y: u.yValue(xDomain.max)}
+                ]
+            }
+
+            if (u.beta == 0) {
+                return [
+                    {x: u.xValue(yDomain.min), y: yDomain.min},
+                    {x: xDomain.max, y: yDomain.min},
+                    {x: xDomain.max, y: yDomain.max},
+                    {x: u.xValue(yDomain.max), y: yDomain.max}
+                ]
+            }
+
+            var allPoints = d3.merge([u.points(xDomain, yDomain), u.points(xDomain, yDomain, true)]).sort(sortObjects('x'));
+
+            allPoints.push({x: xDomain.max, y: yDomain.min});
+            allPoints.push({x: xDomain.min, y: yDomain.min});
+            allPoints.push({x: xDomain.min, y: yDomain.max});
+
+            return allPoints;
+
+        }};
+
+
 
         return u;
     }

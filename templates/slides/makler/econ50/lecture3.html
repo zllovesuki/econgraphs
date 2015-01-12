@@ -112,7 +112,7 @@
                 <div class="empty-date">
                     <p class="calendar-date">JAN 19</p>
 
-                    <p class="fragment highlight-red">NO LECTURE - HOLIDAY</p>
+                    <p class="fragment highlight-red">NO LECTURE - HOLIDYA</p>
                 </div>
             </div>
             <div class="col-lg-2">
@@ -302,10 +302,10 @@
     <hr/>
         {% raw %}
         <model>
-        <param name="AX" value="8"/>
-        <param name="AY" value="10"/>
-        <param name="BX" value="6"/>
-        <param name="BY" value="4"/>
+        <param name="XA" value="8"/>
+        <param name="YA" value="10"/>
+        <param name="XB" value="6"/>
+        <param name="YB" value="4"/>
 
         <hr/>
         <div class="row">
@@ -313,9 +313,9 @@
                 <graph height="500" width="500">
                     <axis dim="x" min="0" max="15" title="Good X"></axis>
                     <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                    <point point="[params.AX, params.AY]" droplines="both" label="A" xlabel="Ax"
-                           ylabel="Ay"></point>
-                    <point point="[params.BX, params.BY]" droplines="both" label="B" xlabel="Bx" ylabel="By"
+                    <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
+                           ylabel="yA"></point>
+                    <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
                            color="purple"></point>
 
                 </graph>
@@ -325,22 +325,22 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <p rendered-math expression="A_{x} = {{ params.AX }}"></p>
-                            <slider value="params.AX" min="3" max="12" precision="1"></slider>
+                            <p rendered-math expression="x_A = {{ params.XA }}"></p>
+                            <slider value="params.XA" min="3" max="12" precision="1"></slider>
                         </div>
                         <div class="col-md-6">
-                            <p style="color:purple" rendered-math expression="B_{x} = {{ params.BX }}"></p>
-                            <slider value="params.BX" min="3" max="12" precision="1"></slider>
+                            <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
+                            <slider value="params.XB" min="3" max="12" precision="1"></slider>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <p rendered-math expression="A_{y} = {{ params.AY }}"></p>
-                            <slider value="params.AY" min="3" max="12" precision="1"></slider>
+                            <p rendered-math expression="y_A = {{ params.YA }}"></p>
+                            <slider value="params.YA" min="3" max="12" precision="1"></slider>
                         </div>
                         <div class="col-md-6">
-                            <p style="color:purple" rendered-math expression="B_{y} = {{ params.BY }}"></p>
-                            <slider value="params.BY" min="3" max="12" precision="1"></slider>
+                            <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
+                            <slider value="params.YB" min="3" max="12" precision="1"></slider>
                         </div>
                     </div>
 
@@ -359,10 +359,10 @@
 
         {% raw %}
         <model>
-            <param name="AX" value="8"/>
-            <param name="AY" value="10"/>
-            <param name="BX" value="6"/>
-            <param name="BY" value="4"/>
+            <param name="XA" value="8"/>
+            <param name="YA" value="10"/>
+            <param name="XB" value="6"/>
+            <param name="YB" value="4"/>
 
             <hr/>
             <div class="row">
@@ -370,23 +370,23 @@
                     <graph height="500" width="500">
                         <axis dim="x" min="0" max="15" title="Good X"></axis>
                         <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                        <rect points="[[params.AX,params.AY],[0,0]]" color="red" show="params.showPreferredToA"></rect>
-                        <rect points="[[params.AX,params.AY],[15,15]]" color="green"
+                        <rect points="[[params.XA,params.YA],[0,0]]" color="red" show="params.showPreferredToA"></rect>
+                        <rect points="[[params.XA,params.YA],[15,15]]" color="green"
                               show="params.showPreferredToA"></rect>
-                        <rect points="[[params.BX,params.BY],[0,0]]" color="red" show="params.showPreferredToB"></rect>
-                        <rect points="[[params.BX,params.BY],[15,15]]" color="green"
+                        <rect points="[[params.XB,params.YB],[0,0]]" color="red" show="params.showPreferredToB"></rect>
+                        <rect points="[[params.XB,params.YB],[15,15]]" color="green"
                               show="params.showPreferredToB"></rect>
-                        <point point="[params.AX, params.AY]" droplines="both" label="A" xlabel="Ax"
-                               ylabel="Ay"></point>
-                        <point point="[params.BX, params.BY]" droplines="both" label="B" xlabel="Bx" ylabel="By"
+                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
                                color="purple"></point>
-                        <label point="[0.5*(params.AX + 15), 0.5*(params.AY + 15)]" label="Preferred to A"
+                        <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
                                show="params.showPreferredToA" color="darkgreen"></label>
-                        <label point="[0.5*(params.AX), 0.5*(params.AY)]" label="Dispreferred to A"
+                        <label point="[0.5*(params.XA), 0.5*(params.YA)]" label="Dispreferred to A"
                                show="params.showPreferredToA" color="darkred"></label>
-                        <label point="[0.5*(params.BX + 15), 0.5*(params.BY + 15)]" label="Preferred to B"
+                        <label point="[0.5*(params.XB + 15), 0.5*(params.YB + 15)]" label="Preferred to B"
                                show="params.showPreferredToB" color="darkgreen"></label>
-                        <label point="[0.5*(params.BX), 0.5*(params.BY)]" label="Dispreferred to B"
+                        <label point="[0.5*(params.XB), 0.5*(params.YB)]" label="Dispreferred to B"
                                show="params.showPreferredToB" color="darkred"></label>
                     </graph>
                 </div>
@@ -394,80 +394,80 @@
                     <div class="well">
                         <div class="row">
                             <div class="col-md-6">
-                                <p rendered-math expression="A_{x} = {{ params.AX }}"></p>
-                                <slider value="params.AX" min="3" max="12" precision="1"></slider>
+                                <p rendered-math expression="x_A= {{ params.XA }}"></p>
+                                <slider value="params.XA" min="3" max="12" precision="1"></slider>
                             </div>
                             <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="B_{x} = {{ params.BX }}"></p>
-                                <slider value="params.BX" min="3" max="12" precision="1"></slider>
+                                <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
+                                <slider value="params.XB" min="3" max="12" precision="1"></slider>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <p rendered-math expression="A_{y} = {{ params.AY }}"></p>
-                                <slider value="params.AY" min="3" max="12" precision="1"></slider>
+                                <p rendered-math expression="y_A = {{ params.YA }}"></p>
+                                <slider value="params.YA" min="3" max="12" precision="1"></slider>
                             </div>
                             <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="B_{y} = {{ params.BY }}"></p>
-                                <slider value="params.BY" min="3" max="12" precision="1"></slider>
+                                <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
+                                <slider value="params.YB" min="3" max="12" precision="1"></slider>
                             </div>
                         </div>
 
                         <hr/>
-                        <p ng-if="(params.AX > params.BX && params.AY > params.BY)">
+                        <p ng-if="(params.XA > params.XB && params.YA > params.YB)">
                             <span rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x > B_x</span>
-                            and <span rendered-math>A_y > B_y</span>.
+                            since <span rendered-math>x_A > x_B</span>
+                            and <span rendered-math>y_A > y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX > params.BX && params.AY == params.BY)">
+                        <p ng-if="(params.XA > params.XB && params.YA == params.YB)">
                             <span rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x > B_x</span>
-                            and <span rendered-math>A_y = B_y</span>.
+                            since <span rendered-math>x_A > x_B</span>
+                            and <span rendered-math>y_A = y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX == params.BX && params.AY > params.BY)">
+                        <p ng-if="(params.XA == params.XB && params.YA > params.YB)">
                             <span rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x = B_x</span>
-                            and <span rendered-math>A_y > B_y</span>.
+                            since <span rendered-math>x_A = x_B</span>
+                            and <span rendered-math>y_A > y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX < params.BX && params.AY < params.BY)">
+                        <p ng-if="(params.XA < params.XB && params.YA < params.YB)">
                             <span rendered-math>A \prec B</span><br/>
-                            since <span rendered-math>A_x < B_x</span>
-                            and <span rendered-math>A_y < B_y</span>.
+                            since <span rendered-math>x_A < x_B</span>
+                            and <span rendered-math>y_A < y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX < params.BX && params.AY == params.BY)">
+                        <p ng-if="(params.XA < params.XB && params.YA == params.YB)">
                             <span rendered-math>A \prec B</span><br/>
-                            since <span rendered-math>A_x < B_x</span>
-                            and <span rendered-math>A_y = B_y</span>.
+                            since <span rendered-math>x_A < x_B</span>
+                            and <span rendered-math>y_A = y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX == params.BX && params.AY == params.BY)">
+                        <p ng-if="(params.XA == params.XB && params.YA == params.YB)">
                             <span rendered-math>A \sim B</span><br/>
-                            since <span rendered-math>A_x = B_x</span>
-                            and <span rendered-math>A_y = B_y</span>.
+                            since <span rendered-math>x_A = x_B</span>
+                            and <span rendered-math>y_A = y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX == params.BX && params.AY < params.BY)">
+                        <p ng-if="(params.XA == params.XB && params.YA < params.YB)">
                             <span rendered-math>A \prec B</span><br/>
-                            since <span rendered-math>A_x = B_x</span>
-                            and <span rendered-math>A_y < B_y</span>.
+                            since <span rendered-math>x_A = x_B</span>
+                            and <span rendered-math>y_A < y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX < params.BX && params.AY > params.BY)">
+                        <p ng-if="(params.XA < params.XB && params.YA > params.YB)">
                             We don't know if <span rendered-math>A \prec B</span> or <span
                                 rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x < B_x</span>
-                            and <span rendered-math>A_y > B_y</span>.
+                            since <span rendered-math>x_A < x_B</span>
+                            and <span rendered-math>y_A > y_B</span>.
                         </p>
 
-                        <p ng-if="(params.AX > params.BX && params.AY < params.BY)">
+                        <p ng-if="(params.XA > params.XB && params.YA < params.YB)">
                             We don't know if <span rendered-math>A \prec B</span> or <span
                                 rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x > B_x</span>
-                            and <span rendered-math>A_y < B_y</span>.
+                            since <span rendered-math>x_A > x_B</span>
+                            and <span rendered-math>y_A < y_B</span>.
                         </p>
 
                         <div class="fragment"><hr/>
@@ -507,11 +507,11 @@
 
         {% raw %}
         <model>
-            <param name="AX" value="8"/>
-            <param name="AY" value="10"/>
-            <param name="BX" value="6"/>
-            <param name="BY" value="4"/>
-            <function name="u" category="utility" fn-params=""/>
+            <param name="XA" value="8"/>
+            <param name="YA" value="10"/>
+            <param name="XB" value="6"/>
+            <param name="YB" value="4"/>
+            <function name="u" category="utility" form="CobbDouglas"></function>
 
             <hr/>
             <div class="row">
@@ -519,104 +519,64 @@
                     <graph height="500" width="500">
                         <axis dim="x" min="0" max="15" title="Good X"></axis>
                         <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                        <rect points="[[params.AX,params.AY],[0,0]]" color="red" show="params.showPreferredToA"></rect>
-                        <rect points="[[params.AX,params.AY],[15,15]]" color="green"
-                              show="params.showPreferredToA"></rect>
-                        <rect points="[[params.BX,params.BY],[0,0]]" color="red" show="params.showPreferredToB"></rect>
-                        <rect points="[[params.BX,params.BY],[15,15]]" color="green"
-                              show="params.showPreferredToB"></rect>
-                        <point point="[params.AX, params.AY]" droplines="both" label="A" xlabel="Ax"
-                               ylabel="Ay"></point>
-                        <point point="[params.BX, params.BY]" droplines="both" label="B" xlabel="Bx" ylabel="By"
+                        <rect points="[[params.XA,params.YA],[0,0]]" color="red" show="params.showMonotonicity"></rect>
+                        <rect points="[[params.XA,params.YA],[15,15]]" color="green"
+                              show="params.showMonotonicity"></rect>
+                        <area fn="functions.u.setLevel([params.XA, params.YA]).preferred" color="green"
+                              show="params.showPreferredToA"/>
+                        <area fn="functions.u.dispreferred" color="red" show="params.showPreferredToA"/>
+                        <curve fn="functions.u.setLevel([params.XA, params.YA])"></curve>
+                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
                                color="purple"></point>
-                        <label point="[0.5*(params.AX + 15), 0.5*(params.AY + 15)]" label="Preferred to A"
-                               show="params.showPreferredToA" color="darkgreen"></label>
-                        <label point="[0.5*(params.AX), 0.5*(params.AY)]" label="Dispreferred to A"
-                               show="params.showPreferredToA" color="darkred"></label>
-                        <label point="[0.5*(params.BX + 15), 0.5*(params.BY + 15)]" label="Preferred to B"
-                               show="params.showPreferredToB" color="darkgreen"></label>
-                        <label point="[0.5*(params.BX), 0.5*(params.BY)]" label="Dispreferred to B"
-                               show="params.showPreferredToB" color="darkred"></label>
+                        <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
+                               color="darkgreen" show="params.showPreferredToA || params.showMonotonicity"></label>
+                        <label point="[0.5*(params.XA), 0.5*(params.YA)]" label="Dispreferred to A"
+                               color="darkred" show="params.showPreferredToA || params.showMonotonicity"></label>
                     </graph>
                 </div>
                 <div class="col-md-6">
                     <div class="well">
                         <div class="row">
                             <div class="col-md-6">
-                                <p rendered-math expression="A_{x} = {{ params.AX }}"></p>
-                                <slider value="params.AX" min="3" max="12" precision="1"></slider>
+                                <p rendered-math expression="x_A = {{ params.XA }}"></p>
+                                <slider value="params.XA" min="3" max="12" precision="1"></slider>
                             </div>
                             <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="B_{x} = {{ params.BX }}"></p>
-                                <slider value="params.BX" min="3" max="12" precision="1"></slider>
+                                <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
+                                <slider value="params.XB" min="3" max="12" precision="1"></slider>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <p rendered-math expression="A_{y} = {{ params.AY }}"></p>
-                                <slider value="params.AY" min="3" max="12" precision="1"></slider>
+                                <p rendered-math expression="y_A = {{ params.YA }}"></p>
+                                <slider value="params.YA" min="3" max="12" precision="1"></slider>
                             </div>
                             <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="B_{y} = {{ params.BY }}"></p>
-                                <slider value="params.BY" min="3" max="12" precision="1"></slider>
+                                <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
+                                <slider value="params.YB" min="3" max="12" precision="1"></slider>
                             </div>
                         </div>
 
                         <hr/>
-                        <p ng-if="(params.AX > params.BX && params.AY > params.BY)">
+
+
+                        <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 1">
                             <span rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x > B_x</span>
-                            and <span rendered-math>A_y > B_y</span>.
+                            since <span rendered-math>B</span> lies <b>below</b><br/> the indifference curve passing through <span rendered-math>A</span>.
                         </p>
 
-                        <p ng-if="(params.AX > params.BX && params.AY == params.BY)">
-                            <span rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x > B_x</span>
-                            and <span rendered-math>A_y = B_y</span>.
-                        </p>
-
-                        <p ng-if="(params.AX == params.BX && params.AY > params.BY)">
-                            <span rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x = B_x</span>
-                            and <span rendered-math>A_y > B_y</span>.
-                        </p>
-
-                        <p ng-if="(params.AX < params.BX && params.AY < params.BY)">
+                        <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 2">
                             <span rendered-math>A \prec B</span><br/>
-                            since <span rendered-math>A_x < B_x</span>
-                            and <span rendered-math>A_y < B_y</span>.
+                            since <span rendered-math>B</span> lies <b>above</b><br/> the indifference curve passing through <span
+                                rendered-math>A</span>.
                         </p>
 
-                        <p ng-if="(params.AX < params.BX && params.AY == params.BY)">
-                            <span rendered-math>A \prec B</span><br/>
-                            since <span rendered-math>A_x < B_x</span>
-                            and <span rendered-math>A_y = B_y</span>.
-                        </p>
-
-                        <p ng-if="(params.AX == params.BX && params.AY == params.BY)">
+                        <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 0">
                             <span rendered-math>A \sim B</span><br/>
-                            since <span rendered-math>A_x = B_x</span>
-                            and <span rendered-math>A_y = B_y</span>.
-                        </p>
-
-                        <p ng-if="(params.AX == params.BX && params.AY < params.BY)">
-                            <span rendered-math>A \prec B</span><br/>
-                            since <span rendered-math>A_x = B_x</span>
-                            and <span rendered-math>A_y < B_y</span>.
-                        </p>
-
-                        <p ng-if="(params.AX < params.BX && params.AY > params.BY)">
-                            We don't know if <span rendered-math>A \prec B</span> or <span
-                                rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x < B_x</span>
-                            and <span rendered-math>A_y > B_y</span>.
-                        </p>
-
-                        <p ng-if="(params.AX > params.BX && params.AY < params.BY)">
-                            We don't know if <span rendered-math>A \prec B</span> or <span
-                                rendered-math>A \succ B</span><br/>
-                            since <span rendered-math>A_x > B_x</span>
-                            and <span rendered-math>A_y < B_y</span>.
+                            since <span rendered-math>B</span> lies <b>along</b><br/> the indifference curve passing through <span
+                                rendered-math>A</span>.
                         </p>
 
                         <div class="fragment">
@@ -626,11 +586,11 @@
                                 preferred/dispreferred to A' : 'Show preferred/dispreferred to A' }}
                             </toggle>
                             <hr/>
-                            <toggle param="params.showPreferredToB" init="false">{{ params.showPreferredToB ? 'Hide
-                                preferred/dispreferred to B' : 'Show preferred/dispreferred to B' }}
+                            <toggle param="params.showMonotonicity" init="false">{{ params.showMonotonicity ? 'Hide
+                                monotonicity' : 'Show monotonicity' }}
                             </toggle>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>

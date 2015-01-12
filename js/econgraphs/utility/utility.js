@@ -59,6 +59,26 @@ econgraphs.functions.utility = {
 
         };
 
+        // Given two bundles, evaluates whether agent prefers first or second, or is indifferent
+        u.bundlePreferred = function(bundles, t) {
+
+            var u1 = u.utility(bundles[0]),
+                u2 = u.utility(bundles[1]),
+                percentUilityDifference = (u2 - u1)/(0.5*(u1 + u2)),
+                tolerance = t || 0.01; // percent difference within which one is thought to be indifferent
+
+            if(percentUilityDifference > tolerance) {
+                return 2; //second bundle preferred
+            }
+
+            if(percentUilityDifference < -tolerance) {
+                return 1; //first bundle preferred
+            }
+
+            return 0; //indifferent between two bundles
+
+        };
+
         // Find the optimal bundle for a given income and prices
         u.optimalBundle = function (income, px, py) {
 
