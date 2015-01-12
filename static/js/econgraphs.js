@@ -180,6 +180,13 @@ econgraphs.functions.utility = {
             }
         };
 
+        u.mrsTangentLine = function(bundle) {
+            var point = {x: bundle[0], y:bundle[1]},
+                slope = -u.mrs(bundle),
+                l = new kg.functions.Linear({definitionType:'point-slope', point:point, slope: slope});
+            return l;
+        };
+
         u.utility = function(bundle) {
             bundle = bundle || u.bases;
             return u.value([bundle.x,bundle.y])
@@ -351,6 +358,7 @@ econgraphs.functions.utility.CobbDouglas = function () {
             xDomain = domainAsObject(xDomain);
             yDomain = domainAsObject(yDomain);
 
+            /* This doesn't work yet
             if (u.alpha == 0) {
                 return [
                     {x: xDomain.min, y: u.yValue(xDomain.min)},
@@ -368,6 +376,7 @@ econgraphs.functions.utility.CobbDouglas = function () {
                     {x: u.xValue(yDomain.max), y: yDomain.max}
                 ]
             }
+            */
 
             var allPoints = d3.merge([u.points(xDomain, yDomain), u.points(xDomain, yDomain, true)]).sort(sortObjects('x'));
 
@@ -378,6 +387,28 @@ econgraphs.functions.utility.CobbDouglas = function () {
             return allPoints;
 
         }};
+
+        u.mrsOfX = function(bundle) {
+
+            return {points: function (xDomain, yDomain) {
+
+                var points = [];
+
+                var x, y;
+
+                for (var i = 0; i < 51; i++) {
+
+                    x = xDomain.min + (i / 50) * (xDomain.max - xDomain.min);
+                    y = u.mrs(x);
+                    if (inRange(y, yDomain)) {
+                        points.push({x: x, y: y});
+                    }
+                }
+            }
+            }
+
+
+        };
 
 
 

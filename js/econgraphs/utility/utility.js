@@ -48,6 +48,13 @@ econgraphs.functions.utility = {
             }
         };
 
+        u.mrsTangentLine = function(bundle) {
+            var point = {x: bundle[0], y:bundle[1]},
+                slope = -u.mrs(bundle),
+                l = new kg.functions.Linear({definitionType:'point-slope', point:point, slope: slope});
+            return l;
+        };
+
         u.utility = function(bundle) {
             bundle = bundle || u.bases;
             return u.value([bundle.x,bundle.y])

@@ -352,7 +352,7 @@
 
     </section>
     <section>
-        <h2>Possible assumption: <b>Monotonicity (“More is Better”)</b></h2>
+        <h2>Possible Assumption 1: <b>Monotonicity (“More is Better”)</b></h2>
         <hr/>
         <p>Bundle <span rendered-math>A</span> is preferred to bundle <span rendered-math>B</span> (that is, <span rendered-math>A \succ B</span>)<br/>if <span rendered-math>A</span> contains at least as much of all goods as <span rendered-math>B</span>,<br/> and strictly more of at least one good.</p>
 
@@ -599,23 +599,300 @@
 
     </section>
 
+    <section>
+        <h2>Possible Assumption 2: Convexity (“Variety is Better”)</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">Bundle <span rendered-math>C</span> is preferred to bundles <span
+                    rendered-math>A</span> and <span
+                    rendered-math>B</span></div>
+            <div class="col-md-6 fragment">...that is, <span rendered-math>C \succ A</span> and <span rendered-math>C \succ B</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">if <span rendered-math>A</span> and <span rendered-math>B</span> are on
+                the same indifference curve
+            </div>
+            <div class="col-md-6 fragment">...that is, <span rendered-math>A \sim B</span></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">and <span rendered-math>C</span> is a <b>convex combination</b> of <span
+                    rendered-math>A</span> and <span
+                    rendered-math>B</span>.
+            </div>
+            <div class="col-md-6 fragment"><p>...that is, the quantities in bundle <span rendered-math>C</span> are <b>weighted
+                averages</b> of those in
+                <span rendered-math>A</span> and <span rendered-math>B</span>.</p>
+            </div>
+        </div>
+
+
+
+        {% raw %}
+        <model>
+            <param name="alpha" value="0.5"/>
+            <function name="u" category="utility" form="CobbDouglas"></function>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <area fn="functions.u.setLevel([12,2]).preferred" color="green"/>
+                        <area fn="functions.u.dispreferred" color="red"/>
+                        <curve fn="functions.u.setLevel([12,2])"></curve>
+                        <segment points="[{x:12,y:2},{x:3,y:8}]" show="params.showC"></segment>
+                        <point point="[3,8]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[12, 2]" droplines="both" label="B" xlabel="xB" ylabel="yB"></point>
+                        <point point="[3*params.alpha + 12*(1-params.alpha), 8*params.alpha + 2*(1-params.alpha)]" droplines="both" label="C" xlabel="xC" ylabel="yC"
+                               color="purple" show="params.showC"></point>
+                    </graph>
+                </div>
+                <div class="col-md-6">
+                    <toggle param="params.showC" init="false">{{ params.showC ? 'Hide
+                        point C' : 'Show point C' }}</toggle>
+
+                    <div ng-if="params.showC">
+                        <div class="well">
+                            <p rendered-math expression="\alpha = {{ params.alpha | number: 2 }}"></p>
+                            <slider value="params.alpha" min="0" max="1" precision="0.01"></slider>
+                            <hr/>
+
+
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math style="text-align:right">x_C</td>
+                                <td rendered-math> = \alpha x_A + (1-\alpha) x_B</td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ params.alpha | number: 2 }} \times 3 + (1 - {{ params.alpha | number: 2 }}) \times 12"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ 3*params.alpha + 12*(1-params.alpha) | number: 2 }}"></span></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math style="text-align:right">y_C</td>
+                                <td rendered-math> = \alpha y_A + (1-\alpha) y_B</td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ params.alpha | number: 2 }} \times 8 + (1 - {{ params.alpha | number: 2 }}) \times 2"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ 8*params.alpha + 2*(1-params.alpha) | number: 2 }}"></span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+    <section>
+        <h1>Monotonicity & Convexity Together</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>If an agent's preferences</h2>
+                <h2>are <b>monotonic</b> (more is better)</h2>
+                <h2> and <b>convex</b> (variety is better),</h2>
+            </div>
+            <div class="col-md-6 fragment">
+                <h2>then indifference curves</h2>
+                <h2>will be downward-sloping</h2>
+                <h2>and bowed in to the origin.</h2>
+            </div>
+        </div>
+        <hr/>
+        <div class="fragment">
+            <h2>(Spoiler alert: think about the function <span rendered-math>f(x,y) = xy</span>,</h2>
+            <h2>which has level curves that look like <span rendered-math>y = \frac{k}{x}</span>.)</h2>
+        </div>
+
+
+
+    </section>
+
+
 
     <section>
         <clicker-question>
-            <h2>For a general downward-sloping</h2>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
 
-            <h2>straight-line demand curve:</h2>
-            <clicker-option letter="A">Demand is equally elastic at every point.</clicker-option>
-            <clicker-option letter="B">Demand is most elastic toward the upper-left.</clicker-option>
-            <clicker-option letter="C">Demand is most elastic toward the lower-right.</clicker-option>
-            <clicker-option letter="D">None of the above is true (it depends on the precise functional form)!
-            </clicker-option>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Puppies</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Ebola Cases</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Upward sloping, with preferred set up and to the left</clicker-option>
+            <clicker-option letter="B">Upward sloping, with preferred set down and to the right</clicker-option>
+            <clicker-option letter="C">Downward sloping, with preferred set up and to the right</clicker-option>
+            <clicker-option letter="D">Downward sloping, with preferred set down and to the left</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Ebola Cases</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Terrorist Attacks</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Upward sloping, with preferred set up and to the left</clicker-option>
+            <clicker-option letter="B">Upward sloping, with preferred set down and to the right</clicker-option>
+            <clicker-option letter="C">Downward sloping, with preferred set up and to the right</clicker-option>
+            <clicker-option letter="D">Downward sloping, with preferred set down and to the left</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Left shoes</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Right shoes</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Straight, downward-sloping lines</clicker-option>
+            <clicker-option letter="B">A single 45-degree line through the origin</clicker-option>
+            <clicker-option letter="C">L-shaped</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed in to the origin</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed out from the origin</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Star Wars memorabilia</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: My Little Pony memoriabilia</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Straight, downward-sloping lines</clicker-option>
+            <clicker-option letter="B">A single 45-degree line through the origin</clicker-option>
+            <clicker-option letter="C">L-shaped</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed in to the origin</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed out from the origin</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Coke</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Pepsi</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Straight, downward-sloping lines</clicker-option>
+            <clicker-option letter="B">A single 45-degree line through the origin</clicker-option>
+            <clicker-option letter="C">L-shaped</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed in to the origin</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed out from the origin</clicker-option>
         </clicker-question>
         <clicker-file></clicker-file>
     </section>
 
+
     <section>
         <h1>10 minute break</h1>
+    </section>
+    <section>
+        <h1>Marginal Rate of Substitution (MRS)</h1>
+        <hr/>
+        <h2 class="fragment">The rate at which the consumer is just willing to substitute one good for another</h2>
+        <h2 class="fragment">Visually: The slope of the demand curve</h2>
+        <h2 class="fragment">Mathematically: Next time.</h2>
+    </section>
+    <section>
+        <h2>Marginal Rate of Substitution (MRS)</h2>
+        <hr/>
+        {% raw %}
+        <model>
+            <param name="x" value="30"/>
+            <param name="dx" value="10"/>
+            <function name="u" category="utility" form="CobbDouglas"></function>
+            <div class="row">
+                <div class="col-md-6">
+                    <graph>
+                        <axis dim="x" min="0" max="150" title="Good X"></axis>
+                        <axis dim="y" min="0" max="150" title="Good Y"></axis>
+                        <curve fn="functions.u.setLevel(40)"></curve>
+                        <point point="[params.x, 1600/params.x]" droplines="both" label="A" xlabel="{{ params.x }}"
+                               ylabel="{{ 1600/params.x | number:2 }}"></point>
+                        <point point="[params.x + params.dx, 1600/(params.x + params.dx)]" droplines="both" label="B" xlabel="{{ params.x + params.dx | number:0 }}" ylabel="{{ 1600/(params.x + params.dx) | number: 2 }}"
+                               color="purple"></point>
+                        <!--<line fn="functions.u.mrsTangentLine([params.x, 1600/params.x])"></line>-->
+                        <line params="{definitionType:'point-point', points:[{x:params.x, y:1600/params.x},{x:params.x + params.dx,y:1600/(params.x + params.dx)}]}"></line>
+                    </graph>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="well">
+                        <p rendered-math expression="x_A = {{ params.x }}"></p>
+                        <slider value="params.x" min="20" max="130" precision="1"></slider>
+                        <hr/>
+                        <p rendered-math expression="\Delta x = {{ params.dx }}"></p>
+                        <slider value="params.dx" min="1" max="10" precision="1"></slider>
+
+                    </div>
+                    <hr/>
+                    <p rendered-math expression="A \approx ({{ params.x | number:0 }}, {{ 1600/params.x | number:2 }})"></p>
+                    <p rendered-math expression="B \approx ({{ params.x + params.dx | number:0 }}, {{ 1600/(params.x + params.dx) | number: 2 }})"></p>
+                    <hr/>
+                    <p>Moving from point <span rendered-math>A</span> to point <span rendered-math>B</span><br/>
+                    means getting <span rendered-math expression="\Delta x = {{ params.dx | number: 0 }}"></span> more units of <span rendered-math>X</span><br/>
+                    and giving up <span rendered-math
+                                             expression="\Delta y \approx {{ 1600/params.x - 1600/(params.x + params.dx) | number:2 }}"></span>
+                    units of <span rendered-math>Y</span>.</p>
+                    <hr/>
+                    <p rendered-math expression="\displaystyle{MRS \approx \frac{\Delta y}{\Delta x} \approx \frac{ {{ 1600/params.x - 1600/(params.x + params.dx) | number:2 }} }{ {{ params.dx | number: 0 }} } \approx {{ (1600/params.x - 1600/(params.x + params.dx))/params.dx | number: 2 }} \frac{\text{units of }Y}{\text{unit of }X} }"></p>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
     </section>
 
 {% endblock %}
