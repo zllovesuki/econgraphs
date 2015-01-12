@@ -27,7 +27,7 @@
         <hr/>
         <h2 class="fragment">Logistics and Context</h2>
 
-        <h2 class="fragment">Motivation: Holiday Gift Giving</h2>
+        <h2 class="fragment">Motivation</h2>
 
         <h2 class="fragment">Preferences</h2>
 
@@ -37,9 +37,9 @@
         <hr/>
         <h2 class="fragment">Marginal Rate of Substitution</h2>
 
-        <h2 class="fragment">Revealed Preference</h2>
-
         <h2 class="fragment">Behavioral Economics</h2>
+
+        <h2 class="fragment">Implications for Econ 51</h2>
     </section>
     <section>
         <h1>Logistics and Context</h1>
@@ -112,7 +112,7 @@
                 <div class="empty-date">
                     <p class="calendar-date">JAN 19</p>
 
-                    <p class="fragment highlight-red">NO LECTURE - HOLIDYA</p>
+                    <p class="fragment highlight-red">NO LECTURE - HOLIDAY</p>
                 </div>
             </div>
             <div class="col-lg-2">
@@ -190,8 +190,12 @@
     <section>
         <h1>Motivation</h1>
         <hr/>
-
-        <h2>How do we think about choices?</h2>
+        <h2>Where does demand come from?</h2>
+        <h2>How do we think about choices in general?</h2>
+    </section>
+    <section>
+        <h2>Choices are everywhere</h2>
+        <img src="{{ url_for('static', filename='images/econ50/lecture3/tinder.png') }}">
     </section>
     <section>
         <h2 class="fragment">Harold Hamm offers $975 mln divorce check;</h2>
@@ -201,6 +205,23 @@
         <p><a href="http://www.cnbc.com/id/102315179"
               target="_blank">CNBC, January 6, 2015</a>
         </p>
+    </section>
+    <section>
+        <h2>Why are there so many kinds of pasta sauce?</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/pasta1.jpg') }}">
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/pasta2.jpg') }}">
+            </div>
+
+        </div>
+
+        <h2>And how can their prices be so different?</h2>
+
+
     </section>
 
     <section>
@@ -245,7 +266,7 @@
             <td>The consumer likes <span rendered-math>A</span> <b>at most as much as</b> <span rendered-math>B</span>.</td>
         </tr>
         <tr class="fragment">
-            <td rendered-math>A \preceq B</td>
+            <td rendered-math>A \prec B</td>
             <td><span rendered-math>A</span> is <b>strictly dispreferred</b> to <span rendered-math>B</span></td>
             <td>The consumer likes <span rendered-math>A</span> <b>less than</b> <span rendered-math>B</span>.</td>
         </tr>
@@ -253,7 +274,7 @@
     </section>
     <section>
         <h1>Consumer Preferences: Fundamental Assumptions</h1>
-        <hr/>
+        <p/>
         <table class="table">
             <tr class="fragment">
                 <td>Preferences are <b>complete</b>.</td>
@@ -295,6 +316,7 @@
             </div>
         </div>
     </section>
+
     <section>
     <h2>Preferences over Quantities</h2>
     <hr/>
@@ -307,7 +329,6 @@
         <param name="XB" value="6"/>
         <param name="YB" value="4"/>
 
-        <hr/>
         <div class="row">
             <div class="col-md-6">
                 <graph height="500" width="500">
@@ -894,5 +915,147 @@
         </model>
         {% endraw %}
     </section>
+    <section>
+    <h1>Diminishing MRS</h1>
+    <hr/>
+    <h2>The twin assumptions of <b>monotonicity</b> and <b>convexity</b></h2>
+        <h2>also give us <b>diminishing MRS</b>,</h2>
+        <h2>which is <i>related to</i> diminishing marginal returns.</h2>
+    </section>
+    <section>
+        <h1>Possible Assumption 3: Smoothness</h1>
+        <hr/>
+        <h2>Indifference curves don't have kinks,<br/>so the MRS is a continuous function.</h2>
+        <hr/>
+        <p>(we will often assume this, or something like this,<br/> in order to help us solve things with calculus)</p>
+    </section>
+    <section>
+        <h2>A sneak peek of Econ 51...</h2>
+        <hr/>
+        <p>Bill has 10 units of X and 4 units of Y. Ted has 2 units of X and 8 units of Y.</p>
+
+        <p>The diagrams below show their indifference curves for these bundles.</p>
+
+        <p>See if they can <b>both</b> be made better off by trading...</p>
+
+        <hr/>
+        {% raw %}
+        <model>
+            <param name="dx" value="0">
+            <param name="dy" value="0">
+            <function name="u" category="utility" form="CobbDouglas"></function>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>Bill's Perspective</p>
+                    <hr/>
+                    <graph width="400" height="400">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <area fn="functions.u.setLevel([10,4]).preferred" color="green"/>
+                        <curve fn="functions.u"></curve>
+                        <point point="[10, 4]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[10 - params.dx, 4 + params.dy]" droplines="both" label="B" xlabel="xB"
+                               ylabel="yB"
+                               color="purple"></point>
+                    </graph>
+                </div>
+                <div class="col-md-4">
+                    <p>Ted's Perspective</p>
+                    <hr/>
+                    <graph width="400" height="400">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <area fn="functions.u.setLevel([2,8]).preferred" color="green"/>
+                        <curve fn="functions.u"></curve>
+                        <point point="[2, 8]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[2 + params.dx, 8 - params.dy]" droplines="both" label="B" xlabel="xB"
+                               ylabel="yB"
+                               color="purple"></point>
+                    </graph>
+                </div>
+                <div class="col-md-4">
+                    <div class="well">
+                        <p>Bill trades {{ params.dx }} units of X</p>
+                        <slider value="params.dx" min="0" max="10" precision="1"></slider>
+                        <p>for {{ params.dy }} units of Ted's Y</p>
+                        <slider value="params.dy" min="0" max="10" precision="1"></slider>
+
+                    </div>
+                    <hr/>
+                    <p ng-if="functions.u.bundlePreferred([{x: 10, y: 4},{x: 10 - params.dx, y: 4 + params.dy}]) == 1">
+                        Bill is worse off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 10, y: 4},{x: 10 - params.dx, y: 4 + params.dy}]) == 2">
+                        Bill is better off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 10, y: 4},{x: 10 - params.dx, y: 4 + params.dy}]) == 0">
+                        Bill is no worse off or better off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 2, y: 8},{x: 2 + params.dx, y: 8 - params.dy}]) == 1">
+                        Ted is worse off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 2, y: 8},{x: 2 + params.dx, y: 8 - params.dy}]) == 2">
+                        Ted is better off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 2, y: 8},{x: 2 + params.dx, y: 8 - params.dy}]) == 0">
+                        Ted is no worse off or better off than before.
+                    </p>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+    </section>
+    <section>
+        <h1>Behavioral Economics</h1>
+    </section>
+    <section>
+        <h1>Endowment Effect</h1>
+        <img src="{{ url_for('static',filename='images/econ50/lecture3/ourpuppy.jpg')}}" class="fragment">
+    </section>
+    <section>
+        <h1>Culture and Choice</h1>
+        <img src="{{ url_for('static',filename='images/econ50/lecture3/chimps.jpb') }}" class="fragment">
+    </section>
+    <section>
+        <h1>Accounting for Mistakes</h1>
+        <img src="{{ url_for('static',filename='images/econ50/lecture3/hitbybus.png') }}" class="fragment">
+    </section>
+    <section>
+        <h2>Summary</h2>
+        <hr/>
+        <h2 class="fragment">We are interested in the way people make <b>choices</b>.</h2>
+        <hr/>
+        <h2 class="fragment">To do this, we make some conjectures about <b>preferences</b> - how people rank goods, and
+            bundles of goods.</h2>
+        <hr/>
+        <h2 class="fragment">We have looked at different <b>assumptions</b> about preferences, including
+            <b>monotonicity</b> and <b>convexity</b>.</h2>
+        <hr/>
+        <h2 class="fragment">We have seen how <b>indifference curves</b> partition all possible bundles into those
+            preferred, dispreferred, and indifferent to a given bundle.</h2>
+        <hr/>
+        <h2 class="fragment">We have begun to <b>measure</b> preferences using the notion of the Marginal Rate of
+            Substitution (MRS).</h2>
+    </section>
+    <section>
+        <h1>Looking forward</h1>
+        <hr/>
+
+        <h2>Wednesday: utility functions</h2>
+
+        <h2>Next Wednesday: budget constraints and optimal choice</h2>
+
+        <h2>After that: deriving demand, analyzing demand shifters</h2>
+
+    </section>
+
+
 
 {% endblock %}
