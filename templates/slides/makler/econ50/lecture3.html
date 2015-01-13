@@ -1,0 +1,1069 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 3</h2>
+
+        <h1>Preferences and Indifference Curves</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>January 12, 2014</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Logistics and Context</h2>
+
+        <h2 class="fragment">Motivation</h2>
+
+        <h2 class="fragment">Preferences</h2>
+
+        <h2 class="fragment">Indifference Curves</h2>
+        <hr/>
+        <h2 class="fragment">10 minute break</h2>
+        <hr/>
+        <h2 class="fragment">Marginal Rate of Substitution</h2>
+
+        <h2 class="fragment">Behavioral Economics</h2>
+
+        <h2 class="fragment">Implications for Econ 51</h2>
+    </section>
+    <section>
+        <h1>Logistics and Context</h1>
+    </section>
+    <section id="two-week-view">
+        <div class="row" style="height:20%">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2"><p class="calendar-date">M</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">W</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">T</p>
+                <hr/>
+            </div>
+            <div class="col-lg-2"><p class="calendar-date">F</p>
+                <hr/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="today-date">
+                    <p class="calendar-date">JAN 12</p>
+
+                    <p>Lecture 3: Preferences, Indifference Curves</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 13</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 14</p>
+
+                    <p>Lecture 4: Utility Functions</p>
+
+                    <p><em>B&B Ch. 3</em></p>
+
+                    <p class="fragment highlight-red"><em>Last day for section sign-up!</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 15</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="section-date">
+                    <p class="calendar-date">JAN 16</p>
+
+                    <p>Sections</p>
+
+                    <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 19</p>
+
+                    <p class="fragment highlight-red">NO LECTURE - HOLIDAY</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 20</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="lecture-date">
+                    <p class="calendar-date">JAN 21</p>
+
+                    <p>Lecture 5: Budget constraints; optimal choice</p>
+
+                    <p><em>B&B Ch. 4</em></p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="empty-date">
+                    <p class="calendar-date">JAN 22</p>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="section-date">
+                    <p class="calendar-date">JAN 23</p>
+
+                    <p>Sections</p>
+
+                    <p class="fragment highlight-red"><em>Homework 2 Due</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+    <h1>Office Hours begin this week</h1>
+    <hr/>
+    <h2>Mine: Mondays after lecture (11:00am - 12:30pm) and Wednesdays from 2:00-3:30pm, 224 Landau</h2>
+        <h2>TA Rui Xu: Thursdays, 3-5pm, location TBD</h2>
+        <h2>TA Michael Zhang: Thursdays, 5-7pm, room 120-414</h2>
+        <h2>CTL Peer Tutor David Calica: tutoring drop-in hours for the econ core classes, Mondays, 7-9pm, Sweet Hall 403</h2>
+    </section>
+
+    <section>
+        <h1>Rough Overview (Subject to Change)</h1>
+
+        <p></p>
+        <table class="table">
+            <tr class="fragment">
+                <td>Week 1</td>
+                <td>Constrained Optimization, Comparative Statics, Elasticity</td>
+                <td>Chapters 1 & 2</td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 2-5</td>
+                <td>Consumer Theory:<br/>Preferences, Utility, Choice, Behavior</td>
+                <td>Chapters 3-5</td>
+            </tr>
+            <tr class="fragment">
+                <td></td>
+                <td>~ Midterm: February 9 ~</td>
+                <td></td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 6-8</td>
+                <td>Producer Theory:<br/>Cost Minimization & Profit Maximization</td>
+                <td>Chapters 6-9</td>
+            </tr>
+            <tr class="fragment">
+                <td>Weeks 9-10</td>
+                <td>Consumers & Producers Together:<br/>
+                    Perfectly Competitive Markets, Monopoly, Monopsony
+                </td>
+                <td>Chapters 10-11</td>
+            </tr>
+            <tr class="fragment">
+                <td></td>
+                <td>~ Final: March 18 ~</td>
+                <td></td>
+            </tr>
+
+        </table>
+    </section>
+
+    <section>
+        <h1>Motivation</h1>
+        <hr/>
+        <h2>Where does demand come from?</h2>
+        <h2>How do we think about choices in general?</h2>
+    </section>
+    <section>
+        <h2>Choices are everywhere</h2>
+        <img src="{{ url_for('static', filename='images/econ50/lecture3/tinder.png') }}">
+    </section>
+    <section>
+        <h2 class="fragment">Harold Hamm offers $975 mln divorce check;</h2>
+        <h2 class="fragment">ex-wife rejects it</h2>
+        <img src="{{ url_for('static', filename='images/econ50/lecture3/billion-dollar-check.jpg') }}">
+
+        <p><a href="http://www.cnbc.com/id/102315179"
+              target="_blank">CNBC, January 6, 2015</a>
+        </p>
+    </section>
+    <section>
+        <h2>Why are there so many kinds of pasta sauce?</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/pasta1.jpg') }}">
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/pasta2.jpg') }}">
+            </div>
+
+        </div>
+
+        <h2>And how can their prices be so different?</h2>
+
+
+    </section>
+
+    <section>
+    <h1>Preferences and Utility</h1>
+    <hr/>
+    <h2>Goal: develop a framework for analyzing <b>consumer choice</b>.</h2>
+    <hr/>
+    <h2>Assumption: given all available options,<br/>people choose the best things they can afford.</h2>
+    <hr/>
+    <h2>Next week, we'll define <b>afford</b>.<br/>This week, we'll work on defining <b>best things</b>.</h2>
+    </section>
+    <section>
+    <h2>Consumer Preferences: Vocabulary and Notation</h2>
+    <hr/>
+        <h2>We call the objects of consumer choice <b>bundles</b> or <b>baskets</b>.</h2>
+        <hr/>
+        <p>Given a choice between bundle <span rendered-math>A</span> and bundle <span rendered-math>B</span>, we say that:</p>
+    <table class="table">
+        <tr>
+            <td>Symbols</td>
+            <td>Meaning</td>
+            <td>Informally quantitative interpretation</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \succ B</td>
+            <td><span rendered-math>A</span> is <b>strictly preferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>more than</b> <span rendered-math>B</span>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \succeq B</td>
+            <td><span rendered-math>A</span> is <b>weakly preferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>at least as much as</b> <span rendered-math>B</span>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \sim B</td>
+            <td><b>Indifferent</b> between <span rendered-math>A</span> and <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> and <span rendered-math>B</span> <b>the same amount</b>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \preceq B</td>
+            <td><span rendered-math>A</span> is <b>weakly dispreferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>at most as much as</b> <span rendered-math>B</span>.</td>
+        </tr>
+        <tr class="fragment">
+            <td rendered-math>A \prec B</td>
+            <td><span rendered-math>A</span> is <b>strictly dispreferred</b> to <span rendered-math>B</span></td>
+            <td>The consumer likes <span rendered-math>A</span> <b>less than</b> <span rendered-math>B</span>.</td>
+        </tr>
+    </table>
+    </section>
+    <section>
+        <h1>Consumer Preferences: Fundamental Assumptions</h1>
+        <p/>
+        <table class="table">
+            <tr class="fragment">
+                <td>Preferences are <b>complete</b>.</td>
+                <td>Any two bundles can be compared.</td>
+                <td>For any <span rendered-math>A</span> and <span rendered-math>B</span>,<br/>either <span rendered-math>A \succeq B</span> or <span rendered-math>B \succeq A</span>.</td>
+            </tr>
+            <tr class="fragment">
+                <td>Preferences are <b>transitive</b>.</td>
+                <td>If you like <span rendered-math>A</span> at least as much as <span rendered-math>B</span>,<br/>and you like
+                    <span rendered-math>B</span> at least as much as <span rendered-math>C</span>,<br/>then you like
+                    <span rendered-math>A</span> at least as much as <span rendered-math>C</span>.</td>
+                <td>If <span rendered-math>A \succeq B</span> and <span rendered-math>B \succeq C</span>,<br/>then
+                    <span rendered-math>A \succeq C</span>.</td>
+            </tr>
+
+        </table>
+        <hr/>
+        <h2 class="fragment">Together, these assumptions mean that consumers can rank all possible consumption bundles in a coherent way.</h2>
+    </section>
+    <section>
+        <h2>How would you rank these bundles?</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies1.jpg') }}">
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies2.jpg') }}">
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies3.jpg') }}">
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/econ50/lecture3/puppies4.jpg') }}">
+            </div>
+        </div>
+    </section>
+
+    <section>
+    <h2>Preferences over Quantities</h2>
+    <hr/>
+    <p>One type of choice: how much of various goods?</p>
+    <hr/>
+        {% raw %}
+        <model>
+        <param name="XA" value="8"/>
+        <param name="YA" value="10"/>
+        <param name="XB" value="6"/>
+        <param name="YB" value="4"/>
+
+        <div class="row">
+            <div class="col-md-6">
+                <graph height="500" width="500">
+                    <axis dim="x" min="0" max="15" title="Good X"></axis>
+                    <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                    <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
+                           ylabel="yA"></point>
+                    <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
+                           color="purple"></point>
+
+                </graph>
+            </div>
+            <div class="col-md-6">
+                <div class="well">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p rendered-math expression="x_A = {{ params.XA }}"></p>
+                            <slider value="params.XA" min="3" max="12" precision="1"></slider>
+                        </div>
+                        <div class="col-md-6">
+                            <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
+                            <slider value="params.XB" min="3" max="12" precision="1"></slider>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p rendered-math expression="y_A = {{ params.YA }}"></p>
+                            <slider value="params.YA" min="3" max="12" precision="1"></slider>
+                        </div>
+                        <div class="col-md-6">
+                            <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
+                            <slider value="params.YB" min="3" max="12" precision="1"></slider>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+    <section>
+        <h2>Possible Assumption 1: <b>Monotonicity (“More is Better”)</b></h2>
+        <hr/>
+        <p>Bundle <span rendered-math>A</span> is preferred to bundle <span rendered-math>B</span> (that is, <span rendered-math>A \succ B</span>)<br/>if <span rendered-math>A</span> contains at least as much of all goods as <span rendered-math>B</span>,<br/> and strictly more of at least one good.</p>
+
+
+        {% raw %}
+        <model>
+            <param name="XA" value="8"/>
+            <param name="YA" value="10"/>
+            <param name="XB" value="6"/>
+            <param name="YB" value="4"/>
+
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <rect points="[[params.XA,params.YA],[0,0]]" color="red" show="params.showPreferredToA"></rect>
+                        <rect points="[[params.XA,params.YA],[15,15]]" color="green"
+                              show="params.showPreferredToA"></rect>
+                        <rect points="[[params.XB,params.YB],[0,0]]" color="red" show="params.showPreferredToB"></rect>
+                        <rect points="[[params.XB,params.YB],[15,15]]" color="green"
+                              show="params.showPreferredToB"></rect>
+                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
+                               color="purple"></point>
+                        <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
+                               show="params.showPreferredToA" color="darkgreen"></label>
+                        <label point="[0.5*(params.XA), 0.5*(params.YA)]" label="Dispreferred to A"
+                               show="params.showPreferredToA" color="darkred"></label>
+                        <label point="[0.5*(params.XB + 15), 0.5*(params.YB + 15)]" label="Preferred to B"
+                               show="params.showPreferredToB" color="darkgreen"></label>
+                        <label point="[0.5*(params.XB), 0.5*(params.YB)]" label="Dispreferred to B"
+                               show="params.showPreferredToB" color="darkred"></label>
+                    </graph>
+                </div>
+                <div class="col-md-6">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p rendered-math expression="x_A= {{ params.XA }}"></p>
+                                <slider value="params.XA" min="3" max="12" precision="1"></slider>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
+                                <slider value="params.XB" min="3" max="12" precision="1"></slider>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p rendered-math expression="y_A = {{ params.YA }}"></p>
+                                <slider value="params.YA" min="3" max="12" precision="1"></slider>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
+                                <slider value="params.YB" min="3" max="12" precision="1"></slider>
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <p ng-if="(params.XA > params.XB && params.YA > params.YB)">
+                            <span rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>x_A > x_B</span>
+                            and <span rendered-math>y_A > y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA > params.XB && params.YA == params.YB)">
+                            <span rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>x_A > x_B</span>
+                            and <span rendered-math>y_A = y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA == params.XB && params.YA > params.YB)">
+                            <span rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>x_A = x_B</span>
+                            and <span rendered-math>y_A > y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA < params.XB && params.YA < params.YB)">
+                            <span rendered-math>A \prec B</span><br/>
+                            since <span rendered-math>x_A < x_B</span>
+                            and <span rendered-math>y_A < y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA < params.XB && params.YA == params.YB)">
+                            <span rendered-math>A \prec B</span><br/>
+                            since <span rendered-math>x_A < x_B</span>
+                            and <span rendered-math>y_A = y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA == params.XB && params.YA == params.YB)">
+                            <span rendered-math>A \sim B</span><br/>
+                            since <span rendered-math>x_A = x_B</span>
+                            and <span rendered-math>y_A = y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA == params.XB && params.YA < params.YB)">
+                            <span rendered-math>A \prec B</span><br/>
+                            since <span rendered-math>x_A = x_B</span>
+                            and <span rendered-math>y_A < y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA < params.XB && params.YA > params.YB)">
+                            We don't know if <span rendered-math>A \prec B</span> or <span
+                                rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>x_A < x_B</span>
+                            and <span rendered-math>y_A > y_B</span>.
+                        </p>
+
+                        <p ng-if="(params.XA > params.XB && params.YA < params.YB)">
+                            We don't know if <span rendered-math>A \prec B</span> or <span
+                                rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>x_A > x_B</span>
+                            and <span rendered-math>y_A < y_B</span>.
+                        </p>
+
+                        <div class="fragment"><hr/>
+
+                        <toggle param="params.showPreferredToA" init="false">{{ params.showPreferredToA ? 'Hide
+                            preferred/dispreferred to A' : 'Show preferred/dispreferred to A' }}
+                        </toggle>
+                            <hr/>
+                        <toggle param="params.showPreferredToB" init="false">{{ params.showPreferredToB ? 'Hide
+                            preferred/dispreferred to B' : 'Show preferred/dispreferred to B' }}
+                        </toggle>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+    <section>
+    <h1>This leads us to a question:</h1>
+    <hr/>
+    <h2>How do we compare two bundles</h2>
+    <h2>if each has more of some things and less of others?</h2>
+    <hr/>
+    <h2 class="fragment"><b>Indifference curves</b></h2>
+    </section>
+
+    <section>
+        <h2>The Indifference Curve for Bundle A:</h2>
+        <hr/>
+        <p>(1) Shows all the points likes just as much as A (is "indifferent" between that point and A).</p>
+
+        <p>(2) Partitions the entire choice space into bundles which are preferred to A,<br/> and those which are dispreferred to A.</p>
+
+
+        {% raw %}
+        <model>
+            <param name="XA" value="8"/>
+            <param name="YA" value="10"/>
+            <param name="XB" value="6"/>
+            <param name="YB" value="4"/>
+            <function name="u" category="utility" form="CobbDouglas"></function>
+
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <rect points="[[params.XA,params.YA],[0,0]]" color="red" show="params.showMonotonicity"></rect>
+                        <rect points="[[params.XA,params.YA],[15,15]]" color="green"
+                              show="params.showMonotonicity"></rect>
+                        <area fn="functions.u.setLevel([params.XA, params.YA]).preferred" color="green"
+                              show="params.showPreferredToA"/>
+                        <area fn="functions.u.dispreferred" color="red" show="params.showPreferredToA"/>
+                        <curve fn="functions.u.setLevel([params.XA, params.YA])"></curve>
+                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
+                               color="purple"></point>
+                        <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
+                               color="darkgreen" show="params.showPreferredToA || params.showMonotonicity"></label>
+                        <label point="[0.5*(params.XA), 0.5*(params.YA)]" label="Dispreferred to A"
+                               color="darkred" show="params.showPreferredToA || params.showMonotonicity"></label>
+                    </graph>
+                </div>
+                <div class="col-md-6">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p rendered-math expression="x_A = {{ params.XA }}"></p>
+                                <slider value="params.XA" min="3" max="12" precision="1"></slider>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
+                                <slider value="params.XB" min="3" max="12" precision="1"></slider>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p rendered-math expression="y_A = {{ params.YA }}"></p>
+                                <slider value="params.YA" min="3" max="12" precision="1"></slider>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
+                                <slider value="params.YB" min="3" max="12" precision="1"></slider>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+
+                        <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 1">
+                            <span rendered-math>A \succ B</span><br/>
+                            since <span rendered-math>B</span> lies <b>below</b><br/> the indifference curve passing through <span rendered-math>A</span>.
+                        </p>
+
+                        <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 2">
+                            <span rendered-math>A \prec B</span><br/>
+                            since <span rendered-math>B</span> lies <b>above</b><br/> the indifference curve passing through <span
+                                rendered-math>A</span>.
+                        </p>
+
+                        <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 0">
+                            <span rendered-math>A \sim B</span><br/>
+                            since <span rendered-math>B</span> lies <b>along</b><br/> the indifference curve passing through <span
+                                rendered-math>A</span>.
+                        </p>
+
+                        <div class="fragment">
+                            <hr/>
+
+                            <toggle param="params.showPreferredToA" init="false">{{ params.showPreferredToA ? 'Hide
+                                preferred/dispreferred to A' : 'Show preferred/dispreferred to A' }}
+                            </toggle>
+                            <hr/>
+                            <toggle param="params.showMonotonicity" init="false">{{ params.showMonotonicity ? 'Hide
+                                monotonicity' : 'Show monotonicity' }}
+                            </toggle>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+
+    <section>
+        <h2>Possible Assumption 2: Convexity (“Variety is Better”)</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">Bundle <span rendered-math>C</span> is preferred to bundles <span
+                    rendered-math>A</span> and <span
+                    rendered-math>B</span></div>
+            <div class="col-md-6 fragment">...that is, <span rendered-math>C \succ A</span> and <span rendered-math>C \succ B</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">if <span rendered-math>A</span> and <span rendered-math>B</span> are on
+                the same indifference curve
+            </div>
+            <div class="col-md-6 fragment">...that is, <span rendered-math>A \sim B</span></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">and <span rendered-math>C</span> is a <b>convex combination</b> of <span
+                    rendered-math>A</span> and <span
+                    rendered-math>B</span>.
+            </div>
+            <div class="col-md-6 fragment"><p>...that is, the quantities in bundle <span rendered-math>C</span> are <b>weighted
+                averages</b> of those in
+                <span rendered-math>A</span> and <span rendered-math>B</span>.</p>
+            </div>
+        </div>
+
+
+
+        {% raw %}
+        <model>
+            <param name="alpha" value="0.5"/>
+            <function name="u" category="utility" form="CobbDouglas"></function>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <area fn="functions.u.setLevel([12,2]).preferred" color="green"/>
+                        <area fn="functions.u.dispreferred" color="red"/>
+                        <curve fn="functions.u.setLevel([12,2])"></curve>
+                        <segment points="[{x:12,y:2},{x:3,y:8}]" show="params.showC"></segment>
+                        <point point="[3,8]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[12, 2]" droplines="both" label="B" xlabel="xB" ylabel="yB"></point>
+                        <point point="[3*params.alpha + 12*(1-params.alpha), 8*params.alpha + 2*(1-params.alpha)]" droplines="both" label="C" xlabel="xC" ylabel="yC"
+                               color="purple" show="params.showC"></point>
+                    </graph>
+                </div>
+                <div class="col-md-6">
+                    <toggle param="params.showC" init="false">{{ params.showC ? 'Hide
+                        point C' : 'Show point C' }}</toggle>
+
+                    <div ng-if="params.showC">
+                        <div class="well">
+                            <p rendered-math expression="\alpha = {{ params.alpha | number: 2 }}"></p>
+                            <slider value="params.alpha" min="0" max="1" precision="0.01"></slider>
+                            <hr/>
+
+
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math style="text-align:right">x_C</td>
+                                <td rendered-math> = \alpha x_A + (1-\alpha) x_B</td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ params.alpha | number: 2 }} \times 3 + (1 - {{ params.alpha | number: 2 }}) \times 12"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ 3*params.alpha + 12*(1-params.alpha) | number: 2 }}"></span></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math style="text-align:right">y_C</td>
+                                <td rendered-math> = \alpha y_A + (1-\alpha) y_B</td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ params.alpha | number: 2 }} \times 8 + (1 - {{ params.alpha | number: 2 }}) \times 2"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td/>
+                                <td><span rendered-math
+                                          expression="= {{ 8*params.alpha + 2*(1-params.alpha) | number: 2 }}"></span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+    <section>
+        <h1>Monotonicity & Convexity Together</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>If an agent's preferences</h2>
+                <h2>are <b>monotonic</b> (more is better)</h2>
+                <h2> and <b>convex</b> (variety is better),</h2>
+            </div>
+            <div class="col-md-6 fragment">
+                <h2>then indifference curves</h2>
+                <h2>will be downward-sloping</h2>
+                <h2>and bowed in to the origin.</h2>
+            </div>
+        </div>
+        <hr/>
+        <div class="fragment">
+            <h2>(Spoiler alert: think about the function <span rendered-math>f(x,y) = xy</span>,</h2>
+            <h2>which has level curves that look like <span rendered-math>y = \frac{k}{x}</span>.)</h2>
+        </div>
+
+
+
+    </section>
+
+
+
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Puppies</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Ebola Cases</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Upward sloping, with preferred set up and to the left</clicker-option>
+            <clicker-option letter="B">Upward sloping, with preferred set down and to the right</clicker-option>
+            <clicker-option letter="C">Downward sloping, with preferred set up and to the right</clicker-option>
+            <clicker-option letter="D">Downward sloping, with preferred set down and to the left</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Ebola Cases</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Terrorist Attacks</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Upward sloping, with preferred set up and to the left</clicker-option>
+            <clicker-option letter="B">Upward sloping, with preferred set down and to the right</clicker-option>
+            <clicker-option letter="C">Downward sloping, with preferred set up and to the right</clicker-option>
+            <clicker-option letter="D">Downward sloping, with preferred set down and to the left</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Left shoes</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Right shoes</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Straight, downward-sloping lines</clicker-option>
+            <clicker-option letter="B">A single 45-degree line through the origin</clicker-option>
+            <clicker-option letter="C">L-shaped</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed in to the origin</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed out from the origin</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Star Wars memorabilia</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: My Little Pony memoriabilia</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Straight, downward-sloping lines</clicker-option>
+            <clicker-option letter="B">A single 45-degree line through the origin</clicker-option>
+            <clicker-option letter="C">L-shaped</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed in to the origin</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed out from the origin</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+    <section>
+        <clicker-question>
+            <h2>What would the indifference curves look like in a diagram of:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Good X: Coke</b></h2>
+
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Good Y: Pepsi</b></h2>
+                </div>
+            </div>
+            <clicker-option letter="A">Straight, downward-sloping lines</clicker-option>
+            <clicker-option letter="B">A single 45-degree line through the origin</clicker-option>
+            <clicker-option letter="C">L-shaped</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed in to the origin</clicker-option>
+            <clicker-option letter="D">Downward sloping and bowed out from the origin</clicker-option>
+        </clicker-question>
+        <clicker-file></clicker-file>
+    </section>
+
+
+    <section>
+        <h1>10 minute break</h1>
+    </section>
+    <section>
+        <h1>Marginal Rate of Substitution (MRS)</h1>
+        <hr/>
+        <h2 class="fragment">The rate at which the consumer is just willing to substitute one good for another</h2>
+        <h2 class="fragment">Visually: The slope of the indifference curve</h2>
+        <h2 class="fragment">Mathematically: Next time.</h2>
+    </section>
+    <section>
+        <h2>Marginal Rate of Substitution (MRS)</h2>
+        <hr/>
+        {% raw %}
+        <model>
+            <param name="x" value="30"/>
+            <param name="dx" value="10"/>
+            <function name="u" category="utility" form="CobbDouglas"></function>
+            <div class="row">
+                <div class="col-md-6">
+                    <graph>
+                        <axis dim="x" min="0" max="150" title="Good X"></axis>
+                        <axis dim="y" min="0" max="150" title="Good Y"></axis>
+                        <curve fn="functions.u.setLevel(40)"></curve>
+                        <point point="[params.x, 1600/params.x]" droplines="both" label="A" xlabel="{{ params.x }}"
+                               ylabel="{{ 1600/params.x | number:2 }}"></point>
+                        <point point="[params.x + params.dx, 1600/(params.x + params.dx)]" droplines="both" label="B" xlabel="{{ params.x + params.dx | number:0 }}" ylabel="{{ 1600/(params.x + params.dx) | number: 2 }}"
+                               color="purple"></point>
+                        <!--<line fn="functions.u.mrsTangentLine([params.x, 1600/params.x])"></line>-->
+                        <line params="{definitionType:'point-point', points:[{x:params.x, y:1600/params.x},{x:params.x + params.dx,y:1600/(params.x + params.dx)}]}"></line>
+                    </graph>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="well">
+                        <p rendered-math expression="x_A = {{ params.x }}"></p>
+                        <slider value="params.x" min="20" max="130" precision="1"></slider>
+                        <hr/>
+                        <p rendered-math expression="\Delta x = {{ params.dx }}"></p>
+                        <slider value="params.dx" min="1" max="10" precision="1"></slider>
+
+                    </div>
+                    <hr/>
+                    <p rendered-math expression="A \approx ({{ params.x | number:0 }}, {{ 1600/params.x | number:2 }})"></p>
+                    <p rendered-math expression="B \approx ({{ params.x + params.dx | number:0 }}, {{ 1600/(params.x + params.dx) | number: 2 }})"></p>
+                    <hr/>
+                    <p>Moving from point <span rendered-math>A</span> to point <span rendered-math>B</span><br/>
+                    means getting <span rendered-math expression="\Delta x = {{ params.dx | number: 0 }}"></span> more units of <span rendered-math>X</span><br/>
+                    and giving up <span rendered-math
+                                             expression="\Delta y \approx {{ 1600/params.x - 1600/(params.x + params.dx) | number:2 }}"></span>
+                    units of <span rendered-math>Y</span>.</p>
+                    <hr/>
+                    <p rendered-math expression="\displaystyle{MRS \approx \frac{\Delta y}{\Delta x} \approx \frac{ {{ 1600/params.x - 1600/(params.x + params.dx) | number:2 }} }{ {{ params.dx | number: 0 }} } \approx {{ (1600/params.x - 1600/(params.x + params.dx))/params.dx | number: 2 }} \frac{\text{units of }Y}{\text{unit of }X} }"></p>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+    </section>
+    <section>
+    <h1>Diminishing MRS</h1>
+    <hr/>
+    <h2>The twin assumptions of <b>monotonicity</b> and <b>convexity</b></h2>
+        <h2>also give us <b>diminishing MRS</b>,</h2>
+        <h2>which is <i>related to</i> diminishing marginal returns.</h2>
+    </section>
+    <section>
+        <h1>Possible Assumption 3: Smoothness</h1>
+        <hr/>
+        <h2>Indifference curves don't have kinks,<br/>so the MRS is a continuous function.</h2>
+        <hr/>
+        <p>(we will often assume this, or something like this,<br/> in order to help us solve things with calculus)</p>
+    </section>
+    <section>
+        <h2>A sneak peek of Econ 51...</h2>
+        <hr/>
+        <p>Bill has 10 units of X and 4 units of Y. Ted has 2 units of X and 8 units of Y.</p>
+
+        <p>The diagrams below show their indifference curves for these bundles.</p>
+
+        <p>See if they can <b>both</b> be made better off by trading...</p>
+
+        <hr/>
+        {% raw %}
+        <model>
+            <param name="dx" value="0">
+            <param name="dy" value="0">
+            <function name="u" category="utility" form="CobbDouglas"></function>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>Bill's Perspective</p>
+                    <hr/>
+                    <graph width="400" height="400">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <area fn="functions.u.setLevel([10,4]).preferred" color="green"/>
+                        <curve fn="functions.u"></curve>
+                        <point point="[10, 4]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[10 - params.dx, 4 + params.dy]" droplines="both" label="B" xlabel="xB"
+                               ylabel="yB"
+                               color="purple"></point>
+                    </graph>
+                </div>
+                <div class="col-md-4">
+                    <p>Ted's Perspective</p>
+                    <hr/>
+                    <graph width="400" height="400">
+                        <axis dim="x" min="0" max="15" title="Good X"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                        <area fn="functions.u.setLevel([2,8]).preferred" color="green"/>
+                        <curve fn="functions.u"></curve>
+                        <point point="[2, 8]" droplines="both" label="A" xlabel="xA"
+                               ylabel="yA"></point>
+                        <point point="[2 + params.dx, 8 - params.dy]" droplines="both" label="B" xlabel="xB"
+                               ylabel="yB"
+                               color="purple"></point>
+                    </graph>
+                </div>
+                <div class="col-md-4">
+                    <div class="well">
+                        <p>Bill trades {{ params.dx }} units of X</p>
+                        <slider value="params.dx" min="0" max="10" precision="1"></slider>
+                        <p>for {{ params.dy }} units of Ted's Y</p>
+                        <slider value="params.dy" min="0" max="10" precision="1"></slider>
+
+                    </div>
+                    <hr/>
+                    <p ng-if="functions.u.bundlePreferred([{x: 10, y: 4},{x: 10 - params.dx, y: 4 + params.dy}]) == 1">
+                        Bill is worse off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 10, y: 4},{x: 10 - params.dx, y: 4 + params.dy}]) == 2">
+                        Bill is better off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 10, y: 4},{x: 10 - params.dx, y: 4 + params.dy}]) == 0">
+                        Bill is no worse off or better off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 2, y: 8},{x: 2 + params.dx, y: 8 - params.dy}]) == 1">
+                        Ted is worse off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 2, y: 8},{x: 2 + params.dx, y: 8 - params.dy}]) == 2">
+                        Ted is better off than before.
+                    </p>
+
+                    <p ng-if="functions.u.bundlePreferred([{x: 2, y: 8},{x: 2 + params.dx, y: 8 - params.dy}]) == 0">
+                        Ted is no worse off or better off than before.
+                    </p>
+                </div>
+            </div>
+        </model>
+        {% endraw %}
+    </section>
+    <section>
+        <h1>Behavioral Economics</h1>
+    </section>
+    <section>
+        <h1>Endowment Effect</h1>
+        <img src="{{ url_for('static',filename='images/econ50/lecture3/ourpuppy.jpg')}}" class="fragment">
+    </section>
+    <section>
+        <h1>Culture and Choice</h1>
+        <img src="{{ url_for('static',filename='images/econ50/lecture3/chimps.jpb') }}" class="fragment">
+    </section>
+    <section>
+        <h1>Accounting for Mistakes</h1>
+        <img src="{{ url_for('static',filename='images/econ50/lecture3/hitbybus.png') }}" class="fragment">
+    </section>
+    <section>
+        <h2>Summary</h2>
+        <hr/>
+        <h2 class="fragment">We are interested in the way people make <b>choices</b>.</h2>
+        <hr/>
+        <h2 class="fragment">To do this, we make some conjectures about <b>preferences</b> - how people rank goods, and
+            bundles of goods.</h2>
+        <hr/>
+        <h2 class="fragment">We have looked at different <b>assumptions</b> about preferences, including
+            <b>monotonicity</b> and <b>convexity</b>.</h2>
+        <hr/>
+        <h2 class="fragment">We have seen how <b>indifference curves</b> partition all possible bundles into those
+            preferred, dispreferred, and indifferent to a given bundle.</h2>
+        <hr/>
+        <h2 class="fragment">We have begun to <b>measure</b> preferences using the notion of the Marginal Rate of
+            Substitution (MRS).</h2>
+    </section>
+    <section>
+        <h1>Looking forward</h1>
+        <hr/>
+
+        <h2>Wednesday: utility functions</h2>
+
+        <h2>Next Wednesday: budget constraints and optimal choice</h2>
+
+        <h2>After that: deriving demand, analyzing demand shifters</h2>
+
+    </section>
+
+
+
+{% endblock %}

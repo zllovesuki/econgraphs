@@ -56,7 +56,7 @@ econgraphs.functions.utility.CobbDouglas = function () {
 
         };
 
-        u.area = function(xDomain,yDomain) {
+        u.preferred = {area: function(xDomain,yDomain) {
 
             xDomain = domainAsObject(xDomain);
             yDomain = domainAsObject(yDomain);
@@ -85,7 +85,66 @@ econgraphs.functions.utility.CobbDouglas = function () {
 
             return allPoints;
 
+        }};
+
+        u.dispreferred = {area: function (xDomain, yDomain) {
+
+            xDomain = domainAsObject(xDomain);
+            yDomain = domainAsObject(yDomain);
+
+            /* This doesn't work yet
+            if (u.alpha == 0) {
+                return [
+                    {x: xDomain.min, y: u.yValue(xDomain.min)},
+                    {x: xDomain.min, y: yDomain.max},
+                    {x: xDomain.max, y: yDomain.max},
+                    {x: xDomain.max, y: u.yValue(xDomain.max)}
+                ]
+            }
+
+            if (u.beta == 0) {
+                return [
+                    {x: u.xValue(yDomain.min), y: yDomain.min},
+                    {x: xDomain.max, y: yDomain.min},
+                    {x: xDomain.max, y: yDomain.max},
+                    {x: u.xValue(yDomain.max), y: yDomain.max}
+                ]
+            }
+            */
+
+            var allPoints = d3.merge([u.points(xDomain, yDomain), u.points(xDomain, yDomain, true)]).sort(sortObjects('x'));
+
+            allPoints.push({x: xDomain.max, y: yDomain.min});
+            allPoints.push({x: xDomain.min, y: yDomain.min});
+            allPoints.push({x: xDomain.min, y: yDomain.max});
+
+            return allPoints;
+
+        }};
+
+        u.mrsOfX = function(bundle) {
+
+            return {points: function (xDomain, yDomain) {
+
+                var points = [];
+
+                var x, y;
+
+                for (var i = 0; i < 51; i++) {
+
+                    x = xDomain.min + (i / 50) * (xDomain.max - xDomain.min);
+                    y = u.mrs(x);
+                    if (inRange(y, yDomain)) {
+                        points.push({x: x, y: y});
+                    }
+                }
+            }
+            }
+
+
         };
+
+
 
         return u;
     }

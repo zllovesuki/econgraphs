@@ -21,13 +21,13 @@ kgAngular.directive('graph', function (D3Helpers) {
         scope.$on('resize', resize);
 
         // These are D3 selectors for each type of shape on the graph
-        var circles, lines, curves, areas, texts, x_axis, y_axis, x_axis_label, y_axis_label;
+        var circles, lines, curves, rects, areas, texts, x_axis, y_axis, x_axis_label, y_axis_label;
 
         // Regenerate current definitions of plotted shapes from graph objects.
         function plotted_shapes () {
 
             // reset plotted shapes
-            var shapes = {lines: [], circles: [], curves: [], texts: [], areas: []};
+            var shapes = {lines: [], circles: [], curves: [], texts: [], rects: [], areas: []};
 
             // get current coordinates for shapes
             scope.graph_definition.objects.forEach(function (graph_object) {
@@ -45,6 +45,7 @@ kgAngular.directive('graph', function (D3Helpers) {
 
             // update the data for each of the D3 shape selectors
             areas = D3Helpers.drawAreas(data.areas, areas);
+            rects = D3Helpers.drawRects(data.rects, rects);
             lines = D3Helpers.drawLines(data.lines,lines);
             curves = D3Helpers.drawCurves(data.curves,curves);
             circles = D3Helpers.drawCircles(data.circles,circles);
@@ -83,6 +84,7 @@ kgAngular.directive('graph', function (D3Helpers) {
                 .attr("transform", "translate(" + scope.margin.left + "," + scope.margin.top + ")");
 
             areas = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.area');
+            rects = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.rect');
             curves = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.curve');
             lines = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.line');
             circles = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.circle');

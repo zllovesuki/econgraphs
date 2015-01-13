@@ -6,13 +6,22 @@ kgAngular.directive('renderedMath',function() {
 
     function link(scope,el) {
 
-        function render() {
-            katex.render(scope.expression, el[0]);
+        if(scope.expression) {
+
+            function render() {
+                katex.render(scope.expression, el[0]);
+            }
+
+            scope.$on('redraw', render);
+
+            render();
+
+        } else {
+
+            katex.render(el[0].innerText, el[0])
+
         }
 
-        scope.$on('redraw', render);
-
-        render();
 
     }
 

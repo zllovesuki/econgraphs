@@ -67,6 +67,36 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
+    this.drawRects = function (data, rects) {
+
+        rects = rects.data(data);
+        rects.exit().remove();
+        rects.enter().append('rect')
+            .attr('class', function (d) {
+                return d.class
+            })
+            .attr('fill-opacity', 0.3);;
+        rects
+            .attr('x', function (d) {
+                return d.x
+            })
+            .attr('y', function (d) {
+                return d.y
+            })
+            .attr('width', function (d) {
+                return d.width
+            })
+            .attr('height', function (d) {
+                return d.height
+            })
+            .attr('style', function(d) {
+                return 'fill:' + d.color
+            });
+
+        return rects;
+
+    };
+
 
     this.drawCurves = function (data,curves) {
 
@@ -88,19 +118,17 @@ kgAngular.service('D3Helpers', function () {
 
     this.drawAreas = function(data,areas) {
 
-
-
         areas = areas.data(data);
         areas.exit().remove();
         areas.enter().append('svg:path')
+            .attr('fill-opacity', 0.3);
+        areas
+            .attr('d', function (d) {
+                return d.points
+            })
             .attr('fill', function (d) {
                 return d.color
-            })
-            .attr('fill-opacity', 0.3);
-        areas.attr('d', function (d) {
-            return d.points
-        });
-
+            });
         return areas;
 
     };
@@ -120,6 +148,9 @@ kgAngular.service('D3Helpers', function () {
             })
             .attr("text-anchor", function (d) {
                 return d.anchor
+            })
+            .attr("fill", function (d) {
+                return d.color
             })
             .attr("font-size", 14)
             .attr("font-style", "oblique")
@@ -241,6 +272,9 @@ kgAngular.directive('clickerQuestion', function () {
                 // i starts at 5 because student data begins on the sixth line of the CSV
                 for (var i = 5; i < data.length; i++) {
                     var studentResponse = data[i];
+                    if (studentResponse.length == 1) {
+                        studentResponse = studentResponse[0].split(',');
+                    }
                     if (studentResponse.length > 2) {
 
                         // Each student's most response to the last question is in the seventh-to-last column of the CSV
@@ -356,13 +390,22 @@ kgAngular.directive('renderedMath',function() {
 
     function link(scope,el) {
 
-        function render() {
-            katex.render(scope.expression, el[0]);
+        if(scope.expression) {
+
+            function render() {
+                katex.render(scope.expression, el[0]);
+            }
+
+            scope.$on('redraw', render);
+
+            render();
+
+        } else {
+
+            katex.render(el[0].innerText, el[0])
+
         }
 
-        scope.$on('redraw', render);
-
-        render();
 
     }
 
@@ -519,6 +562,39 @@ kgAngular.directive('slider', function () {
         };
     });
 
+// toggle.js
+/**
+ * Created by cmakler on 01/09/15.
+ */
+
+'use strict';
+
+kgAngular.directive('toggle', function () {
+
+    function link(scope, el, attrs, ModelCtrl) {
+
+        if(scope.init == 'true') {
+            scope.param = true;
+        }
+
+        scope.toggle = function() {
+            scope.param = !scope.param;
+            ModelCtrl.update();
+        };
+
+    }
+
+    return {
+        link: link,
+        require: '^model',
+        restrict: 'E',
+        replace: true,
+        transclude: true,
+        template: "<button ng-click='toggle()')><span ng-transclude/></button>",
+        scope: { param: '=', init:'@' }
+    };
+});
+
 // graph.js
 /**
  * Created by cmakler on 10/31/14.
@@ -543,13 +619,13 @@ kgAngular.directive('graph', function (D3Helpers) {
         scope.$on('resize', resize);
 
         // These are D3 selectors for each type of shape on the graph
-        var circles, lines, curves, areas, texts, x_axis, y_axis, x_axis_label, y_axis_label;
+        var circles, lines, curves, rects, areas, texts, x_axis, y_axis, x_axis_label, y_axis_label;
 
         // Regenerate current definitions of plotted shapes from graph objects.
         function plotted_shapes () {
 
             // reset plotted shapes
-            var shapes = {lines: [], circles: [], curves: [], texts: [], areas: []};
+            var shapes = {lines: [], circles: [], curves: [], texts: [], rects: [], areas: []};
 
             // get current coordinates for shapes
             scope.graph_definition.objects.forEach(function (graph_object) {
@@ -567,6 +643,7 @@ kgAngular.directive('graph', function (D3Helpers) {
 
             // update the data for each of the D3 shape selectors
             areas = D3Helpers.drawAreas(data.areas, areas);
+            rects = D3Helpers.drawRects(data.rects, rects);
             lines = D3Helpers.drawLines(data.lines,lines);
             curves = D3Helpers.drawCurves(data.curves,curves);
             circles = D3Helpers.drawCircles(data.circles,circles);
@@ -605,6 +682,7 @@ kgAngular.directive('graph', function (D3Helpers) {
                 .attr("transform", "translate(" + scope.margin.left + "," + scope.margin.top + ")");
 
             areas = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.area');
+            rects = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.rect');
             curves = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.curve');
             lines = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.line');
             circles = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.circle');
@@ -701,67 +779,93 @@ kgAngular.directive('point', function () {
 
         function link(scope, element, attrs, graphCtrl) {
 
+            // Show unless there is an attribute determining show/hide behavior
+            if (!attrs['show']) {
+                scope.show = function () {
+                    return true
+                }
+            }
+
             graphCtrl.addObject({
 
                 update: function (shapes,graph) {
 
-                    var p = (typeof scope.point == 'function') ? scope.point() : scope.point;
+                    if (scope.show()) {
 
-                    var droplines = scope.droplines || 'none'; // set droplines to "none" by default
+                        var p = (typeof scope.point == 'function') ? scope.point() : scope.point;
 
-                    var x = p[0],
-                        y = p[1];
+                        var droplines = scope.droplines || 'none'; // set droplines to "none" by default
 
-                    var xInDomain = (x <= graph.xDomain[1] && x >= graph.xDomain[0]),
-                        yInDomain = (y <= graph.yDomain[1] && y >= graph.yDomain[0]);
+                        var label = scope.label || 'none';
 
-                    var cx = graph.x(x),
-                        cy = graph.y(y);
+                        var x = p[0],
+                            y = p[1];
 
-                    // Add point to shapes if it's in the graph domain
-                    if(xInDomain && yInDomain) {
+                        var xInDomain = (x <= graph.xDomain[1] && x >= graph.xDomain[0]),
+                            yInDomain = (y <= graph.yDomain[1] && y >= graph.yDomain[0]);
 
-                        shapes.circles.push({
-                            color: scope.color,
-                            cx: cx,
-                            cy: cy
-                        });
+                        var cx = graph.x(x),
+                            cy = graph.y(y);
+
+                        // Add point to shapes if it's in the graph domain
+                        if (xInDomain && yInDomain) {
+
+                            shapes.circles.push({
+                                color: scope.color,
+                                cx: cx,
+                                cy: cy
+                            });
+
+                        }
+
+                        if (label != 'none') {
+                            shapes.texts.push({
+                                text: scope.label,
+                                x: cx,
+                                y: cy + 5,
+                                anchor: 'middle',
+                                color: 'white'
+                            })
+                        }
+
+                        // Add associated droplines and labels only if the each is in its dimension of the graph domain
+
+                        if (droplines != 'none') {
+
+                            // Add a vertical dropline unless droplines == horizontal
+                            if (droplines != 'horizontal' && xInDomain) {
+                                shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
+                                    x1: cx, y1: Math.max(cy, 0), x2: cx, y2: graph.height + 25});
+                                if (scope.xlabel != '') {
+                                    shapes.texts.push({
+                                        text: scope.xlabel,
+                                        x: cx,
+                                        y: graph.height + 40,
+                                        anchor: 'middle',
+                                        color: scope.color
+                                    })
+                                }
+                            }
+
+                            // Add a horizontal dropline unless droplines == vertical
+                            if (droplines != 'vertical' && yInDomain) {
+                                shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
+                                    x1: Math.min(cx, graph.width), y1: cy, x2: -25, y2: cy});
+                                if (scope.ylabel != '') {
+                                    shapes.texts.push({
+                                        text: scope.ylabel,
+                                        x: -27,
+                                        y: cy + 5,
+                                        anchor: 'end',
+                                        color: scope.color
+                                    })
+                                }
+                            }
+
+                        }
 
                     }
 
-                    // Add associated droplines and labels only if the each is in its dimension of the graph domain
-
-                    if (droplines != 'none') {
-
-                        // Add a vertical dropline unless droplines == horizontal
-                        if (droplines != 'horizontal' && xInDomain) {
-                            shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
-                                x1: cx, y1: Math.max(cy,0), x2: cx, y2: graph.height + 25});
-                            if (scope.xlabel != '') {
-                                shapes.texts.push({
-                                    text: scope.xlabel,
-                                    x: cx,
-                                    y: graph.height + 40,
-                                    anchor: 'middle'
-                                })
-                            }
-                        }
-
-                        // Add a horizontal dropline unless droplines == vertical
-                        if (droplines != 'vertical' && yInDomain) {
-                            shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
-                                x1: Math.min(cx,graph.width), y1: cy, x2: -25, y2: cy});
-                            if (scope.ylabel != '') {
-                                shapes.texts.push({
-                                    text: scope.ylabel,
-                                    x: -27,
-                                    y: cy + 5,
-                                    anchor: 'end'
-                                })
-                            }
-                        }
-
-                    }
 
                     return shapes;
 
@@ -774,7 +878,7 @@ kgAngular.directive('point', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { point: '&', droplines: '@', xlabel: '@', ylabel: '@', color: '@'}
+            scope: { point: '&', droplines: '@', label: '@', xlabel: '@', ylabel: '@', color: '@', show:'&'}
         }
     }
 );
@@ -788,40 +892,51 @@ kgAngular.directive('curve', function (D3Helpers) {
 
         function link(scope, element, attrs, graphCtrl) {
 
+            // Show unless there is an attribute determining show/hide behavior
+            if (!attrs['show']) {
+                scope.show = function () {
+                    return true
+                }
+            }
+
             graphCtrl.addObject({
                 
                 update: function (shapes,graph) {
 
-                    var p = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
+                    if(scope.show()) {
 
-                    var yofx = [];
-                    var xofy = [];
+                        var p = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
 
-                    if('y' != scope.ind) {
-                        yofx = p.points(graph.xDomain, graph.yDomain)
-                    }
+                        var yofx = [];
+                        var xofy = [];
 
-                    if('x' != scope.ind) {
-                        xofy = p.points(graph.xDomain, graph.yDomain, true)
-                    }
-
-                    function sortObjects(key,descending) {
-                        return function(a,b) {
-                            var lower = descending ? a[key] : b[key],
-                                higher = descending ? b[key] : a[key];
-                            return lower > higher ? -1 : lower < higher ? 1 : lower <= higher ? 0 : NaN;
+                        if ('y' != scope.ind) {
+                            yofx = p.points(graph.xDomain, graph.yDomain)
                         }
+
+                        if ('x' != scope.ind) {
+                            xofy = p.points(graph.xDomain, graph.yDomain, true)
+                        }
+
+                        function sortObjects(key, descending) {
+                            return function (a, b) {
+                                var lower = descending ? a[key] : b[key],
+                                    higher = descending ? b[key] : a[key];
+                                return lower > higher ? -1 : lower < higher ? 1 : lower <= higher ? 0 : NaN;
+                            }
+                        }
+
+                        var allPoints = d3.merge([yofx, xofy]);
+
+                        if ('y' == scope.ind) {
+                            allPoints = allPoints.sort(sortObjects('y'));
+                        } else {
+                            allPoints = allPoints.sort(sortObjects('x'));
+                        }
+
+                        shapes.curves.push({points: graph.curveFunction(allPoints), color: scope.color});
+
                     }
-
-                    var allPoints = d3.merge([yofx,xofy]);
-
-                    if('y' == scope.ind) {
-                        allPoints = allPoints.sort(sortObjects('y'));
-                    } else {
-                        allPoints = allPoints.sort(sortObjects('x'));
-                    }
-
-                    shapes.curves.push({points: graph.curveFunction(allPoints), color: scope.color});
 
                     return shapes;
 
@@ -834,7 +949,7 @@ kgAngular.directive('curve', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', ind: '@', color: '@' }
+            scope: { fn: '&', ind: '@', color: '@', show: '&' }
         }
     }
 );
@@ -848,19 +963,32 @@ kgAngular.directive('line', function () {
 
         function link(scope, element, attrs, graphCtrl) {
 
+            // Show unless there is an attribute determining show/hide behavior
+            if (!attrs['show']) {
+                scope.show = function () {
+                    return true
+                }
+            }
+
             graphCtrl.addObject({
 
                 update: function (shapes, graph) {
 
-                    var l = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
+                    if (scope.show()) {
 
-                    var points = l.points(graph.xDomain,graph.yDomain),
-                        x1 = graph.x(points[0].x),
-                        y1 = graph.y(points[0].y),
-                        x2 = graph.x(points[1].x),
-                        y2 = graph.y(points[1].y);
+                        if(scope.params() != undefined && scope.params().hasOwnProperty('definitionType')) {
+                            scope.fn = new kg.functions.Linear(scope.params());
+                        }
+                        var l = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
 
-                    shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color})
+                        var points = l.points(graph.xDomain, graph.yDomain),
+                            x1 = graph.x(points[0].x),
+                            y1 = graph.y(points[0].y),
+                            x2 = graph.x(points[1].x),
+                            y2 = graph.y(points[1].y);
+
+                        shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});
+                    }
 
                     return shapes;
 
@@ -873,7 +1001,51 @@ kgAngular.directive('line', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', color: '@'}
+            scope: { fn: '&', color: '@', show:'&', params: '&'}
+        }
+    }
+);
+
+kgAngular.directive('segment', function () {
+
+        function link(scope, element, attrs, graphCtrl) {
+
+            // Show unless there is an attribute determining show/hide behavior
+            if (!attrs['show']) {
+                scope.show = function () {
+                    return true
+                }
+            }
+
+            graphCtrl.addObject({
+
+                update: function (shapes, graph) {
+
+                    if (scope.show()) {
+
+                        var points = (typeof scope.points == 'function') ? scope.points() : scope.points;
+
+                        var x1 = graph.x(points[0].x),
+                            y1 = graph.y(points[0].y),
+                            x2 = graph.x(points[1].x),
+                            y2 = graph.y(points[1].y);
+
+                        shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});
+
+                    }
+
+                    return shapes;
+
+                }
+            });
+
+        }
+
+        return {
+            link: link,
+            require: '^graph',
+            restrict: 'E',
+            scope: { points: '&', color: '@', show:'&'}
         }
     }
 );
@@ -887,13 +1059,25 @@ kgAngular.directive('area', function (D3Helpers) {
 
         function link(scope, element, attrs, graphCtrl) {
 
+            // Show unless there is an attribute determining show/hide behavior
+            if (!attrs['show']) {
+                scope.show = function () {
+                    return true
+                }
+            }
+
             graphCtrl.addObject({
                 
                 update: function (shapes,graph) {
 
-                    var p = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
+                    if (scope.show()) {
 
-                    shapes.areas.push({points: graph.curveFunction(p.area(graph.xDomain, graph.yDomain)), color: scope.color});
+                        var p = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
+
+                        shapes.areas.push({points: graph.curveFunction(p.area(graph.xDomain, graph.yDomain)), color: scope.color});
+
+
+                    }
 
                     return shapes;
 
@@ -906,7 +1090,122 @@ kgAngular.directive('area', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', ind: '@', color: '@' }
+            scope: { fn: '&', ind: '@', color: '@', show: '&' }
+        }
+    }
+);
+
+// rect.js
+/**
+ * Created by cmakler on 1/9/15.
+ */
+
+kgAngular.directive('rect', function (D3Helpers) {
+
+        function link(scope, element, attrs, graphCtrl) {
+
+            // Show unless there is an attribute determining show/hide behavior
+            if (!attrs['show']) {
+                scope.show = function () {
+                    return true
+                }
+            }
+
+            graphCtrl.addObject({
+
+                update: function (shapes, graph) {
+
+                    if(scope.show()) {
+
+                        var p = (typeof scope.points == 'function') ? scope.points() : scope.points;
+
+                        var x1 = graph.x(p[0][0]),
+                            y1 = graph.y(p[0][1]),
+                            x2 = graph.x(p[1][0]),
+                            y2 = graph.y(p[1][1]);
+
+                        var x = Math.min(x1,x2),
+                            y = Math.min(y1,y2),
+                            width = Math.abs(x1 - x2),
+                            height = Math.abs(y1 - y2);
+
+                        shapes.rects.push({x: x, y: y, width: width, height:height , color: scope.color});
+
+                    }
+
+                    return shapes;
+
+                }
+            });
+
+        }
+
+        return {
+            link: link,
+            require: '^graph',
+            restrict: 'E',
+            scope: { points: '&', show: '&', color: '@' }
+        }
+    }
+);
+
+// label.js
+/**
+ * Created by cmakler on 1/9/15.
+ */
+
+kgAngular.directive('label', function () {
+
+        function link(scope, element, attrs, graphCtrl) {
+
+            // Show unless there is an attribute determining show/hide behavior
+            if(!attrs['show']) { scope.show = function(){return true} }
+
+            graphCtrl.addObject({
+
+                update: function (shapes, graph) {
+
+                    if (scope.show()) {
+
+                        var p = (typeof scope.point == 'function') ? scope.point() : scope.point;
+                        var l = (typeof scope.label == 'function') ? scope.label() : scope.label;
+
+                        var x = p[0],
+                            y = p[1];
+
+                        var xInDomain = (x <= graph.xDomain[1] && x >= graph.xDomain[0]),
+                            yInDomain = (y <= graph.yDomain[1] && y >= graph.yDomain[0]);
+
+                        var cx = graph.x(x),
+                            cy = graph.y(y);
+
+                        // Add label to shapes if it's in the graph domain
+                        if (xInDomain && yInDomain) {
+
+                            shapes.texts.push({
+                                text: l,
+                                x: cx,
+                                y: cy + 5,
+                                anchor: 'middle',
+                                color: scope.color
+                            });
+
+                        }
+
+                    }
+
+                    return shapes;
+
+                }
+            });
+
+        }
+
+        return {
+            link: link,
+            require: '^graph',
+            restrict: 'E',
+            scope: { point: '&', label: '@', color: '@', show:'&'}
         }
     }
 );
