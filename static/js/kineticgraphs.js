@@ -554,7 +554,7 @@ kg.functions.Linear = (function() {
                 points.push({x: xDomain.max, y: yRight})
             }
 
-            return points;
+            return points.sort(sortObjects('x'));
             
         };
 

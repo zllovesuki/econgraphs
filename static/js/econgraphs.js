@@ -511,7 +511,7 @@ econgraphs.functions.utility.PerfectComplements = (function () {
             }
         };
 
-        u.area = function (xDomain, yDomain) {
+        u.preferred = {area: function (xDomain, yDomain) {
 
             xDomain = domainAsObject(xDomain);
             yDomain = domainAsObject(yDomain);
@@ -522,7 +522,7 @@ econgraphs.functions.utility.PerfectComplements = (function () {
 
             return points;
 
-        };
+        }};
 
         return econgraphs.functions.utility.addUtilityMethods(u,params);
 
@@ -542,16 +542,39 @@ econgraphs.functions.utility.PerfectSubstitutes = (function () {
 
     return function (params) {
 
-        var u = new kg.functions.Linear({
-
-            definitionType: 'standard',
-            a: params.a,
-            b: params.b,
-            c: 0
-
-        });
+        var u = new kg.functions.Linear({definitionType: 'standard'});
 
         u = econgraphs.functions.utility.addUtilityMethods(u, params);
+
+        u.updateParams = function (params) {
+
+            if (typeof params == 'function') {
+                params = params();
+            }
+
+            if(params) {
+                u.setCoefficients({a: params.a, b: params.b, c: 0});
+            }
+
+            return u;
+
+        };
+
+        u.preferred = {area: function (xDomain, yDomain) {
+
+            xDomain = domainAsObject(xDomain);
+            yDomain = domainAsObject(yDomain);
+
+            var allPoints = u.points(xDomain, yDomain);
+
+            // TODO: this fails when horizontal
+            allPoints.push({x: xDomain.max, y: yDomain.min});
+            allPoints.push({x: xDomain.max, y: yDomain.max});
+            allPoints.push({x: xDomain.min, y: yDomain.max});
+
+            return allPoints;
+
+        }};
 
         // Find the optimal bundle for a given budget constraint
         u._optimalBundle = function (income, px, py) {
