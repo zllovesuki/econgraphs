@@ -983,15 +983,16 @@ kgAngular.directive('line', function () {
                         if(scope.params() != undefined && scope.params().hasOwnProperty('definitionType')) {
                             scope.fn = new kg.functions.Linear(scope.params());
                         }
+
                         var l = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
 
-                        var points = l.points(graph.xDomain, graph.yDomain),
+                        if(l != undefined) {var points = l.points(graph.xDomain, graph.yDomain),
                             x1 = graph.x(points[0].x),
                             y1 = graph.y(points[0].y),
                             x2 = graph.x(points[1].x),
                             y2 = graph.y(points[1].y);
 
-                        shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});
+                        shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});}
                     }
 
                     return shapes;

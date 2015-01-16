@@ -91,7 +91,7 @@ econgraphs.functions.utility.PerfectComplements = (function () {
             }
         };
 
-        u.area = function (xDomain, yDomain) {
+        u.preferred = {area: function (xDomain, yDomain) {
 
             xDomain = domainAsObject(xDomain);
             yDomain = domainAsObject(yDomain);
@@ -102,7 +102,7 @@ econgraphs.functions.utility.PerfectComplements = (function () {
 
             return points;
 
-        };
+        }};
 
         return econgraphs.functions.utility.addUtilityMethods(u,params);
 
