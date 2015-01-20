@@ -6,14 +6,14 @@
 
 kgAngular.directive('graph', function (D3Helpers) {
 
-    function link(scope, el, attrs) {
+    function link(scope, el, attrs, ModelCtrl) {
 
         el = el[0];
 
         scope.graph_definition = scope.graph_definition || {};
         
-        scope.x_axis = scope.x_axis || {min: 0, max: 10, title: 'X axis'};
-        scope.y_axis = scope.y_axis || {min: 0, max: 10, title: 'Y axis'};
+        scope.x_axis = scope.x_axis || {min: 0, max: 10, title: 'X axis', ticks: 1};
+        scope.y_axis = scope.y_axis || {min: 0, max: 10, title: 'Y axis', ticks: 1};
         scope.dimensions = {height: attrs.height || 700, width: attrs.width || 700};
         scope.margin = {top: 10, right: 10, bottom: 70, left: 70};
 
@@ -21,13 +21,13 @@ kgAngular.directive('graph', function (D3Helpers) {
         scope.$on('resize', resize);
 
         // These are D3 selectors for each type of shape on the graph
-        var circles, lines, curves, rects, areas, texts, x_axis, y_axis, x_axis_label, y_axis_label;
+        var circles, lines, curves, rects, areas, texts, divs, x_axis, y_axis, x_axis_label, y_axis_label;
 
         // Regenerate current definitions of plotted shapes from graph objects.
         function plotted_shapes () {
 
             // reset plotted shapes
-            var shapes = {lines: [], circles: [], curves: [], texts: [], rects: [], areas: []};
+            var shapes = {lines: [], circles: [], curves: [], texts: [], rects: [], areas: [], divs: []};
 
             // get current coordinates for shapes
             scope.graph_definition.objects.forEach(function (graph_object) {
@@ -50,13 +50,14 @@ kgAngular.directive('graph', function (D3Helpers) {
             curves = D3Helpers.drawCurves(data.curves,curves);
             circles = D3Helpers.drawCircles(data.circles,circles);
             texts = D3Helpers.drawTexts(data.texts,texts);
+            divs = D3Helpers.drawDivs(data.divs,divs);
 
             // Add x axis
-            x_axis.call(d3.svg.axis().scale(scope.graph_definition.x).orient("bottom"));
+            x_axis.call(d3.svg.axis().scale(scope.graph_definition.x).orient("bottom").ticks(scope.x_axis.ticks));
             x_axis_label.text(scope.x_axis.title);
 
             // Add y axis
-            y_axis.call(d3.svg.axis().scale(scope.graph_definition.y).orient("left"));
+            y_axis.call(d3.svg.axis().scale(scope.graph_definition.y).orient("left").ticks(scope.y_axis.ticks));
             y_axis_label.text(scope.y_axis.title);
 
         }
@@ -64,6 +65,7 @@ kgAngular.directive('graph', function (D3Helpers) {
         function resize() {
             if (scope.graph_definition.vis) {
                 d3.select(el).select('svg').remove();
+                d3.select(el).selectAll('div').remove();
                 drawGraph();
             }
         }
@@ -83,12 +85,18 @@ kgAngular.directive('graph', function (D3Helpers) {
                 .append("g")
                 .attr("transform", "translate(" + scope.margin.left + "," + scope.margin.top + ")");
 
+            d3.select(el.parentNode).select('div').remove();
+            scope.graph_definition.divs = d3.select(el.parentNode)
+                .append("div")
+                .attr("style", "position:absolute; left: " + scope.margin.left + "px; top: " + scope.margin.top + "px");
+
             areas = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.area');
             rects = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.rect');
             curves = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.curve');
             lines = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.line');
             circles = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.circle');
             texts = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.text');
+            divs = scope.graph_definition.divs.append('div').attr('class', 'graph-divs').selectAll('div');
             x_axis = scope.graph_definition.vis.append('g').attr('class', 'x axis').attr("transform", "translate(0," + scope.graph_definition.height + ")");
             y_axis = scope.graph_definition.vis.append('g').attr('class', 'y axis');
             x_axis_label = x_axis.append("text")
@@ -118,6 +126,7 @@ kgAngular.directive('graph', function (D3Helpers) {
         $scope.graph_definition = $scope.graph_definition || {};
 
         var graph_objects = $scope.graph_definition.objects = [];
+        var graph_divs = $scope.graph_definition.divs = [];
 
         this.addObject = function(newObject) {
             graph_objects.push(newObject);
@@ -127,11 +136,18 @@ kgAngular.directive('graph', function (D3Helpers) {
             $scope[dim+'_axis'] = axis_definition;
         };
 
+        this.addDiv = function(newDiv) {
+            graph_divs.push(newDiv)
+        };
+
+
+
     }
 
     return {
         link: link,
         controller: controller,
+        require: '^model',
         restrict: 'E',
         scope: true
     }

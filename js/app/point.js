@@ -55,7 +55,29 @@ kgAngular.directive('point', function () {
                             })
                         }
 
-                        // Add associated droplines and labels only if the each is in its dimension of the graph domain
+
+                        // Add associated labels only if each is in its dimension fo the graph domain
+                        if (scope.xlabel != '' && xInDomain) {
+                            shapes.divs.push({
+                                html: scope.xlabel,
+                                x: cx - 50,
+                                y: graph.height + 20,
+                                width: 100,
+                                color: scope.color
+                            })
+                        }
+
+                        if (scope.ylabel != '' && yInDomain) {
+                            shapes.divs.push({
+                                html: scope.ylabel,
+                                x: -70,
+                                y: cy - 20,
+                                width: 50,
+                                color: scope.color
+                            })
+                        }
+
+                        // Add associated droplines only if the each is in its dimension of the graph domain
 
                         if (droplines != 'none') {
 
@@ -63,30 +85,12 @@ kgAngular.directive('point', function () {
                             if (droplines != 'horizontal' && xInDomain) {
                                 shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
                                     x1: cx, y1: Math.max(cy, 0), x2: cx, y2: graph.height + 25});
-                                if (scope.xlabel != '') {
-                                    shapes.texts.push({
-                                        text: scope.xlabel,
-                                        x: cx,
-                                        y: graph.height + 40,
-                                        anchor: 'middle',
-                                        color: scope.color
-                                    })
-                                }
                             }
 
                             // Add a horizontal dropline unless droplines == vertical
                             if (droplines != 'vertical' && yInDomain) {
                                 shapes.lines.push({class: scope.style + ' dropline', color: scope.color,
                                     x1: Math.min(cx, graph.width), y1: cy, x2: -25, y2: cy});
-                                if (scope.ylabel != '') {
-                                    shapes.texts.push({
-                                        text: scope.ylabel,
-                                        x: -27,
-                                        y: cy + 5,
-                                        anchor: 'end',
-                                        color: scope.color
-                                    })
-                                }
                             }
 
                         }

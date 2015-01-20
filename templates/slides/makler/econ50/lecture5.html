@@ -8,14 +8,14 @@
         <hr/>
         <br/>
 
-        <h2>Lecture 4</h2>
+        <h2>Lecture 5</h2>
 
-        <h1>Utility Functions</h1>
+        <h1>Optimal Consumption Choice</h1>
         <br/>
         <hr/>
         <br/>
 
-        <h3>January 14, 2014</h3>
+        <h3>January 21, 2014</h3>
         <hr>
         <br/>
 
@@ -26,240 +26,177 @@
         <h1>Today's Agenda</h1>
         <hr/>
         <h2 class="fragment">Logistics and Context</h2>
-
-        <h2 class="fragment">Motivation: Quantifying Utility, Then and Now</h2>
-
-        <h2 class="fragment">Utility Functions, Marginal Utility, and MRS</h2>
-
+        <h2 class="fragment">Motivation: Gifts, Gift Cards, and Cash</h2>
+        <h2 class="fragment">Defining the Budget Set</h2>
+        <h2 class="fragment">Analyzing the Optimal Consumption Choice for a Budget Set</h2>
         <hr/>
         <h2 class="fragment">10 minute break</h2>
         <hr/>
-        <h2 class="fragment">Utility Function I: The Cobb-Douglas Utility Function</h2>
-
-        <h2 class="fragment">Utility Function II: Perfect Substitutes</h2>
-
-        <h2 class="fragment">Utility Function III: Perfect Complements</h2>
-
+        <h2 class="fragment">Optimal Consumption when Calculus Works: Lagrangians!</h2>
+        <h2 class="fragment">Optimal Consumption when Calculus Doesn't Work</h2>
     </section>
     <section>
-    <section>
-        <h1>Logistics and Context</h1>
-    </section>
-    <section id="two-week-view">
-        <div class="row" style="height:20%">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-2"><p class="calendar-date">M</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">T</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">W</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">T</p>
-                <hr/>
-            </div>
-            <div class="col-lg-2"><p class="calendar-date">F</p>
-                <hr/>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-2">
-                <div class="lecture-date">
-                    <p class="calendar-date">JAN 12</p>
-
-                    <p>Lecture 3: Preferences, Indifference Curves</p>
-
-                    <p><em>B&B Ch. 3</em></p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 13</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="today-date">
-                    <p class="calendar-date">JAN 14</p>
-
-                    <p>Lecture 4: Utility Functions</p>
-
-                    <p><em>B&B Ch. 3</em></p>
-
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 15</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="section-date">
-                    <p class="calendar-date">JAN 16</p>
-
-                    <p class="fragment highlight-red">Sections</p>
-
-                    <p class="fragment highlight-red"><em>Homework 1 Due</em></p>
-
-                    <p class="fragment highlight-red"><em>Homework 2 Posted</em></p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 19</p>
-
-                    <p class="fragment highlight-red">NO LECTURE - HOLIDAY</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 20</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="lecture-date">
-                    <p class="calendar-date">JAN 21</p>
-
-                    <p>Lecture 5: Budget constraints; optimal choice</p>
-
-                    <p><em>B&B Ch. 4</em></p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="empty-date">
-                    <p class="calendar-date">JAN 22</p>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="section-date">
-                    <p class="calendar-date">JAN 23</p>
-
-                    <p>Sections</p>
-
-                    <p><em>Homework 2 Due</em></p>
-
-                    <p><em>Homework 3 Posted</em></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section>
-        <h2>Context: Consumer Theory</h2>
-
-        <p></p>
-        <table class="table">
-            <tr class="fragment" style="background-color:lightgreen">
-                <td>Week 2</td>
-                <td><b>Consumer Choice Framework</b>: Preferences,<br/>Indifference Curves, and Utility Functions</td>
-                <td>Chapter 3</td>
-            </tr>
-            <tr class="fragment">
-                <td>Week 3</td>
-                <td><b>Optimal Choice:</b> Budget Constraints;<br/><span rendered-math>(x^*, y^*)</span> as a function of
-                    <span rendered-math>(p_x, p_y, I)</span>.</td>
-                <td>4.1-4.3</td>
-            </tr>
-            <tr class="fragment">
-                <td>Week 4</td>
-                <td><b>Comparative Statics:</b> Deriving the Demand Curve; <br/>Income and Subsitution Effects; <br/>Consumer
-                    Surplus; Market Demand</td>
-                <td>5.1-5.4</td>
-            </tr>
-            <tr class="fragment">
-                <td>Week 5</td>
-                <td><b>Applications:</b> Labor/Leisure, Price Indices, <br/>Intertemporal Choice, Revealed Preference</td>
-                <td>5.5-5.6,<br/>Ch. 4 Appendix 2, 4.4</td>
-            </tr>
-            <tr class="fragment">
-                <td>Week 6</td>
-                <td>Midterm! ...and on to producer theory</td>
-                <td/>
-            </tr>
-
-
-        </table>
-    </section>
+        <section>
+            <h1>Logistics and Context</h1>
+        </section>
+        <section>
+            <h2>Context: Consumer Theory</h2>
+            <p></p>
+            <table class="table">
+                <tr class="fragment">
+                    <td>Week 2</td>
+                    <td><b>Consumer Choice Framework</b>: Preferences,<br/>Indifference Curves, and Utility Functions</td>
+                    <td>Chapter 3</td>
+                </tr>
+                <tr class="fragment" style="background-color:lightgreen">
+                    <td>Week 3</td>
+                    <td><b>Optimal Choice:</b> Budget Constraints;<br/><span rendered-math>(x^*, y^*)</span> as a function of
+                        <span rendered-math>(p_x, p_y, I)</span>.</td>
+                    <td>4.1-4.3</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 4</td>
+                    <td><b>Comparative Statics:</b> Deriving the Demand Curve; <br/>Income and Subsitution Effects; <br/>Consumer
+                        Surplus; Market Demand</td>
+                    <td>5.1-5.4</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 5</td>
+                    <td><b>Applications:</b> Labor/Leisure, Price Indices, <br/>Intertemporal Choice, Revealed Preference</td>
+                    <td>5.5-5.6,<br/>Ch. 4 Appendix 2, 4.4</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 6</td>
+                    <td>Midterm! ...and on to producer theory</td>
+                    <td/>
+                </tr>
+            </table>
+        </section>
     </section>
     <section>
-    <section>
-        <h1>Motivation</h1>
-        <hr/>
-        <h2>Quantifying Utility, Then and Now</h2>
+        <section>
+            <h1>Motivation</h1>
+            <hr/>
+            <h2>Gifts, Gift Cards, and Cash</h2>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Which would you rather receive from your ideal significant other for Valentine's Day?</h2>
+                <clicker-option letter="A">An assortment of Ghiradelli Chocolates worth $50</clicker-option>
+                <clicker-option letter="B">A $50 gift card for Ghiradelli Chocolates</clicker-option>
+                <clicker-option letter="C">$50 in cash</clicker-option>
+            </clicker-question>
+            <clicker-file></clicker-file>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Which would you rather receive from your great-aunt on your birthday?</h2>
+                <clicker-option letter="A">A CD worth $15</clicker-option>
+                <clicker-option letter="B">A $15 iTunes gift card</clicker-option>
+                <clicker-option letter="C">$15 in cash</clicker-option>
+            </clicker-question>
+            <clicker-file></clicker-file>
+        </section>
+        <section>
+            <h2>Waldfogel (AER 1993): <a href="http://www.jstor.org.ezproxy.stanford.edu/stable/2117564">The Deadweight Loss of Christmas</a></h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture5/waldfogel.png') }}">
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture5/waldfogel2.png') }}">
+                </div>
+            </div>
+        </section>
     </section>
     <section>
-        <h2>18th/19th Centuries: Utilitarianism</h2>
-        <hr/>
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Jeremy Bentham</h2>
-                <img src="{{ url_for('static', filename='images/econ50/lecture4/bentham.jpg') }}">
-            </div>
-            <div class="col-md-4">
-                <h2>John Stuart Mill</h2>
-                <img src="{{ url_for('static', filename='images/econ50/lecture4/mill.jpg') }}">
-            </div>
-            <div class="col-md-4">
-                <blockquote>"...the greatest happiness of the greatest number is the foundation of morals and legislation..."</blockquote>
-                <p style="font-size:18pt">- Jeremy Bentham,
-                    <i>Introduction to the Principles of Morals and Legislation</i> (1789)</p>
-                <hr/>
-                <blockquote>"the utilitarian standard...is not the agent's own greatest happiness, but the greatest amount of happiness, altogether."</blockquote>
-                <p style="font-size:18pt">- John Stuart Mill,
-                    <i>Utilitarianism</i> (1861)</p>
-                <hr/>
+        <section>
+        <h1>Defining the <b>Budget Set</b></h1>
+            <hr/>
+            <h2 class="fragment">A <b>budget set</b> is the set of all bundles available to a consumer,<br/>given all relevant constraints</h2>
+            <hr/>
+            <h2 class="fragment">The simple case: <span rendered-math>p_xx + p_yy \le I</span></h2>
 
-            </div>
-        </div>
-    </section>
-    <section>
-        <h2>20th Century: Revealed Preference</h2>
-        <hr/>
-        <div class="row">
-            <div class="col-md-6">
-                <h2>Paul Samuelson</h2>
-                <img src="{{ url_for('static', filename='images/econ50/lecture4/samuelson.jpg') }}">
-            </div>
-            <div class="col-md-6">
-                <blockquote>"Utility is taken to be correlative to Desire or Want.<br/><br/>It has been already argued that
-                    desires cannot be measured directly, but only indirectly, by the outward phenomena to which they
-                    give rise...<br/><br/>the measure is found in
-                    the price which a person is willing to pay for the fulfilment or satisfaction of his desire."</blockquote>
-            </div>
-        </div>
-    </section>
-    <section>
-        <h2>21st Century: Neuroeconomics</h2>
+        </section>
+        <section>
+            <h2>The Simple Budget Set</h2>
+            <hr/>
+            <p>Analyzes tradeoff between two goods, <span rendered-math>X</span> and <span rendered-math>Y</span>,
+                <br/>for a consumer with income <span rendered-math>I</span> budgeted for <span rendered-math>X</span>
+                and <span rendered-math>Y</span>.</p>
+            <table class="table fragment">
+                <tr>
+                    <td rendered-math>p_x</td>
+                    <td>Price of good <span rendered-math>X</span></td>
+                    <td rendered-math>p_y</td>
+                    <td>Price of good <span rendered-math>Y</span></td>
+                </tr>
+                <tr>
+                    <td rendered-math>x</td>
+                    <td>Quantity of good <span rendered-math>X</span> bought</td>
+                    <td rendered-math>y</td>
+                    <td>Quantity of good <span rendered-math>Y</span> bought</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math>p_xx</td>
+                    <td>Expenditure on <span rendered-math>X</span></td>
+                    <td rendered-math>p_yy</td>
+                    <td>Expenditure on <span rendered-math>Y</span></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">Therefore, <span rendered-math>px_x + py_y \le I</span> means
+                <br/>"total expenditure on <span rendered-math>X</span>, plus total expenditure on <span
+                        rendered-math>Y</span>,
+                <br/>must not exceed the income budgeted to <span rendered-math>X</span> and <span
+                        rendered-math>Y</span>."</p>
+        </section>
+        <section>
+            <h2>The Simple Budget Set: Visual Analysis</h2>
+            <div class="row">
+                {% raw %}
+                <model>
+                    <param name="px" value="1"/>
+                    <function name="b" category="budget" form="SimpleBudgetConstraint" fn-params="{px:1, py:1, income:10}"></function>
 
-        <hr/>
-        <div class="row">
-            <div class=col-md-4>
-                <img src="{{ url_for('static', filename='images/econ50/lecture4/fmri1.png') }}">
+                <div class="col-md-8">
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="15" title="Good X" ticks="0"></axis>
+                        <axis dim="y" min="0" max="15" title="Good Y" ticks="0"></axis>
+                        <point color="purple" point="[10/params.px,0]" xlabel="\frac{I}{P_x}"></point>
+                        <point color="darkorange" point="[0,10]" ylabel="\frac{I}{P_y}"></point>
+                        <line fn="functions.b.updateParams({px:params.px, py:1, income:10})"></line>
+                    </graph>
+                </div>
+                <div class="col-md-4">
+                    <p>Constraint: <span rendered-math>Px_x + Py_y \le I</span></p>
+                    <slider min="0.25" max="2" precision="0.25" value="params.px"></slider>
+                    <div class="fragment">
+                        <p>Suppose <span rendered-math>y = 0</span>; then<br/>
+                        spend all money on <span rendered-math>X</span></p>
+                        <p rendered-math class="fragment">\Rightarrow P_xx + p_y \times 0 = I</p>
+                        <div class="fragment"><span rendered-math style="color:purple">\displaystyle{\Rightarrow x = \frac{I}{p_x}}</span></div>
+                    </div>
+                    <div class="fragment">
+                        <p>Suppose <span rendered-math>x = 0</span>; then<br/>
+                            spend all money on <span rendered-math>Y</span></p>
+
+                        <p rendered-math class="fragment">\Rightarrow p_x \times 0 + p_yy = I</p>
+
+                        <div class="fragment"><span rendered-math style="color:darkorange">\displaystyle{\Rightarrow y = \frac{I}{p_y}}</span>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p>Slope of "budget line" connecting these two points:</p>
+                        <p rendered-math>\displaystyle{\text{slope} = -\frac{I}{p_y}}</p>
+                    </div>
+                </div>
+                </model>
+                {% endraw %}
             </div>
-            <div class=col-md-8>
-                <img src="{{ url_for('static', filename='images/econ50/lecture4/fmri2.png') }}" width="100%">
-                <p style="font-size:18pt">
-                <a href="http://www.apa.org/research/tools/fmri-adult.pdf">American Psychological Association Science Directorate, 2007</a>
-                </p>
-            </div>
-        </div>
-
-
-    </section>
-    </section>
-    <section>
-
-
-    <section>
-    <h1>Utility Function, Marginal Utility,<br/>and the Marginal Rate of Substitution</h1>
-    </section>
+        </section>
 
     <section>
         <h2>Utility functions: Map quantity of goods consumed onto...?</h2>
@@ -1209,9 +1146,12 @@
                             <line fn="functions.u.setLevel([9,9])" color="lightgrey"></line>
                             <line fn="functions.u.setLevel([10,10])" color="lightgrey"></line>
                             <line fn="functions.u.setLevel([11,11])" color="lightgrey"></line>
+
                             <point point="[1,8]" label="B" droplines="both"/>
                             <point point="[4,4]" label="A" droplines="both"/>
                             <point point="[8,2]" label="C" droplines="both"/>
+
+
                         </graph>
 
                     </div>
