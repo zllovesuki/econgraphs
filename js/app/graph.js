@@ -15,7 +15,7 @@ kgAngular.directive('graph', function (D3Helpers) {
         scope.x_axis = scope.x_axis || {min: 0, max: 10, title: 'X axis', ticks: 1};
         scope.y_axis = scope.y_axis || {min: 0, max: 10, title: 'Y axis', ticks: 1};
         scope.dimensions = {height: attrs.height || 700, width: attrs.width || 700};
-        scope.margin = {top: 10, right: 10, bottom: 70, left: 70};
+        scope.margin = {top: 10, right: 10, bottom: 80, left: 90};
 
         scope.$on('redraw', drawObjects);
         scope.$on('resize', resize);
@@ -101,12 +101,12 @@ kgAngular.directive('graph', function (D3Helpers) {
             y_axis = scope.graph_definition.vis.append('g').attr('class', 'y axis');
             x_axis_label = x_axis.append("text")
                 .attr("x", scope.graph_definition.width / 2)
-                .attr("y", "4em")
+                .attr("y", "5em")
                 .style("text-anchor", "middle");
             y_axis_label = y_axis.append("text")
                 .attr("transform", "rotate(-90)")
                 .attr("x", -scope.graph_definition.height / 2)
-                .attr("y", "-4em")
+                .attr("y", "-5em")
                 .style("text-anchor", "middle");
 
 

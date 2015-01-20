@@ -149,26 +149,27 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
-    function renderKatex(divs) {
-        for(var i=0; i<divs[0].length; i++) {
-            var element = this[0][i],
-                text = element.innerText;
-            katex.render(text,element)
-        }
-
-    }
-
     this.drawDivs = function(data,divs) {
 
         divs = divs.data(data);
         divs.exit().remove();
         divs.enter().append("div");
         divs
-            .attr("style", function (d) {
-                return "position: absolute; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
+            .attr("class", function(d) {
+                return d.math ? 'katex' : "";
             })
-            .text(function(d) { return d.html})
-            .call(renderKatex);
+            .attr("style", function (d) {
+                return "position: absolute; text-align: "+ d.align + "; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
+            })
+            .text(function(d) { return d.html});
+
+        for (var i = 0; i < data.length; i++) {
+            if (false != data[i].math) {
+                var element = divs[0][i],
+                    text = element.innerText;
+                katex.render(text, element)
+            }
+        }
 
         return divs;
     };

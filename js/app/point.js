@@ -63,17 +63,19 @@ kgAngular.directive('point', function () {
                                 x: cx - 50,
                                 y: graph.height + 20,
                                 width: 100,
-                                color: scope.color
+                                color: scope.color,
+                                align: 'center'
                             })
                         }
 
                         if (scope.ylabel != '' && yInDomain) {
                             shapes.divs.push({
                                 html: scope.ylabel,
-                                x: -70,
+                                x: -120,
                                 y: cy - 20,
-                                width: 50,
-                                color: scope.color
+                                width: 100,
+                                color: scope.color,
+                                align: 'right'
                             })
                         }
 

@@ -166,26 +166,27 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
-    function renderKatex(divs) {
-        for(var i=0; i<divs[0].length; i++) {
-            var element = this[0][i],
-                text = element.innerText;
-            katex.render(text,element)
-        }
-
-    }
-
     this.drawDivs = function(data,divs) {
 
         divs = divs.data(data);
         divs.exit().remove();
         divs.enter().append("div");
         divs
-            .attr("style", function (d) {
-                return "position: absolute; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
+            .attr("class", function(d) {
+                return d.math ? 'katex' : "";
             })
-            .text(function(d) { return d.html})
-            .call(renderKatex);
+            .attr("style", function (d) {
+                return "position: absolute; text-align: "+ d.align + "; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
+            })
+            .text(function(d) { return d.html});
+
+        for (var i = 0; i < data.length; i++) {
+            if (false != data[i].math) {
+                var element = divs[0][i],
+                    text = element.innerText;
+                katex.render(text, element)
+            }
+        }
 
         return divs;
     };
@@ -636,7 +637,7 @@ kgAngular.directive('graph', function (D3Helpers) {
         scope.x_axis = scope.x_axis || {min: 0, max: 10, title: 'X axis', ticks: 1};
         scope.y_axis = scope.y_axis || {min: 0, max: 10, title: 'Y axis', ticks: 1};
         scope.dimensions = {height: attrs.height || 700, width: attrs.width || 700};
-        scope.margin = {top: 10, right: 10, bottom: 70, left: 70};
+        scope.margin = {top: 10, right: 10, bottom: 80, left: 90};
 
         scope.$on('redraw', drawObjects);
         scope.$on('resize', resize);
@@ -722,12 +723,12 @@ kgAngular.directive('graph', function (D3Helpers) {
             y_axis = scope.graph_definition.vis.append('g').attr('class', 'y axis');
             x_axis_label = x_axis.append("text")
                 .attr("x", scope.graph_definition.width / 2)
-                .attr("y", "4em")
+                .attr("y", "5em")
                 .style("text-anchor", "middle");
             y_axis_label = y_axis.append("text")
                 .attr("transform", "rotate(-90)")
                 .attr("x", -scope.graph_definition.height / 2)
-                .attr("y", "-4em")
+                .attr("y", "-5em")
                 .style("text-anchor", "middle");
 
 
@@ -876,17 +877,19 @@ kgAngular.directive('point', function () {
                                 x: cx - 50,
                                 y: graph.height + 20,
                                 width: 100,
-                                color: scope.color
+                                color: scope.color,
+                                align: 'center'
                             })
                         }
 
                         if (scope.ylabel != '' && yInDomain) {
                             shapes.divs.push({
                                 html: scope.ylabel,
-                                x: -70,
+                                x: -120,
                                 y: cy - 20,
-                                width: 50,
-                                color: scope.color
+                                width: 100,
+                                color: scope.color,
+                                align: 'right'
                             })
                         }
 
