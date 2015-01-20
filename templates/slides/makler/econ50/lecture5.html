@@ -197,1104 +197,290 @@
                 {% endraw %}
             </div>
         </section>
-
-    <section>
-        <h2>Utility functions: Map quantity of goods consumed onto...?</h2>
-        <hr/>
-        <div class="row">
-            <div class="col-md-5">
-                <img src="{{ url_for('static',filename='images/econ50/lecture4/besanko_5e_fig_03_02.jpg') }}">
-            </div>
-            <div class="col-md-3 fragment">
-                <div style="height:150px"></div>
-                <p>BS METER</p>
-                <img src="{{ url_for('static',filename='images/econ50/lecture4/meter.jpg') }}">
-            </div><div class="col-md-4">
-                <img src="{{ url_for('static',filename='images/econ50/lecture4/besanko_5e_fig_03_03.jpg') }}">
-            </div>
-        </div>
-    </section>
-    <section>
-        <h2>This is Spinal Tap (1984)</h2>
-        <iframe width="960" height="720" src="//www.youtube.com/embed/KOO5S4vxi0o?rel=0&amp;showinfo=0" frameborder="0"
-                allowfullscreen></iframe>
-    </section>
-    <section>
-        <h2><a href="xkcd.com/670/">XKCD: Spinal Tap Amps</a></h2>
-        <img src="{{ url_for('static',filename='images/econ50/lecture4/xkcd_spinal_tap_amps.png') }}" width="1110" height="355">
-
-    </section>
-    <section>
-        <h1>But we're saved...<span class="fragment">by indifference curves!</span></h1>
-    <hr/>
-    <p class="fragment">It turns out that we can get<br/><b>everything we need to derive and analyze demand</b><br/> from indifference curves -- and in particular, from<br/>the <b>Marginal Rate of Substitution</b>.</p>
-    <hr/>
-    <p class="fragment">So as long as a utility function <br/><b>generates the right indifference curves,</b><br/> the "utility numbers" don't actually matter!</p>
-    </section>
-    <section>
-        <h2>Recall: Fundamental Assumptions</h2>
-        <p></p>
-        <table class="table">
-            <tr class="fragment">
-                <td>Preferences are <b>complete</b>.</td>
-                <td>Any two bundles can be compared.</td>
-                <td>For any <span rendered-math>A</span> and <span rendered-math>B</span>,<br/>either <span
-                        rendered-math>A \succeq B</span> or <span rendered-math>B \succeq A</span>.
-                </td>
-            </tr>
-            <tr class="fragment">
-                <td>Preferences are <b>transitive</b>.</td>
-                <td>If you like <span rendered-math>A</span> at least as much as <span rendered-math>B</span>,<br/>and
-                    you like
-                    <span rendered-math>B</span> at least as much as <span rendered-math>C</span>,<br/>then you like
-                    <span rendered-math>A</span> at least as much as <span rendered-math>C</span>.
-                </td>
-                <td>If <span rendered-math>A \succeq B</span> and <span rendered-math>B \succeq C</span>,<br/>then
-                    <span rendered-math>A \succeq C</span>.
-                </td>
-            </tr>
-
-        </table>
-        <hr/>
-        <p class="fragment">We can achieve this by using a <b>utility function <span rendered-math>u()</span></b><br/>to assign a numerical value to each bundle:</p>
-
-        <h2 class="fragment"><span rendered-math>A \succ B</span> if and only if <span rendered-math>u(A) > u(B)</span>.</h2>
-
-        <h2 class="fragment"><span rendered-math>A \sim B</span> if and only if <span rendered-math>u(A) = u(B)</span>.</h2>
-
-        <h2 class="fragment"><span rendered-math>A \prec B</span> if and only if <span rendered-math>u(A) < u(B)</span>.
-        </h2>
-
-    </section>
-    <section>
-        <h2>Recall: Quantity Bundles</h2>
-        <hr/>
-        <p>One type of choice: how much of various goods?</p>
-        <hr/>
-        {% raw %}
-        <model>
-            <param name="XA" value="8"/>
-            <param name="YA" value="10"/>
-            <param name="XB" value="6"/>
-            <param name="YB" value="4"/>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <graph height="500" width="500">
-                        <axis dim="x" min="0" max="15" title="Good X"></axis>
-                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="x_A"
-                               ylabel="y_A"></point>
-                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="x_B" ylabel="y_B"
-                               color="purple"></point>
-
-                    </graph>
-                </div>
-                <div class="col-md-6">
-                    <div class="well">
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p rendered-math expression="x_A = {{ params.XA }}"></p>
-                                <slider value="params.XA" min="3" max="12" precision="1"></slider>
-                            </div>
-                            <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
-                                <slider value="params.XB" min="3" max="12" precision="1"></slider>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p rendered-math expression="y_A = {{ params.YA }}"></p>
-                                <slider value="params.YA" min="3" max="12" precision="1"></slider>
-                            </div>
-                            <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
-                                <slider value="params.YB" min="3" max="12" precision="1"></slider>
-                            </div>
-                        </div>
-
-                    </div>
-                    <hr/>
-                    <p class="fragment">Now we can say that our utility function <span rendered-math>u()</span><br/>is a multivariate function of
-                        <span rendered-math>x</span> and <span rendered-math>y</span>:</p>
-                    <hr/>
-                    <h2 class="fragment" rendered-math expression="u(A) = u(x_A,y_A) = u({{ params.XA }}, {{ params.YA }})"></h2>
-
-                    <h2 class="fragment" rendered-math
-                        expression="u(B) = u(x_B,y_B) = u({{ params.XB }}, {{ params.YB }})"></h2>
-
-                </div>
-            </div>
-        </model>
-        {% endraw %}
-    </section>
-    <section>
-        <h2>Visualizing the utility function...</h2>
-        <hr/>
-        <div class="row">
-            <div class="col-md-8">
-                <img src="{{ url_for('static',filename='images/econ50/lecture4/besanko_5e_fig_03_04.jpg') }}"
-                     width="910" height="613">
-            </div>
-            <div class="col-md-4">
-                <hr/>
-                <p class="fragment">Indifference curves are the <b>level curves</b><br/>(e..g, <span rendered-math>U =4</span>).</p>
-                <hr/>
-                <p class="fragment">The marginal utilities are the <b>partial derivatives</b>.</p>
-                <p class="fragment" rendered-math>\displaystyle{MU_x = \frac{\partial u(x,y)}{\partial x}}</p>
-                <p class="fragment" rendered-math>\displaystyle{MU_y = \frac{\partial u(x,y)}{\partial y}}</p>
-            </div>
-        </div>
-
-    </section>
-    <section>
-        <clicker-question>
-            <h2>For the utility function <span rendered-math>u(x,y) = x + 2y</span>,<br/>the marginal utility of X:</h2>
-            <clicker-option letter="A">is the same as the marginal utility of Y.</clicker-option>
-            <clicker-option letter="B">is greater than the marginal utility of Y.</clicker-option>
-            <clicker-option letter="C">is less than the marginal utility of Y.</clicker-option>
-            <clicker-option letter="D">depends upon how many units of X are being consumed.</clicker-option>
-        </clicker-question>
-        <clicker-file></clicker-file>
-        <p class="fragment">Remember: <span rendered-math>\displaystyle{MU_x = \frac{\partial u(x,y)}{\partial x}}</span> and <span
-                rendered-math>\displaystyle{MU_y = \frac{\partial u(x,y)}{\partial y}}</span></p>
-    </section>
-    <section>
-        <clicker-question>
-            <h2>For the utility function <span rendered-math>\displaystyle{u(x,y) = x^{1/2}y^{1/2}}</span>,<br/>the marginal utility of X:</h2>
-            <clicker-option letter="A">is the same as the marginal utility of Y.</clicker-option>
-            <clicker-option letter="B">is greater than the marginal utility of Y.</clicker-option>
-            <clicker-option letter="C">is less than the marginal utility of Y.</clicker-option>
-            <clicker-option letter="D">depends upon how many units of X are being consumed.</clicker-option>
-        </clicker-question>
-        <clicker-file></clicker-file>
-    </section>
-    <section>
-        <h2>Recall: Monotonicity Assumption</h2>
-
-        <hr/>
-
-        <p>Bundle <span rendered-math>A</span> is preferred to bundle <span rendered-math>B</span> (that is, <span
-                rendered-math>A \succ B</span>)<br/>if <span rendered-math>A</span> contains at least as much of all
-            goods as <span rendered-math>B</span>,<br/> and strictly more of at least one good.</p>
-
-        <hr/>
-        <p class="fragment">In other words, holding all other quantities in a bundle constant,<br/>an increase in the quantity of one good results in an increase in utility.</p>
-        <hr/>
-        <p class="fragment">Now, with our multivariate utility function <span rendered-math>u(x,y)</span>,<br/>we see that this is an assumption about the partial derivatives of that function:</p>
-        <hr/>
-        <div class="row fragment">
-            <div class="col-md-6">
-                <p rendered-math>\displaystyle{\frac{\partial u(x,y)}{\partial x} > 0}</p>
-            </div>
-            <div class="col-md-6">
-                <p rendered-math>\displaystyle{\frac{\partial u(x,y)}{\partial y} > 0}</p>
-            </div>
-        </div>
-        <hr/>
-        <div class="row fragment">
-            <div class="col-md-6">
-                <p>Marginal utility of good X <span rendered-math>(MU_x)</span><br/>is positive.</p>
-            </div>
-            <div class="col-md-6">
-                <p>Marginal utility of good Y <span rendered-math>(MU_y)</span><br/>is positive.</p>
-            </div>
-        </div>
-
-
-    </section>
-    <section>
-        <h2>Recall: Indifference Curves</h2>
-        <hr/>
-        <p>The indifference curve for bundle A shows all the points the consumer likes as much as A<br/>(is "indifferent" between that bundle and A).</p>
-
-        <p class="fragment">Now: set of all bundles that give the same utility as bundle A</br>...that is, the set of all <span rendered-math>(x,y)</span> such that <span rendered-math>u(x,y) = u(x_A,y_A)</span> </p>
-
-
-        {% raw %}
-        <model>
-            <param name="XA" value="3"/>
-            <param name="YA" value="8"/>
-            <param name="XB" value="6"/>
-            <param name="YB" value="4"/>
-            <function name="u" category="utility" form="CobbDouglas"></function>
-
-            <hr/>
-            <div class="row">
-                <div class="col-md-6">
-                    <graph height="500" width="500">
-                        <axis dim="x" min="0" max="15" title="Good X"></axis>
-                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                        <curve fn="functions.u.setLevel([params.XA, params.YA])"></curve>
-                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
-                               color="purple"></point>
-                        <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
-                               color="darkgreen" show="params.showPreferredToA || params.showMonotonicity"></label>
-                        <label point="[0.5*(params.XA), 0.5*(params.YA)]" label="Dispreferred to A"
-                               color="darkred" show="params.showPreferredToA || params.showMonotonicity"></label>
-                    </graph>
-                </div>
-                <div class="col-md-6">
-                    <hr/>
-                    <div class="well">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p rendered-math expression="x_A = {{ params.XA }}"></p>
-                                <slider value="params.XA" min="1" max="14" precision="1"></slider>
-                            </div>
-                            <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="x_B = {{ params.XB }}"></p>
-                                <slider value="params.XB" min="1" max="14" precision="1"></slider>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p rendered-math expression="y_A = {{ params.YA }}"></p>
-                                <slider value="params.YA" min="1" max="14" precision="1"></slider>
-                            </div>
-                            <div class="col-md-6">
-                                <p style="color:purple" rendered-math expression="y_B = {{ params.YB }}"></p>
-                                <slider value="params.YB" min="1" max="14" precision="1"></slider>
-                            </div>
-                        </div>
-                        <hr/>
-                        <div class="row fragment">
-                            <p>Example: <span rendered-math>u(x,y) = xy</span></p>
-
-                            <div class="col-md-6">
-                                <table>
-                                    <tr>
-                                        <td rendered-math>u(x_A,y_A)</td>
-                                        <td><span rendered-math
-                                               expression="= {{ params.XA }} \times {{ params.YA }}"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td/>
-                                        <td><span rendered-math
-                                                  expression="= {{ params.XA*params.YA }}"> </span> utils
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </div>
-                            <div class="col-md-6">
-                                <table style="color:purple">
-                                    <tr>
-                                        <td rendered-math>u(x_B,y_B)</td>
-                                        <td><span rendered-math
-                                                  expression="= {{ params.XB }} \times {{ params.YB }}"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td/>
-                                        <td><span rendered-math
-                                                  expression="= {{ params.XB*params.YB }}"> </span> utils
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <div class="fragment">
-                            <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 1">
-                                <span rendered-math>A \succ B</span> because <span rendered-math>u(x_A,y_A) > u(x_B,Y_B)</span>.
-                            </p>
-
-                            <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 2">
-                                <span rendered-math>A \prec B</span> because <span
-                                    rendered-math>u(x_A,y_A) < u(x_B,Y_B)</span>.
-                            </p>
-
-                            <p ng-if="functions.u.bundlePreferred([{x: params.XA, y: params.YA},{x: params.XB, y: params.YB}]) == 0">
-                                <span rendered-math>A \sim B</span> because <span
-                                    rendered-math>u(x_A,y_A) = u(x_B,Y_B)</span>.
-                            </p>
-                        </div>
-
-
-
-
-
-                    </div>
-                </div>
-            </div>
-        </model>
-        {% endraw %}
-
-    </section>
-
-
-    <section>
-        <h1>Recall: Marginal Rate of Substitution (MRS)</h1>
-        <hr/>
-        <h2 class="fragment">The rate at which the consumer is just willing to substitute one good for another</h2>
-        <h2 class="fragment">Visually: The negative of the slope of the indifference curve</h2>
-        <h2 class="fragment">Mathematically: <b>The ratio of the marginal utilities, <span rendered-math>\frac{MU_x}{MU_y}</span></b></h2>
-    </section>
-
-    <section>
-        <h2>Marginal Rate of Substitution (MRS)</h2>
-        <hr/>
-        {% raw %}
-        <model>
-            <param name="x" value="30"/>
-            <param name="dx" value="10"/>
-            <function name="u" category="utility" form="CobbDouglas"></function>
-            <div class="row">
-                <div class="col-md-6">
-                    <graph>
-                        <axis dim="x" min="0" max="150" title="Good X"></axis>
-                        <axis dim="y" min="0" max="150" title="Good Y"></axis>
-                        <curve fn="functions.u.setLevel(40)"></curve>
-                        <point point="[params.x, 1600/params.x]" droplines="both" label="A" xlabel="{{ params.x }}"
-                               ylabel="{{ 1600/params.x | number:2 }}"></point>
-                        <point point="[params.x + params.dx, 1600/(params.x + params.dx)]" droplines="both" label="B"
-                               xlabel="{{ params.x + params.dx | number:0 }}"
-                               ylabel="{{ 1600/(params.x + params.dx) | number: 2 }}"
-                               color="purple"></point>
-                        <!--<line fn="functions.u.mrsTangentLine([params.x, 1600/params.x])"></line>-->
-                        <line params="{definitionType:'point-point', points:[{x:params.x, y:1600/params.x},{x:params.x + params.dx,y:1600/(params.x + params.dx)}]}"></line>
-                    </graph>
-
-                </div>
-                <div class="col-md-6">
-                    <div class="well">
-                        <p rendered-math expression="x_A = {{ params.x }}"></p>
-                        <slider value="params.x" min="20" max="130" precision="1"></slider>
-                        <hr/>
-                        <p rendered-math expression="\Delta x = {{ params.dx }}"></p>
-                        <slider value="params.dx" min="1" max="10" precision="1"></slider>
-
-                    </div>
-                    <hr/>
-                    <p rendered-math
-                       expression="A \approx ({{ params.x | number:0 }}, {{ 1600/params.x | number:2 }})"></p>
-
-                    <p rendered-math
-                       expression="B \approx ({{ params.x + params.dx | number:0 }}, {{ 1600/(params.x + params.dx) | number: 2 }})"></p>
-                    <hr/>
-                    <p>Moving from point <span rendered-math>A</span> to point <span rendered-math>B</span><br/>
-                        means getting <span rendered-math expression="\Delta x = {{ params.dx | number: 0 }}"></span>
-                        more units of <span rendered-math>X</span><br/>
-                        and giving up <span rendered-math
-                                            expression="\Delta y \approx {{ 1600/params.x - 1600/(params.x + params.dx) | number:2 }}"></span>
-                        units of <span rendered-math>Y</span>.</p>
-                    <hr/>
-                    <p rendered-math
-                       expression="\displaystyle{MRS \approx \frac{\Delta y}{\Delta x} \approx \frac{ {{ 1600/params.x - 1600/(params.x + params.dx) | number:2 }} }{ {{ params.dx | number: 0 }} } \approx {{ (1600/params.x - 1600/(params.x + params.dx))/params.dx | number: 2 }} \frac{\text{units of }Y}{\text{unit of }X} }"></p>
-                </div>
-            </div>
-        </model>
-        {% endraw %}
-    </section>
-
-    <section>
-        <h2>Deriving the MRS from the utility function</h2>
-        <hr/>
-        {% raw %}
-        <model>
-            <param name="x" value="3"/>
-            <param name="dx" value="1"/>
-            <function name="u" category="utility" form="CobbDouglas"></function>
-            <div class="row">
-                <div class="col-md-6">
-                    <graph>
-                        <axis dim="x" min="2" max="9" title="Good X"></axis>
-                        <axis dim="y" min="2" max="9" title="Good Y"></axis>
-                        <curve fn="functions.u.setLevel([3,8])"></curve>
-                        <curve fn="functions.u.setLevel([params.x, 24/(params.x + params.dx)])"></curve>
-                        <point point="[params.x, 24/params.x]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[params.x + params.dx, 24/(params.x + params.dx)]" droplines="both" label="B"
-                               xlabel="xB"
-                               ylabel="yB"
-                               color="purple"></point>
-                        <point point="[params.x, 24/(params.x + params.dx)]" droplines="none" label="C"></point>
-
-                    </graph>
-
-                </div>
-                <div class="col-md-6">
-                    <p>Consider the point <span rendered-math>C = (x_A,y_B)</span>.
-                    <hr/>
-                    <table>
-                        <tr style="height:75px" class="fragment">
-                            <td rendered-math>U(A) - U(C)</td>
-                            <td rendered-math>= U(x_A, y_A) - U(x_A, y_B)</td>
-                        </tr>
-                        <tr style="height:100px" class="fragment">
-                            <td/>
-                            <td rendered-math>\displaystyle{= (y_A - y_B) \times \frac{U(x_A, y_A) - U(x_A, y_B)}{y_A - y_B}}</td>
-                        </tr>
-                        <tr style="height:100px" class="fragment">
-                            <td/>
-                            <td><span rendered-math>\displaystyle{\rightarrow (y_A - y_B) \times \frac{\partial u(x,y)}{\partial y}}
-                            </span> as <span rendered-math>B \rightarrow A</span></td>
-                        </tr>
-                    </table>
-                    <hr/>
-                    <table>
-                        <tr style="height:75px" class="fragment">
-                            <td rendered-math>U(B) - U(C)</td>
-                            <td rendered-math>= U(x_B, y_B) - U(x_A, y_B)</td>
-                        </tr>
-                        <tr style="height:100px" class="fragment">
-                            <td/>
-                            <td rendered-math>\displaystyle{= (x_B - x_A) \times \frac{U(x_B, y_B) - U(x_A, y_B)}{x_B -
-                                x_A}}
-                            </td>
-                        </tr>
-                        <tr style="height:100px" class="fragment">
-                            <td/>
-                            <td><span rendered-math>\displaystyle{\rightarrow (x_B - x_A) \times \frac{\partial u(x,y)}{\partial x}}
-                            </span> as <span rendered-math>B \rightarrow A</span></td>
-                        </tr>
-                    </table>
-                </div>
-                <p class="fragment"><b>These two must be equal!!!</b></p>
-            </div>
-        </model>
-        {% endraw %}
-    </section>
-
-    <section>
-        <h2>Deriving the MRS from the utility function</h2>
-        <hr/>
-        {% raw %}
-        <model>
-            <param name="x" value="3"/>
-            <param name="dx" value="1"/>
-            <function name="u" category="utility" form="CobbDouglas"></function>
-            <div class="row">
-                <div class="col-md-6">
-                    <graph>
-                        <axis dim="x" min="2" max="9" title="Good X"></axis>
-                        <axis dim="y" min="2" max="9" title="Good Y"></axis>
-                        <curve fn="functions.u.setLevel([3,8])"></curve>
-                        <curve fn="functions.u.setLevel([params.x, 24/(params.x + params.dx)])"></curve>
-                        <point point="[params.x, 24/params.x]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[params.x + params.dx, 24/(params.x + params.dx)]" droplines="both" label="B"
-                               xlabel="xB"
-                               ylabel="yB"
-                               color="purple"></point>
-                        <point point="[params.x, 24/(params.x + params.dx)]" droplines="none" label="C"></point>
-
-                    </graph>
-
-                </div>
-                <div class="col-md-6">
-                    <p>(Continuing) <span rendered-math>C = (x_A,y_B)</span>. As <span rendered-math>B \rightarrow A</span>:
-                    <hr/>
-                    <table>
-                        <tr style="height:100px">
-                            <td rendered-math>U(A) - U(C)</td>
-                            <td rendered-math>\displaystyle{\rightarrow (y_A - y_B) \times \frac{\partial u(x,y)}{\partial y}}</td>
-                        </tr>
-
-                        <tr style="height:100px">
-                            <td rendered-math>U(B) - U(C)</td>
-                            <td rendered-math>\displaystyle{\rightarrow (x_B - x_A) \times \frac{\partial u(x,y)}{\partial x}}</td>
-                        </tr>
-                    </table>
-                </div>
-                <p><b>These two must be equal!!!</b></p>
-                <hr/>
-                <table>
-                    <tr style="height:75px" class="fragment">
-                        <td rendered-math style="text-align:right">U(A) - U(C)</td>
-                        <td rendered-math>=</td>
-                        <td rendered-math>U(B) - U(C)</td>
-                    </tr><tr style="height:100px" class="fragment">
-                        <td rendered-math>\displaystyle{(y_A - y_B) \times \frac{\partial u(x,y)}{\partial
-                            y}}
-                        </td><td rendered-math>=</td>
-                        <td rendered-math>\displaystyle{(x_B - x_A) \times \frac{\partial u(x,y)}{\partial
-                            x}}
-                        </td>
-                    </tr>
-                    <tr style="height:100px" class="fragment">
-                        <td rendered-math style="text-align:right">\displaystyle{\frac{y_A - y_B}{x_B - x_A}}
-                        </td>
-                        <td rendered-math>=</td>
-                        <td rendered-math>\displaystyle{
-                            \frac{\partial u(x,y) / \partial x}
-                            {\partial u(x,y) / \partial y}
-                            }
-                        </td>
-                    </tr>
-                    <tr style="height:100px" class="fragment">
-                        <td rendered-math style="text-align:right">\displaystyle{MRS = -\frac{y_B - y_A}{x_B - x_A}}
-                        </td>
-                        <td rendered-math>=</td>
-                        <td rendered-math>\displaystyle{\frac{MU_x}{MU_y}}</td>
-                    </tr>
-                </table>
-
-            </div>
-        </model>
-        {% endraw %}
-    </section>
-    <section>
-        <h2>A simpler, equivalent but less precise derivation<br/>(somewhat following B&B, page 91):</h2>
-    <hr/>
-        <p>Suppose a consumer changes the level of consumption of <span rendered-math>x</span> and <span
-                rendered-math>y</span> by <span rendered-math>\Delta x</span> and <span rendered-math>\Delta y</span>.</p>
-        <p>The corresponding impact on utility will be:</p>
-        <p style="height:75px" rendered-math>\Delta U = MU_x \times \Delta x + MU_y \times \Delta y</p>
-        <p>But if we're along an indifference curve, <span rendered-math>\Delta U = 0</span>; so it must be that:</p>
-
-        <p style="height:75px" rendered-math>MU_x \times \Delta x + MU_y \times \Delta y = 0</p>
-
-        <p>Subtract <span rendered-math>MU_x \times \Delta x</span> from both sides:</p>
-
-        <p style="height:75px" rendered-math>MU_y \times \Delta y = -MU_x \times \Delta x </p>
-
-        <p>Multiply both sides by <span rendered-math>MU_y</span> and divide both sides by <span rendered-math>-\Delta x</span>: </p>
-
-        <p style="height:100px" rendered-math>\displaystyle{-\frac{\Delta y}{\Delta x} = \frac{MU_x}{MU_y}}</p>
-    </section>
-    <section>
-        <h1>FUNDAMENTAL FORMULA FOR ECON 50</h1>
-    <hr/>
-    <h1 rendered-math>MRS_{x,y} = \frac{MU_x}{MU_y}</h1>
-    <hr/>
-    <div class="fragment"><p>...and note the units!</p>
-    <hr/>
-    <h2 rendered-math>\displaystyle{\frac{MU_x}{MU_y} =
-        \frac
-        { \frac{ \text{utils} }{ \text{units of } X } }
-        { \frac{ \text{utils} }{ \text{units of } Y } }= \frac{\text{units of }Y}{\text{units of }X}}</h2>
-    </div>
-    <div class="fragment">The utils cancel, leaving us with only units of <span rendered-math>X</span> and <span rendered-math>Y</span>.</div>
-    </section>
-    </section>
-    <section>
-        <h1>Ten Minute Break</h1>
-    </section>
-
-    <section>
-    <section>
-        <h1>Utility Function I:<br/>Cobb-Douglas</h1>
-    <hr/>
-    <h1 rendered-math>\displaystyle{u(x,y) = x^ay^b}</h1>
-    </section>
-    <section>
-        <h1>Generic Cobb-Douglas:</h1><h1><span rendered-math>\displaystyle{u(x,y) = cx^ay^b}</span></h1>
-        <hr/>
-        <table>
-            <tr>
-                <td height="100px" style="text-align: right">
-                    <h2 rendered-math>MU_x =</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>acx^{a-1}y^b</h2>
-                </td>
-            </tr>
-            <tr>
-                <td height="100px" style="text-align: right">
-                    <h2 rendered-math>MU_y =</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>bcx^ay^{b-1}</h2>
-                </td>
-            </tr>
-            <tr>
-                <td height="100px" style="text-align: right">
-                    <h2 rendered-math>MRS_{x,y} =</h2></td>
-                <td class="fragment">
-                    <h2 rendered-math>\displaystyle{\frac{MU_x}{MU_y} =}</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\displaystyle{\frac{acx^{a-1}y^b}{bcx^ay^{b-1}} =}</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\displaystyle{\frac{ay}{bx}}</h2>
-                </td>
-            </tr>
-        </table>
-
-
-    </section>
-    <section>
-        <h2>We've just shown that if <span rendered-math>\displaystyle{u(x,y) = cx^ay^b}</span>, then <span rendered-math>\displaystyle{MRS_{x,y} = \frac{ay}{bx}}</span>.</h2>
-        <hr/>
-            <h2>Find the marginal rate of substitution<br/>for the following Cobb-Douglas utility functions:</h2>
-        <hr/>
-        <table>
-            <tr>
-                <td height="100px">
-                    <h2 rendered-math>u(x,y) = xy^2</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow a = 1, b = 2</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow MRS = \frac{1y}{2x} = \frac{y}{2x}</h2>
-                </td>
-            </tr>
-            <tr>
-                <td height="100px">
-                    <h2 rendered-math>u(x,y) = x^{1/3}y^{2/3}</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow a = \frac{1}{3}, b = \frac{2}{3}</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow MRS = \frac{\frac{1}{3}y}{\frac{2}{3}x} = \frac{y}{2x}</h2>
-                </td>
-            </tr>
-            <tr>
-                <td height="100px">
-                    <h2 rendered-math>u(x,y) = x^{1/10}y^{1/5}</h2></td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow a = \frac{1}{10}, b = \frac{1}{5}</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow MRS = \frac{\frac{1}{10}y}{\frac{1}{5}x} = \frac{y}{2x}</h2>
-                </td>
-
-            </tr>
-            <tr>
-                <td height="100px">
-                    <h2 rendered-math>u(x,y) = x^{8}y^{16}</h2></td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow a = 8, b = 16</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow MRS = \frac{8y}{16x} = \frac{y}{2x}</h2>
-                </td>
-            </tr>
-            <tr>
-                <td height="100px">
-                    <h2 rendered-math>u(x,y) = 4xy^2</h2></td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow a = 1, b = 2</h2>
-                </td>
-                <td class="fragment">
-                    <h2 rendered-math>\Rightarrow MRS = \frac{1y}{2x} = \frac{y}{2x}</h2>
-                </td>
-            </tr>
-
-        </table>
-
-    </section>
-    <section>
-        <clicker-question>
-            <h2>Is the utility function <span rendered-math>u(x,y) = \ln x + 2\ln y</span><br/>a Cobb-Douglas utility function?</h2>
-            <hr/>
-            <p>(Hint: calculate the MRS; you can take a minute to do so.)</p>
-            <clicker-option letter="A">Yes; it represents the same preferences as <span rendered-math>u(x,y) = xy^2</span>.</clicker-option>
-            <clicker-option letter="B">Yes; it represents the same preferences as <span
-                    rendered-math>u(x,y) = x^2y</span>.</clicker-option>
-            <clicker-option letter="C">Yes, but we don't know what preferences it represents.</clicker-option>
-            <clicker-option letter="D">Nope.</clicker-option>
-
-        </clicker-question>
-        <clicker-file></clicker-file>
-
-
-    </section>
-    <section>
-        <clicker-question>
-            <h2>What do the indifference curves for a typical Cobb-Douglas function look like?</h2>
-            <clicker-option letter="A">Downward-sloping curves, bowed in to the origin</clicker-option>
-            <clicker-option letter="B">Downward-sloping straight lines</clicker-option>
-            <clicker-option letter="C">Vertical lines</clicker-option>
-            <clicker-option letter="D">Horizontal lines</clicker-option>
-            <clicker-option letter="E">L-shaped</clicker-option>
-        </clicker-question>
-        <clicker-file></clicker-file>
-
-
-    </section>
-    <section>
-        <h2>Consider the utility function <span rendered-math>u(x,y) = x</span>.</h2>
-        <hr/>
-        <clicker-question>
-            <h2>What do the indifference curves for this function look like?</h2>
-            <clicker-option letter="A">Normal Cobb-Douglas: downward-sloping, bowed in to the origin</clicker-option>
-            <clicker-option letter="B">Downward-sloping straight lines</clicker-option>
-            <clicker-option letter="C">Vertical lines</clicker-option>
-            <clicker-option letter="D">Horizontal lines</clicker-option>
-            <clicker-option letter="D">L-shaped</clicker-option>
-        </clicker-question>
-        <clicker-file></clicker-file>
-
-
-    </section>
-    <section>
-        <h2>Cobb-Douglas Indifference Map</h2>
-        <hr/>
-    {% raw %}
-        <model>
-
-            <!-- Model parameters -->
-            <param name="alpha" value="0.8"/>
-            <param name="beta" value="0.2"/>
-            <param name="a" value="1"/>
-            <param name="b" value="2"/>
-
-
-            <!-- Model functions -->
-            <function name="u" category="utility" form="CobbDouglas"></function>
-
-
-            <div class="row">
-
-
-                <div class="col-md-8">
-
-                    <graph height="600" width="600">
-                        <axis dim="x" min="0" max="12" title="Good X"></axis>
-                        <axis dim="y" min="0" max="12" title="Good Y"></axis>
-                        <curve fn="functions.u.updateParams({alpha:params.a, beta:params.b}).setLevel([1,1])"
-                               color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([2,2])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([3,3])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([4,4])"></curve>
-                        <area fn="functions.u.preferred" color="lightgreen"/>
-                        <curve fn="functions.u.setLevel([5,5])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([6,6])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([7,7])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([8,8])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([9,9])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([10,10])" color="lightgrey"></curve>
-                        <curve fn="functions.u.setLevel([11,11])" color="lightgrey"></curve>
-
-                        <point point="[1,8]" label="B" droplines="both"/>
-                        <point point="[4,4]" label="A" droplines="both"/>
-                        <point point="[8,2]" label="C" droplines="both"/>
-
-
-                    </graph>
-
-                </div>
-                <div class="col-md-4">
-                    <div rendered-math align="center" style="{font-size: 14pt}"
-                         expression="U(x,y) = x^ay^b = x^{ {{ params.a | number:2}} }y^{
-                                 {{ params.b | number:2}} }"></div>
-                    <hr/>
-                    <div class="well">
-                        <p rendered-math expression="a: {{ params.a | number:2}}"></p>
-                        <slider value="params.a" min="0" max="10" precision="0.25"></slider>
-                        <p rendered-math expression="b: {{ params.b | number:2}}"></p>
-                        <slider value="params.b" min="0" max="10" precision="0.25"></slider>
-                    </div>
-
-                </div>
-            </div>
-        </model>
-        {% endraw %}
-    </section>
     </section>
     <section>
         <section>
-            <h1>Utility Function II: Perfect Substitutes</h1>
+            <h1>Analyzing the</h1>
+            <h1>Optimal Consumption Choice</h1>
+            <h2>for a Budget Set</h2>
+        </section>
+    </section>
+    <section>
+        <h1>10 Minute Break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Optimal Consumption when Calculus Works</h1>
+            <hr/>
+            <h1>Lagrangians!</h1>
+        </section>
+        <section>
+
+            <div class="row">
+                <div class="col-md-5" style="text-align: left">
+                    If these three conditions hold:
+                </div>
+                <div class="col-md-7 well">
+                    <table class="table">
+                        <tr>
+                            <td>(a)</td>
+                            <td class="fragment">The consumer's preferences over <span rendered-math>X</span> and <span
+                                    rendered-math>Y</span> are <br/><b>continuously differentiable</b>, <b>strictly
+                                monotonic</b> and <b>strictly convex</b></td>
+                        </tr>
+                        <tr>
+                            <td>(b)</td>
+                            <td class="fragment">The indifference curves <b>do not cross the axes</b></td>
+                        </tr>
+                        <tr>
+                            <td>(c)</td>
+                            <td class="fragment">The budget constraint is a <b>simple straight line</b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-5" style="text-align: left">
+                    Then the solution to the utility-maximization problem:
+                </div>
+                <div class="col-md-7 well">
+                    <table class="table">
+                        <tr>
+                            <td>1.</td>
+                            <td class="fragment">Will involve strictly positive quantities <span rendered-math>X</span>
+                                and <span
+                                        rendered-math>Y</span>
+                                <br/>(an <b>interior solution</b>, not a <b>corner solution</b>)</td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td class="fragment">Can be found using the <b>Lagrangian method</b></td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td class="fragment">Is described by the equations</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="fragment"><span rendered-math>\displaystyle{\frac{MU_x}{MU_y} = \frac{P_x}{P_y} }</span>
+                                &nbsp; &nbsp; &nbsp; and &nbsp; &nbsp; &nbsp; <span rendered-math>P_xx + P_yy = I</span></td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
 
         </section>
         <section>
-            <h1>Generic Perfect Substitutes: <br/><span rendered-math>\displaystyle{u(x,y) = c + ax + by}</span></h1>
+            <h2>The Simple Utility Maximization Problem: General Case</h2>
             <hr/>
-            <table>
-                <tr>
-                    <td height="100px" style="text-align: right">
-                        <h2 rendered-math>MU_x =</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>a</h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td height="100px" style="text-align: right">
-                        <h2 rendered-math>MU_y =</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>b</h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td height="100px" style="text-align: right">
-                        <h2 rendered-math>MRS_{x,y} =</h2></td>
-                    <td class="fragment">
-                        <h2 rendered-math>\displaystyle{\frac{MU_x}{MU_y} =}</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\displaystyle{\frac{a}{b}}</h2>
-                    </td>
-                </tr>
-            </table>
+            <p>You have a budget of <span rendered-math>I</span> and can buy units of <span rendered-math>X</span> and
+                <span rendered-math>Y</span> at prices <span rendered-math>P_x</span> and <span rendered-math>P_y</span>, respectively.</p>
 
+            <p>Your objective is to maximize your utility function is <span rendered-math>u(x,y)</span> given this constraint.</p>
 
+            <p>Assuming "more is better," you will spend your entire income on <span rendered-math>X</span> and
+                <span rendered-math>Y</span>.</p>
+            <hr/>
+            <div class="fragment">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3>In words...</h3>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3>Formally...</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>Find the maximum of the objective function<br/><span rendered-math>u(x,y)</span></p>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math width="30%"
+                                    style="text-align: right">\displaystyle{\max_{(x,y)}}</td>
+                                <td rendered-math>u(x,y)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>subject to the constraint<br/><span rendered-math>P_xx + P_yy = I</span>.</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                                <td rendered-math expression="I - P_xx - P_yy = 0"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </section>
         <section>
-            <h2>We've just shown that if <span rendered-math>\displaystyle{u(x,y) = ax + by + c}</span>, then <span
-                    rendered-math>\displaystyle{MRS_{x,y} = \frac{a}{b}}</span>.</h2>
+            <h2>Using the Lagrangian Method: General Case</h2>
             <hr/>
-            <h2>Find the marginal rate of substitution<br/>for the following perfect-substitute utility functions:</h2>
-            <hr/>
-            <table>
-                <tr>
-                    <td height="100px">
-                        <h2 rendered-math>u(x,y) = x + 2y</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow a = 1, b = 2</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow MRS = \frac{1}{2}</h2>
-                    </td>
+            <table style="width:100%">
+                <tr class="fragment">
+                    <td rendered-math expression="\Lagr (x,y,P_x, P_y, I ,\lambda)" width="30%" style="text-align: right"></td>
+                    <td rendered-math expression="= u(x,y) + \lambda(I - P_xx - P_yy)"></td>
                 </tr>
-                <tr>
-                    <td height="100px">
-                        <h2 rendered-math>u(x,y) = \frac{1}{3}x + \frac{2}{3}y</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow a = \frac{1}{3}, b = \frac{2}{3}</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow MRS = \frac{\frac{1}{3}}{\frac{2}{3}} = \frac{1}{2}</h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td height="100px">
-                        <h2 rendered-math>u(x,y) = \frac{1}{10}x + \frac{1}{5}y</h2></td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow a = \frac{1}{10}, b = \frac{1}{5}</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow MRS = \frac{\frac{1}{10}}{\frac{1}{5}} = \frac{1}{2}</h2>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td height="100px">
-                        <h2 rendered-math>u(x,y) = 8x + 16y</h2></td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow a = 8, b = 16</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow MRS = \frac{8}{16} = \frac{1}{2}</h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td height="100px">
-                        <h2 rendered-math>u(x,y) = x + 2y + 4</h2></td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow a = 1, b = 2</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>\Rightarrow MRS = \frac{1}{2}</h2>
-                    </td>
-                </tr>
-
             </table>
-
+            <hr/>
+            <p class="fragment">First order conditions (FOC)'s:</p>
+            <hr/>
+            <table style="width:100%">
+                <tr class="fragment" style="height:100px">
+                    <td rendered-math expression="\displaystyle{\frac{\partial \Lagr(x,y,P_x, P_y, I ,\lambda)}{\partial x}}" width="30%"
+                        style="text-align: right"></td>
+                    <td rendered-math expression="\displaystyle{= \frac{\partial u(x,y)}{\partial x} - \lambda P_x}"></td>
+                    <td class="fragment" rendered-math expression="\displaystyle{\text{set}  = 0\Rightarrow \lambda = \frac{MU_x}{P_x}}"></td>
+                </tr>
+                <tr class="fragment" style="height:100px">
+                    <td rendered-math
+                        expression="\displaystyle{\frac{\partial \Lagr(x,y,P_x, P_y, I ,\lambda)}{\partial y}}"
+                        width="30%"
+                        style="text-align: right"></td>
+                    <td class="fragment" rendered-math
+                        expression="\displaystyle{= \frac{\partial u(x,y)}{\partial y} - \lambda P_y}"></td>
+                    <td class="fragment" rendered-math
+                        expression="\displaystyle{\text{set}  = 0\Rightarrow  \lambda = \frac{MU_y}{P_y}}"></td>
+                </tr>
+                <tr class="fragment" style="height:100px">
+                    <td rendered-math
+                        expression="\displaystyle{\frac{\partial \Lagr(x,y,P_x, P_y, I ,\lambda)}{\partial \lambda}}"
+                        width="30%"
+                        style="text-align: right"></td>
+                    <td class="fragment" rendered-math expression="= I - P_xx - P_yy"></td>
+                    <td class="fragment" rendered-math expression="\text{set} = 0\Rightarrow P_xx + P_yy = I"></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">The first two FOC's imply the familiar condition: <span rendered-math>\displaystyle{\frac{MU_x}{MU_y} = \frac{P_x}{P_y} }</span>.</p>
+            <hr/>
+            <p class="fragment">What is the interpretation of <span rendered-math>\lambda</span>...?</p>
         </section>
         <section>
             <clicker-question>
-                <h2>What do the indifference curves for a typical <br/>perfect-substitute utility function look like?</h2>
-                <clicker-option letter="A">Downward-sloping curves, bowed in to the origin</clicker-option>
-                <clicker-option letter="B">Downward-sloping straight lines</clicker-option>
-                <clicker-option letter="C">Vertical lines</clicker-option>
-                <clicker-option letter="D">Horizontal lines</clicker-option>
-                <clicker-option letter="E">L-shaped</clicker-option>
+                <h2>We just found that in solving the Lagrangian,</h2>
+                <h2 rendered-math>\displaystyle{\lambda = \frac{MU_x}{P_x} = \frac{MU_y}{P_y}}</h2>
+                <h2>How should we interpret <span rendered-math>\lambda</span> intuitively?</h2>
+                <clicker-option letter="A">The change in optimal quantity of X or Y resulting from<br/>a $1 rise in price of that good.</clicker-option>
+                <clicker-option letter="B">The change in optimal quantity of X or Y resulting from<br/>a $1 rise in income.</clicker-option>
+                <clicker-option letter="C">The change in utility resulting from<br/>a $1 rise in the price of either X
+                    or Y.
+                </clicker-option>
+                <clicker-option letter="D">The change in utility resulting from<br/>a $1 rise in income.</clicker-option>
             </clicker-question>
-            <clicker-file></clicker-file>
-
 
         </section>
         <section>
-            <h2>Perfect Substitutes Indifference Map</h2>
+            <h2>Simplest Cobb-Douglas: <span rendered-math>I = 12, P_x = 3, P_y = 2, u(x,y) = xy</span> </h2>
             <hr/>
-            {% raw %}
-            <model>
-
-                <!-- Model parameters -->
-                <param name="alpha" value="0.8"/>
-                <param name="beta" value="0.2"/>
-                <param name="a" value="1"/>
-                <param name="b" value="2"/>
-
-
-                <!-- Model functions -->
-                <function name="u" category="utility" form="PerfectSubstitutes"></function>
-
-
-                <div class="row">
-
-
-                    <div class="col-md-8">
-
-                        <graph height="600" width="600">
-                            <axis dim="x" min="0" max="12" title="Good X"></axis>
-                            <axis dim="y" min="0" max="12" title="Good Y"></axis>
-                            <line fn="functions.u.updateParams({a:params.a, b:params.b}).setLevel([1,1])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([2,2])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([3,3])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([4,4])"></line>
-                            <area fn="functions.u.preferred" color="lightgreen"></area>
-                            <line fn="functions.u.setLevel([5,5])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([6,6])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([7,7])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([8,8])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([9,9])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([10,10])" color="lightgrey"></line>
-                            <line fn="functions.u.setLevel([11,11])" color="lightgrey"></line>
-
-                            <point point="[1,8]" label="B" droplines="both"/>
-                            <point point="[4,4]" label="A" droplines="both"/>
-                            <point point="[8,2]" label="C" droplines="both"/>
-
-
-                        </graph>
-
-                    </div>
-                    <div class="col-md-4">
-                        <div rendered-math align="center" style="{font-size: 14pt}"
-                             expression="U(x,y) = ax + by = {{ params.a | number:2}}x + {{ params.b | number:2}}y"></div>
-                        <hr/>
-                        <div class="well">
-                            <p rendered-math expression="a: {{ params.a | number:2}}"></p>
-                            <slider value="params.a" min="0" max="10" precision="0.25"></slider>
-                            <p rendered-math expression="b: {{ params.b | number:2}}"></p>
-                            <slider value="params.b" min="0.25" max="10" precision="0.25"></slider>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    Objective Function:
+                </div>
+                <div class="col-md-9">
+                    <table style="width:100%">
+                        <tr class="fragment">
+                            <td rendered-math expression="\Lagr" width="30%"
+                                style="text-align: right"></td>
+                            <td rendered-math expression="= xy + \lambda(12 - 3x - 2y)"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    First Order Conditions:
+                </div>
+                <div class="col-md-9">
+                    <table style="width:100%">
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr}{\partial x}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= y - 3\lambda}"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{\text{set}  = 0\Rightarrow \lambda = \frac{y}{3}}"></td>
+                        </tr>
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr}{\partial y}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{= x - 2\lambda}"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{\text{set}  = 0\Rightarrow  \lambda = \frac{x}{2}}"></td>
+                        </tr>
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr}{\partial \lambda}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td class="fragment" rendered-math expression="= 12 - 3x - 2y"></td>
+                            <td class="fragment" rendered-math
+                                expression="\text{set} = 0\Rightarrow 3x + 2y = 12"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    Solve:
+                </div>
+                <div class="col-md-9">
+                    <div class="row" style="height:100px">
+                        <div class="col-md-6 fragment" style="text-align: left">
+                            Set <span rendered-math>\lambda</span> in the first two FOC's<br/>equal to each other:
                         </div>
+                        <div class="col-md-6 fragment" rendered-math>\displaystyle{\frac{y}{3} = \frac{x}{2} \Rightarrow \color{red}{y = \frac{3}{2}x}}</div>
+                    </div>
+                    <div class="row" style="height:100px">
+                        <div class="col-md-6 fragment" style="text-align: left">
+                            Substitute <span rendered-math>\color{red}{y = \frac{3}{2}x}</span><br/>into the third FOC:
+                        </div>
+                        <div class="col-md-6 fragment" rendered-math>\displaystyle{3x + 2\color{red}{\left(\frac{3}{2}x\right)} = 12 \Rightarrow \color{green}{x^* =2}}
 
+                        </div>
+                    </div>
+                    <div class="row" style="height:100px">
+                        <div class="col-md-6 fragment" style="text-align: left; vertical-align: middle">
+                            Substitute <span rendered-math>\color{green}{x^* = 2}</span> into <span
+                                rendered-math>\color{red}{y = \frac{3}{2}x}</span>:
+                        </div>
+                        <div class="col-md-6 fragment" rendered-math>\displaystyle{y^* = \frac{3}{2}\color{green}{\left(2\right)} = 3}</div>
                     </div>
                 </div>
-            </model>
-            {% endraw %}
+            </div>
+
+
+
         </section>
-
-
-
     </section>
-
     <section>
         <section>
-            <h1>Utility Function III: Perfect Complements</h1>
-
-        </section>
-        <section>
-            <h1>Generic Perfect Complements:<br/><span rendered-math>\displaystyle{u(x,y) = \min(ax,by)}</span></h1>
+            <h1>Optimal Consumption</h1>
+            <h1>when Calculus Doesn't Work</h1>
             <hr/>
-            <table>
-                <tr>
-                    <td/>
-                    <td height="100px" style="text-align: right">
-                        <h2 rendered-math>MU_x =</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>a \text{ if } ax < by \text{; otherwise 0}</h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td/><td height="100px" style="text-align: right">
-                        <h2 rendered-math>MU_y =</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>b \text{ if } by < ax \text{; otherwise 0}</h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td height="100px" style="text-align: right">
-                        <h2 rendered-math>MRS_{x,y} =</h2></td>
-                    <td class="fragment">
-                        <h2 rendered-math>\displaystyle{\frac{MU_x}{MU_y} =}</h2>
-                    </td>
-                    <td class="fragment">
-                        <h2 rendered-math>0 \text{ if } ax > by \text{; otherwise undefined}</h2>
-                    </td>
-                </tr>
-            </table>
-
-
+            <h2>Corner Solutions</h2>
+            <h2>Funky Budget Sets</h2>
+            <h2>Funky Preferences</h2>
         </section>
-
-        <section>
-            <clicker-question>
-                <h2>What do the indifference curves for a typical perfect-complement function look like?</h2>
-                <clicker-option letter="A">Downward-sloping curves, bowed in to the origin</clicker-option>
-                <clicker-option letter="B">Downward-sloping straight lines</clicker-option>
-                <clicker-option letter="C">Vertical lines</clicker-option>
-                <clicker-option letter="D">Horizontal lines</clicker-option>
-                <clicker-option letter="E">L-shaped</clicker-option>
-            </clicker-question>
-            <clicker-file></clicker-file>
-
-
-        </section>
-        <section>
-            <h2>Perfect Complements Indifference Map</h2>
-            <hr/>
-            {% raw %}
-            <model>
-
-                <!-- Model parameters -->
-                <param name="alpha" value="0.8"/>
-                <param name="beta" value="0.2"/>
-                <param name="a" value="1"/>
-                <param name="b" value="2"/>
-
-
-                <!-- Model functions -->
-                <function name="u" category="utility" form="PerfectComplements"></function>
-
-
-                <div class="row">
-
-
-                    <div class="col-md-8">
-
-                        <graph height="600" width="600">
-                            <axis dim="x" min="0" max="12" title="Good X"></axis>
-                            <axis dim="y" min="0" max="12" title="Good Y"></axis>
-                            <curve fn="functions.u.updateParams({a:params.a, b:params.b}).setLevel([1,1])"
-                                   color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([2,2])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([3,3])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([4,4])"></curve>
-                            <area fn="functions.u.preferred" color="lightgreen"/>
-                            <curve fn="functions.u.setLevel([5,5])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([6,6])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([7,7])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([8,8])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([9,9])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([10,10])" color="lightgrey"></curve>
-                            <curve fn="functions.u.setLevel([11,11])" color="lightgrey"></curve>
-
-                            <point point="[1,8]" label="B" droplines="both"/>
-                            <point point="[4,4]" label="A" droplines="both"/>
-                            <point point="[8,2]" label="C" droplines="both"/>
-
-
-                        </graph>
-
-                    </div>
-                    <div class="col-md-4">
-                        <div rendered-math align="center" style="{font-size: 14pt}"
-                             expression="U(x,y) = \min(ax,by) = \min({{ params.a | number:2}}x, {{ params.b | number:2}}y)"></div>
-                        <hr/>
-                        <div class="well">
-                            <p rendered-math expression="a: {{ params.a | number:2}}"></p>
-                            <slider value="params.a" min="0.25" max="10" precision="0.25"></slider>
-                            <p rendered-math expression="b: {{ params.b | number:2}}"></p>
-                            <slider value="params.b" min="0.25" max="10" precision="0.25"></slider>
-                        </div>
-                    </div>
-                </div>
-            </model>
-            {% endraw %}
-        </section>
-
-
     </section>
+
+
+
     <section>
         <h1>Summary</h1>
         <hr/>
