@@ -176,7 +176,7 @@ kgAngular.service('D3Helpers', function () {
                 return d.math ? 'katex' : "";
             })
             .attr("style", function (d) {
-                return "position: absolute; text-align: "+ d.align + "; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
+                return "position: absolute; font-size: " + d.size + "; text-align: "+ d.align + "; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
             })
             .text(function(d) { return d.html});
 
@@ -710,7 +710,7 @@ kgAngular.directive('graph', function (D3Helpers) {
             d3.select(el.parentNode).select('div').remove();
             scope.graph_definition.divs = d3.select(el.parentNode)
                 .append("div")
-                .attr("style", "position:absolute; left: " + scope.margin.left + "px; top: " + scope.margin.top + "px");
+                .attr("style", "position:absolute; left: " + scope.margin.left + "px; top: " + scope.margin.top + "px; width: " + scope.graph_definition.width + "px; height: " + scope.graph_definition.height + "px");
 
             areas = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.area');
             rects = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.rect');
@@ -878,7 +878,8 @@ kgAngular.directive('point', function () {
                                 y: graph.height + 20,
                                 width: 100,
                                 color: scope.color,
-                                align: 'center'
+                                align: 'center',
+                                size: '16pt'
                             })
                         }
 
@@ -889,7 +890,8 @@ kgAngular.directive('point', function () {
                                 y: cy - 20,
                                 width: 100,
                                 color: scope.color,
-                                align: 'right'
+                                align: 'right',
+                                size: '16pt'
                             })
                         }
 
@@ -1230,12 +1232,15 @@ kgAngular.directive('label', function () {
                         // Add label to shapes if it's in the graph domain
                         if (xInDomain && yInDomain) {
 
-                            shapes.texts.push({
-                                text: l,
-                                x: cx,
+                            shapes.divs.push({
+                                html: l,
+                                x: cx - 75,
                                 y: cy + 5,
-                                anchor: 'middle',
-                                color: scope.color
+                                width: 150,
+                                align: 'center',
+                                color: scope.color,
+                                math: false,
+                                size: '14pt'
                             });
 
                         }

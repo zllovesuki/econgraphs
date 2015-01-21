@@ -64,7 +64,8 @@ kgAngular.directive('point', function () {
                                 y: graph.height + 20,
                                 width: 100,
                                 color: scope.color,
-                                align: 'center'
+                                align: 'center',
+                                size: '16pt'
                             })
                         }
 
@@ -75,7 +76,8 @@ kgAngular.directive('point', function () {
                                 y: cy - 20,
                                 width: 100,
                                 color: scope.color,
-                                align: 'right'
+                                align: 'right',
+                                size: '16pt'
                             })
                         }
 

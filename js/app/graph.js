@@ -88,7 +88,7 @@ kgAngular.directive('graph', function (D3Helpers) {
             d3.select(el.parentNode).select('div').remove();
             scope.graph_definition.divs = d3.select(el.parentNode)
                 .append("div")
-                .attr("style", "position:absolute; left: " + scope.margin.left + "px; top: " + scope.margin.top + "px");
+                .attr("style", "position:absolute; left: " + scope.margin.left + "px; top: " + scope.margin.top + "px; width: " + scope.graph_definition.width + "px; height: " + scope.graph_definition.height + "px");
 
             areas = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.area');
             rects = scope.graph_definition.vis.append('g').attr('class', 'graph-objects').selectAll('g.rect');

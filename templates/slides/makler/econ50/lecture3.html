@@ -15,7 +15,7 @@
         <hr/>
         <br/>
 
-        <h3>January 12, 2014</h3>
+        <h3>January 12, 2015</h3>
         <hr>
         <br/>
 
@@ -342,9 +342,9 @@
                 <graph height="500" width="500">
                     <axis dim="x" min="0" max="15" title="Good X"></axis>
                     <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                    <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
-                           ylabel="yA"></point>
-                    <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
+                    <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="x_A"
+                           ylabel="y_A"></point>
+                    <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="x_B" ylabel="y_B"
                            color="purple"></point>
 
                 </graph>
@@ -396,28 +396,34 @@
             <hr/>
             <div class="row">
                 <div class="col-md-6">
-                    <graph height="500" width="500">
-                        <axis dim="x" min="0" max="15" title="Good X"></axis>
-                        <axis dim="y" min="0" max="15" title="Good Y"></axis>
-                        <rect points="[[params.XA,params.YA],[0,0]]" color="red" show="params.showPreferredToA"></rect>
-                        <rect points="[[params.XA,params.YA],[15,15]]" color="green"
-                              show="params.showPreferredToA"></rect>
-                        <rect points="[[params.XB,params.YB],[0,0]]" color="red" show="params.showPreferredToB"></rect>
-                        <rect points="[[params.XB,params.YB],[15,15]]" color="green"
-                              show="params.showPreferredToB"></rect>
-                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
-                               color="purple"></point>
-                        <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
-                               show="params.showPreferredToA" color="darkgreen"></label>
-                        <label point="[0.5*(params.XA), 0.5*(params.YA)]" label="Dispreferred to A"
-                               show="params.showPreferredToA" color="darkred"></label>
-                        <label point="[0.5*(params.XB + 15), 0.5*(params.YB + 15)]" label="Preferred to B"
-                               show="params.showPreferredToB" color="darkgreen"></label>
-                        <label point="[0.5*(params.XB), 0.5*(params.YB)]" label="Dispreferred to B"
-                               show="params.showPreferredToB" color="darkred"></label>
-                    </graph>
+                    <div>
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="15" title="Good X"></axis>
+                            <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                            <rect points="[[params.XA,params.YA],[0,0]]" color="red"
+                                  show="params.showPreferredToA"></rect>
+                            <rect points="[[params.XA,params.YA],[15,15]]" color="green"
+                                  show="params.showPreferredToA"></rect>
+                            <rect points="[[params.XB,params.YB],[0,0]]" color="red"
+                                  show="params.showPreferredToB"></rect>
+                            <rect points="[[params.XB,params.YB],[15,15]]" color="green"
+                                  show="params.showPreferredToB"></rect>
+                            <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="x_A"
+                                   ylabel="y_A"></point>
+                            <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="x_B" ylabel="y_B"
+                                   color="purple"></point>
+                            <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
+                                   show="params.showPreferredToA" color="darkgreen"></label>
+                            <label point="[0.5*(params.XA), 0.5*(params.YA)]" label="Dispreferred to A"
+                                   show="params.showPreferredToA" color="darkred"></label>
+                            <label point="[0.5*(params.XB + 15), 0.5*(params.YB + 15)]" label="Preferred to B"
+                                   show="params.showPreferredToB" color="darkgreen"></label>
+                            <label point="[0.5*(params.XB), 0.5*(params.YB)]" label="Dispreferred to B"
+                                   show="params.showPreferredToB" color="darkred"></label>
+                        </graph>
+
+                    </div>
+
                 </div>
                 <div class="col-md-6">
                     <div class="well">
@@ -555,9 +561,9 @@
                               show="params.showPreferredToA"/>
                         <area fn="functions.u.dispreferred" color="red" show="params.showPreferredToA"/>
                         <curve fn="functions.u.setLevel([params.XA, params.YA])"></curve>
-                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="xB" ylabel="yB"
+                        <point point="[params.XA, params.YA]" droplines="both" label="A" xlabel="x_A"
+                               ylabel="y_A"></point>
+                        <point point="[params.XB, params.YB]" droplines="both" label="B" xlabel="x_B" ylabel="y_B"
                                color="purple"></point>
                         <label point="[0.5*(params.XA + 15), 0.5*(params.YA + 15)]" label="Preferred to A"
                                color="darkgreen" show="params.showPreferredToA || params.showMonotonicity"></label>
@@ -671,9 +677,9 @@
                         <area fn="functions.u.dispreferred" color="red"/>
                         <curve fn="functions.u.setLevel([12,2])"></curve>
                         <segment points="[{x:12,y:2},{x:3,y:8}]" show="params.showC"></segment>
-                        <point point="[3,8]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[12, 2]" droplines="both" label="B" xlabel="xB" ylabel="yB"></point>
+                        <point point="[3,8]" droplines="both" label="A" xlabel="x_A"
+                               ylabel="y_A"></point>
+                        <point point="[12, 2]" droplines="both" label="B" xlabel="x_B" ylabel="y_B"></point>
                         <point point="[3*params.alpha + 12*(1-params.alpha), 8*params.alpha + 2*(1-params.alpha)]" droplines="both" label="C" xlabel="xC" ylabel="yC"
                                color="purple" show="params.showC"></point>
                     </graph>
@@ -942,9 +948,9 @@
         <hr/>
         <p>Bill has 10 units of X and 4 units of Y. Ted has 2 units of X and 8 units of Y.</p>
 
-        <p>The diagrams below show their indifference curves for these bundles.</p>
+        <p>The diagrams below show their indifference curves for these bundles (as "A").</p>
 
-        <p>See if they can <b>both</b> be made better off by trading...</p>
+        <p>See if they can <b>both</b> be made better off by trading (to "B")...</p>
 
         <hr/>
         {% raw %}
@@ -961,11 +967,8 @@
                         <axis dim="y" min="0" max="15" title="Good Y"></axis>
                         <area fn="functions.u.setLevel([10,4]).preferred" color="green"/>
                         <curve fn="functions.u"></curve>
-                        <point point="[10, 4]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[10 - params.dx, 4 + params.dy]" droplines="both" label="B" xlabel="xB"
-                               ylabel="yB"
-                               color="purple"></point>
+                        <point point="[10, 4]" droplines="both" label="A"></point>
+                        <point point="[10 - params.dx, 4 + params.dy]" droplines="both" label="B" color="purple"></point>
                     </graph>
                 </div>
                 <div class="col-md-4">
@@ -976,11 +979,8 @@
                         <axis dim="y" min="0" max="15" title="Good Y"></axis>
                         <area fn="functions.u.setLevel([2,8]).preferred" color="green"/>
                         <curve fn="functions.u"></curve>
-                        <point point="[2, 8]" droplines="both" label="A" xlabel="xA"
-                               ylabel="yA"></point>
-                        <point point="[2 + params.dx, 8 - params.dy]" droplines="both" label="B" xlabel="xB"
-                               ylabel="yB"
-                               color="purple"></point>
+                        <point point="[2, 8]" droplines="both" label="A"></point>
+                        <point point="[2 + params.dx, 8 - params.dy]" droplines="both" label="B" color="purple"></point>
                     </graph>
                 </div>
                 <div class="col-md-4">

@@ -159,7 +159,7 @@ kgAngular.service('D3Helpers', function () {
                 return d.math ? 'katex' : "";
             })
             .attr("style", function (d) {
-                return "position: absolute; text-align: "+ d.align + "; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
+                return "position: absolute; font-size: " + d.size + "; text-align: "+ d.align + "; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
             })
             .text(function(d) { return d.html});
 

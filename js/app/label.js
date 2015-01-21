@@ -30,12 +30,15 @@ kgAngular.directive('label', function () {
                         // Add label to shapes if it's in the graph domain
                         if (xInDomain && yInDomain) {
 
-                            shapes.texts.push({
-                                text: l,
-                                x: cx,
+                            shapes.divs.push({
+                                html: l,
+                                x: cx - 75,
                                 y: cy + 5,
-                                anchor: 'middle',
-                                color: scope.color
+                                width: 150,
+                                align: 'center',
+                                color: scope.color,
+                                math: false,
+                                size: '14pt'
                             });
 
                         }
