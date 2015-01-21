@@ -149,10 +149,30 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
+    this.drawDivs = function(data,divs) {
 
-    this.drawAxes = function() {
+        divs = divs.data(data);
+        divs.exit().remove();
+        divs.enter().append("div");
+        divs
+            .attr("class", function(d) {
+                return d.math ? 'katex' : "";
+            })
+            .attr("style", function (d) {
+                return "position: absolute; font-size: " + d.size + "; text-align: "+ d.align + "; left: " + d.x + "px; top: " + d.y + "px; color: " + d.color + "; width: " + d.width + "px";
+            })
+            .text(function(d) { return d.html});
 
-    }
+        for (var i = 0; i < data.length; i++) {
+            if (false != data[i].math) {
+                var element = divs[0][i],
+                    text = element.innerText;
+                katex.render(text, element)
+            }
+        }
+
+        return divs;
+    };
 
 
     this.addAxes = function(graph,x_axis,y_axis) {

@@ -1,0 +1,1282 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 5</h2>
+
+        <h1>Optimal Consumption Choice</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>January 21, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Logistics and Context</h2>
+        <h2 class="fragment">Motivation: Gifts, Gift Cards, and Cash</h2>
+        <h2 class="fragment">Defining the Budget Set</h2>
+        <h2 class="fragment">Optimal Consumption for a Simple Budget Set</h2>
+        <h2 class="fragment">Composite Goods</h2>
+        <hr/>
+        <h2 class="fragment">10 minute break</h2>
+        <hr/>
+        <h2 class="fragment">Deep Dive: Optimal Choice with Cobb-Douglas Preferences</h2>
+    </section>
+    <section>
+        <section>
+            <h1>Logistics and Context</h1>
+        </section>
+        <section>
+            <h2>Logistics</h2>
+            <hr/>
+            <h3>Please sign up for section <b>in Canvas</b> by the end of the day.</h3>
+            <p>Current data reflects what was in Axess last Friday.</p>
+            <p>You can change, but please do so today so the TA's have the right HW to return in sections.</p>
+            <hr/>
+            <h3>Office hours this week:</h3>
+            <p>Me: today, 2-3:30, Landau 224</p>
+            <p>Connor: today, 3-5, Bldg 200, Classroom 030</p>
+            <p>Michael: Thursday, 3-5, Bldg 200, Classroom 203</p>
+            <p>Rui: Thursday, 5-7, Bldg 200, Classroom 034</p>
+            <hr/>
+            <h3>Homework 2 is due in section this Friday.</h3>
+            <p>Be sure to let me and/or your TA know if you need to hand it in early.</p>
+        </section>
+        <section>
+            <h2>Context: Consumer Theory</h2>
+            <p></p>
+            <table class="table">
+                <tr class="fragment">
+                    <td>Week 2</td>
+                    <td><b>Consumer Choice Framework</b>: Preferences,<br/>Indifference Curves, and Utility Functions</td>
+                    <td>Chapter 3</td>
+                </tr>
+                <tr class="fragment" style="background-color:lightgreen">
+                    <td>Week 3</td>
+                    <td><b>Optimal Choice:</b> Budget Constraints;<br/><span rendered-math>(x^*, y^*)</span> as a function of
+                        <span rendered-math>(p_x, p_y, I)</span>.</td>
+                    <td>4.1-4.3</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 4</td>
+                    <td><b>Comparative Statics:</b> Deriving the Demand Curve; <br/>Income and Subsitution Effects; <br/>Consumer
+                        Surplus; Market Demand</td>
+                    <td>5.1-5.4</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 5</td>
+                    <td><b>Applications:</b> Labor/Leisure, Price Indices, <br/>Intertemporal Choice, Revealed Preference</td>
+                    <td>5.5-5.6,<br/>Ch. 4 Appendix 2, 4.4</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 6</td>
+                    <td>Midterm! ...and on to producer theory</td>
+                    <td/>
+                </tr>
+            </table>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Motivation</h1>
+            <hr/>
+            <h2>Gifts, Gift Cards, and Cash</h2>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Which would you rather receive from your ideal significant other for Valentine's Day?</h2>
+                <clicker-option letter="A">An assortment of Ghiradelli Chocolates worth $50</clicker-option>
+                <clicker-option letter="B">A $50 gift card for Ghiradelli Chocolates</clicker-option>
+                <clicker-option letter="C">$50 in cash</clicker-option>
+            </clicker-question>
+            <clicker-file></clicker-file>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Which would you rather receive from your great-aunt on your birthday?</h2>
+                <clicker-option letter="A">A CD worth $15</clicker-option>
+                <clicker-option letter="B">A $15 iTunes gift card</clicker-option>
+                <clicker-option letter="C">$15 in cash</clicker-option>
+            </clicker-question>
+            <clicker-file></clicker-file>
+        </section>
+        <section>
+            <h2>Waldfogel (AER 1993): <a href="http://www.jstor.org.ezproxy.stanford.edu/stable/2117564">The Deadweight Loss of Christmas</a></h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture5/waldfogel.png') }}">
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture5/waldfogel2.png') }}">
+                </div>
+            </div>
+        </section>
+    </section>
+    <section>
+        <section>
+        <h1>Defining the <b>Budget Set</b></h1>
+            <hr/>
+            <h2 class="fragment">A <b>budget set</b> is the set of all bundles available to a consumer,<br/>given all relevant constraints</h2>
+            <hr/>
+            <h2 class="fragment">The simple case: <span rendered-math>p_xx + p_yy \le I</span></h2>
+
+        </section>
+        <section>
+            <h2>The Simple Budget Set</h2>
+            <hr/>
+            <p>Analyzes tradeoff between two goods, <span rendered-math>X</span> and <span rendered-math>Y</span>,
+                <br/>for a consumer with income <span rendered-math>I</span> budgeted for <span rendered-math>X</span>
+                and <span rendered-math>Y</span>.</p>
+            <table class="table fragment">
+                <tr>
+                    <td rendered-math>p_x</td>
+                    <td>Price of good <span rendered-math>X</span></td>
+                    <td rendered-math>p_y</td>
+                    <td>Price of good <span rendered-math>Y</span></td>
+                </tr>
+                <tr>
+                    <td rendered-math>x</td>
+                    <td>Quantity of good <span rendered-math>X</span> bought</td>
+                    <td rendered-math>y</td>
+                    <td>Quantity of good <span rendered-math>Y</span> bought</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math>p_xx</td>
+                    <td>Expenditure on <span rendered-math>X</span></td>
+                    <td rendered-math>p_yy</td>
+                    <td>Expenditure on <span rendered-math>Y</span></td>
+                </tr>
+            </table>
+            <hr/>
+            <p class="fragment">Therefore, <span rendered-math>p_xx + p_yy \le I</span> means
+                <br/>"total expenditure on <span rendered-math>X</span>, plus total expenditure on <span
+                        rendered-math>Y</span>,
+                <br/>must not exceed the income budgeted to <span rendered-math>X</span> and <span
+                        rendered-math>Y</span>."</p>
+        </section>
+        <section>
+            <h2>The Simple Budget Set: Visual Analysis</h2>
+            <hr/>
+            <div class="row">
+                {% raw %}
+                <model>
+                    <function name="b" category="budget" form="SimpleBudgetConstraint" fn-params="{px:1, py:1, income:10}"></function>
+
+                <div class="col-md-6">
+                    <div>
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="15" title="Good X" ticks="0"></axis>
+                            <axis dim="y" min="0" max="15" title="Good Y" ticks="0"></axis>
+                            <point color="red" point="[10,0]" xlabel="\frac{I}{P_x}"
+                                   show="params.showXIntercept"></point>
+                            <point color="blue" point="[0,10]" ylabel="\frac{I}{P_y}"
+                                   show="params.showYIntercept"></point>
+                            <area fn="functions.b" color="purple" show="params.showBudgetSet"></area>
+                            <line fn="functions.b" show="params.showBudgetLine"></line>
+                        </graph>
+                    </div>
+                    <hr/>
+                    <div>
+                        <toggle param="params.showXIntercept" init="false">
+                            {{ params.showXIntercept ? 'Hide X Intercept' : 'Show X Intercept' }}
+                        </toggle>
+                        <toggle param="params.showYIntercept" init="false">
+                            {{ params.showYIntercept ? 'Hide Y Intercept' : 'Show Y Intercept' }}
+                        </toggle>
+                    </div>
+                    <hr/>
+                    <div>
+                        <toggle param="params.showBudgetLine" init="false">
+                            {{ params.showBudgetLine ? 'Hide Budget Line' : 'Show Budget Line' }}
+                        </toggle>
+                        <toggle param="params.showBudgetSet" init="false">
+                            {{ params.showBudgetSet ? 'Hide Budget Set' : 'Show Budget Set' }}
+                        </toggle>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <p>Constraint: <span rendered-math>P_xx + P_yy \le I</span></p>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5 fragment well" style="color:red">
+                            <p>Suppose <span rendered-math>y = 0</span></p>
+
+                            <p>Buy only <span rendered-math>X</span></p>
+
+                            <p rendered-math class="fragment">P_xx + p_y \times 0 = I</p>
+
+                            <p rendered-math class="fragment">\displaystyle{\Rightarrow x = \frac{I}{p_x}}</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5 fragment well" style="color:blue">
+                                <p>Suppose <span rendered-math>x = 0</span></p>
+                                <p>Buy only <span rendered-math>Y</span></p>
+                                <p rendered-math class="fragment">p_x \times 0 + p_yy = I</p>
+                                <p rendered-math class="fragment">\displaystyle{\Rightarrow y = \frac{I}{p_y}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-11 well fragment">
+                            <p>The <b>budget line</b> is the set of points that exhausts the budget:</p>
+                            <p class="fragment" rendered-math>y = \frac{I}{P_y} - \frac{P_x}{P_y}x</p>
+                            <p class="fragment">Note the slope: <span rendered-math>-\frac{P_x}{P_y}</span></p>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-11 well fragment">
+                            <p>The <b>budget set</b> or <b>feasible set</b> is the "affordable area" with money left over.</p>
+                        </div>
+                    </div>
+                </div>
+                </model>
+                {% endraw %}
+            </div>
+        </section>
+        <section>
+            <h2>The Simple Budget Set: Numerical Example</h2>
+            <hr/>
+            <div class="row">
+                {% raw %}
+                <model>
+                    <param name="px" value="3"/>
+                    <param name="py" value="2"/>
+                    <param name="income" value="12"/>
+                    <function name="b" category="budget" form="SimpleBudgetConstraint"
+                              fn-params="{px:1, py:1, income:10}"></function>
+
+                    <div class="col-md-8">
+                        <div>
+                            <graph height="600" width="600">
+                                <axis dim="x" min="0" max="15" title="Good X"></axis>
+                                <axis dim="y" min="0" max="15" title="Good Y"></axis>
+                                <point color="red" point="[params.income/params.px,0]" xlabel="\frac{I}{P_x}"></point>
+                                <point color="blue" point="[0,params.income/params.py]" ylabel="\frac{I}{P_y}"></point>
+                                <area fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})" color="purple"></area>
+                                <line fn="functions.b"></line>
+                            </graph>
+                        </div>
+                        <hr/>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <p style="color:red" rendered-math expression="P_x = \${{ params.px | number: 2}}"></p>
+                            <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+                            <hr/>
+                            <p style="color:blue" rendered-math expression="P_y = \${{ params.py | number: 2}}"></p>
+                            <slider value="params.py" min="1" max="6" precision="0.25"></slider>
+                            <hr/>
+                            <p rendered-math expression="I = \${{ params.income | number: 2 }}"></p>
+                            <slider value="params.income" min="4" max="24" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <p>Constraint: <span rendered-math expression="{{ params.px | number:2 }}x + {{params.py | number: 2}}y \le {{ params.income }}"></span></p>
+                        <hr/>
+                        <p>Slope: <span rendered-math expression="\displaystyle{-\frac{P_x}{P_y} = -\frac{ {{ params.px | number:2 }} }{ {{params.py | number: 2}} } \approx - {{ params.px/params.py | number: 2 }} }"</p>
+                    </div>
+                </model>
+                {% endraw %}
+            </div>
+        </section>
+        <section>
+            <h2>NOTICE THE UNITS!!!!</h2>
+            <hr/>
+            <p><b>Budget Constraint</b></p>
+            <table class="table">
+                <tr>
+                    <td rendered-math style="text-align:center; color:red">P_x</td>
+                    <td rendered-math style="color:red">\times</td>
+                    <td rendered-math style="text-align:center; color:red">x</td>
+                    <td rendered-math>+</td>
+                    <td rendered-math style="text-align:center; color:blue">P_y</td>
+                    <td rendered-math style="color:blue">\times</td>
+                    <td rendered-math style="text-align:center; color:blue">y</td>
+                    <td rendered-math>\le</td>
+                    <td rendered-math style="text-align:center">I</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math style="color:red">\displaystyle{\frac{\text{Dollars}}{\text{Units of X}}}</td>
+                    <td rendered-math style="color:red">\displaystyle{\times}</td>
+                    <td rendered-math style="color:red">\displaystyle{\text{Units of X}}</td>
+                    <td rendered-math>+</td>
+                    <td rendered-math style="color:blue">\displaystyle{\frac{\text{Dollars}}{\text{Units of Y}}}</td>
+                    <td rendered-math style="color:blue">\displaystyle{\times}</td>
+                    <td rendered-math style="color:blue">\displaystyle{\text{Units of Y}}</td>
+                    <td rendered-math>\le</td>
+                    <td rendered-math>\text{Total Dollars}</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math colspan="3" style="text-align: center; color:red">\text{Dollars spent on X}</td>
+                    <td rendered-math>+</td>
+                    <td rendered-math colspan="3" style="text-align: center; color:blue">\text{Dollars spent on Y}</td>
+                    <td rendered-math>\le</td>
+                    <td rendered-math>\text{Total Dollars}</td>
+                </tr>
+            </table>
+            <hr/>
+            <hr/>
+            <p><b>Slope of the Budget Line</b></p>
+            <hr/>
+            <p><span rendered-math class="fragment">\displaystyle{\frac{\color{red}{P_x}}{\color{blue}{P_y}}}</span>
+                <span
+                    rendered-math
+                    class="fragment">\displaystyle{= \frac{\color{red}{\frac{\text{Dollars}}{\text{Units of X}}}}{\color{blue}{\frac{\text{Dollars}}{\text{Units of Y}}}}}</span>
+            <span
+                    rendered-math
+                    class="fragment">\displaystyle{= \frac{ \color{blue}{\text{Units of Y} }}{ \color{red}{\text {Units of X}} }}</span></p>
+            <hr/>
+            <p class="fragment">...same units as the Marginal Rate of Substitution...hmmm.</p>
+        </section>
+        <section>
+            <h1>Funky Budget Constraints</h1>
+            <hr/>
+            <h2>Gifts and Gift Cards</h2>
+            <h2>Quantity Discounts</h2>
+            <h2>Unlimited Ride Wristbands</h2>
+            <h2>Cell Phone Plans</h2>
+            <hr/>
+            <p class="fragment">In all of these, there is an element of a kinked budget constraint:<br/>you don't pay a constant price for every unit of a good or service.</p>
+            <p class="fragment">(This kind of stuff is best derived on the board...)</p>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Optimal Consumption for a Simple Budget Set</h1>
+            <hr/>
+            <h2>Last week: rank all bundles</h2>
+            <h2>Today, so far: identify affordable bundles</h2>
+            <hr/>
+            <h2 class="fragment">Our current objective:</h2>
+
+            <h2 class="fragment">Given <b>set of preferences</b> and <b>budget set</b>,</h2>
+
+            <h2 class="fragment">identify the <b>most preferred affordable bundle</b>.</h2>
+            <hr/>
+            <p class="fragment">Put another way: you tell me your budget and your preferences, I'll tell you what to buy.</p>
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture5/veyron.jpg') }}">
+        </section>
+        <section>
+            <h2>Two Ways of Looking at the Same Bundles</h2>
+            {% raw %}
+            <model>
+                <function name="u" category="utility" form="CobbDouglas" fn-params="{alpha:1,beta:1}"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"
+                          fn-params="{px:1, py:1, income:10}"></function>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="15" title="Good X" ticks="0"></axis>
+                            <axis dim="y" min="0" max="15" title="Good Y" ticks="0"></axis>
+                            <area fn="functions.u.setLevel([2,8]).preferred" color="lightgreen"></area>
+                            <label point="[10,10]" label="Preferred to A"></label>
+                            <curve fn="functions.u.setLevel([2,8])"></curve>
+                            <point point="[2,8]" label="A" droplines="both"></point>
+                        </graph>
+                        </div>
+                        <hr/>
+                        <p><b>Indifference Curves</b></p>
+
+                        <p>Partition the Good X-Good Y space<br/>into preferred and dispreferred bundles.</p>
+                    </div>
+                    <div class="col-md-6">
+
+                        <div>
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="15" title="Good X" ticks="0"></axis>
+                            <axis dim="y" min="0" max="15" title="Good Y" ticks="0"></axis>
+                            <area fn="functions.b" color="purple"></area>
+                            <label point="[2,2]" label="Budget Set"></label>
+                            <line fn="functions.b"></line>
+                            <point point="[2,8]" label="A" droplines="both"></point>
+
+                        </graph>
+                        </div>
+                        <hr/>
+                        <p><b>Budget Set</b></p>
+                        <p>Partitions the Good X-Good Y space<br/>into affordable and unaffordable bundles.</p>
+
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>The Budget Line / Indifference Curve Diagram</h2>
+            {% raw %}
+            <model>
+                <function name="u" category="utility" form="CobbDouglas" fn-params="{alpha:1,beta:1}"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"
+                          fn-params="{px:1, py:1, income:10}"></function>
+
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <div>
+                            <graph height="500" width="500">
+                                <axis dim="x" min="0" max="15" title="Good X" ticks="0"></axis>
+                                <axis dim="y" min="0" max="15" title="Good Y" ticks="0"></axis>
+                                <area fn="functions.u.setLevel([2,8]).preferred" color="lightgreen"></area>
+                                <area fn="functions.b" color="purple"></area>
+                                <label point="[10,10]" label="Preferred to A"></label>
+                                <label point="[2,2]" label="Budget Set"></label>
+                                <line fn="functions.b"></line>
+                                <curve fn="functions.u.setLevel([2,8])"></curve>
+                                <point point="[2,8]" label="A" droplines="both"></point>
+                            </graph>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+                <hr/>
+                <p>Question: is overlap good?</p>
+                <p class="fragment">How could this consumer do better?</p>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>Choosing the Most Preferred Bundle</h2>
+            <hr/>
+            {% raw %}
+            <model>
+                <param name="x" value="2"/>
+                <function name="u" category="utility" form="CobbDouglas" fn-params="{alpha:1,beta:1}"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"
+                          fn-params="{px:1, py:1, income:10}"></function>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                            <graph height="500" width="500">
+                                <axis dim="x" min="0" max="15" title="Good X" ticks="0"></axis>
+                                <axis dim="y" min="0" max="15" title="Good Y" ticks="0"></axis>
+                                <area fn="functions.u.setLevel([params.x,10-params.x]).preferred" color="lightgreen"></area>
+                                <area fn="functions.b" color="purple"></area>
+                                <label point="[10,10]" label="Preferred to A"></label>
+                                <label point="[2,2]" label="Budget Set"></label>
+                                <line fn="functions.b"></line>
+                                <curve fn="functions.u"></curve>
+                                <point point="[params.x,10-params.x]" label="A" droplines="both"></point>
+                            </graph>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <p>Let's vary the amount spent on X,<br/>and see if we can find<br/>the most preferred bundle.</p>
+                        <hr/>
+                        <div class="well">
+                            <p>Amount spent on <span rendered-math>X</span></p>
+                            <slider value="params.x" min="1" max="9" precision="0.1"></slider>
+                        </div>
+                    </div>
+                </div>
+
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <clicker-question>
+                <p>Think about how we just found the most preferred bundle.</p>
+
+                <p>Recall that the Marginal Rate of Substitution is the (negative of the) slope of the indifference
+                    curve, and that <span rendered-math>\frac{P_x}{P_y}</span> is the (negative of the) slope of the
+                    budget line.</p>
+                <hr/>
+                <h2>When the consumer is choosing <b>the best affordable bundle</b>:</h2>
+                <clicker-option letter="A"><span rendered-math>MRS_{x,y} > \frac{P_x}{P_y}</span></clicker-option>
+                <clicker-option letter="B"><span rendered-math>MRS_{x,y} = \frac{P_x}{P_y}</span></clicker-option>
+                <clicker-option letter="C"><span rendered-math>MRS_{x,y} < \frac{P_x}{P_y}</span></clicker-option>
+                <clicker-option letter="D">None of these</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <clicker-question>
+                <p>Think about how we just found the most preferred bundle.</p>
+                <p>Recall that the Marginal Rate of Substitution is the (negative of the) slope of the indifference curve, and that <span rendered-math>\frac{P_x}{P_y}</span> is the (negative of the) slope of the budget line.</p>
+                <hr/>
+                <h2>When the consumer is choosing <b>too little X</b>:</h2>
+                <clicker-option letter="A"><span rendered-math>MRS_{x,y} > \frac{P_x}{P_y}</span></clicker-option>
+                <clicker-option letter="B"><span rendered-math>MRS_{x,y} = \frac{P_x}{P_y}</span></clicker-option>
+                <clicker-option letter="C"><span rendered-math>MRS_{x,y} < \frac{P_x}{P_y}</span></clicker-option>
+                <clicker-option letter="D">None of these</clicker-option>
+            </clicker-question>
+        </section>
+
+        <section>
+            <h2>The Tangency Condition</h2>
+            {% raw %}
+            <model>
+                <param name="x" value="2"/>
+                <function name="u" category="utility" form="CobbDouglas" fn-params="{alpha:1,beta:1}"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"
+                          fn-params="{px:1, py:1, income:10}"></function>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                            <graph height="500" width="500">
+                                <axis dim="x" min="0" max="15" title="Good X" ticks="0"></axis>
+                                <axis dim="y" min="0" max="15" title="Good Y" ticks="0"></axis>
+                                <area fn="functions.u.setLevel([params.x,10-params.x]).preferred"
+                                      color="lightgreen"></area>
+                                <area fn="functions.b" color="purple"></area>
+                                <label point="[10,10]" label="Preferred to A"></label>
+                                <label point="[2,2]" label="Budget Set"></label>
+                                <line fn="functions.b"></line>
+                                <curve fn="functions.u"></curve>
+                                <line fn="functions.u.mrsTangentLine([params.x,10-params.x])" color="green"></line>
+                                <point point="[params.x,10-params.x]" label="A" droplines="both"></point>
+                            </graph>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="well">
+                            <p>Amount spent on <span rendered-math>X</span></p>
+                            <slider value="params.x" min="1" max="9" precision="0.1"></slider>
+                        </div>
+                        <hr/>
+                    </div>
+                </div>
+
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Three Ways to Think About</h1>
+            <h1>the Tangency Condition</h1>
+            <hr>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>MRS_{x,y} = \frac{P_x}{P_y}</h2>
+                </div>
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>\frac{MU_x}{MU_y} = \frac{P_x}{P_y}</h2>
+                </div>
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>\frac{MU_x}{P_x} = \frac{MU_y}{P_y}</h2>
+                </div>
+
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <p><span rendered-math>MRS_{x,y}</span> is the rate at which<br/>a consumer is <b>willing</b><br/>to
+                        give up Y to get more X.</p>
+                    <hr/>
+                    <p class="fragment"><span rendered-math>\frac{P_x}{P_y}</span> is the rate at which<br/>the <b>market allows</b>
+                        consumers<br/> to give up Y to get more X.</p>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p><span rendered-math>\frac{MU_x}{MU_y}</span> is the value
+                        <br/>the <b>consumer</b> places<br/>on X relative to Y.</p>
+                    <hr/>
+                    <p class="fragment"><span rendered-math>\frac{P_x}{P_y}</span> is the value<br/>the <b>market</b> places<br/>on X
+                        relative to Y.</p>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p><span rendered-math>\frac{MU_x}{P_x}</span> is the marginal utility<br/>of the last dollar<br/>spent
+                        on good X.</p>
+                    <hr/>
+                    <p class="fragment"><span rendered-math>\frac{MU_y}{P_y}</span> is the marginal utility<br/>of the last dollar<br/>spent
+                        on good Y.</p>
+                </div>
+
+            </div>
+
+        </section>
+        <section>
+            <h1>Three Ways to Think About</h1>
+            <h1>Buying Too Little X</h1>
+            <hr>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>MRS_{x,y} > \frac{P_x}{P_y}</h2>
+
+                </div>
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>\frac{MU_x}{MU_y} > \frac{P_x}{P_y}</h2>
+
+                </div>
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>\frac{MU_x}{P_x} > \frac{MU_y}{P_y}</h2>
+
+                </div>
+
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <p>The consumer is more willing</br>to give up Y to get X<br/>than the market requires.</p>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p>The consumer places<br/>relatively more value on X<br/>than the market in general.</p>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p>The consumer gets more<br/>"bang for her buck"<br/>from good X than good Y..</p>
+                </div>
+
+            </div>
+            <hr/>
+            <h2 class="fragment">...and vice versa for the case of buying too much X...</h2>
+        </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Special Case: A "Composite Good"</h1>
+            <hr/>
+            <h2>So far, we've thought of these diagrams showing the tradeoff between two goods.</h2>
+            <hr/>
+            <h2>However, it's also reasonable to think about it showing the tradeoff between one good, and spending money on "other stuff."</h2>
+        </section>
+        <section>
+            <h2>Units with a Composite Good</h2>
+            <hr/>
+            <p><b>Budget Constraint</b></p>
+            <table class="table">
+                <tr>
+                    <td rendered-math style="text-align:center; color:red">P_x</td>
+                    <td rendered-math style="color:red">\times</td>
+                    <td rendered-math style="text-align:center; color:red">x</td>
+                    <td rendered-math>+</td>
+                    <td rendered-math style="text-align:center; color:blue">P_y</td>
+                    <td rendered-math style="color:blue">\times</td>
+                    <td rendered-math style="text-align:center; color:blue">y</td>
+                    <td rendered-math>\le</td>
+                    <td rendered-math style="text-align:center">I</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math style="color:red">\displaystyle{\frac{\text{Dollars}}{\text{Units of X}}}</td>
+                    <td rendered-math style="color:red">\displaystyle{\times}</td>
+                    <td rendered-math style="color:red">\displaystyle{\text{Units of X}}</td>
+                    <td rendered-math>+</td>
+                    <td rendered-math style="color:blue">\displaystyle{\frac{\text{Dollars}}{\text{Units of other stuff}}}</td>
+                    <td rendered-math style="color:blue">\displaystyle{\times}</td>
+                    <td rendered-math style="color:blue">\displaystyle{\text{Units of other stuff}}</td>
+                    <td rendered-math>\le</td>
+                    <td rendered-math>\text{Total Dollars}</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math colspan="3" style="text-align: center; color:red">\text{Dollars spent on X}</td>
+                    <td rendered-math>+</td>
+                    <td rendered-math colspan="3" style="text-align: center; color:blue">\text{Dollars spent on other stuff}</td>
+                    <td rendered-math>\le</td>
+                    <td rendered-math>\text{Total Dollars}</td>
+                </tr>
+            </table>
+            <hr/>
+            <hr/>
+            <p><b>Slope of the Budget Line</b></p>
+            <hr/>
+            <p><span rendered-math class="fragment">\displaystyle{\frac{\color{red}{P_x}}{\color{blue}{P_y}}}</span>
+                <span
+                        rendered-math
+                        class="fragment">\displaystyle{= \frac{\color{red}{\frac{\text{Dollars}}{\text{Units of X}}}}{\color{blue}{\frac{\text{Dollars}}{\text{Units of Y}}}}}</span>
+            <span
+                    rendered-math
+                    class="fragment">\displaystyle{= \frac{ \color{blue}{\text{Units of other stuff} }}{ \color{red}{\text {Units of X}} }}</span>
+            </p>
+            <hr/>
+            <p class="fragment">We can normalize the "price" of Y to be $1;<br/>in this case, a "unit of Y" is the <b>best alternative use of a dollar</b><br/>and the "marginal utility of Y" is the highest possible marginal utility<br/>received from spending money on some other good than X.</p>
+        </section>
+        <section>
+            <h1>Let's go further!</h1>
+            <hr/>
+            <p class="fragment">We know that we can transform any utility function by a monotonic transformation, and keep preferences the same.</p>
+            <p class="fragment">It makes sense that the "marginal utility from an additional dollar spent on something else" would be pretty constant.</p>
+            <p class="fragment">So, let's <b>normalize</b> the utility function so that <span rendered-math>MU_y = 1</span>.</p>
+        </section>
+        <section>
+            <h1>The normalized utility function</h1>
+            <h1>with a composite good as good Y:</h1>
+            <hr>
+            <h2><b>Quasilinear Utility Function:</b> <span rendered-math> u(x,y) = f(x) + y \Rightarrow MU_y = 1</span></h2>
+
+            <h2><b>Normalized Budget Constraint:</b> <span rendered-math> P_xx + y = I \Rightarrow P_y = 1</span></h2>
+
+        </section>
+        <section>
+            <h1>The Tangency Condition</h1>
+
+            <h1>with a Composite Good</h1>
+            <hr>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>MRS_{x,y} = P_x</h2>
+                </div>
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>MU_x = P_x</h2>
+                </div>
+                <div class="col-md-4 fragment">
+                    <h2 rendered-math>\frac{MU_x}{P_x} = 1</h2>
+                </div>
+
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <p><span rendered-math>MRS_{x,y}</span> is the rate at which<br/>a consumer is <b>willing</b><br/>to
+                        give up $ to get more X.</p>
+                    <hr/>
+                    <p class="fragment"><span rendered-math>P_x</span> is the rate at which<br/>the <b>market
+                        allows</b>
+                        consumers<br/> to give up $ to get more X.</p>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p><span rendered-math>MU_x</span> is the value
+                        <br/>the <b>consumer</b> places<br/>on X relative to $.</p>
+                    <hr/>
+                    <p class="fragment"><span rendered-math>P_x</span> is the value<br/>the <b>market</b>
+                        places<br/>on X
+                        relative to $.</p>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p><span rendered-math>\frac{MU_x}{P_x}</span> is the marginal utility<br/>of the last dollar<br/>spent
+                        on good X.</p>
+                    <hr/>
+                    <p class="fragment"><span rendered-math>\frac{MU_y}{P_y} = 1</span> is the marginal utility<br/>of the best alternative<br/>use of $1.</p>
+                </div>
+
+            </div>
+
+
+        </section>
+        <section>
+            <h1>MB = P wasn't BS after all.</h1>
+            <hr/>
+            <h2 class="fragment">...but what MB really meant was...</h2>
+            <hr/>
+            <blockquote class="fragment">The marginal rate of substitution<br/>between units of X</br>and dollars spent on the next best alternative.</blockquote>
+        </section>
+        <section>
+            <h1>After the break: Deep dive into Cobb-Douglas</h1>
+        </section>
+    </section>
+    <section>
+        <h1>10 Minute Break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Optimal Consumption when Calculus Works</h1>
+            <hr/>
+            <h1>...a deep dive into Cobb-Douglas utility functions</h1>
+        </section>
+        <section>
+
+            <div class="row">
+                <div class="col-md-5" style="text-align: left">
+                    If these three conditions hold:
+                </div>
+                <div class="col-md-7 well">
+                    <table class="table">
+                        <tr>
+                            <td>(a)</td>
+                            <td class="fragment">The consumer's preferences over <span rendered-math>X</span> and <span
+                                    rendered-math>Y</span> are <br/><b>continuously differentiable</b>, <b>strictly
+                                monotonic</b> and <b>strictly convex</b></td>
+                        </tr>
+                        <tr>
+                            <td>(b)</td>
+                            <td class="fragment">The indifference curves <b>do not cross the axes</b></td>
+                        </tr>
+                        <tr>
+                            <td>(c)</td>
+                            <td class="fragment">The budget constraint is a <b>simple straight line</b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-5" style="text-align: left">
+                    Then the solution to the utility-maximization problem:
+                </div>
+                <div class="col-md-7 well">
+                    <table class="table">
+                        <tr>
+                            <td>1.</td>
+                            <td class="fragment">Will involve strictly positive quantities <span rendered-math>X</span>
+                                and <span
+                                        rendered-math>Y</span>
+                                <br/>(an <b>interior solution</b>, not a <b>corner solution</b>)</td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td class="fragment">Can be found using the <b>Lagrangian method</b></td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td class="fragment">Is characterized by the conditions</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="fragment"><span rendered-math>\displaystyle{\frac{MU_x}{MU_y} = \frac{P_x}{P_y} }</span>
+                                &nbsp; &nbsp; &nbsp; and &nbsp; &nbsp; &nbsp; <span rendered-math>P_xx + P_yy = I</span></td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+            <p class="fragment">(i.e., is the point on the budget line that satisfies the tangency condition)</p>
+
+        </section>
+        <section>
+            <h2>The Simple Utility Maximization Problem: General Case</h2>
+            <hr/>
+            <p>You have a budget of <span rendered-math>I</span> and can buy units of <span rendered-math>X</span> and
+                <span rendered-math>Y</span> at prices <span rendered-math>P_x</span> and <span rendered-math>P_y</span>, respectively.</p>
+
+            <p>Your objective is to maximize your utility function is <span rendered-math>u(x,y)</span> given this constraint.</p>
+
+            <p>Assuming "more is better," you will spend your entire income on <span rendered-math>X</span> and
+                <span rendered-math>Y</span>.</p>
+            <hr/>
+            <div class="fragment">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3>In words...</h3>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3>Formally...</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>Find the maximum of the objective function<br/><span rendered-math>u(x,y)</span></p>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math width="30%"
+                                    style="text-align: right">\displaystyle{\max_{(x,y)}}</td>
+                                <td rendered-math>u(x,y)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>subject to the constraint<br/><span rendered-math>P_xx + P_yy = I</span>.</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <table style="width:100%">
+                            <tr class="fragment">
+                                <td rendered-math expression="\text{s. t.}" width="30%" style="text-align: right"></td>
+                                <td rendered-math expression="I - P_xx - P_yy = 0"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Using the Lagrangian Method: General Case</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    Objective Function:
+                </div>
+                <div class="col-md-9">
+                    <table style="width:100%">
+                        <tr class="fragment">
+                            <td rendered-math expression="\Lagr (x,y,P_x, P_y, I ,\lambda)" width="30%" style="text-align: right"></td>
+                            <td rendered-math expression="= u(x,y) + \lambda(I - P_xx - P_yy)"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    First Order Conditions:
+                </div>
+                <div class="col-md-9">
+                    <table style="width:100%">
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math expression="\displaystyle{\frac{\partial \Lagr(x,y,P_x, P_y, I ,\lambda)}{\partial x}}" width="30%"
+                                style="text-align: right"></td>
+                            <td rendered-math expression="\displaystyle{= \frac{\partial u(x,y)}{\partial x} - \lambda P_x}"></td>
+                            <td class="fragment" rendered-math expression="\displaystyle{\text{set}  = 0\Rightarrow \lambda = \frac{MU_x}{P_x}}"></td>
+                        </tr>
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr(x,y,P_x, P_y, I ,\lambda)}{\partial y}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{= \frac{\partial u(x,y)}{\partial y} - \lambda P_y}"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{\text{set}  = 0\Rightarrow  \lambda = \frac{MU_y}{P_y}}"></td>
+                        </tr>
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr(x,y,P_x, P_y, I ,\lambda)}{\partial \lambda}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td class="fragment" rendered-math expression="= I - P_xx - P_yy"></td>
+                            <td class="fragment" rendered-math expression="\text{set} = 0\Rightarrow P_xx + P_yy = I"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    Solve for <span rendered-math>x^*</span> and <span rendered-math>y^*</span>:
+                </div>
+                <div class="col-md-9">
+                    <div class="row" style="height:100px">
+                        <div class="col-md-6 fragment" style="text-align: left">
+                            Set <span rendered-math>\lambda</span> in the first two FOC's<br/>equal to each
+                            other:
+                        </div>
+                        <div class="col-md-6 fragment"><span rendered-math>\displaystyle{\lambda = \frac{MU_x}{P_x} = \frac{MU_y}{P_y} }</span><span rendered-math class="fragment">\displaystyle{ \Rightarrow \frac{MU_x}{MU_y} = \frac{P_x}{P_y}}</span></div>
+                    </div>
+                    <hr/>
+                    <p class="fragment">This condition, plus the budget constraint (and third FOC) <span rendered-math>P_xx + P_yy = I</span>, make two equations in two unknowns (<span
+                            rendered-math>x</span> and <span rendered-math>y</span>).</p>
+                </div>
+            </div>
+
+        </section>
+        <section>
+            <clicker-question>
+                <h2>We just found that in solving the Lagrangian,</h2>
+                <h2 rendered-math>\displaystyle{\lambda = \frac{MU_x}{P_x} = \frac{MU_y}{P_y}}</h2>
+                <h2>How should we interpret <span rendered-math>\lambda</span> intuitively?</h2>
+                <clicker-option letter="A">The change in optimal quantity of X or Y resulting from<br/>a $1 rise in price of that good.</clicker-option>
+                <clicker-option letter="B">The change in optimal quantity of X or Y resulting from<br/>a $1 rise in income.</clicker-option>
+                <clicker-option letter="C">The change in utility resulting from<br/>a $1 rise in the price of either X
+                    or Y.
+                </clicker-option>
+                <clicker-option letter="D">The change in utility resulting from<br/>a $1 rise in income.</clicker-option>
+            </clicker-question>
+
+        </section>
+        <section>
+            <h2>Simplest Cobb-Douglas: <span rendered-math>I = 12, P_x = 3, P_y = 2, u(x,y) = xy</span> </h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    Objective Function:
+                </div>
+                <div class="col-md-9">
+                    <table style="width:100%">
+                        <tr class="fragment">
+                            <td rendered-math expression="\Lagr" width="30%"
+                                style="text-align: right"></td>
+                            <td rendered-math expression="= xy + \lambda(12 - 3x - 2y)"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    First Order Conditions:
+                </div>
+                <div class="col-md-9">
+                    <table style="width:100%">
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr}{\partial x}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= y - 3\lambda}"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{\text{set}  = 0\Rightarrow \lambda = \frac{y}{3}}"></td>
+                        </tr>
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr}{\partial y}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{= x - 2\lambda}"></td>
+                            <td class="fragment" rendered-math
+                                expression="\displaystyle{\text{set}  = 0\Rightarrow  \lambda = \frac{x}{2}}"></td>
+                        </tr>
+                        <tr class="fragment" style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\frac{\partial \Lagr}{\partial \lambda}}"
+                                width="30%"
+                                style="text-align: right"></td>
+                            <td class="fragment" rendered-math expression="= 12 - 3x - 2y"></td>
+                            <td class="fragment" rendered-math
+                                expression="\text{set} = 0\Rightarrow 3x + 2y = 12"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    Solve for <span rendered-math>x^*</span> and <span rendered-math>y^*</span>:
+                </div>
+                <div class="col-md-9">
+                    <div class="row" style="height:100px">
+                        <div class="col-md-6 fragment" style="text-align: left">
+                            Set <span rendered-math>\lambda</span> in the first two FOC's<br/>equal to each other:
+                        </div>
+                        <div class="col-md-6 fragment" rendered-math>\displaystyle{\frac{y}{3} = \frac{x}{2} \Rightarrow \color{red}{y = \frac{3}{2}x}}</div>
+                    </div>
+                    <div class="row" style="height:100px">
+                        <div class="col-md-6 fragment" style="text-align: left">
+                            Substitute <span rendered-math>\color{red}{y = \frac{3}{2}x}</span><br/>into the third FOC:
+                        </div>
+                        <div class="col-md-6 fragment" rendered-math>\displaystyle{3x + 2\color{red}{\left(\frac{3}{2}x\right)} = 12 \Rightarrow \color{blue}{x^* =2}}
+
+                        </div>
+                    </div>
+                    <div class="row" style="height:100px">
+                        <div class="col-md-6 fragment" style="text-align: left; vertical-align: middle">
+                            Substitute <span rendered-math>\color{blue}{x^* = 2}</span> into <span
+                                rendered-math>\color{red}{y = \frac{3}{2}x}</span>:
+                        </div>
+                        <div class="col-md-6 fragment" rendered-math>\displaystyle{y^* = \frac{3}{2}\color{blue}{\left(2\right)} = 3}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Life Doesn't Have to Be Pain</h2>
+            <hr/>
+            <p>Recall that for a Cobb-Douglas utility function of the form <span rendered-math>u(x,y) = cx^ay^b</span>,<br/>the Marginal Rate of Substitution is <span rendered-math>\frac{ay}{bx}</span>.</p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <p>Step 1.<br/>Tangency Condition:</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math style="text-align: right; width: 30%">MRS_{x,y}</td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>\displaystyle{\frac{P_x}{P_y}}</td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math style="text-align: right; width: 30%">\displaystyle{\frac{ay}{bx}}</td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>\displaystyle{\frac{P_x}{P_y}}</td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math style="text-align: right; width: 30%; color:red">P_yy</td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>\displaystyle{\frac{b}{a}P_xx}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p>Step 2.<br/> Budget Constraint:</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math style="text-align: right; width: 30%">P_xx + \color{red}{P_yy}</td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>I</td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math style="text-align: right; width: 30%">\displaystyle{P_xx +
+                                \frac{b}{a}P_xx}
+                            </td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>I</td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math style="text-align: right; width: 30%">P_xx
+                            </td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>\displaystyle{\left(\frac{a}{a + b}\right)I}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4 fragment">
+                    <p>Step 3.<br/>Solve for <span rendered-math>P_yy</span>: </p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math style="text-align: right; width: 30%">P_yy</td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>\displaystyle{\frac{b}{a}P_xx}</td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math style="text-align: right; width: 30%">P_yy</td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>\displaystyle{\frac{b}{a}\left(\frac{a}{a + b}\right)I}</td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math style="text-align: right; width: 30%">P_yy</td>
+                            <td rendered-math>=</td>
+                            <td rendered-math>\displaystyle{\left(\frac{b}{a + b}\right)I}</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1>IMPORTANT FACT ABOUT COBB-DOUGLAS</h1>
+            <hr/>
+            <h2>For the Cobb-Douglas utility function <span rendered-math>u(x,y) = cx^ay^b</span></h2>
+            <h2>the consumer will spend fraction <span rendered-math>\displaystyle{\frac{a}{a+b}}</span> of her income on X</h2>
+            <h2>and the remaining fraction <span rendered-math>\displaystyle{\frac{b}{a+b}}</span> of her income on Y:</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment"><h2 rendered-math>\displaystyle{x^* = \left(\frac{a}{a+b}\right)\frac{I}{P_x}}</h2></div>
+                <div class="col-md-6 fragment"><h2 rendered-math>\displaystyle{y^* = \left(\frac{b}{a+b}\right)\frac{I}{P_y}}</h2></div>
+            </div>
+        </section>
+        <section>
+
+            {% raw %}
+                <model>
+
+                    <!-- Model parameters -->
+                    <param name="px" value="3"/>
+                    <param name="py" value="2"/>
+                    <param name="income" value="60"/>
+                    <param name="alpha" value="0.5"/>
+                    <param name="beta" value="0.5"/>
+                    <param name="a" value="4"/>
+                    <param name="b" value="3"/>
+                    <param name="xLabel" value="Good X" type="string"/>
+                    <param name="yLabel" value="Good Y" type="string"/>
+
+                    <!-- Model functions -->
+                    <function name="u" category="utility" form="CobbDouglas"></function>
+                    <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                    <h3>Putting it All Together: <span rendered-math expression="U(x,y) = x^ay^b = x^{ {{ params.alpha | number:2}} }y^{
+                                         {{ params.beta | number:2}} }"></span> </h3>
+                    <hr/>
+
+                    <div class="row">
+
+
+                        <div class="col-lg-8">
+                            <graph height="700" width="700">
+                                <axis dim="x" min="0" max="65" title="{{ params.xLabel }}"></axis>
+                                <axis dim="y" min="0" max="65" title="Good Y"></axis>
+                                <area fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).optimalIndifferenceCurve(params.income, params.px, params.py).preferred"
+                                      color="green"/>
+                                <curve fn="functions.u.setLevel([5,5])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([10,10])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([15,15])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([20,20])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([25,25])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([30,30])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([35,35])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([40,40])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([45,45])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([50,50])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([55,55])"
+                                       color="#EEEEEE"></curve>
+                                <curve fn="functions.u.setLevel([60,60])"
+                                       color="#EEEEEE"></curve>
+                                <area fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})" color="purple"></area>
+                                <line fn="functions.b"></line>
+                                <curve fn="functions.u.optimalIndifferenceCurve(params.income, params.px, params.py)"
+                                       color="green"></curve>
+                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
+                                       droplines="both" xlabel="x^*" ylabel="y^*"></point>
+
+                            </graph>
+
+
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="well">
+                                <h6>Budget Parameters</h6>
+                                <hr/>
+                                <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                                <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+                                <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
+                                <slider value="params.py" min="1" max="6" precision="0.25"></slider>
+                                <p>Income: ${{ params.income | number:0}}</p>
+                                <slider value="params.income" min="5" max="120" precision="1"></slider>
+                            </div>
+                            <hr/>
+                            <div class="well">
+                                <h6>Utility Parameters</h6>
+                                <hr/>
+                                <p rendered-math expression="a: {{ params.alpha | number:2}}"></p>
+                                <slider value="params.alpha" min="0" max="1" precision="0.05"></slider>
+                                <p rendered-math expression="b: {{ params.beta | number:2}}"></p>
+                                <slider value="params.beta" min="0" max="1" precision="0.05"></slider>
+                            </div>
+                        </div>
+                    </div>
+                </model>
+                {% endraw %}
+        </section>
+
+    </section>
+
+
+
+    <section>
+        <h1>Summary</h1>
+        <hr/>
+        <p class="fragment">Object: find the point in the budget set<br/>such that no other point is both preferred and affordable.</p>
+        <p class="fragment">Approach: compare the consumer's willingness to trade off between X and Y (the MRS) with the market's willingness to trade off between them (the price ratio)</p>
+        <p class="fragment">We solved for the optimal consumption choice with calculus (the Lagrangian method)</p>
+        <p class="fragment">An <b>interior solution</b> under ideal ("regular") conditions is characterized by the tangency condition
+            <span rendered-math>MRS_{x,y} = \frac{P_x}{P_y}</span> and the budget constraint <span rendered-math>P_xx + P_yy = I</span>.</p>
+        <p class="fragment">In the special case of Cobb-Douglas preferences, consumers will spend a constant fraction of their income on each good, regardless of the price; and that fraction is determined by the exponents on the function.</p>
+    </section>
+
+    <section>
+        <h1>Next time:</h1>
+        <hr/>
+        <h2>When Calculus Doesn't Work</h2>
+        <p>Perfect Complements</p>
+        <p>Perfect Substitutes</p>
+        <p>Quasilinear Utility Functions</p>
+        <p>Kinked Budget Constraints</p>
+        <hr/>
+        <h2>Comparative Statics and Demand</h2>
+        <p>What happens when you change prices and income?</p>
+    </section>
+
+
+
+
+{% endblock %}

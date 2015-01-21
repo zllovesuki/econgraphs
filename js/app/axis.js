@@ -12,7 +12,8 @@ kgAngular.directive('axis', function () {
             GraphCtrl.addAxis(scope.dim, {
                 min: scope.min(),
                 max: scope.max(),
-                title: scope.title
+                title: scope.title,
+                ticks: scope.ticks()
             });
         }
 
@@ -26,7 +27,7 @@ kgAngular.directive('axis', function () {
         link: link,
         restrict: 'E',
         require: '^graph',
-        scope: {dim: '@', min: '&', max: '&', title: '@'}
+        scope: {dim: '@', min: '&', max: '&', title: '@', ticks: '&'}
     }
 
 });
