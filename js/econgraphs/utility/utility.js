@@ -122,27 +122,38 @@ econgraphs.functions.utility = {
 
         */
 
-        u.priceConsumptionCurve = function (pccParams,xDomain,yDomain,samplePoints) {
+        u.priceConsumptionCurve = function (pccParams,samplePoints) {
 
-            var optimalBundle,
-                isGoodX = ('y' != pccParams['good']),
-                minPrice = pccParams['minPrice'] || 0,
-                maxPrice = pccParams['maxPrice'] || 50,
-                income = pccParams[income],
-                px = isGoodX ? minPrice : pccParams['otherPrice'],
-                py = isGoodX ? pccParams['otherPrice'] : minPrice,
-                step = calculateStep(minPrice,maxPrice,samplePoints),
-                points = [];
+            return {
 
-            for(var i=0; i<samplePoints; i++) {
-                optimalBundle = u.optimalBundle(income,px,py);
-                if (onGraph(optimalBundle,xDomain,yDomain)) {
-                    points.push(u.optimalBundle(income, px, py));
+                points: function(xDomain,yDomain){
+
+                var optimalBundle,
+                    isGoodX = ('y' != pccParams['good']),
+                    minPrice = pccParams['minPrice'] || 0,
+                    maxPrice = pccParams['maxPrice'] || 100,
+                    income = pccParams['income'],
+                    samplePoints = pccParams['samplePoints'] || 51,
+                    px = isGoodX ? minPrice : pccParams['otherPrice'],
+                    py = isGoodX ? pccParams['otherPrice'] : minPrice,
+                    step = calculateStep(minPrice, maxPrice, samplePoints),
+                    points = [];
+
+                for (var i = 0; i < samplePoints; i++) {
+                    optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income,px,py)[1]};
+                    if (onGraph(optimalBundle, xDomain, yDomain)) {
+                        points.push(optimalBundle);
+                    }
+                    isGoodX ? px += step : py += step;
                 }
-                (good == 'x') ? px += step : py += step;
+
+                return points;
+
             }
 
-            return points;
+            }
+
+
 
         };
 

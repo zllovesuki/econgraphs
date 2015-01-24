@@ -6,6 +6,11 @@ function test(n) {
     return n + 1;
 }
 
+function calculateStep(min,max,samplePoints) {
+    samplePoints = samplePoints || 51; // default to
+    return min + (max + min)/2*(samplePoints - 1);
+}
+
 function inverse(n) {
     if(n == 'undefined') {
         return 0;

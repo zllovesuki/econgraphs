@@ -149,6 +149,34 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
+    this.configLabel = function(labelParams) {
+
+
+        var width = labelParams['width'] || 100,
+            xOffset = labelParams['xOffset'] || 0,
+            yOffset = labelParams['yOffset'] || 0,
+            xCoord = labelParams['point']['x'] || labelParams['point'][0],
+            yCoord = labelParams['point']['y'] || labelParams['point'][1],
+            x = labelParams['graph'].x(xCoord) + xOffset,
+            y = labelParams['graph'].y(yCoord) + yOffset - 20,
+            align = labelParams['align'] || 'left';
+        if(align == 'right') {
+            x -= width;
+        }
+        if(align == 'center') {
+            x -= 0.5*width;
+        }
+        return {
+            html: labelParams['html'],
+            x: x,
+            y: y,
+            align: align,
+            width: width,
+            math: true,
+            size: '16pt'
+        }
+    };
+
     this.drawDivs = function(data,divs) {
 
         divs = divs.data(data);
