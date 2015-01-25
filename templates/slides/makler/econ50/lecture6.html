@@ -102,17 +102,28 @@
                     <td><b>Consumer Choice Framework</b>: Preferences,<br/>Indifference Curves, and Utility Functions</td>
                     <td>Chapter 3</td>
                 </tr>
-                <tr class="fragment" style="background-color:lightgreen">
+                <tr class="fragment">
                     <td>Week 3</td>
                     <td><b>Optimal Choice:</b> Budget Constraints;<br/><span rendered-math>(x^*, y^*)</span> as a function of
-                        <span rendered-math>(P_x, P_y, I)</span>.</td>
+                        <span rendered-math>(P_x, P_y, I)</span> when calculus works</td>
                     <td>4.1-4.3</td>
                 </tr>
-                <tr class="fragment">
+                <tr class="fragment" style="background-color:lightgreen">
+                    <td></td>
+                    <td>and when calculus doesn't work (kinks and corners).
+                    </td>
+                    <td></td>
+                </tr>
+                <tr class="fragment" style="background-color:lightgreen">
                     <td>Week 4</td>
-                    <td><b>Comparative Statics:</b> Deriving the Demand Curve; <br/>Income and Subsitution Effects; <br/>Consumer
-                        Surplus; Market Demand</td>
-                    <td>5.1-5.4</td>
+                    <td><b>Comparative Statics:</b> Deriving the Demand Curve; <br/>Income and Subsitution Effects;</td>
+                    <td>5.1-5.2</td>
+                </tr>
+                <tr class="fragment">
+                    <td></td>
+                    <td>Consumer Surplus; Market Demand
+                    </td>
+                    <td>5.3-5.4</td>
                 </tr>
                 <tr class="fragment">
                     <td>Week 5</td>
@@ -137,8 +148,6 @@
                 <param name="income" value="60"/>
                 <param name="alpha" value="0.5"/>
                 <param name="beta" value="0.5"/>
-                <param name="a" value="4"/>
-                <param name="b" value="3"/>
                 <param name="xLabel" value="Good X" type="string"/>
                 <param name="yLabel" value="Good Y" type="string"/>
 
@@ -146,16 +155,12 @@
                 <function name="u" category="utility" form="CobbDouglas"></function>
                 <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
 
-                <h3>Cobb-Douglas Demand: <span rendered-math expression="U(x,y) = x^ay^b = x^{ {{ params.alpha | number:2}} }y^{
-                                         {{ params.beta | number:2}} }"></span></h3>
+                <p>Last Lecture: Cobb-Douglas Demand: <span rendered-math>u(x,y) = x^ay^b</span> <span class="fragment" rendered-math> \Rightarrow x^* =
+                            \left(\frac{a}{a+b}\right)\frac{I}{P_x},y^* = \left(\frac{a}{a+b}\right)\frac{I}{P_y}</span></p>
                 <hr/>
-                <div class="row">
-                    <div class="col-md-6">
 
-                    </div>
-                </div>
 
-                <div class="row">
+                <div class="row fragment">
 
 
                     <div class="col-md-8">
@@ -266,6 +271,12 @@
                     <td rendered-math>?</td>
                 </tr>
             </table>
+        </section>
+        <section>
+            <h1>This lecture:</h1>
+            <hr/>
+            <h2>Derive the demand functions for cases when calculus doesn't work</h2>
+            <h2>Comparative statics: how does demand change with changes in prices and income?</h2>
         </section>
     </section>
     <section>
@@ -460,8 +471,6 @@
         <section>
             {% raw %}
             <model>
-
-
 
                 <!-- Model parameters -->
                 <param name="px" value="3"/>
