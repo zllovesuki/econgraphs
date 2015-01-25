@@ -105,7 +105,7 @@
                 <tr class="fragment" style="background-color:lightgreen">
                     <td>Week 3</td>
                     <td><b>Optimal Choice:</b> Budget Constraints;<br/><span rendered-math>(x^*, y^*)</span> as a function of
-                        <span rendered-math>(p_x, p_y, I)</span>.</td>
+                        <span rendered-math>(P_x, P_y, I)</span>.</td>
                     <td>4.1-4.3</td>
                 </tr>
                 <tr class="fragment">
@@ -123,6 +123,147 @@
                     <td>Week 6</td>
                     <td>Midterm! ...and on to producer theory</td>
                     <td/>
+                </tr>
+            </table>
+        </section>
+        <section>
+
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="beta" value="0.5"/>
+                <param name="a" value="4"/>
+                <param name="b" value="3"/>
+                <param name="xLabel" value="Good X" type="string"/>
+                <param name="yLabel" value="Good Y" type="string"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <h3>Cobb-Douglas Demand: <span rendered-math expression="U(x,y) = x^ay^b = x^{ {{ params.alpha | number:2}} }y^{
+                                         {{ params.beta | number:2}} }"></span></h3>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-6">
+
+                    </div>
+                </div>
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="65" title="{{ params.xLabel }}"></axis>
+                            <axis dim="y" min="0" max="65" title="Good Y"></axis>
+                            <area fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).optimalIndifferenceCurve(params.income, params.px, params.py).preferred"
+                                  color="green"/>
+                            <curve fn="functions.u.setLevel([5,5])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([10,10])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([15,15])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([20,20])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([25,25])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([30,30])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([35,35])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([40,40])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([45,45])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([50,50])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([55,55])"
+                                   color="#AAAAAA"></curve>
+                            <curve fn="functions.u.setLevel([60,60])"
+                                   color="#AAAAAA"></curve>
+                            <area fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"
+                                  color="purple"></area>
+                            <line fn="functions.b"></line>
+                            <curve fn="functions.u.optimalIndifferenceCurve(params.income, params.px, params.py)"
+                                   color="green"></curve>
+                            <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
+                                   droplines="both" xlabel="x^*" ylabel="y^*"></point>
+
+                        </graph>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <h6>Budget Parameters</h6>
+                            <hr/>
+                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                            <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+                            <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
+                            <slider value="params.py" min="1" max="6" precision="0.25"></slider>
+                            <p>Income: ${{ params.income | number:0}}</p>
+                            <slider value="params.income" min="5" max="120" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <div class="well">
+                            <h6>Utility Parameters</h6>
+                            <hr/>
+                            <p rendered-math expression="a: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0" max="1" precision="0.05"></slider>
+                            <p rendered-math expression="b: {{ params.beta | number:2}}"></p>
+                            <slider value="params.beta" min="0" max="1" precision="0.05"></slider>
+                        </div>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>Review and Preview: <span rendered-math>(x^*,y^*)</span> as a function of
+                <span rendered-math>(P_x, P_y, I)</span></h2>
+            <table class="table">
+                <tr style="background-color:darkblue">
+                    <td style="color: white" >Functional Form</td>
+                    <td style="color: white" rendered-math>u(x,y)</td>
+                    <td style="color: white" rendered-math>x^*(P_x, P_y, I)</td>
+                    <td style="color: white" rendered-math>y^*(P_x, P_y, I)</td>
+                </tr>
+                <tr>
+                    <td>Cobb-Douglas</td>
+                    <td rendered-math>cx^ay^b</td>
+                    <td rendered-math>\displaystyle{\left(\frac{a}{a+b}\right)\frac{I}{P_x}}</td>
+                    <td rendered-math>\displaystyle{\left(\frac{b}{a+b}\right)\frac{I}{P_y}}</td>
+                </tr>
+                <tr>
+                    <td>(in section)</td>
+                    <td rendered-math>\sqrt x + \sqrt y</td>
+                    <td rendered-math>\displaystyle{\left(\frac{P_y}{P_x + P_y}\right)\frac{I}{P_x}}</td>
+                    <td rendered-math>\displaystyle{\left(\frac{P_x}{P_x + P_y}\right)\frac{I}{P_y}}</td>
+                </tr>
+                <tr>
+                    <td>Perfect Substitutes</td>
+                    <td rendered-math>ax + by</td>
+                    <td rendered-math>?</td>
+                    <td rendered-math>?</td>
+                </tr>
+                <tr>
+                    <td>Perfect Complements</td>
+                    <td rendered-math>\min(ax,by)</td>
+                    <td rendered-math>?</td>
+                    <td rendered-math>?</td>
+                </tr>
+                <tr>
+                    <td>Quasilinear</td>
+                    <td rendered-math>v(x) + y</td>
+                    <td rendered-math>?</td>
+                    <td rendered-math>?</td>
                 </tr>
             </table>
         </section>
@@ -272,6 +413,19 @@
             </model>
             {% endraw %}
         </section>
+    </section>
+    <section>
+        <section>
+            <h1>Perfect Substitutes</h1>
+            <hr/>
+            <h2>We are perfectly willing to substitute one good for another (not always in 1:1 ratio)</h2>
+            <hr/>
+            <h2 class="fragment">Examples: 1 Coke or 1 Pepsi, 1 Dime or 2 Nickels</h2>
+            <hr/>
+            <h2 class="fragment">The rate at which we're willing to exchange one for the other is <b>constant</b>.</h2>
+            <hr/>
+            <h2 class="fragment">Functional form: <span rendered-math>u(x,y) = ax + by</span></h2>
+        </section>
         <section>
             <clicker-question>
                 <h2>Suppose <span rendered-math>u(x,y) = 2x + y</span>.</h2>
@@ -321,7 +475,7 @@
                 <function name="u" category="utility" form="PerfectSubstitutes"></function>
                 <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
 
-                <h2>Perfect Complements: <span rendered-math align="center" style="{font-size: 14pt}"
+                <h2>Perfect Substitutes: <span rendered-math align="center" style="{font-size: 14pt}"
                                                expression="U(x,y) = ax + by = {{ params.a | number:1}}x + {{ params.b | number:1}}y"></span>
                 </h2>
                 <hr/>
@@ -388,6 +542,20 @@
                 </div>
             </model>
             {% endraw %}
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Perfect Complements</h1>
+            <hr/>
+            <h2>We always want to consume goods together</h2>
+            <h2>in a particular proportion</h2>
+            <hr/>
+            <h2 class="fragment">Examples: 2 creams: 1 coffee, 1 left shoe: 1 right shoe</h2>
+            <hr/>
+            <h2 class="fragment">Having additional units of either, beyond our desired ratio, does not raise our utility.</h2>
+            <hr/>
+            <h2 class="fragment">Functional form: <span rendered-math>u(x,y) = \min(ax,by)</span></h2>
         </section>
         <section>
             <clicker-question>
@@ -528,99 +696,7 @@
 
     </section>
     <section>
-        <section>
 
-            {% raw %}
-                <model>
-
-                    <!-- Model parameters -->
-                    <param name="px" value="3"/>
-                    <param name="py" value="2"/>
-                    <param name="income" value="60"/>
-                    <param name="alpha" value="0.5"/>
-                    <param name="beta" value="0.5"/>
-                    <param name="a" value="4"/>
-                    <param name="b" value="3"/>
-                    <param name="xLabel" value="Good X" type="string"/>
-                    <param name="yLabel" value="Good Y" type="string"/>
-
-                    <!-- Model functions -->
-                    <function name="u" category="utility" form="CobbDouglas"></function>
-                    <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
-
-                    <h3>Putting it All Together: <span rendered-math expression="U(x,y) = x^ay^b = x^{ {{ params.alpha | number:2}} }y^{
-                                         {{ params.beta | number:2}} }"></span> </h3>
-                    <hr/>
-
-                    <div class="row">
-
-
-                        <div class="col-lg-8">
-                            <graph height="700" width="700">
-                                <axis dim="x" min="0" max="65" title="{{ params.xLabel }}"></axis>
-                                <axis dim="y" min="0" max="65" title="Good Y"></axis>
-                                <area fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).optimalIndifferenceCurve(params.income, params.px, params.py).preferred"
-                                      color="green"/>
-                                <curve fn="functions.u.setLevel([5,5])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([10,10])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([15,15])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([20,20])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([25,25])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([30,30])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([35,35])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([40,40])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([45,45])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([50,50])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([55,55])"
-                                       color="#AAAAAA"></curve>
-                                <curve fn="functions.u.setLevel([60,60])"
-                                       color="#AAAAAA"></curve>
-                                <area fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})" color="purple"></area>
-                                <line fn="functions.b"></line>
-                                <curve fn="functions.u.optimalIndifferenceCurve(params.income, params.px, params.py)"
-                                       color="green"></curve>
-                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
-                                       droplines="both" xlabel="x^*" ylabel="y^*"></point>
-
-                            </graph>
-
-
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="well">
-                                <h6>Budget Parameters</h6>
-                                <hr/>
-                                <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
-                                <slider value="params.px" min="1" max="6" precision="0.25"></slider>
-                                <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
-                                <slider value="params.py" min="1" max="6" precision="0.25"></slider>
-                                <p>Income: ${{ params.income | number:0}}</p>
-                                <slider value="params.income" min="5" max="120" precision="1"></slider>
-                            </div>
-                            <hr/>
-                            <div class="well">
-                                <h6>Utility Parameters</h6>
-                                <hr/>
-                                <p rendered-math expression="a: {{ params.alpha | number:2}}"></p>
-                                <slider value="params.alpha" min="0" max="1" precision="0.05"></slider>
-                                <p rendered-math expression="b: {{ params.beta | number:2}}"></p>
-                                <slider value="params.beta" min="0" max="1" precision="0.05"></slider>
-                            </div>
-                        </div>
-                    </div>
-                </model>
-                {% endraw %}
-        </section>
 
     </section>
 
