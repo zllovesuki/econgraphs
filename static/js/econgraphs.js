@@ -342,27 +342,34 @@ econgraphs.functions.utility = {
 
         */
 
-        u.engelCurve = function(engelParams,xDomain,yDomain,samplePoints) {
+        u.engelCurve = function(engelParams) {
 
-            var quantity,
-                isGoodX = ('y' != engelParams['good']),
-                minIncome = engelParams['minIncome'] || 0,
-                maxIncome = engelParams['maxIncome'] || 50,
-                px = engelParams['px'],
-                py = engelParams['py'],
-                step = calculateStep(minIncome, maxIncome, samplePoints),
-                points = [],
-                income = minIncome;
+            return {
 
-            for (var i = 0; i < samplePoints; i++) {
-                quantity = isGoodX ? u.optimalBundle(income, px, py).x : u.optimalBundle(income, px, py).y;
-                if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
-                    points.push({x: quantity, y: income});
+                points: function (xDomain, yDomain) {
+
+                    var quantity,
+                        isGoodX = ('y' != engelParams['good']),
+                        minIncome = engelParams['minIncome'] || 0,
+                        maxIncome = engelParams['maxIncome'] || 50,
+                        px = engelParams['px'],
+                        py = engelParams['py'],
+                        income = minIncome,
+                        samplePoints = engelParams['samplePoints'] || 51,
+                        step = calculateStep(minIncome, maxIncome, samplePoints),
+                        points = [];
+
+                    for (var i = 0; i < samplePoints; i++) {
+                        quantity = isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
+                        if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
+                            points.push({x: quantity, y: income});
+                        }
+                        income += step;
+                    }
+
+                    return points;
                 }
-                income += step;
             }
-
-            return points;
 
         };
 
