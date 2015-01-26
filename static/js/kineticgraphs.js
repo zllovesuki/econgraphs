@@ -8,7 +8,7 @@ function test(n) {
 
 function calculateStep(min,max,samplePoints) {
     samplePoints = samplePoints || 51; // default to
-    return min + (max + min)/2*(samplePoints - 1);
+    return(max - min)/(samplePoints - 1);
 }
 
 function inverse(n) {

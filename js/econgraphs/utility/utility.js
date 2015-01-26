@@ -122,39 +122,35 @@ econgraphs.functions.utility = {
 
         */
 
-        u.priceConsumptionCurve = function (pccParams,samplePoints) {
+        u.priceConsumptionCurve = function (pccParams) {
 
             return {
 
-                points: function(xDomain,yDomain){
+                points: function (xDomain, yDomain) {
 
-                var optimalBundle,
-                    isGoodX = ('y' != pccParams['good']),
-                    minPrice = pccParams['minPrice'] || 0,
-                    maxPrice = pccParams['maxPrice'] || 100,
-                    income = pccParams['income'],
-                    samplePoints = pccParams['samplePoints'] || 51,
-                    px = isGoodX ? minPrice : pccParams['otherPrice'],
-                    py = isGoodX ? pccParams['otherPrice'] : minPrice,
-                    step = calculateStep(minPrice, maxPrice, samplePoints),
-                    points = [];
+                    var optimalBundle,
+                        isGoodX = ('y' != pccParams['good']),
+                        minPrice = pccParams['minPrice'] || 0,
+                        maxPrice = pccParams['maxPrice'] || 100,
+                        income = pccParams['income'],
+                        samplePoints = pccParams['samplePoints'] || 51,
+                        px = isGoodX ? minPrice : pccParams['otherPrice'],
+                        py = isGoodX ? pccParams['otherPrice'] : minPrice,
+                        step = calculateStep(minPrice, maxPrice, samplePoints),
+                        points = [];
 
-                for (var i = 0; i < samplePoints; i++) {
-                    optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income,px,py)[1]};
-                    if (onGraph(optimalBundle, xDomain, yDomain)) {
-                        points.push(optimalBundle);
+                    for (var i = 0; i < samplePoints; i++) {
+                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                        if (onGraph(optimalBundle, xDomain, yDomain)) {
+                            points.push(optimalBundle);
+                        }
+                        isGoodX ? px += step : py += step;
                     }
-                    isGoodX ? px += step : py += step;
+
+                    return points;
+
                 }
-
-                return points;
-
             }
-
-            }
-
-
-
         };
 
         /*
@@ -162,36 +158,42 @@ econgraphs.functions.utility = {
          Find the income expansion path for a given set of prices.
          The incomeExpansionParams object should have the following structure:
 
-         {
-            minIncome: the minimum income to evaluate (0 by default)
-            maxIncome: the maximum income to evaluate (50 by default)
-            px: price of x
-            py: price of y
-         }
+             {
+                minIncome: the minimum income to evaluate (0 by default)
+                maxIncome: the maximum income to evaluate (50 by default)
+                px: price of x
+                py: price of y
+             }
 
          */
 
-        u.incomeExpansionPath = function (incomeExpansionParams, xDomain, yDomain, samplePoints) {
+        u.incomeConsumptionCurve = function (iccParams) {
 
-            var optimalBundle,
-                minIncome = incomeExpansionParams['minIncome'] || 0,
-                maxIncome = incomeExpansionParams['maxIncome'] || 50,
-                px = incomeExpansionParams['px'],
-                py = incomeExpansionParams['py'],
-                step = calculateStep(minIncome, maxIncome, samplePoints),
-                points = [],
-                income = minIncome;
+            return {
 
-            for (var i = 0; i < samplePoints; i++) {
-                optimalBundle = u.optimalBundle(income, px, py);
-                if (onGraph(optimalBundle, xDomain, yDomain)) {
-                    points.push(u.optimalBundle(income, px, py));
+                points: function (xDomain, yDomain) {
+
+                    var optimalBundle,
+                        minIncome = iccParams['minIncome'] || 0,
+                        maxIncome = iccParams['maxIncome'] || 50,
+                        px = iccParams['px'],
+                        py = iccParams['py'],
+                        income = minIncome,
+                        samplePoints = iccParams['samplePoints'] || 51,
+                        step = calculateStep(minIncome, maxIncome, samplePoints),
+                        points = [];
+
+                    for (var i = 0; i < samplePoints; i++) {
+                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                        if (onGraph(optimalBundle, xDomain, yDomain)) {
+                            points.push(optimalBundle);
+                        }
+                        income += step;
+                    }
+
+                    return points;
                 }
-                income += step;
             }
-
-            return points;
-
         };
 
         /*
@@ -246,35 +248,42 @@ econgraphs.functions.utility = {
              }
 
          */
-        u.demandCurve = function(demandParams,xDomain,yDomain, samplePoints) {
+        u.demandCurve = function(demandParams) {
 
-            var price,
-                quantity,
-                isGoodX = ('y' != demandParams['good']),
-                minPrice = demandParams['minPrice'] || 0,
-                maxPrice = demandParams['maxPrice'] || 50,
-                income = demandParams[income],
-                px = isGoodX ? minPrice : demandParams['otherPrice'],
-                py = isGoodX ? demandParams['otherPrice'] : minPrice,
-                step = calculateStep(minPrice, maxPrice, samplePoints),
-                points = [];
+            return {
 
-            for (var i = 0; i < samplePoints; i++) {
-                if(isGoodX) {
-                    price = px;
-                    quantity = u.optimalBundle(income, px, py).x;
-                    px += step;
-                } else {
-                    price = py;
-                    quantity = u.optimalBundle(income, px, py).y;
-                    py += step;
-                }
-                if (onGraph({x: quantity, y: price}, xDomain, yDomain)) {
-                    points.push({x: quantity, y: price});
+                points: function (xDomain, yDomain) {
+
+                    var price,
+                        quantity,
+                        isGoodX = ('y' != demandParams['good']),
+                        minPrice = demandParams['minPrice'] || 0,
+                        maxPrice = demandParams['maxPrice'] || 50,
+                        income = demandParams['income'],
+                        px = isGoodX ? minPrice : demandParams['otherPrice'],
+                        py = isGoodX ? demandParams['otherPrice'] : minPrice,
+                        samplePoints = demandParams['samplePoints'] || 51,
+                        step = calculateStep(minPrice, maxPrice, samplePoints),
+                        points = [];
+
+                    for (var i = 0; i < samplePoints; i++) {
+                        if (isGoodX) {
+                            price = px;
+                            quantity = u.optimalBundle(income, px, py)[0];
+                            px += step;
+                        } else {
+                            price = py;
+                            quantity = u.optimalBundle(income, px, py)[1];
+                            py += step;
+                        }
+                        if (onGraph({x: quantity, y: price}, xDomain, yDomain)) {
+                            points.push({x: quantity, y: price});
+                        }
+                    }
+
+                    return points;
                 }
             }
-
-            return points;
         };
 
         // Find the lowest possible cost for a given level of utility, given px and py

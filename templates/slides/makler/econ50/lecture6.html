@@ -138,6 +138,24 @@
             </table>
         </section>
         <section>
+            <h1>REMEMBER: COBB-DOUGLAS DEMAND</h1>
+            <hr/>
+            <h2>For the Cobb-Douglas utility function <span rendered-math>u(x,y) = cx^ay^b</span></h2>
+
+            <h2>the consumer will spend fraction <span rendered-math>\displaystyle{\frac{a}{a+b}}</span> of her income
+                on X</h2>
+
+            <h2>and the remaining fraction <span rendered-math>\displaystyle{\frac{b}{a+b}}</span> of her income on Y:
+            </h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment"><h2 rendered-math>\displaystyle{x^* =
+                    \left(\frac{a}{a+b}\right)\frac{I}{P_x}}</h2></div>
+                <div class="col-md-6 fragment"><h2 rendered-math>\displaystyle{y^* =
+                    \left(\frac{b}{a+b}\right)\frac{I}{P_y}}</h2></div>
+            </div>
+        </section>
+        <section>
 
             {% raw %}
             <model>
@@ -155,14 +173,11 @@
                 <function name="u" category="utility" form="CobbDouglas"></function>
                 <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
 
-                <p>Last Lecture: Cobb-Douglas Demand: <span rendered-math>u(x,y) = x^ay^b</span> <span class="fragment" rendered-math> \Rightarrow x^* =
+                <p>Cobb-Douglas Demand: <span rendered-math>u(x,y) = x^ay^b \Rightarrow x^* =
                             \left(\frac{a}{a+b}\right)\frac{I}{P_x},y^* = \left(\frac{a}{a+b}\right)\frac{I}{P_y}</span></p>
                 <hr/>
 
-
-                <div class="row fragment">
-
-
+                <div class="row">
                     <div class="col-md-8">
                         <graph height="700" width="700">
                             <axis dim="x" min="0" max="65" title="{{ params.xLabel }}"></axis>
@@ -231,8 +246,7 @@
             {% endraw %}
         </section>
         <section>
-            <h2>Review and Preview: <span rendered-math>(x^*,y^*)</span> as a function of
-                <span rendered-math>(P_x, P_y, I)</span></h2>
+            <h2>Demand Functions for Different Kinds of Utility</h2>
             <table class="table">
                 <tr style="background-color:darkblue">
                     <td style="color: white" >Functional Form</td>
@@ -247,7 +261,7 @@
                     <td rendered-math>\displaystyle{\left(\frac{b}{a+b}\right)\frac{I}{P_y}}</td>
                 </tr>
                 <tr>
-                    <td>(in section)</td>
+                    <td>Weak Substitutes (e.g.)</td>
                     <td rendered-math>\sqrt x + \sqrt y</td>
                     <td rendered-math>\displaystyle{\left(\frac{P_y}{P_x + P_y}\right)\frac{I}{P_x}}</td>
                     <td rendered-math>\displaystyle{\left(\frac{P_x}{P_x + P_y}\right)\frac{I}{P_y}}</td>
@@ -303,50 +317,32 @@
             </clicker-question>
         </section>
         <section>
-            <clicker-question>
-                <h2>Could you answer the previous question by taking the derivative of <span rendered-math>y = 9 - (x + 1)^2</span> and setting it equal to zero?</h2>
-                <clicker-option letter="A">Yes</clicker-option>
-                <clicker-option letter="B">No</clicker-option>
-            </clicker-question>
-        </section>
-        <section>
-            <clicker-question>
-                <h2>Suppose <span rendered-math>y = 9 - (x - 1)^2</span>.</h2>
-                <h2>What is the maximum value of <span rendered-math>y</span> if <span rendered-math>x \ge 0</span>?</h2>
-                <clicker-option letter="A">9</clicker-option>
-                <clicker-option letter="B">8</clicker-option>
-                <clicker-option letter="C">2</clicker-option>
-                <clicker-option letter="D">0</clicker-option>
-            </clicker-question>
-        </section>
-        <section>
-            <clicker-question>
-                <h2>Could you answer the previous question by taking the derivative of <span rendered-math>y = 9 - (x - 1)^2</span>
-                    and setting it equal to zero?</h2>
-                <clicker-option letter="A">Yes</clicker-option>
-                <clicker-option letter="B">No</clicker-option>
-            </clicker-question>
-        </section>
-        <section>
-            <clicker-question>
-                <h2>Suppose <span rendered-math>y = 9 - |x - 1|</span>. </h2>
-
-                <h2>What is the maximum value of <span rendered-math>y</span> if <span rendered-math>x \ge 0</span>?</h2>
-                <clicker-option letter="A">9</clicker-option>
-                <clicker-option letter="B">8</clicker-option>
-                <clicker-option letter="C">2</clicker-option>
-                <clicker-option letter="D">0</clicker-option>
-            </clicker-question>
-        </section>
-        <section>
-            <clicker-question>
-                <h2>Suppose <span rendered-math>y = 9 - |x + 1|</span>. </h2>
-                <h2>What is the maximum value of <span rendered-math>y</span> if <span rendered-math>x \ge 0</span>?</h2>
-                <clicker-option letter="A">9</clicker-option>
-                <clicker-option letter="B">8</clicker-option>
-                <clicker-option letter="C">2</clicker-option>
-                <clicker-option letter="D">0</clicker-option>
-            </clicker-question>
+            <h2>Examples where calculus</h2>
+            <h2>(specifically, taking the derivative and setting it equal to zero)</h2>
+            <h2>won't find the maximum for <span rendered-math>x \ge 0</span>:</h2>
+            <hr/>
+            <table class="table">
+                <tr style="background-color:darkblue; color:white">
+                    <td>Example</td>
+                    <td>Why Calculus Fails</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math>y = 9 - (x + 1)^2</td>
+                    <td>Derivative equal to zero when <span rendered-math>x < 0</span>;<br/>maximum occurs at the nearest "corner" of the constrained set.</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math>y = 9 - x</td>
+                    <td class="fragment">Derivative never equal to zero (the function is always decreasing);<br/>maximum occurs at the lowest "corner" of the constrained set.</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math>y = 9 - \left|x - 1\right|</td>
+                    <td class="fragment">Derivative doesn't exist at the maximum; solution occurs at an interior "kink."</td>
+                </tr>
+                <tr class="fragment">
+                    <td rendered-math>y = 9 + (x-1)^2</td>
+                    <td class="fragment">Derivative equal to zero at the minimum, not maximum.</td>
+                </tr>
+            </table>
         </section>
         <section>
             <h1>KINDS OF KINKS AND CORNERS<br/>YOU'LL ENCOUNTER IN THIS COURSE</h1>
@@ -423,6 +419,7 @@
 
             </model>
             {% endraw %}
+            <div class="fragment"><b>The logic of MRS and the price ratio holds true even in non-smooth cases.</b></div>
         </section>
     </section>
     <section>
@@ -552,6 +549,75 @@
             </model>
             {% endraw %}
         </section>
+        <section>
+            <h1>DEMAND FOR PERFECT SUBSTITUTES</h1>
+            <hr/>
+            <h2>For the perfect-substitute utility function <span rendered-math>u(x,y) = ax + by</span></h2>
+
+            <h2>the consumer will spend all her income on X if <span rendered-math>\frac{a}{b} > \frac{P_x}{P_y}</span>,</h2>
+
+            <h2>the consumer will spend all her income on Y if <span rendered-math>\frac{a}{b} < \frac{P_x}{P_y}</span>,</h2>
+
+            <h2>and be indifferent between all possible combinations if <span rendered-math>\frac{a}{b} = \frac{P_x}{P_y}</span></h2>
+        </section>
+        <section>
+            <h2>Demand Functions for Different Kinds of Utility</h2>
+            <table class="table">
+                <tr style="background-color:darkblue; color:white">
+                    <td>Functional Form</td>
+                    <td rendered-math>u(x,y)</td>
+                    <td>[Condition]</td>
+                    <td rendered-math>x^*(P_x, P_y, I)</td>
+                    <td rendered-math>y^*(P_x, P_y, I)</td>
+                </tr>
+                <tr>
+                    <td>Cobb-Douglas</td>
+                    <td rendered-math>cx^ay^b</td>
+                    <td></td>
+                    <td rendered-math>\left(\frac{a}{a+b}\right)\frac{I}{P_x}</td>
+                    <td rendered-math>\left(\frac{b}{a+b}\right)\frac{I}{P_y}</td>
+                </tr>
+                <tr>
+                    <td>Weak Substitutes (e.g.)</td>
+                    <td rendered-math>\sqrt x + \sqrt y</td>
+                    <td></td>
+                    <td rendered-math>\left(\frac{P_y}{P_x + P_y}\right)\frac{I}{P_x}</td>
+                    <td rendered-math>\left(\frac{P_x}{P_x + P_y}\right)\frac{I}{P_y}</td>
+                </tr>
+                <tr style="background-color:lightgreen">
+                    <td>Perfect Substitutes</td>
+                    <td rendered-math>ax + by</td>
+                    <td rendered-math>\frac{a}{b} > \frac{P_x}{P_y}</td>
+                    <td rendered-math>\frac{I}{P_x}</td>
+                    <td>0</td>
+                </tr>
+                <tr style="background-color:lightgreen">
+                    <td></td>
+                    <td></td>
+                    <td rendered-math>\frac{a}{b} < \frac{P_x}{P_y}</td>
+                    <td>0</td>
+                    <td rendered-math>\frac{I}{P_y}</td>
+                </tr>
+                <tr style="background-color:lightgreen">
+                    <td></td>
+                    <td></td>
+                    <td rendered-math>\frac{a}{b} = \frac{P_x}{P_y}</td>
+                    <td colspan="2" style="text-align: center">[Indifferent; not determined]</td>
+                </tr>
+                <tr>
+                    <td>Perfect Complements</td>
+                    <td rendered-math>\min(ax,by)</td>
+                    <td rendered-math>?</td>
+                    <td rendered-math>?</td>
+                </tr>
+                <tr>
+                    <td>Quasilinear</td>
+                    <td rendered-math>v(x) + y</td>
+                    <td rendered-math>?</td>
+                    <td rendered-math>?</td>
+                </tr>
+            </table>
+        </section>
     </section>
     <section>
         <section>
@@ -666,8 +732,8 @@
                                    show="params.showIndifferenceMap"></curve>
                             <curve fn="functions.u.setLevel([14,14])" color="#AAAAAA"
                                    show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.priceConsumptionCurve({good:'x', income: params.income, otherPrice: params.py},10) "
-                                   color="red" label="PCC"></curve>
+                            <!--<curve fn="functions.u.priceConsumptionCurve({good:'x', income: params.income, otherPrice: params.py},10) "
+                                   color="red" label="PCC"></curve>-->
 
                         </graph>
 
@@ -701,12 +767,429 @@
             </model>
             {% endraw %}
         </section>
+        <section>
+            <h1>DEMAND FOR PERFECT COMPLEMENTS</h1>
+            <hr/>
+            <h2>For the perfect-complements utility function</h2>
+            <h2 rendered-math>u(x,y) = \min(ax,by)</h2>
+
+            <h2>the consumer will buy as many bundles of</h2>
+
+            <h2>(<span rendered-math>a</span> units of X, <span rendered-math>b</span> units of Y)</h2>
+
+            <h2> as she can afford. Since each bundle costs <span rendered-math>aP_x + bP_y</span>:</h2>
+
+            <div class="row">
+                <div class="col-md-6 fragment"><h2 rendered-math>\displaystyle{x^* =
+                    a\left(\frac{I}{aP_x + bP_y}\right)}</h2></div>
+                <div class="col-md-6 fragment"><h2 rendered-math>\displaystyle{y^* =
+                    b\left(\frac{I}{aP_x + bP_y}\right)}</h2></div>
+            </div>
+        </section>
+        <section>
+            <h2>Demand Functions for Different Kinds of Utility</h2>
+            <table class="table">
+                <tr style="background-color:darkblue; color:white">
+                    <td>Functional Form</td>
+                    <td rendered-math>u(x,y)</td>
+                    <td>[Condition]</td>
+                    <td rendered-math>x^*(P_x, P_y, I)</td>
+                    <td rendered-math>y^*(P_x, P_y, I)</td>
+                </tr>
+                <tr>
+                    <td>Cobb-Douglas</td>
+                    <td rendered-math>cx^ay^b</td>
+                    <td></td>
+                    <td rendered-math>\left(\frac{a}{a+b}\right)\frac{I}{P_x}</td>
+                    <td rendered-math>\left(\frac{b}{a+b}\right)\frac{I}{P_y}</td>
+                </tr>
+                <tr>
+                    <td>Weak Substitutes (e.g.)</td>
+                    <td rendered-math>\sqrt x + \sqrt y</td>
+                    <td></td>
+                    <td rendered-math>\left(\frac{P_y}{P_x + P_y}\right)\frac{I}{P_x}</td>
+                    <td rendered-math>\left(\frac{P_x}{P_x + P_y}\right)\frac{I}{P_y}</td>
+                </tr>
+                <tr>
+                    <td>Perfect Substitutes</td>
+                    <td rendered-math>ax + by</td>
+                    <td rendered-math>\frac{a}{b} > \frac{P_x}{P_y}</td>
+                    <td rendered-math>\frac{I}{P_x}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td rendered-math>\frac{a}{b} < \frac{P_x}{P_y}</td>
+                    <td>0</td>
+                    <td rendered-math>\frac{I}{P_y}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td rendered-math>\frac{a}{b} = \frac{P_x}{P_y}</td>
+                    <td colspan="2" style="text-align: center">[Indifferent; not determined]</td>
+                </tr>
+                <tr style="background-color:lightgreen">
+                    <td>Perfect Complements</td>
+                    <td rendered-math>\min(ax,by)</td>
+                    <td/>
+                    <td rendered-math>a\left(\frac{I}{aP_x + bP_y}\right)</td>
+                    <td rendered-math>b\left(\frac{I}{aP_x + bP_y}\right)</td>
+                </tr>
+                <tr>
+                    <td>Quasilinear</td>
+                    <td rendered-math>v(x) + y</td>
+                    <td rendered-math>?</td>
+                    <td rendered-math>?</td>
+                </tr>
+            </table>
+        </section>
 
 
     </section>
     <section>
 
+        <section>
+            <h1>Quasilinear Utility</h1>
+            <hr/>
+            <h2>One good has diminishing marginal utility,</h2>
 
+            <h2>the other good has constant marginal utility.</h2>
+            <hr/>
+            <h2 class="fragment">Example: one good vs. a "composite good"</h2>
+            <hr/>
+            <h2 class="fragment">Functional form: <span rendered-math>u(x,y) = v(x) + y</span></h2>
+            <hr/>
+            <h2 class="fragment">Depending on <span rendered-math>v(x)</span>, <br/>indifference curves might cross the axes.</h2>
+        </section>
+        <section>
+            <h1>The general approach:</h1>
+            <hr/>
+            <h2 class="fragment">Marginal utilities are positive, and indifference curves are smooth and convex in shape.</h2>
+            <h2 class="fragment">When the "normal method" yields positive quantities, great.</h2>
+            <h2 class="fragment">When the "normal method" yields a negative quantity, go to the closest corner (purchasing zero of the good that would have been negative at the tangency).</h2>
+            <h2 class="fragment">This allows us to model goods that you buy none of<br/>when their price is too high or income is too low (reasonable!)</h2>
+        </section>
+        <section>
+            <h2>Example: <span rendered-math>u(x,y) = a \ln x + by</span></h2>
+            <hr/>
+            <h2 rendered-math>MRS_{x,y} = \frac{a}{bx}</h2>
+            <hr/>
+            <h2>Setting this equal to <span rendered-math>\frac{P_x}{P_y}</span> yields the tangency condition:</h2>
+            <h2 rendered-math>P_xx = \frac{a}{b}P_y \Rightarrow x^* = \frac{aP_y}{bP_x} \text{ (always positive; affordable if }I \ge \frac{a}{b}P_y)</h2>
+            <hr/>
+            <h2>Plugging this into the budget condition yields</h2>
+            <h2 rendered-math>\frac{a}{b}P_y + P_yy = I</h2>
+            <h2 rendered-math>y^* = \frac{I}{P_y} - \frac{a}{b} \text{ (negative if }I < \frac{a}{b}P_y)</h2>
+            <p><a href="https://www.desmos.com/calculator/1g53qtcrca">Link to Working example in Desmos</a></p>
+        </section>
+        <section>
+            <h1>DEMAND FOR QUASILINEAR UTILITY</h1>
+            <h1 rendered-math>u(x,y) = a \ln x + by</h1>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Case 1: <span rendered-math>I > \frac{a}{b}P_y</span></h2>
+                    <hr/>
+                    <h2 rendered-math>x^* = \frac{aP_y}{bP_x}</h2>
+                    <h2 rendered-math>y^* = \frac{I}{P_y} - \frac{a}{b}</h2>
+                    <hr/>
+                    <h2>(Interior Solution)</h2>
+                </div>
+                <div class="col-md-6">
+                    <h2>Case 1: <span rendered-math>I \le \frac{a}{b}P_y</span></h2>
+                    <hr/>
+                    <h2 rendered-math>x^* = \frac{I}{P_x}</h2>
+                    <h2 rendered-math>y^* = 0</h2>
+                    <hr/>
+                    <h2>(Corner solution)</h2>
+
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Demand Functions for Different Kinds of Utility</h2>
+            <table class="table">
+                <tr style="background-color:darkblue; color:white">
+                    <td>Functional Form</td>
+                    <td rendered-math>u(x,y)</td>
+                    <td>[Condition]</td>
+                    <td rendered-math>x^*(P_x, P_y, I)</td>
+                    <td rendered-math>y^*(P_x, P_y, I)</td>
+                </tr>
+                <tr>
+                    <td>Cobb-Douglas</td>
+                    <td rendered-math>cx^ay^b</td>
+                    <td></td>
+                    <td rendered-math>\left(\frac{a}{a+b}\right)\frac{I}{P_x}</td>
+                    <td rendered-math>\left(\frac{b}{a+b}\right)\frac{I}{P_y}</td>
+                </tr>
+                <tr>
+                    <td>Weak Substitutes (e.g.)</td>
+                    <td rendered-math>\sqrt x + \sqrt y</td>
+                    <td></td>
+                    <td rendered-math>\left(\frac{P_y}{P_x + P_y}\right)\frac{I}{P_x}</td>
+                    <td rendered-math>\left(\frac{P_x}{P_x + P_y}\right)\frac{I}{P_y}</td>
+                </tr>
+                <tr>
+                    <td>Perfect Substitutes</td>
+                    <td rendered-math>ax + by</td>
+                    <td rendered-math>\frac{a}{b} > \frac{P_x}{P_y}</td>
+                    <td rendered-math>\frac{I}{P_x}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td rendered-math>\frac{a}{b} < \frac{P_x}{P_y}</td>
+                    <td>0</td>
+                    <td rendered-math>\frac{I}{P_y}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td rendered-math>\frac{a}{b} = \frac{P_x}{P_y}</td>
+                    <td colspan="2" style="text-align: center">[Indifferent; not determined]</td>
+                </tr>
+                <tr>
+                    <td>Perfect Complements</td>
+                    <td rendered-math>\min(ax,by)</td>
+                    <td/>
+                    <td rendered-math>a\left(\frac{I}{aP_x + bP_y}\right)</td>
+                    <td rendered-math>b\left(\frac{I}{aP_x + bP_y}\right)</td>
+                </tr>
+                <tr style="background-color:lightgreen">
+                    <td>Quasilinear (e.g.)</td>
+                    <td rendered-math>a \ln x + by</td>
+                    <td rendered-math>I \ge \frac{a}{b}P_y</td>
+                    <td rendered-math>\frac{aP_y}{bP_x}</td>
+                    <td rendered-math>\frac{I}{P_y} - \frac{a}{b}</td>
+                </tr>
+                <tr style="background-color:lightgreen">
+                    <td></td>
+                    <td rendered-math></td>
+                    <td rendered-math>I < \frac{a}{b}P_y</td>
+                    <td rendered-math>\frac{I}{P_x}</td>
+                    <td rendered-math>0</td>
+                </tr>
+            </table>
+        </section>
+
+
+
+
+    </section>
+    <section>
+    <h1>Ten Minute Break</h1>
+    <hr/>
+    <h2>When we come back: Comparative Statics!</h2>
+    </section>
+    <section>
+        <section>
+            <h1>Comparative Statics</h1>
+            <hr/>
+            <h2>How does the quantity demanded of each good change</h2>
+            <h2>when prices or income change?</h2>
+            <hr/>
+            <h2>How can we envision these changes in an indiffence curve / budget line diagram</h2>
+            <h2>and in a traditional demand curve diagram?</h2>
+            <hr/>
+            <h2>How can we measure the amount of these changes?</h2>
+        </section>
+        <section>
+            <h1>Remember some Definitions from Econ 1</h1>
+            <hr/>
+            <table class="table">
+                <tr>
+                    <td><b>Substitutes</b></td>
+                    <td>Quantity demanded <b>increases</b><br/>when other price <b>increases</b></td>
+                    <td>Cross-price elasticity > 0</td>
+                </tr>
+                <tr>
+                    <td><b>Complements</b></td>
+                    <td>Quantity demanded <b>decreases</b><br/>when other price <b>increases</b></td>
+                    <td>Cross-price elasticity < 0</td>
+                </tr>
+            </table><hr/>
+            <table class="table">
+                <tr>
+                    <td><b>Normal Good</b></td>
+                    <td>Quantity demanded <b>increases</b><br/>when income <b>increases</b></td>
+                    <td>Income elasticity > 0</td>
+                </tr>
+                <tr>
+                    <td><b>Inferior Good</b></td>
+                    <td>Quantity demanded <b>decreases</b><br/>when income <b>increases</b></td>
+                    <td>Income elasticity < 0</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2>Visual Comparative Statics: Price Changes</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table">
+                        <tr class="fragment">
+                            <td><b>Price Consumption Curve (top)</b></td>
+                            <td>A curve in <b><span rendered-math>X-Y</span> space</b> showing the quantities demanded
+                                of X and Y as the
+                                <b>price of one good</b> is varied.
+                            </td>
+                        </tr><tr class="fragment">
+                            <td width="30%"><b>Demand Curve (bottom)</b></td>
+                            <td>A curve in <b>quantity-price space</b> showing the quantity demanded of one good as the
+                                <b>price of that good</b> is varied
+                            </td>
+                        </tr>
+
+                    </table></div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture6/besanko_5e_fig_05_01.jpg') }}">
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Visual Comparative Statics: Income Changes</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table">
+                        <tr class="fragment">
+                            <td><b>Income Consumption Curve (right)</b></td>
+                            <td>A curve in <b><span rendered-math>X-Y</span>space </b> showing the quantities demanded
+                                of X and Y as <b>income</b> is varied.
+                            </td>
+                        </tr>
+                        <tr class="fragment">
+                            <td width="30%"><b>Engel Curve (below)</b></td>
+                            <td>A curve in <b>quantity-income space</b> showing the quantity demanded of one good as <b>income</b>
+                                is varied
+                            </td>
+                        </tr>
+
+                    </table>
+                    <img src="{{ url_for('static', filename='images/econ50/lecture6/besanko_5e_fig_05_03.jpg') }}">
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/econ50/lecture6/besanko_5e_fig_05_02.jpg') }}">
+                </div>
+            </div>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Comparative Statics: Cobb-Douglas</h1>
+        </section>
+        <section>
+
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="beta" value="0.5"/>
+                <param name="xLabel" value="Good X" type="string"/>
+                <param name="yLabel" value="Good Y" type="string"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div style="position:absolute;top:0px;left:0px;width:350px;height:350px;">
+
+                        <graph height="350" width="350">
+                                <axis dim="x" min="0" max="65" title="Quantity of X"></axis>
+                                <axis dim="y" min="0" max="65" title="Quantity of Y"></axis>
+                                <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"></line>
+                                <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).optimalIndifferenceCurve(params.income, params.px, params.py)"
+                                       color="green" label="U^*"></curve>
+                                <curve fn="functions.u.priceConsumptionCurve({good:'x', income: params.income, otherPrice: params.py, minPrice:0.1, maxPrice:50, samplePoints: 200}) "
+                                   color="blue" label="PCC_X" show="params.showPCCX"></curve>
+                                <curve fn="functions.u.priceConsumptionCurve({good:'y', income: params.income, otherPrice: params.px, minPrice:50, maxPrice:0.1, samplePoints: 200}) "
+                                   color="red" label="PCC_Y" show="params.showPCCY"></curve>
+                                <curve fn="functions.u.incomeConsumptionCurve({maxIncome:200, px:params.px, py:params.py, samplePoints: 50})"
+                                       color="darkorange" label="ICC" show="params.showICC"></curve>
+                            <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
+                                       droplines="both" xlabel="x^*" ylabel="y^*"></point>
+
+                            </graph>
+
+                        </div>
+                        <div style="position:absolute;top:350px;left:0px;width:350px;height:350px;">
+                            <graph height="350" width="350">
+                                <axis dim="x" min="0" max="65" title="Quantity of X"></axis>
+                                <axis dim="y" min="0" max="10" title="Price of X"></axis>
+                                <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).demandCurve({maxPrice: 10, income: params.income, otherPrice: params.py, samplePoints: 200})" color="blue"></curve>
+                                <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0],params.px]"
+                                       droplines="both" xlabel="x^*(P_X)" ylabel="P_X"></point>
+                            </graph>
+                        </div>
+                        <div style="position:absolute;top:350px;left:350px;width:350px;height:350px;">
+                            <graph height="350" width="350">
+                                <axis dim="x" min="0" max="65" title="Quantity of Y"></axis>
+                                <axis dim="y" min="0" max="10" title="Price of Y"></axis>
+                                <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).demandCurve({good:'y',maxPrice: 10, income: params.income, otherPrice: params.px, samplePoints: 200})"
+                                       color="red"></curve>
+                                <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[1],params.py]"
+                                       droplines="both" xlabel="y^*(P_Y)" ylabel="P_Y"></point>
+                            </graph>
+                        </div>
+                        <div style="position:absolute; top:0px;left:350px;width:400px;height:350px">
+                            <p>Cobb-Douglas Demand:</p>
+                            <table class="table">
+                                <tr>
+                                    <td rendered-math>x^*=\left(\frac{a}{a+b}\right)\frac{I}{P_x}</td>
+                                    <td rendered-math>y^*=\left(\frac{b}{a+b}\right)\frac{I}{P_y}</td>
+                                </tr>
+                            </table>
+                            <div>
+                            <toggle param="params.showPCCX">{{ params.showPCCX ? 'Hide' : 'Show' }} <span
+                                    rendered-math>PCC_X</span></toggle>
+                            </div>
+                            <div>
+                            <toggle param="params.showPCCY">{{ params.showPCCY ? 'Hide' : 'Show' }} <span
+                                    rendered-math>PCC_Y</span></toggle>
+                            </div>
+                            <div>
+                            <toggle param="params.showICC">{{ params.showICC ? 'Hide' : 'Show' }} <span
+                                    rendered-math>ICC</span></toggle>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <h6>Budget Parameters</h6>
+                            <hr/>
+                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                            <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+                            <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
+                            <slider value="params.py" min="1" max="6" precision="0.25"></slider>
+                            <p>Income: ${{ params.income | number:0}}</p>
+                            <slider value="params.income" min="5" max="120" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <div class="well">
+                            <h6>Utility Parameters</h6>
+                            <hr/>
+                            <p rendered-math expression="a: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0" max="1" precision="0.05"></slider>
+                            <p rendered-math expression="b: {{ params.beta | number:2}}"></p>
+                            <slider value="params.beta" min="0" max="1" precision="0.05"></slider>
+                        </div>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
     </section>
 
 

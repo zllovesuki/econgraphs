@@ -1054,7 +1054,7 @@ kgAngular.directive('curve', function (D3Helpers) {
  * Created by cmakler on 11/3/14.
  */
 
-kgAngular.directive('line', function () {
+kgAngular.directive('line', function (D3Helpers) {
 
         function link(scope, element, attrs, graphCtrl) {
 
@@ -1084,6 +1084,24 @@ kgAngular.directive('line', function () {
                             y2 = graph.y(points[1].y);
 
                         shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});}
+
+                        // Add label to last point
+
+                        var label = scope.label || 'none';
+
+                        // Add associated labels only if each is in its dimension fo the graph domain
+                        if (label != 'none') {
+                            var labelObject = D3Helpers.configLabel({
+                                graph: graph,
+                                html: label,
+                                point: points[0],
+                                xOffset: scope.xLabelOffset,
+                                yOffset: scope.yLabelOffset
+                            });
+                            labelObject.color = scope.color;
+
+                            shapes.divs.push(labelObject);
+                        }
                     }
 
                     return shapes;
@@ -1097,7 +1115,7 @@ kgAngular.directive('line', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', color: '@', show:'&', params: '&'}
+            scope: { fn: '&', color: '@', show:'&', params: '&', label:'@', xLabelOffset:'@', yLabelOffset:'@'}
         }
     }
 );
