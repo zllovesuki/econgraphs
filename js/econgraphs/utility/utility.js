@@ -105,6 +105,194 @@ econgraphs.functions.utility = {
 
         };
 
+
+
+        /*
+
+        Find the price-consumption curve for a given income and other price
+
+        The pccParams object should have the following structure:
+        {
+            good: the good whose price we are going to vary; must be 'x' or 'y'; 'x' by default
+            minPrice: the minimum price to evaluate (0 by default)
+            maxPrice: the maximum price to evaluate (50 by default)
+            income: the consumer's income
+            otherPrice: the price of the other good
+        }
+
+        */
+
+        u.priceConsumptionCurve = function (pccParams) {
+
+            return {
+
+                points: function (xDomain, yDomain) {
+
+                    var optimalBundle,
+                        isGoodX = ('y' != pccParams['good']),
+                        minPrice = pccParams['minPrice'] || 0,
+                        maxPrice = pccParams['maxPrice'] || 100,
+                        income = pccParams['income'],
+                        samplePoints = pccParams['samplePoints'] || 51,
+                        px = isGoodX ? minPrice : pccParams['otherPrice'],
+                        py = isGoodX ? pccParams['otherPrice'] : minPrice,
+                        step = calculateStep(minPrice, maxPrice, samplePoints),
+                        points = [];
+
+                    for (var i = 0; i < samplePoints; i++) {
+                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                        if (onGraph(optimalBundle, xDomain, yDomain)) {
+                            points.push(optimalBundle);
+                        }
+                        isGoodX ? px += step : py += step;
+                    }
+
+                    return points;
+
+                }
+            }
+        };
+
+        /*
+
+         Find the income expansion path for a given set of prices.
+         The incomeExpansionParams object should have the following structure:
+
+             {
+                minIncome: the minimum income to evaluate (0 by default)
+                maxIncome: the maximum income to evaluate (50 by default)
+                px: price of x
+                py: price of y
+             }
+
+         */
+
+        u.incomeConsumptionCurve = function (iccParams) {
+
+            return {
+
+                points: function (xDomain, yDomain) {
+
+                    var optimalBundle,
+                        minIncome = iccParams['minIncome'] || 0,
+                        maxIncome = iccParams['maxIncome'] || 50,
+                        px = iccParams['px'],
+                        py = iccParams['py'],
+                        income = minIncome,
+                        samplePoints = iccParams['samplePoints'] || 51,
+                        step = calculateStep(minIncome, maxIncome, samplePoints),
+                        points = [];
+
+                    for (var i = 0; i < samplePoints; i++) {
+                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                        if (onGraph(optimalBundle, xDomain, yDomain)) {
+                            points.push(optimalBundle);
+                        }
+                        income += step;
+                    }
+
+                    return points;
+                }
+            }
+        };
+
+        /*
+
+        Find the Engel curve for a given set of prices
+        The engelCurveParams object should have the following structure:
+        {
+            good: the good whose quantity demanded we are going to plot
+            minIncome: the minimum income to evaluate (0 by default)
+            maxIncome: the maximum income to evaluate (50 by default)
+            px: price of x
+            py: price of y
+        }
+
+        */
+
+        u.engelCurve = function(engelParams) {
+
+            return {
+
+                points: function (xDomain, yDomain) {
+
+                    var quantity,
+                        isGoodX = ('y' != engelParams['good']),
+                        minIncome = engelParams['minIncome'] || 0,
+                        maxIncome = engelParams['maxIncome'] || 50,
+                        px = engelParams['px'],
+                        py = engelParams['py'],
+                        income = minIncome,
+                        samplePoints = engelParams['samplePoints'] || 51,
+                        step = calculateStep(minIncome, maxIncome, samplePoints),
+                        points = [];
+
+                    for (var i = 0; i < samplePoints; i++) {
+                        quantity = isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
+                        if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
+                            points.push({x: quantity, y: income});
+                        }
+                        income += step;
+                    }
+
+                    return points;
+                }
+            }
+
+        };
+
+        /*
+
+         Find the demand curve for a given income and other price
+
+         The demandParams object should have the following structure:
+             {
+                 good: the good whose price we are going to vary; must be 'x' or 'y'; 'x' by default
+                 minPrice: the minimum price to evaluate (0 by default)
+                 maxPrice: the maximum price to evaluate (50 by default)
+                 income: the consumer's income
+                 otherPrice: the price of the other good
+             }
+
+         */
+        u.demandCurve = function(demandParams) {
+
+            return {
+
+                points: function (xDomain, yDomain) {
+
+                    var price,
+                        quantity,
+                        isGoodX = ('y' != demandParams['good']),
+                        minPrice = demandParams['minPrice'] || 0,
+                        maxPrice = demandParams['maxPrice'] || 50,
+                        income = demandParams['income'],
+                        px = isGoodX ? minPrice : demandParams['otherPrice'],
+                        py = isGoodX ? demandParams['otherPrice'] : minPrice,
+                        samplePoints = demandParams['samplePoints'] || 51,
+                        step = calculateStep(minPrice, maxPrice, samplePoints),
+                        points = [];
+
+                    for (var i = 0; i < samplePoints; i++) {
+                        if (isGoodX) {
+                            price = px;
+                            quantity = u.optimalBundle(income, px, py)[0];
+                            px += step;
+                        } else {
+                            price = py;
+                            quantity = u.optimalBundle(income, px, py)[1];
+                            py += step;
+                        }
+                        if (onGraph({x: quantity, y: price}, xDomain, yDomain)) {
+                            points.push({x: quantity, y: price});
+                        }
+                    }
+
+                    return points;
+                }
+            }
+        };
+
         // Find the lowest possible cost for a given level of utility, given px and py
         u.lowestPossibleCost = function (utility, px, py) {
 

@@ -50,6 +50,24 @@ kgAngular.directive('curve', function (D3Helpers) {
 
                         shapes.curves.push({points: graph.curveFunction(allPoints), color: scope.color});
 
+                        // Add label to last point
+
+                        var label = scope.label || 'none';
+
+                        // Add associated labels only if each is in its dimension fo the graph domain
+                        if (label != 'none') {
+                            var labelObject = D3Helpers.configLabel({
+                                graph: graph,
+                                html:label,
+                                point: allPoints[allPoints.length - 1]
+                            });
+                            labelObject.color = scope.color;
+
+                            shapes.divs.push(labelObject);
+                        }
+
+
+
                     }
 
                     return shapes;
@@ -63,7 +81,7 @@ kgAngular.directive('curve', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', ind: '@', color: '@', show: '&' }
+            scope: { fn: '&', label:'@', ind: '@', color: '@', show: '&' }
         }
     }
 );

@@ -166,6 +166,34 @@ kgAngular.service('D3Helpers', function () {
 
     };
 
+    this.configLabel = function(labelParams) {
+
+
+        var width = labelParams['width'] || 100,
+            xOffset = labelParams['xOffset'] || 0,
+            yOffset = labelParams['yOffset'] || 0,
+            xCoord = labelParams['point']['x'] || labelParams['point'][0],
+            yCoord = labelParams['point']['y'] || labelParams['point'][1],
+            x = labelParams['graph'].x(xCoord) + xOffset,
+            y = labelParams['graph'].y(yCoord) + yOffset - 20,
+            align = labelParams['align'] || 'left';
+        if(align == 'right') {
+            x -= width;
+        }
+        if(align == 'center') {
+            x -= 0.5*width;
+        }
+        return {
+            html: labelParams['html'],
+            x: x,
+            y: y,
+            align: align,
+            width: width,
+            math: true,
+            size: '16pt'
+        }
+    };
+
     this.drawDivs = function(data,divs) {
 
         divs = divs.data(data);
@@ -985,6 +1013,24 @@ kgAngular.directive('curve', function (D3Helpers) {
 
                         shapes.curves.push({points: graph.curveFunction(allPoints), color: scope.color});
 
+                        // Add label to last point
+
+                        var label = scope.label || 'none';
+
+                        // Add associated labels only if each is in its dimension fo the graph domain
+                        if (label != 'none') {
+                            var labelObject = D3Helpers.configLabel({
+                                graph: graph,
+                                html:label,
+                                point: allPoints[allPoints.length - 1]
+                            });
+                            labelObject.color = scope.color;
+
+                            shapes.divs.push(labelObject);
+                        }
+
+
+
                     }
 
                     return shapes;
@@ -998,7 +1044,7 @@ kgAngular.directive('curve', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', ind: '@', color: '@', show: '&' }
+            scope: { fn: '&', label:'@', ind: '@', color: '@', show: '&' }
         }
     }
 );
@@ -1008,7 +1054,7 @@ kgAngular.directive('curve', function (D3Helpers) {
  * Created by cmakler on 11/3/14.
  */
 
-kgAngular.directive('line', function () {
+kgAngular.directive('line', function (D3Helpers) {
 
         function link(scope, element, attrs, graphCtrl) {
 
@@ -1038,6 +1084,24 @@ kgAngular.directive('line', function () {
                             y2 = graph.y(points[1].y);
 
                         shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});}
+
+                        // Add label to last point
+
+                        var label = scope.label || 'none';
+
+                        // Add associated labels only if each is in its dimension fo the graph domain
+                        if (label != 'none') {
+                            var labelObject = D3Helpers.configLabel({
+                                graph: graph,
+                                html: label,
+                                point: points[0],
+                                xOffset: scope.xLabelOffset,
+                                yOffset: scope.yLabelOffset
+                            });
+                            labelObject.color = scope.color;
+
+                            shapes.divs.push(labelObject);
+                        }
                     }
 
                     return shapes;
@@ -1051,7 +1115,7 @@ kgAngular.directive('line', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', color: '@', show:'&', params: '&'}
+            scope: { fn: '&', color: '@', show:'&', params: '&', label:'@', xLabelOffset:'@', yLabelOffset:'@'}
         }
     }
 );
