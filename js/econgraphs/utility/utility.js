@@ -140,9 +140,11 @@ econgraphs.functions.utility = {
                         points = [];
 
                     for (var i = 0; i < samplePoints; i++) {
-                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
-                        if (onGraph(optimalBundle, xDomain, yDomain)) {
-                            points.push(optimalBundle);
+                        if(u.optimalBundle(income,px,py)) {
+                            optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                            if (onGraph(optimalBundle, xDomain, yDomain)) {
+                                points.push(optimalBundle);
+                            }
                         }
                         isGoodX ? px += step : py += step;
                     }
@@ -184,9 +186,11 @@ econgraphs.functions.utility = {
                         points = [];
 
                     for (var i = 0; i < samplePoints; i++) {
-                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
-                        if (onGraph(optimalBundle, xDomain, yDomain)) {
-                            points.push(optimalBundle);
+                        if (u.optimalBundle(income, px, py)) {
+                            optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                            if (onGraph(optimalBundle, xDomain, yDomain)) {
+                                points.push(optimalBundle);
+                            }
                         }
                         income += step;
                     }
@@ -228,10 +232,13 @@ econgraphs.functions.utility = {
                         points = [];
 
                     for (var i = 0; i < samplePoints; i++) {
-                        quantity = isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
-                        if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
-                            points.push({x: quantity, y: income});
+                        if (u.optimalBundle(income, px, py)) {
+                            quantity = isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
+                            if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
+                                points.push({x: quantity, y: income});
+                            }
                         }
+
                         income += step;
                     }
 

@@ -68,14 +68,14 @@ kg.functions.Monomial = (function () {
                     for (var i = 0; i < 51; i++) {
 
                         if (yIsIndependent) {
-                            // Sample 101 points along the Y domain
+                            // Sample 51 points along the Y domain
                             y = yDomain.min + (i / 50) * (yDomain.max - yDomain.min);
                             x = m.xValue(y);
                             if (inRange(x, xDomain)) {
                                 points.push({x: x, y: y});
                             }
                         } else {
-                            // Sample 101 points along the X domain
+                            // Sample 51 points along the X domain
                             x = xDomain.min + (i / 50) * (xDomain.max - xDomain.min);
                             y = m.yValue(x);
                             if (inRange(y, yDomain)) {

@@ -58,6 +58,103 @@ kg.functions.Polynomial = (function() {
             ));
         };
 
+        p.variables = Math.max.apply(null,p.terms.map(function(term) { return term.powers.length}));
+
+        // Return the (x,y) points within the domain [xDomain,yDomain]
+        p.points = function (xDomain, yDomain, yIsIndependent) {
+
+            xDomain = domainAsObject(xDomain);
+            yDomain = domainAsObject(yDomain);
+
+            var points = [];
+
+            var i, j,x, y, current, closest, foundOnGraph;
+
+            switch (p.variables) {
+
+                case 1:
+                    for (i = 0; i < 51; i++) {
+
+                        if (yIsIndependent) {
+                            // Sample 101 points along the Y domain
+                            y = yDomain.min + (i / 50) * (yDomain.max - yDomain.min);
+                            x = p.value([y]);
+                            if (inRange(x, xDomain)) {
+                                points.push({x: x, y: y});
+                            }
+                        } else {
+                            // Sample 101 points along the X domain
+                            x = xDomain.min + (i / 50) * (xDomain.max - xDomain.min);
+                            y = p.value([x]);
+                            if (inRange(y, yDomain)) {
+                                points.push({x: x, y: y});
+                            }
+                        }
+                    }
+                    break;
+
+                case 2:
+
+                    var level = p.level || 0;
+
+                    for (i = 0; i < 101; i++) {
+
+                        if (yIsIndependent) {
+
+                            y = yDomain.min + (i / 100) * (yDomain.max - yDomain.min);
+
+                            closest = {x: 0, y: 0, value: 0.1};
+                            foundOnGraph = false;
+
+                            for (j = 0; j < 101; j++) {
+
+                                x = xDomain.min + (j / 100) * (xDomain.max - xDomain.min);
+                                current = p.value([x, y]) - level;
+                                if (Math.abs(current) < Math.abs(closest.value)) {
+                                    closest = {x: x, y: y, value: current};
+                                    foundOnGraph = true;
+                                }
+
+                            }
+
+                            if (foundOnGraph) {
+                                points.push({x: closest.x, y: closest.y})
+                            }
+                            ;
+
+                        } else {
+
+                            x = xDomain.min + (i / 100) * (xDomain.max - xDomain.min);
+
+                            closest = {x: 0, y: 0, value: 0.1};
+                            foundOnGraph = false;
+
+                            for (j = 0; j < 101; j++) {
+
+                                y = yDomain.min + (j / 100) * (yDomain.max - yDomain.min);
+                                current = p.value([x, y]) - level;
+                                if (Math.abs(current) < Math.abs(closest.value)) {
+                                    closest = {x: x, y: y, value: current};
+                                    foundOnGraph = true;
+                                }
+
+                            }
+
+                            if (foundOnGraph) {
+                                points.push({x: closest.x, y: closest.y})
+                            }
+                            ;
+
+                        }
+
+
+
+                    }
+            }
+
+            return points;
+        };
+
         return p;
 
     }
