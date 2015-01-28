@@ -73,12 +73,16 @@ econgraphs.functions.utility.CES = function () {
             if (params) {
 
                 u.alpha = params['alpha'] || u.alpha;
-                if(params.hasOwnProperty('substitutability')) {
-                    if(params['substitutability']) {
+                u.r = params['r'] - 0.01 || u.r;
 
+                if(params.hasOwnProperty('s')) {
+                    if(params.s >= 0) {
+                        u.r = params.s - 0.01; // Cheat so that 1 = 0.999
+                    } else {
+                        u.r = params.s / (1.01 + params.s) // Cheat so that -1 => -1 / 0.001
                     }
                 }
-                u.r = params['r'] - 0.01 || u.r;
+
 
 
                 if (u.r == 0) {
@@ -107,8 +111,15 @@ econgraphs.functions.utility.CES = function () {
         // Find the lowest possible cost for a given level of utility, given px and py
         u._lowestPossibleCost = function (utility, px, py) {
 
-            return returnsToScale * Math.pow(utility, 1 / returnsToScale) * Math.pow(px / alpha, xProportion) * Math.pow(py / alpha, yProportion);
+            var s = 1 / (1 - u.r),
+                denominator = Math.pow(u.alpha, s) * Math.pow(px, 1 - s) + Math.pow(1 - u.alpha, s) * Math.pow(py, 1 - s),
+                x_coefficient = Math.pow(px / u.alpha, -s) / denominator,
+                y_coefficient = Math.pow(py / (1 - u.alpha), -s) / denominator,
+                scale_factor = u.alpha*Math.pow(x_coefficient, u.r) + (1- u.alpha)*Math.pow(y_coefficient, u.r),
 
+                c = Math.pow(utility/scale_factor, 1/ u.r);
+
+                return c;
         };
 
         return u;

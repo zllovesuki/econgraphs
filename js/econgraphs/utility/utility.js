@@ -320,6 +320,20 @@ econgraphs.functions.utility = {
 
         };
 
+        // Return the income necessary to achieve v(income,px1,py) if px is now px2
+        u.compensatedIncome = function(income,px1,px2,py) {
+            var utility = u.value(u.optimalBundle(income, px1, py));
+            return u._lowestPossibleCost(utility, px2, py);
+
+        };
+
+        // Return the decomposition bundle for a price change from px1 to px2
+        u.decompositionBundle = function (income, px1, px2, py) {
+
+            return u.optimalBundle(u.compensatedIncome(income,px1,px2,py), px2, py);
+
+        };
+
         return u;
 
     }
