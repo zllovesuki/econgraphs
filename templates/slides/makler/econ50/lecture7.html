@@ -8,7 +8,7 @@
         <hr/>
         <br/>
 
-        <h2>Lecture 6</h2>
+        <h2>Lecture 7</h2>
 
         <h1>Comparative Statics II: <br/>Income and Substitution Effects</h1>
         <br/>
@@ -353,9 +353,9 @@
         <section>
             <h1>Constant Elasticity of Substitution</h1>
             <hr/>
-            <h2>The CES Utility Function: <span rendered-math>u(x,y) = a x^r + by^r</span></h2>
+            <h2>The CES Utility Function: <span rendered-math>u(x,y) = \left(a x^r + by^r\right)^\frac{1}{r}</span></h2>
             <hr/>
-            <h2 rendered-math>MRS_{x,y} = \frac{MU_x}{MU_y} = \frac{arx^{r-1}}{bry^{r-1}} = \frac{ax^{r-1}}{by^{r-1}}</h2>
+            <h2 rendered-math>MRS_{x,y} = \frac{MU_x}{MU_y} = \frac{ax^{r-1}}{by^{r-1}}</h2>
             <ul>
                 <li class="fragment">The parameters <span rendered-math>a</span> and <span rendered-math>b</span> measure how much the consumer likes goods
                     <span rendered-math>X</span> and <span rendered-math>Y</span>.</li>
@@ -366,7 +366,7 @@
                 <li class="fragment">As <span rendered-math>r \rightarrow -\infty</span> in the limit, the goods are perfect complements.</li>
                     <li class="fragment">If <span rendered-math>a = b = 1</span> and
                         <span rendered-math>r = \frac{1}{2}</span>, it becomes our "weak substitutes" example:
-                        <span rendered-math>u(x,y) = \sqrt x + \sqrt y</span>.
+                        <span rendered-math>u(x,y) = \left(\sqrt x + \sqrt y\right)^2</span>.
                     </li>
                 </ul>
 
@@ -894,7 +894,7 @@
         <section>
             <h1>Let's generate the Slutztky Diagram for a simple CES utility function</h1>
             <hr/>
-            <h2 rendered-math>u(x,y) = x^r + y^r</h2>
+            <h2 rendered-math>u(x,y) = \left(x^r + y^r\right)^\frac{1}{r}</h2>
             <h2 rendered-math>I = 60</h2>
 
             <h2 rendered-math>P_{x_1} = 3</h2>
@@ -1015,7 +1015,7 @@
         <p class="fragment">With substitutes, the substitution effect dominates</p>
         <p class="fragment">With complements, the income effect dominates</p>
         <p class="fragment">With inferior goods, the income effect is negative for the inferior good</p>
-        <p class="fragment">With Giffen goods, the income effect is <b>so negative</b> that the result of a decrease in price is to decrease consumption.</p>
+        <p class="fragment">With Giffen goods, the income effect is <b>so negative</b><br/>that the result of a decrease in price is to decrease consumption.</p>
     </section>
 
 {% endblock %}
