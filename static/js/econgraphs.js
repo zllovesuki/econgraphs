@@ -272,9 +272,11 @@ econgraphs.functions.utility = {
                         points = [];
 
                     for (var i = 0; i < samplePoints; i++) {
-                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
-                        if (onGraph(optimalBundle, xDomain, yDomain)) {
-                            points.push(optimalBundle);
+                        if(u.optimalBundle(income,px,py)) {
+                            optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                            if (onGraph(optimalBundle, xDomain, yDomain)) {
+                                points.push(optimalBundle);
+                            }
                         }
                         isGoodX ? px += step : py += step;
                     }
@@ -316,9 +318,11 @@ econgraphs.functions.utility = {
                         points = [];
 
                     for (var i = 0; i < samplePoints; i++) {
-                        optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
-                        if (onGraph(optimalBundle, xDomain, yDomain)) {
-                            points.push(optimalBundle);
+                        if (u.optimalBundle(income, px, py)) {
+                            optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
+                            if (onGraph(optimalBundle, xDomain, yDomain)) {
+                                points.push(optimalBundle);
+                            }
                         }
                         income += step;
                     }
@@ -360,10 +364,13 @@ econgraphs.functions.utility = {
                         points = [];
 
                     for (var i = 0; i < samplePoints; i++) {
-                        quantity = isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
-                        if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
-                            points.push({x: quantity, y: income});
+                        if (u.optimalBundle(income, px, py)) {
+                            quantity = isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
+                            if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
+                                points.push({x: quantity, y: income});
+                            }
                         }
+
                         income += step;
                     }
 
@@ -792,4 +799,263 @@ econgraphs.functions.utility.PerfectSubstitutes = (function () {
     }
 
 }());
+
+// utility/ces.js
+/**
+ * Created by cmakler on 1/26/15.
+ */
+
+econgraphs.functions.utility.CES = function () {
+
+    return function (params) {
+
+        var u = new kg.functions.Generic;
+
+        u.alpha = 0.5;
+        u.r = 0.5;
+
+        u.value = function(bundle) {
+            return u.alpha*Math.pow(bundle[0], u.r) + (1- u.alpha)*Math.pow(bundle[1], u.r)
+        };
+
+        u.xValue = function(y) {
+
+            var num = u.level - (1- u.alpha)*Math.pow(y, u.r),
+                dem = u.alpha;
+
+            return Math.pow(num/dem,1/ u.r);
+
+        };
+
+        u.yValue = function (x) {
+
+            return Math.pow((u.level - u.alpha * Math.pow(x, u.r)) / (1 - u.alpha), 1 / u.r)
+
+        };
+
+        u.points = function(xDomain,yDomain,yIsIndependent) {
+
+            xDomain = domainAsObject(xDomain);
+            yDomain = domainAsObject(yDomain);
+
+            var points = [];
+
+            var x, y;
+
+            for (var i = 0.01; i < 51; i++) {
+
+                if (yIsIndependent) {
+                    // Sample 51 points along the Y domain
+                    y = yDomain.min + (i / 50) * (yDomain.max - yDomain.min);
+                    x = u.xValue(y);
+                    if (inRange(x, xDomain)) {
+                        points.push({x: x, y: y});
+                    }
+                } else {
+                    // Sample 51 points along the X domain
+                    x = xDomain.min + (i / 50) * (xDomain.max - xDomain.min);
+                    y = u.yValue(x);
+                    if (inRange(y, yDomain)) {
+                        points.push({x: x, y: y});
+                    }
+                }
+            }
+
+            return points;
+        }
+
+        // Add utility function methods (marginal utility, MRS, etc.)
+        u = econgraphs.functions.utility.addUtilityMethods(u);
+
+        u.updateParams = function (params) {
+
+            if (typeof params == 'function') {
+                params = params();
+            }
+
+            if (params) {
+
+                u.alpha = params['alpha'] || u.alpha;
+                if(params.hasOwnProperty('substitutability')) {
+                    if(params['substitutability']) {
+
+                    }
+                }
+                u.r = params['r'] - 0.01 || u.r;
+
+
+                if (u.r == 0) {
+                    u.r = 0.01;
+                }
+
+            }
+
+            return u;
+
+        };
+
+        u.updateParams(params);
+
+        // Find the optimal bundle for a given income and prices
+        u._optimalBundle = function (income, px, py) {
+
+            var s = 1 / (1 - u.r),
+                denominator = Math.pow(u.alpha,s)*Math.pow(px, 1-s) + Math.pow(1-u.alpha,s)*Math.pow(py, 1-s),
+                optimal_x = income * Math.pow(px/ u.alpha,-s)/denominator,
+                optimal_y = income * Math.pow(py/ (1 - u.alpha),-s) / denominator;
+
+            return [optimal_x,optimal_y];
+        };
+
+        // Find the lowest possible cost for a given level of utility, given px and py
+        u._lowestPossibleCost = function (utility, px, py) {
+
+            return returnsToScale * Math.pow(utility, 1 / returnsToScale) * Math.pow(px / alpha, xProportion) * Math.pow(py / alpha, yProportion);
+
+        };
+
+        return u;
+    }
+
+}();
+
+// utility/inferior.js
+/**
+ * Created by cmakler on 1/26/15.
+ */
+
+econgraphs.functions.utility.Inferior = function () {
+
+    return function (params) {
+
+        var u = new kg.functions.Generic;
+
+        u.xmin = 10;
+        u.ymax = 40;
+        u.alpha = 1;
+        u.delta = 1;
+
+        u.valueOfX = function(x) {return u.alpha * Math.log(x - u.xmin)};
+        u.valueOfY = function(y) {return -(u.alpha + u.delta) * Math.log(u.ymax - y)};
+
+        u.value = function (bundle) {
+            return u.valueOfX(bundle[0]) + u.valueOfY(bundle[1]);
+        };
+
+        u.xValue = function (y) {
+
+            return u.xmin + Math.exp((u.level - u.valueOfY(y))/ u.alpha);
+
+        };
+
+        u.yValue = function (x) {
+
+            return u.ymax + Math.exp((u.valueOfX(x) - u.level)/(u.alpha + u.delta));
+
+        };
+
+        u.points = function (xDomain, yDomain, yIsIndependent) {
+
+            xDomain = domainAsObject(xDomain);
+            yDomain = domainAsObject(yDomain);
+
+            xDomain.min = u.xmin;
+            yDomain.max = u.ymax;
+
+            var points = [];
+
+            var x, y;
+
+            for (var i = 0.01; i < 51; i++) {
+
+                if (yIsIndependent) {
+                    // Sample 51 points along the Y domain
+                    y = yDomain.min + (i / 50) * (yDomain.max - yDomain.min);
+                    x = u.xValue(y);
+                    if (inRange(x, xDomain)) {
+                        points.push({x: x, y: y});
+                    }
+                } else {
+                    // Sample 51 points along the X domain
+                    x = xDomain.min + (i / 50) * (xDomain.max - xDomain.min);
+                    y = u.yValue(x);
+                    if (inRange(y, yDomain)) {
+                        points.push({x: x, y: y});
+                    }
+                }
+            }
+
+            return points;
+        };
+
+        // Add utility function methods (marginal utility, MRS, etc.)
+        u = econgraphs.functions.utility.addUtilityMethods(u);
+
+        u.updateParams = function (params) {
+
+            if (typeof params == 'function') {
+                params = params();
+            }
+
+            if (params) {
+
+                u.xmin = params['xmin'] || u.xmin;
+                u.ymax = params['ymax'] || u.ymax;
+                u.alpha = params['alpha'] || u.alpha;
+                u.delta = params['delta'] || u.delta;
+
+            }
+
+            return u;
+
+        };
+
+        u.updateParams(params);
+
+        // Find the optimal bundle for a given income and prices
+        u._optimalBundle = function (income, px, py) {
+
+            var extremeBundleCost = income - px* u.xmin - py* u.ymax;
+
+            if(extremeBundleCost < 0) {
+
+                var alpha_1 = u.alpha,
+                    alpha_2 = u.alpha + u.delta,
+                    beta_1 = alpha_1 / (alpha_2 - alpha_1),
+                    beta_2 = alpha_2 / (alpha_2 - alpha_1);
+
+                var optimal_x = u.xmin - beta_1 * extremeBundleCost / px,
+                    optimal_y = u.ymax + beta_2 * extremeBundleCost / py;
+
+                return [optimal_x, optimal_y];
+
+                if(optimal_x >= u.xmin && optimal_y > 0) {
+                    return [optimal_x, optimal_y];
+                }
+
+                // Corner solution if buy no y
+                if(optimal_y <= 0) {
+                    return [income/px, 0]
+                }
+
+                // Corner solution if X is as subsistence level
+                if(optimal_x < u.xmin) {
+                    return [u.xmin, (income - u.xmin * px)/py]
+                }
+
+            }
+
+        };
+
+        // Find the lowest possible cost for a given level of utility, given px and py
+        u._lowestPossibleCost = function (utility, px, py) {
+
+            return returnsToScale * Math.pow(utility, 1 / returnsToScale) * Math.pow(px / alpha, xProportion) * Math.pow(py / alpha, yProportion);
+
+        };
+
+        return u;
+    }
+
+}();
 

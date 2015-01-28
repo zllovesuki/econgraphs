@@ -57,7 +57,9 @@
             "utility/utility.js",
             "utility/cobbdouglas.js",
             "utility/complements.js",
-            "utility/substitutes.js"
+            "utility/substitutes.js",
+            "utility/ces.js",
+            "utility/inferior.js"
         ]
     },
     {
