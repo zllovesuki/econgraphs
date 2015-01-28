@@ -1,5 +1,7 @@
 /**
  * Created by cmakler on 1/26/15.
+ *
+ * Note: this implements the utility function described in http://www.hindawi.com/journals/isrn/2012/608645/
  */
 
 econgraphs.functions.utility.Inferior = function () {
@@ -128,7 +130,7 @@ econgraphs.functions.utility.Inferior = function () {
         // Find the lowest possible cost for a given level of utility, given px and py
         u._lowestPossibleCost = function (utility, px, py) {
 
-            return returnsToScale * Math.pow(utility, 1 / returnsToScale) * Math.pow(px / alpha, xProportion) * Math.pow(py / alpha, yProportion);
+            return u.xmin*px + u.ymax*py - 0.25/Math.exp(utility); // TODO This is wrong. Needs more math.
 
         };
 
