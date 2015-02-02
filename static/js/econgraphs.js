@@ -402,7 +402,9 @@ econgraphs.functions.utility = {
 
                     var price,
                         quantity,
+                        compensatedIncome,
                         isGoodX = ('y' != demandParams['good']),
+                        compensationPrice = demandParams['compensationPrice'] || 0,
                         minPrice = demandParams['minPrice'] || 0,
                         maxPrice = demandParams['maxPrice'] || 50,
                         income = demandParams['income'],
@@ -415,7 +417,8 @@ econgraphs.functions.utility = {
                     for (var i = 0; i < samplePoints; i++) {
                         if (isGoodX) {
                             price = px;
-                            quantity = u.optimalBundle(income, px, py)[0];
+                            compensatedIncome = (compensationPrice > 0) ? u.compensatedIncome(income, compensationPrice, price, py) : income;
+                            quantity = u.optimalBundle(compensatedIncome, px, py)[0];
                             px += step;
                         } else {
                             price = py;
@@ -428,6 +431,23 @@ econgraphs.functions.utility = {
                     }
 
                     return points;
+                },
+
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+
+                    var points = this.points(xDomain,yDomain),
+                        minPrice = demandParams['minPrice'] || 0,
+                        maxPrice = demandParams['maxPrice'] || 50;
+
+                    points.push({x: 0, y: maxPrice});
+                    points.push({x: 0, y: minPrice});
+
+                    return points;
+
                 }
             }
         };
@@ -1077,7 +1097,7 @@ econgraphs.functions.utility.Inferior = function () {
         // Find the lowest possible cost for a given level of utility, given px and py
         u._lowestPossibleCost = function (utility, px, py) {
 
-            return 75 - 1/Math.exp(utility);
+            return u.xmin*px + u.ymax*py - 0.25/Math.exp(utility); // TODO This is wrong. Needs more math.
 
         };
 
