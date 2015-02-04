@@ -8,14 +8,14 @@
         <hr/>
         <br/>
 
-        <h2>Lecture 6</h2>
+        <h2>Lecture 8</h2>
 
-        <h1>Comparative Statics II: <br/>Income and Substitution Effects</h1>
+        <h1>Comparative Statics III: <br/>Welfare Analysis</h1>
         <br/>
         <hr/>
         <br/>
 
-        <h3>January 28, 2015</h3>
+        <h3>February 2, 2015</h3>
         <hr>
         <br/>
 
@@ -26,15 +26,15 @@
         <h1>Today's Agenda</h1>
         <hr/>
         <h2 class="fragment">Logistics and Context</h2>
-        <h2 class="fragment">First Click: Price- and Income-Consumption Curves</h2>
-        <h2 class="fragment">Finish Kinks & Corners: Budget Constraints</h2>
-        <h2 class="fragment">Motivation: Falling Gas Prices</h2>
-        <h2 class="fragment">Income and Substitution Effects: Intuition</h2>
-        <h2 class="fragment">Two New and Useful Utility Functions</h2>
+        <h2 class="fragment">Motivation: Social Security COLA</h2>
+        <h2 class="fragment">Welfare Analysis: Introduction and Context</h2>
+        <h2 class="fragment">New/Old Tool: Cost Minimization</h2>
+        <h3 class="fragment">Marshallian and Hicksian Demand</h3>
+        <h3 class="fragment">Indirect Utility and Expenditure Functions</h3>
         <hr/>
         <h2 class="fragment">10 minute break</h2>
         <hr/>
-        <h2 class="fragment">Slutzky Decomposition Diagram</h2>
+        <h2 class="fragment">Compensating and Equivalent Variation</h2>
 
     </section>
     <section>
@@ -42,873 +42,479 @@
             <h1>Logistics and Context</h1>
         </section>
         <section>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/app_economy.png') }}">
-            <p>More info: <a href="http://siepr.stanford.edu/policyforum">http://siepr.stanford.edu/policyforum</a>. (Don't miss section!)</p>
-        </section>
-        <section>
-            <h1>Homework 3: Due This Friday!</h1>
-            <p>It's a hard one - use office hours!</p>
-            <br/>
-            <table class="table">
-                <tr>
-                    <td>Prof. Makler</td>
-                    <td>Mondays, 11:00am-12:30pm<br/>
-                        Wednesdays, 2:00-3:30</td>
-                    <td>Landau 224</td>
-                </tr>
-                <tr>
-                    <td>Connor Scherer</td>
-                    <td>Wednesdays, 3-5</td>
-                    <td>Bldg 200, Classroom 030</td>
-                </tr>
-                <tr>
-                    <td>Michael Zhang</td>
-                    <td>Thursdays, 3-5</td>
-                    <td>Bldg 200, Classroom 203</td>
-                </tr>
-                <tr>
-                    <td>Rui Xu</td>
-                    <td>Thursdays, 5-7</td>
-                    <td>Bldg 200, Classroom 034</td>
-                </tr>
-            </table>
-            </section>
-        <section>
             <h1>Midterm: Monday, February 9</h1>
             <hr/>
             <p>Closed notes, closed book, simple calculators only (no phones, programmable, etc.)</p>
+
             <p>Don't wait till the last minute to ask Piazza questions!</p>
-            <p>If you have an OAE letter and have not yet given it to me, please get it to me ASAP.</p>
+
+            <p>Past midterms are posted online; solutions will be posted by Wednesday</p>
+
+            <p>Review sessions this weekend; exact times TBA</p>
+
+            <p>HW 4, Exercise 1: One of these will be on the midterm!</p>
+
+            <p>No homework due next Friday, but we will have section.</p>
+        </section>
+        <section>
+            <h1>Mid-Quarter Evaluations</h1>
+            <hr/>
+            <p>Extremely valuable - let me know what's working, what's not.</p>
+
+            <p><a href="https://ctleval.stanford.edu/auth/evaluation.php?id=8346">http://tinyurl.com/ec50eval</a></p>
+
+            <p>Link will be posted on the course website too</p>
+        </section>
+        <section>
+            <h1>Clickers</h1>
+            <hr/>
+            <p>I'm still trying to download the roster; when I succeed, I'll post the data I have thus far</p>
+        </section>
+        <section>
+            <h1>Tip of the Hat</h1>
+            <p>The notes today were inspired by <a href="http://web.stanford.edu/~jay/micro_class/lecture8.pdf">Jay
+                Bhattacharya's notes</a> from when he taught a similar course at Stanford in 2001.</p>
+            <p>His approach is similar but a little mathier, and he uses different notation...but you might want to check out his notes.</p>
         </section>
     </section>
     <section>
         <section><h1>First Click</h1>
+            <hr/>
+            <h2>Let's get our brains in gear...</h2>
+        </section>
+        <section>
+            <h2>True or False:</h2>
+                <h2>From a Slutsky diagram showing a decrease in the price of X,</h2>
+            <h2>we can tell if <b>good Y</b> is a
+                normal good or not</h2><h2>(at least in the range relevant to the diagram)</h2>
+            <hr/>
+            <clicker-question>
+                <clicker-option letter="A">True</clicker-option>
+                <clicker-option letter="B">False</clicker-option>
+                <clicker-option letter="C">It depends</clicker-option>
+            </clicker-question>
+
+        </section>
+
+    </section>
+    <section>
+        <section><h1>Motivation:</h1>
+            <hr/>
+            <h2>Social Security</h2>
+
+            <h2>Cost of Living Adjustments</h2>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture8/logo-foxnews-update.png') }}">
+
+            <h2>Obama's Move to change Social Security<br/>inflation rate riles supporters on left</h2>
+            <hr/>
+
+            <p style="text-align:left" class="fragment">President Obama seemed to be coaxing Republicans back to the
+                negotiating
+                table<br/>
+                by offering to change the inflation adjustment in Social Security...but his offer also has had<br/>
+                the unwanted side effect of riling many of his supporters on the left.
+            </p>
+
+            <p style="text-align:left" class="fragment">As the White House delivers its 2014 budget proposal to the
+                Hill...grumbling on the right about the budget's increased taxes is almost outdone by the complaints on
+                the
+                left about the Social Security change, which activists say will cut benefits.</p>
+
+            <p style="text-align:left" class="fragment">The liberal group Campaign
+                for America's Future claims it has collected two million signatures
+                from people opposed to such changes to entitlement programs,
+                and delivered the petition to the White House on Tuesday.</p>
+
+            <p><a href="http://www.foxnews.com/politics/2013/04/10/obama-move-to-change-social-security-inflation-rate-riles-supporters-on-left/">Fox News, April 10, 2013</a></p>
+
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture8/aarp-logo.png') }}">
+
+            <h2>Proposed Changes to<br/>Social Security’s Cost-of-Living Adjustment:</h2>
+
+            <h2>What Would They Mean for Beneficiaries?</h2>
+            <hr/>
+
+            <p style="text-align:left" class="fragment">Economic theory states that if the relative prices of goods and
+                services change,
+                consumers will
+                substitute relatively less expensive goods for relatively more expensive goods.<br/>They do this in order to
+                maximize their standard of living given their expenditure budget.</p>
+
+            <p style="text-align:left" class="fragment">The implication of this substitution behavior is at the crux of
+                the CPI debate:
+                the amount of money that
+                would be needed for these consumers to maintain the same standard of living after a price increase is
+                less than it would be if they still purchased the same quantity of different goods (i.e., if they did
+                not engage in substitution).</p>
+
+            <p>
+                <a href="http://www.aarp.org/content/dam/aarp/research/public_policy_institute/econ_sec/2012/proposed-changes-cola-insight-AARP-ppi-econ-sec.pdf">Gary
+                    Koenig & Mikki Waid, AARP Public Policy Institute</a></p>
+        </section>
+    </section>
+
+    <section>
+        <section>
+            <h1>Welfare Analysis:</h1>
+            <hr/>
+            <h2>Introduction and Context</h2>
+        </section>
+        <section>
+            <h2>Comparative Statics: How Do Things Change?</h2>
+            <hr/>
+            <table class="table">
+                <tr>
+                    <td>How does quantity demanded change<br/>when the price of a good changes?</td>
+                    <td class="fragment">Demand Curve<br/>Price-Consumption Curves</td>
+                </tr>
+                <tr>
+                    <td>How does quantity demanded change<br/>when income changes?</td>
+                    <td class="fragment">Engel Curves<br/>Income-Consumption Curve</td>
+                </tr>
+                <tr>
+                    <td>What are the ways in which<br/>consumers optimally respond<br/>to a price change?</td>
+                    <td class="fragment">Slutsky Diagram<br/>Income Effect<br/>Substitution Effect</td>
+                </tr>
+                <tr>
+                    <td>How can we measure the<br/>welfare effects of a price change?</td>
+                    <td class="fragment">Consumer Surplus,<br/>Compensating Variation, Equivalent Variation</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h1>Welfare Analysis</h1>
+            <hr/>
+            <h2>Quantifying gains and losses of a change.</h2>
+            <hr/>
+            <h2 class="fragment">What units should we use?</h2>
+            <h2 class="fragment">...dollars.</h2>
+        </section>
+        <section>
+            <h1>Three Measures of Welfare <b>Change</b></h1>
+            <hr/>
+            <table class="table">
+                <tr>
+                    <td><b>Consumer Surplus</b></td>
+                    <td class="fragment"><b>Change in area</b> under the demand curve<br/>and above the price line</td>
+                </tr>
+                <tr>
+                    <td><b>Compensating Variation</b></td>
+                    <td class="fragment"><b>Change in income</b> required<br/>to achieve <b>initial utility</b><br/>given the <b>new price</b>.</td>
+                </tr>
+                <tr>
+                    <td><b>Equivalent Variation</b></td>
+                    <td class="fragment"><b>Change in income</b> required<br/>to achieve <b>new utility</b><br/>given the <b>initial price</b>.</td>
+                </tr>
+            </table>
+        </section>
+    <section>
+        <img src="{{ url_for('static',filename='images/econ50/lecture8/besanko_5e_fig_05_14.jpg') }}">
+
+        <p>Consumer Surplus: The Econ 1 Approach (B&B, Figure 5.14)</p>
+
+    </section>
+        </section>
+    <section>
+    <section>
+        <h1>A New/Old Tool: Cost Minimization</h1>
         <hr/>
-        <h2>Let's get our brains in gear...</h2>
-        </section>
-        <section>
-            <h2>Which of these diagrams shows the demand curve for X,<br/>for a consumer with a simple linear budget constraint,<br/>if there exists a perfect substitute for X?</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/demand_with_substitutes_clicker.png') }}">
-        </section>
-        <section>
-            <h2>Which of these diagrams shows the demand curve for X,<br/>for a consumer with a sumple linear budget constraint<br/>and preferences summarized by <span rendered-math>u(x,y) = 2x - y</span>?</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/demand_with_bad_clicker.png') }}">
-        </section>
-        <section>
-            <h2>Suppose preferences are smooth, monotonic and strictly convex, and the budget constraint is as shown in green.</h2>
-            <h2>Which point <i>cannot</i> be optimal?</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/kinked_optimality_clicker.png') }}">
-        </section>
-        <section>
-            <h2>(Here's the diagram from the last question,<br/> with some reasonable smooth, convex indifference curves:)</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/kinked_optimality_clicker_soln.png') }}">
-            <p>Bonus question: What preferences have we seen<br/>that would allow C to be an optimal choice?</p>
-        </section>
-
+        <h2>For a given level of utility <span rendered-math>U</span> ,</h2>
+        <h2>and a given set of prices <span rendered-math>(P_x,P_y)</span> ,</h2>
+        <h2>what is the least costly bundle <span rendered-math>(x^*,y^*)</span></h2>
+        <h2>that achieves the desired utility?</h2>
     </section>
     <section>
-        <section><h1>Wrapping up Kinks and Corners:</h1>
-            <hr/>
-            <h2>Optimal Choice with</h2>
-            <h2>Kinked Budget Constraints</h2>
-            <hr/>
-            <p class="fragment">(Bottom line: keep using common sense!)</p>
-        </section>
-        <section>
-            <h1>Types of Kinked Budget Constraints</h1>
-            <hr/>
-            <h2 class="fragment">Subsidy or Gift</h2>
-            <h2 class="fragment">Quantity Price Increase (e.g., cell data plans)</h2>
-
-            <h2 class="fragment">Quantity Discount</h2>
-
-            <h2 class="fragment">Differential Buying/Selling Prices</h2>
-            <h3 class="fragment">(or savings/borrowing interest rates - <br/>next week we'll discuss intertemporal decisions)</h3>
-
-        </section>
-        <section>
-            <h2>Budget Constraint with a Subsidy: Case I</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/besanko_5e_fig_04_11.jpg') }}">
-        </section>
-        <section>
-            <h2>Budget Constraint with a Subsidy: Case II</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/besanko_5e_fig_04_12.jpg') }}">
-        </section>
-        <section>
-            <h2>Budget Constraint with Quantity Price Increase:<br/>Cell Phone Plan Options</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/besanko_5e_fig_04_14.jpg') }}">
-        </section>
-        <section>
-            <h2>Budget Constraint with Quantity Discount</h2>
-            <img src="{{ url_for('static', filename='images/econ50/lecture7/besanko_5e_fig_04_17.jpg') }}">
-        </section>
-        <section>
-            <h1>Solving Kinked Budget Constraint Problems</h1>
-            <hr/>
-            <p><b>Step 1:</b>Find the utility-maximizing point on each segment of the constraint.</p>
-            <ul>
-                <li class="fragment">If the utility function is smooth (differentiable), solve the normal constrained optimization
-                    problem, and see if the result occurs within the segment.</li>
-                <li class="fragment">If the utility function isn't smooth, use the logic you would otherwise use.</li>
-                <li class="fragment">For example, perfect substitutes will tend to have a solution at a kink or a corner;<br/>perfect complements will involve purchasing goods in a particular proportion.</li>
-            </ul>
-            <hr/>
-            <p><b>Step 2: </b>Compare the best along each segment, to find the overall best.</p>
-            <ul>
-                <li class="fragment">Drawing indifference curves carefully through the kinks and corners can help!</li>
-            </ul>
-
-        </section>
-    </section>
-
-    <section>
-        <section>
-            <h1>Motivation:</h1>
-            <h2>Why Income and Substitution Effects?</h2>
-        </section>
-        <section>
-            <h2>NYT: <a
-                    href="http://www.nytimes.com/2015/01/18/business/economy/lower-oil-prices-offer-a-bonanza-to-us-workers.html">Lower
-                Oil Prices Provide Benefits to U.S. Workers</a></h2>
-            <hr/>
-            <img src="{{ url_for('static',filename='images/econ50/lecture7/nyt_gas_prices.png') }}">
-        </section>
-        <section>
-            <h2>Effects of Drop in Oil Prices on Consumers</h2>
-            <hr/>
-            <table>
-                <tr class="fragment">
-                    <td width="30%">Consumers <br/>are able to afford<br/> more of other things</td>
-                    <td>“Oil prices, gas prices, food prices
-                        — luckily it’s going down, which is great,” Ms. Smith said, explaining that when prices were
-                        higher she
-                        had to scale back on groceries to save money for heating oil. “I hope it keeps going.”
-                    </td>
-                </tr>
-                <tr>
-                    <td style="color:white">-</td>
-                    <td style="color:white">-</td>
-
-                </tr>
-                <tr class="fragment">
-                    <td>Consumers (and gov'ts)<br/>are able to afford<br/>more heating oil</td>
-                    <td>With oil prices down, at least for now, the aid that agencies dole out either as part of the
-                        federal low-income home energy assistance program, Liheap, or other efforts, goes much
-                        further...
-
-                        “This year, we’ve been able to get people a full 100 gallons,” said Linda Dudley, assistant
-                        manager of the heat program at Waldo Community Action Partners in Belfast, on the coast.
-                    </td>
-                </tr>
-
-            </table>
-        </section>
-        <section>
-            <h2>Effects of Drop in Oil Prices on Producers</h2>
-            <hr/>
-            <p>“What might be called an energy shock in reverse is creating losers as well as winners.”</p>
-
-            <table>
-                <tr class="fragment">
-                    <td width="30%">Oil companies<br/>are suffering.</td>
-                    <td>States like Texas and North Dakota, which boomed as oil prices mostly stayed above $90 a barrel
-                        from 2011 to mid-2014, are now feeling a chill. So are industries that supply pipes and other
-                        material to energy drillers and frackers, including steel makers and sand producers.
-                    </td>
-                </tr>
-                <tr>
-                    <td style="color:white">-</td>
-                    <td style="color:white">-</td>
-
-                </tr>
-                <tr class="fragment">
-                    <td>Other industries are benefitting</td>
-                    <td>For the overall economy, the tailwind generated by falling crude prices is expected to be
-                        particularly welcome as growth appears to be slackening overseas.
-                    </td>
-                </tr>
-            </table>
-
-        </section>
-        <section>
-            <h2>Effects of Drop in Oil Prices on the Labor Market</h2>
-            <hr/>
-
-            <table>
-                <tr class="fragment">
-                    <td width="30%">Labor Demand Decisions</td>
-                    <td>Consumers typically spend the money they save on fuel in sectors that are more
-                        “employment-heavy” than the energy industry, Mr. Gapen said, like dining, travel and retail. He
-                        noted that stores employ about 13 percent of American workers, compared with the less than 1
-                        percent of Americans who work in oil and gas extraction and related fields.
-                    </td>
-                </tr>
-                <tr>
-                    <td style="color:white">-</td>
-                    <td style="color:white">-</td>
-
-                </tr>
-                <tr class="fragment">
-                    <td>Labor Supply Decisions</td>
-                    <td>For Ms. Smith, the lower oil and gas prices mean she is talking with her husband about possibly
-                        quitting the second job she took on after they fell behind on bills last winter...She works 60
-                        to
-                        80 hours a week and worries that she is not spending enough time with the couple’s four
-                        children, including a grandchild they are raising.
-                    </td>
-                </tr>
-            </table>
-
-        </section>
-    </section>
-
-
-    <section>
-        <section>
-            <h1>Income and Substitution Effects</h1>
-            <hr/>
-            <h2>Measure the <b>ways</b> in which <br/>a consumer responds to a change in price</h2>
-        </section>
-        <section>
-            <h1>Remember: For Interior Solutions (no kinks/corners)</h1>
-            <hr/>
-            <h2><b>Tangency Condition</b>: <span rendered-math>MRS_{x,y} = \frac{P_x}{P_y}</span> </h2>
-
-            <h2><b>Budget Line Condition</b>: <span rendered-math>P_xx + P_yy = I</span></h2>
-
-        </section>
-        <section>
-            <h1>What happens when the price changes?</h1>
-            <hr/>
-            <table class="table">
-                <tr>
-                    <td class="fragment" width="20%">It changes the <br/><b>price ratio</b>...</td>
-                    <td class="fragment" width="25%">...which affects the <b>tangency condition</b>.</td>
-                    <td class="fragment">One good will be <b>relatively cheaper</b> than before the price change, the other good will be <b>relatively more expensive</b>.</td>
-                </tr>
-                <tr>
-                    <td style="color:white">-</td>
-                    <td style="color:white">-</td>
-
-                </tr>
-
-                <tr>
-                    <td class="fragment">It changes your <b>budget set</b>...</td>
-                    <td class="fragment">...which affects the <b>budget line</b>.</td>
-                    <td class="fragment">A decrease in price allows your <b>income to buy more</b> than you could before the price change; an increase in price means you would need <b>more income to afford your original bundle</b>.</td>
-                </tr>
-            </table>
-        </section>
-        <section>
-            <h1>FORMAL DEFINITIONS</h1>
-            <hr/>
-            <h2>The <b>substitution effect</b> is the change in the amount of a good that would be consumed as the <b>price of that good changes</b>, holding constant <b>all other prices</b> and the <b>level of utility</b>.</h2>
-            <hr/>
-            <h2>The <b>income effect</b> is the change in the amount of a good<br/>that a consumer would buy as <b>purchasing power changes</b>,<br/>holding constant <b>all prices</b>.</h2>
-        </section>
-        <section>
-            <h1>INFORMAL DEFINITIONS</h1>
-            <hr/>
-            <div class="row">
-                <div class="col-md-6 fragment">
-                    <p>Suppose the price of a good goes down.</p>
-
-                    <p class="fragment">You could now afford to be<br/><b>just as happy as you were before</b><br>(move <b>along</b> your indifference curve)</p>
-
-                    <p class="fragment">by buying more of that good, and less of<br/>other, now relatively more
-                        expensive goods<br/><b>saving some money in the meantime</b>.</p>
-                    <hr/>
-                    <p class="fragment">This change in consumption would be the <br/><b>substitution effect</b>.
-                    </p>
-                </div>
-                <div class="col-md-6 fragment">
-                    <p class="fragment">...but suppose you don't save the money.</p>
-                    <p class="fragment">You can spend that money to be<br/><b>happier than you were before</b><br/>(move to a <b>higher</b> indifference curve)</p>
-                    <p class="fragment">by buying more of one or both goods<br/>(depending on whether they're normal goods or inferior goods).</p>
-                    <hr/>
-                    <p class="fragment">This change in consumption would be the <b>income effect</b>.</p>
-                </div>
+        <h2>The <b>Dual Problem</b>: Two Equivalent Ways to Optimize</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <h3><b>Utility Maximization</b></h3>
             </div>
+            <div class="col-md-6">
+                <h3><b>Cost Minimization</b></h3>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6 fragment">
+                <table>
+                    <tr>
+                        <td style="text-align:right;width:50%" rendered-math>\max_{x,y}</td>
+                        <td rendered-math>u(x,y)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right">s.t.</td>
+                        <td rendered-math>P_xx + P_yy = I</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6 fragment">
+                <table>
+                    <tr>
+                        <td style="text-align:right;width:50%" rendered-math>\min_{x,y}</td>
+                        <td rendered-math>P_xx + P_yy</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right">s.t.</td>
+                        <td rendered-math>u(x,y) = U</td>
+                    </tr>
+                </table>
 
-        </section>
-        <section>
-            <h1>Two New Utility Functions</h1>
-            <hr/>
-            <table>
-                <tr>
-                    <td>Constant Elasticity of Substitution (CES)</td>
-                    <td>Has a parameter for <b>substitutability</b>.<br/>
-                    In fact, Cobb-Douglas, perfect complements, and perfect substitutes are all special cases of this function!</td>
-                </tr>
-                <tr>
-                    <td style="color:white">-</td>
-                    <td style="color:white">-</td>
-                </tr>
-                <tr>
-                    <td>Inferior Good Utility Function</td>
-                    <td>Has a negative Income-Consumption Curve (over a relevantregion)<br/>Even displays "Giffen Good" characteristics for high incomes!</td>
-                </tr>
-            </table>
-        </section>
-        <section>
-            <h1>Constant Elasticity of Substitution</h1>
-            <hr/>
-            <h2>The CES Utility Function: <span rendered-math>u(x,y) = a x^r + by^r</span></h2>
-            <hr/>
-            <h2 rendered-math>MRS_{x,y} = \frac{MU_x}{MU_y} = \frac{arx^{r-1}}{bry^{r-1}} = \frac{ax^{r-1}}{by^{r-1}}</h2>
-            <ul>
-                <li class="fragment">The parameters <span rendered-math>a</span> and <span rendered-math>b</span> measure how much the consumer likes goods
-                    <span rendered-math>X</span> and <span rendered-math>Y</span>.</li>
-                <li class="fragment">The parameter <span rendered-math>r \le 1</span> adjusts the complementarity or substitutability of the goods:</li>
-                <ul><li class="fragment">When <span rendered-math>r = 1</span>, the goods are perfect substitutes: <span rendered-math>MRS = \frac{a}{b}</span>.</li>
-                <li class="fragment">As <span rendered-math>r \rightarrow 0</span> in the limit, the goods are Cobb-Douglas: <span
-                        rendered-math>MRS \rightarrow \frac{ay}{bx}</span>.</li>
-                <li class="fragment">As <span rendered-math>r \rightarrow -\infty</span> in the limit, the goods are perfect complements.</li>
-                    <li class="fragment">If <span rendered-math>a = b = 1</span> and
-                        <span rendered-math>r = \frac{1}{2}</span>, it becomes our "weak substitutes" example:
-                        <span rendered-math>u(x,y) = \sqrt x + \sqrt y</span>.
-                    </li>
-                </ul>
+            </div>
+        </div>
+        <hr/>
+        <p>Solve for <span rendered-math>x^*</span> and <span rendered-math>y^*</span>; the solutions are:</p>
 
-            </ul>
-        </section>
-        <section>
-            <h2>The CES Utility Function</h2>
-            {% raw %}
-            <model>
+        <div class="row">
+            <div class="col-md-6 fragment">
+                <p><b>Marshallian Demand Functions</b>:</p>
 
+                <p rendered-math>x^*(P_x,P_y,I),y^*(P_x,P_y,I)</p>
+            </div>
+            <div class="col-md-6 fragment">
+                <p><b>Hicksian Demand Functions</b>:</p>
 
-                <!-- Model parameters -->
-                <param name="px" value="3"/>
-                <param name="py" value="2"/>
-                <param name="income" value="60"/>
-                <param name="alpha" value="0.5"/>
-                <param name="s" value="0"/>
+                <p rendered-math>x^*(U,P_x,P_y), y^*(U,P_x,P_y)</p>
 
+            </div>
+        </div>
+        <hr/>
+        <p>Plug <span rendered-math>x^*</span> and <span rendered-math>y^*</span> back into the objective function:</p>
 
-                <!-- Model functions -->
-                <function name="u" category="utility" form="CES"></function>
-                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+        <div class="row">
+            <div class="col-md-6 fragment">
+                <p><b>Indirect Utility Function</b>: </p>
 
-                <div class="row">
+                <p rendered-math>V(P_x,P_y,I) = u[x^*(P_x,P_y,I),y^*(P_x,P_y,I)]</p>
 
+                <p>(Utility from utility-maximizing choice)</p>
+            </div>
+            <div class="col-md-6 fragment">
+                <p><b>Expenditure Function</b>:</p>
 
-                    <div class="col-md-8">
+                <p rendered-math>E(U,P_x,P_y) = P_xx^*(U,P_x,P_y) + P_yy^*(U, P_x,P_y)</p>
 
-                        <graph height="700" width="700">
-                            <axis dim="x" min="0" max="50" title="Good X"></axis>
-                            <axis dim="y" min="0" max="50" title="Good Y"></axis>
-                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).setLevel([5,5])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([10,10])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([15,15])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([20,20])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([25,25])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([30,30])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([35,35])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([40,40])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([45,45])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([50,50])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([55,55])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([60,60])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"></line>
-                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px, params.py)"
-                                   color="green"></curve>
-                            <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
-                                   droplines="both" xlabel="x^*" ylabel="y^*"></point>
+                <p>(Cost of cost-minimizing choice)</p>
+            </div>
+        </div>
 
 
-                        </graph>
+    </section>
+    <section>
+        {% raw %}
+        <model>
+            <param name="x" value="10"/>
+            <function name="u" category="utility" form="CobbDouglas"></function>
+            <function name="b" category="budget" form="SimpleBudgetConstraint" fn-params="{px:2,py:2,income:80}"></function>
+            <function name="c" category="budget" form="SimpleBudgetConstraint" fn-params="{px:2,py:2}"></function>
+            <h2>Simple Cobb-Douglas: <span rendered-math>u(x,y) = xy, P_x = P_y = 2</span></h2>
+        <div class="row">
+            <div class="col-md-6">
+                <graph height="400" width="400">
+                    <axis dim="x" min="0" max="70" title="Good X"></axis>
+                    <axis dim="y" min="0" max="70" title="Good Y"></axis>
+                    <area fn="functions.u.setLevel([params.x,40-params.x]).preferred" color="green"/>
+                    <line fn="functions.b" color="blue"></line>
+                    <curve fn="functions.u" color="darkblue" label="U(x_A,y_A)"></curve>
+                    <point point="[params.x,40-params.x]"
+                           label="A" droplines="both" xlabel="x_A" ylabel="y_A"></point>
+                </graph>
+            </div>
+            <div class="col-md-6">
+                <graph height="400" width="400">
+                    <axis dim="x" min="0" max="70" title="Good X"></axis>
+                    <axis dim="y" min="0" max="70" title="Good Y"></axis>
+                    <area fn="functions.c.updateParams({px:2, py:2, income:(2*params.x + 2*(400/params.x))})"
+                          color="purple"></line>
+                    <line fn="functions.c" color="red"></line>
+                    <curve fn="functions.u.setLevel([20,20])"
+                           color="darkred" label="U = 400"></curve>
+                    <point point="[params.x,(400/params.x)]"
+                           label="B" droplines="both" xlabel="x_B" ylabel="y_B"></point>
+                </graph>
 
-
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <h6>Budget Parameters</h6>
-                            <hr/>
-                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
-                            <slider value="params.px" min="1" max="6" precision="0.25"></slider>
-                            <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
-                            <slider value="params.py" min="1" max="6" precision="0.25"></slider>
-                            <p>Income: ${{ params.income | number:0}}</p>
-                            <slider value="params.income" min="5" max="120" precision="1"></slider>
-                        </div>
-                        <hr/>
-                        <div class="well">
-                            <h6>Utility Parameters</h6>
-                            <hr/>
-                            <p>Preference for X</p>
-                            <slider value="params.alpha" min="0.1" max="0.9" precision="0.01"></slider>
-                            <p>Substitutability</p>
-                            <slider value="params.s" min="-1" max="1" precision="0.1"></slider>
-                            <toggle param="params.showIndifferenceMap" init="false">{{ params.showIndifferenceMap ?
-                                "Hide" :
-                                "Show" }} Indifference Map
-                            </toggle>
-                        </div>
-
-                    </div>
-                </div>
-            </model>
-            {% endraw %}
-        </section>
-        <section>
-            {% raw %}
-            <model>
-
-
-                <!-- Model parameters -->
-                <param name="px" value="3"/>
-                <param name="py" value="2"/>
-                <param name="income" value="60"/>
-                <param name="alpha" value="0.5"/>
-                <param name="s" value="0"/>
-
-
-                <!-- Model functions -->
-                <function name="u" category="utility" form="CES"></function>
-                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
-
-                <div class="row">
-
-
-                    <div class="col-md-8">
-                        <div style="position:absolute;top:0px;left:0px;width:350px;height:350px;">
-
-                            <graph height="350" width="350">
-                                <axis dim="x" min="0" max="65" title="Quantity of X"></axis>
-                                <axis dim="y" min="0" max="65" title="Quantity of Y"></axis>
-                                <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"></line>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,s:params.s}).optimalIndifferenceCurve(params.income, params.px, params.py)"
-                                       color="green" label="U^*"></curve>
-                                <curve fn="functions.u.priceConsumptionCurve({good:'x', income: params.income, otherPrice: params.py, minPrice:0.1, maxPrice:50, samplePoints: 200}) "
-                                       color="blue" label="PCC_X" show="params.showPCCX"></curve>
-                                <curve fn="functions.u.priceConsumptionCurve({good:'y', income: params.income, otherPrice: params.px, minPrice:50, maxPrice:0.1, samplePoints: 200}) "
-                                       color="red" label="PCC_Y" show="params.showPCCY"></curve>
-                                <curve fn="functions.u.incomeConsumptionCurve({maxIncome:200, px:params.px, py:params.py, samplePoints: 50})"
-                                       color="darkorange" label="ICC" show="params.showICC"></curve>
-                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
-                                       droplines="vertical" xlabel="x^*" color="blue"></point>
-                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
-                                       droplines="horizontal" ylabel="y^*" color="red"></point>
-                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"></point>
-
-                            </graph>
-
-                        </div>
-                        <div style="position:absolute;top:350px;left:0px;width:350px;height:350px;">
-                            <graph height="350" width="350">
-                                <axis dim="x" min="0" max="65" title="Quantity of X"></axis>
-                                <axis dim="y" min="0" max="10" title="Price of X"></axis>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,s:params.s}).demandCurve({maxPrice: 10, income: params.income, otherPrice: params.py, samplePoints: 200})"
-                                       color="blue" label="D_X"></curve>
-                                <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0],params.px]"
-                                       droplines="both" xlabel="x^*(P_X)" ylabel="P_X"></point>
-                            </graph>
-                        </div>
-                        <div style="position:absolute;top:350px;left:350px;width:350px;height:350px;">
-                            <graph height="350" width="350">
-                                <axis dim="x" min="0" max="65" title="Quantity of Y"></axis>
-                                <axis dim="y" min="0" max="10" title="Price of Y"></axis>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,s:params.s}).demandCurve({good:'y',maxPrice: 10, income: params.income, otherPrice: params.px, samplePoints: 200})"
-                                       label="D_Y"
-                                       color="red"></curve>
-                                <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[1],params.py]"
-                                       droplines="both" xlabel="y^*(P_Y)" ylabel="P_Y"></point>
-                            </graph>
-                        </div>
-                        <div style="position:absolute; top:0px;left:350px;width:400px;height:350px">
-                            <p>CES Demand:</p>
-                            <div>
-                                <toggle param="params.showPCCX">{{ params.showPCCX ? 'Hide' : 'Show' }} <span
-                                        rendered-math>PCC_X</span></toggle>
-                            </div>
-                            <div>
-                                <toggle param="params.showPCCY">{{ params.showPCCY ? 'Hide' : 'Show' }} <span
-                                        rendered-math>PCC_Y</span></toggle>
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <h6>Budget Parameters</h6>
-                            <hr/>
-                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
-                            <slider value="params.px" min="1" max="6" precision="0.25"></slider>
-                            <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
-                            <slider value="params.py" min="1" max="6" precision="0.25"></slider>
-                            <p>Income: ${{ params.income | number:0}}</p>
-                            <slider value="params.income" min="5" max="120" precision="1"></slider>
-                        </div>
-                        <hr/>
-                        <div class="well">
-                            <h6>Utility Parameters</h6>
-                            <hr/>
-                            <p>Preference for X</p>
-                            <slider value="params.alpha" min="0.1" max="0.9" precision="0.01"></slider>
-                            <p>Substitutability</p>
-                            <slider value="params.s" min="-1" max="1" precision="0.1"></slider>
-                        </div>
-
-                    </div>
-                </div>
-            </model>
-            {% endraw %}
-        </section>
-        <section>
-            <h1>PRICE-CONSUMPTION CURVES<br/>AND SUBSTITUTABILITY</h1>
-            <hr/>
+            </div>
+        </div>
             <div class="row">
-                <div class="col-md-6 fragment">
-                    <p>If price-consumption curves<br/>are <b>upward-sloping</b>,</p>
-                    <p>it means that the quantities<br/>of goods X and Y</p>
-                    <p>move <b>in the same direction</b><br/>when the price changes;</p>
-                    <p>so they're <b>complements</b>.</p>
 
+
+                <div class="col-md-6">
+                    <p>Utility maximization with <span rendered-math>I = 80</span></p>
+                    <p>Current bundle: <span rendered-math expression="({{ params.x }},{{ 40 - params.x }})"></span></p>
+                    <p>Current utility: <span rendered-math expression="{{ params.x * (40 - params.x) }}"></span></p>
                 </div>
-                <div class="col-md-6 fragment">
-                    <p>If price-consumption curves<br/>are <b>downward-sloping</b>,</p>
-
-                    <p>it means that the quantities<br/>of goods X and Y</p>
-
-                    <p>move <b>in opposite directions</b><br/>when the price changes;</p>
-
-                    <p>so they're <b>substitutes</b>.</p>
+                <div class="col-md-6">
+                    <p>Cost minimization with <span rendered-math>U = 400</span></p>
+                    <p>Current bundle: <span rendered-math expression="({{ params.x }},{{ 400/params.x | number : 2 }})"></span></p>
+                    <p>Current cost: $<span rendered-math expression="{{ 2 * (params.x + 400/params.x) | number: 2 }}"></span></p>
 
                 </div>
             </div>
-             </section>
-        <section>
-            <h1>An Inferior/Giffen Good:</h1>
-            <hr/>
-            <h2 rendered-math>u(x,y) = a \ln (x - x_\text{min}) - b \ln (y_\text{max} - y)</h2>
-            <hr/>
-            <p>The <span rendered-math>x_\text{min}</span> parameter shows that there is a "subsistence level" of good X.</p>
-            <p>The <span rendered-math>y_\text{max}</span> parameter shows that there is a "saturation level" of good Y.</p>
-            <p>Displays negative-sloped Income-Consumption Curve nearly everywhere, and Giffen Good behavior for high levels of income.</p>
-            <hr/>
-            <p class="fragment">Not a standard utility function! Violates all kinds of assumptions! <span
-                    class="fragment highlight-red">DO NOT MEMORIZE!</span></p>
+        <div>
+            <p rendered-math expression="x: {{ params.x }}"></p>
+            <slider value="params.x" min="5" max="35" precision="1"></slider>
 
-        </section>
-        <section>
-            <h2>When Good X is an Inferior Good (sometimes Giffen!)</h2>
-            {% raw %}
-            <model>
-
-
-                <!-- Model parameters -->
-                <param name="px" value="1.5"/>
-                <param name="py" value="1.5"/>
-                <param name="income" value="60"/>
-                <param name="alpha" value="1"/>
-                <param name="delta" value="1"/>
-                <param name="xmin" value="10"/>
-                <param name="ymax" value="40"/>
-
-
-                <!-- Model functions -->
-                <function name="u" category="utility" form="Inferior"></function>
-                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
-
-                <div class="row">
-
-
-                    <div class="col-md-8">
-
-                        <graph height="700" width="700">
-                            <axis dim="x" min="0" max="45" title="{{ params.xLabel }}"></axis>
-                            <axis dim="y" min="0" max="45" title="Good Y"></axis>
-                            <curve fn="functions.u.updateParams({alpha:params.alpha, delta:params.delta, xmin: params.xmin, ymax: params.ymax}).setLevel([10,10])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([12.5,12.5])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([15,15])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([17.5,17.5])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([20,20])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([22.5,22.5])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([25,25])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([27.5,27.5])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([30,30])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([32.5,32.5])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([35,35])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <curve fn="functions.u.setLevel([37.5,37.5])"
-                                   color="#AAAAAA" show="params.showIndifferenceMap"></curve>
-                            <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"></line>
-                            <curve fn="functions.u.optimalIndifferenceCurve(params.income, params.px, params.py)"
-                                   color="green"></curve>
-                            <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
-                                   droplines="both" xlabel="x^*" ylabel="y^*"></point>
-                            <curve fn="functions.u.priceConsumptionCurve({good:'x', income: params.income, otherPrice: params.py, minPrice:0.5, maxPrice:25, samplePoints: 250}) "
-                                   color="blue" label="PCC_X" ind="y" show="params.showPCCX"></curve>
-                            <curve fn="functions.u.incomeConsumptionCurve({minIncome: 0, maxIncome:100, px:params.px, py:params.py, samplePoints: 50})"
-                                   color="darkorange" label="ICC" ind="y" show="params.showICC"></curve>
-
-
-                        </graph>
-
-
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <h6>Budget Parameters</h6>
-                            <hr/>
-                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
-                            <slider value="params.px" min="1" max="2" precision="0.01"></slider>
-                            <!--<p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
-                            <slider value="params.py" min="1.5" max="2.5" precision="0.01"></slider>-->
-                            <p>Income: ${{ params.income | number:0}}</p>
-                            <slider value="params.income" min="50" max="100" precision="1"></slider>
-                        </div>
-                        <hr/>
-                        <toggle param="params.showPCCX">{{ params.showPCCX ? 'Hide' : 'Show' }} <span
-                                rendered-math>PCC_X</span></toggle>
-                        <toggle param="params.showICC">{{ params.showICC ? 'Hide' : 'Show' }} <span
-                                rendered-math>ICC</span></toggle>
-                        <toggle param="params.showIndifferenceMap" init="false">{{ params.showIndifferenceMap ? "Hide" :
-                            "Show" }} Indifference Map
-                        </toggle>
-                    </div>
-                </div>
-            </model>
-            {% endraw %}
-        </section>
-        <section>
-            {% raw %}
-            <model>
-
-
-                <!-- Model parameters -->
-                <param name="px" value="1.5"/>
-                <param name="py" value="1.5"/>
-                <param name="income" value="60"/>
-                <param name="alpha" value="1"/>
-                <param name="delta" value="1"/>
-                <param name="xmin" value="10"/>
-                <param name="ymax" value="40"/>
-
-
-                <!-- Model functions -->
-                <function name="u" category="utility" form="Inferior"></function>
-                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
-
-                <div class="row">
-
-
-                    <div class="col-md-8">
-                        <div style="position:absolute;top:0px;left:0px;width:350px;height:350px;">
-
-                            <graph height="350" width="350">
-                                <axis dim="x" min="0" max="45" title="{{ params.xLabel }}"></axis>
-                                <axis dim="y" min="0" max="45" title="Good Y"></axis>
-                                <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"></line>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,delta:params.delta, xmin: params.xmin, ymax: params.ymax}).optimalIndifferenceCurve(params.income, params.px, params.py)"
-                                       color="green" label="U^*" ind="y"></curve>
-                                <curve fn="functions.u.incomeConsumptionCurve({minIncome: 0, maxIncome:100, px:params.px, py:params.py, samplePoints: 50})"
-                                       color="darkorange" label="ICC" ind="y" show="params.showICC"></curve>
-                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
-                                       droplines="vertical" xlabel="x^*" color="blue"></point>
-                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
-                                       droplines="horizontal" ylabel="y^*" color="red"></point>
-                                <point point="functions.u.optimalBundle(params.income, params.px, params.py)"></point>
-
-                            </graph>
-
-                        </div>
-                        <div style="position:absolute;top:350px;left:350px;width:350px;height:350px;">
-                            <graph height="350" width="350">
-                                <axis dim="x" min="0" max="45" title="Quantity of X"></axis>
-                                <axis dim="y" min="0" max="100" title="Income"></axis>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,delta:params.delta, xmin: params.xmin, ymax: params.ymax}).engelCurve({maxIncome:140, px:params.px, py:params.py, samplePoints: 50})"
-                                       color="blue" label="\text{Engel}_X"></curve>
-                                <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0],params.income]"
-                                       droplines="both" xlabel="x^*(I)" ylabel="I"></point>
-                            </graph>
-                        </div>
-                        <div style="position:absolute;top:350px;left:0px;width:350px;height:350px;">
-                            <graph height="350" width="350">
-                                <axis dim="x" min="0" max="45" title="Quantity of X"></axis>
-                                <axis dim="y" min="0" max="3" title="Price of X"></axis>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,delta:params.delta, xmin: params.xmin, ymax: params.ymax}).demandCurve({minPrice: 0.5, maxPrice: 2.5, income: params.income, otherPrice: params.py, samplePoints: 200})"
-                                       color="blue" label="D_X"></curve>
-                                <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0],params.px]"
-                                       droplines="both" xlabel="x^*(P_X)" ylabel="P_X"></point>
-                            </graph>
-                        </div>
-
-                        <div style="position:absolute; top:0px;left:350px;width:400px;height:350px">
-                            <p>Inferior and Giffen Demand and Engel Curves! Bizarro!</p>
-                            <div>
-                                <toggle param="params.showICC">{{ params.showICC ? 'Hide' : 'Show' }} <span
-                                        rendered-math>ICC</span></toggle>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <h6>Budget Parameters</h6>
-                            <hr/>
-                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
-                            <slider value="params.px" min="1" max="2" precision="0.01"></slider>
-                            <!--<p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
-                            <slider value="params.py" min="1.5" max="2.5" precision="0.01"></slider>-->
-                            <p>Income: ${{ params.income | number:0}}</p>
-                            <slider value="params.income" min="50" max="70" precision="1"></slider>
-                        </div>
-                        <hr/>
-                        <blockquote>Side note: there are lots of parameters that make this graph wig out! It's a <b>really weird</b> utiity function. Don't try to understand it too much...</blockquote>
-                    </div>
-                </div>
-            </model>
-            {% endraw %}
-        </section>
-        <section>
-            <h1>So why did I subject you to that?</h1>
-            <hr/>
-            <h2>After the break: Slutzky Diagrams!</h2>
-            <hr/>
-            <p>We'll use these two functions <br/>to examine price changes when:</p>
-            <p>(a) goods are complements</p>
-            <p>(b) goods are substitutes</p>
-            <p>(c) goods are neutral (Cobb-Douglas)</p>
-            <p>(d) goods are inferior or Giffen</p>
-        </section>
+        </div>
+        </model>
+        {% endraw %}
 
     </section>
-    <section>
-        <h1>Ten Minute Break</h1>
-    </section>
-
-    <section>
         <section>
-            <h1>Remember our story...</h1>
+            <h1>HICKSIAN DEMAND</h1>
+            <h2>(or "compensated demand")</h2>
             <hr/>
+            <h2 rendered-math>x^*(P_x,P_y,U)</h2>
+            <hr/>
+            <p>The quantity demanded of <span rendered-math>X</span>, as a function of the price of <span rendered-math>X</span>,</p>
+            <p>if the consumer is compensated enough</p>
+            <p>to continuously achieve utility level <span rendered-math>U</span>.</p>
+        </section>
+    <section>
+        {% raw %}
+        <model>
+            <param name="px" value="2"/>
+            <function name="u" category="utility" form="CES" fn-params="{s:0}"></function>
+            <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+            <h2>Simple Cobb-Douglas: <span rendered-math>u(x,y) = xy</span>;<br/>start with <span
+                    rendered-math>P_x = 2, P_y = 2, I = 80</span></h2>
+
             <div class="row">
-                <div class="col-md-6 fragment">
-                    <p>Suppose the price of a good goes down.</p>
-
-                    <p class="fragment">You could now afford to be<br/><b>just as happy as you were before</b><br>(move
-                        <b>along</b> your indifference curve)</p>
-
-                    <p class="fragment">by buying more of that good, and less of<br/>other, now relatively more
-                        expensive goods<br/><b>saving some money in the meantime</b>.</p>
-                    <hr/>
-                    <p class="fragment">This change in consumption would be the <br/><b>substitution effect</b>.
-                    </p>
+                <div class="col-md-6">
+                    <graph height="400" width="400">
+                        <axis dim="x" min="0" max="70" title="Good X"></axis>
+                        <axis dim="y" min="0" max="70" title="Good Y"></axis>
+                        <line fn="functions.b.updateParams({px:2,py:2,income:80})" color="grey"></line>
+                        <line fn="functions.b.updateParams({px:params.px,py:2,income:80})" color="blue"></line>
+                        <curve fn="functions.u.optimalIndifferenceCurve(80,params.px,2)" color="darkblue" label="U(x^*,y^*)"></curve>
+                        <point point="functions.u.optimalBundle(80,params.px,2)"
+                               label="M"></point>
+                        <point point="[0,40]" r="3" color="blue" ylabel="\frac{80}{P_y}"></point>
+                        <point point="[40,0]" r="3" color="grey" xlabel="\frac{80}{2}"></point>
+                        <point point="[80/params.px,0]" r="3" color="blue" xlabel="\frac{80}{P_x}"></point>
+                    </graph>
                 </div>
-                <div class="col-md-6 fragment">
-                    <p class="fragment">...but suppose you don't save the money.</p>
+                <div class="col-md-6">
+                    <graph height="400" width="400">
+                        <axis dim="x" min="0" max="70" title="Good X"></axis>
+                        <axis dim="y" min="0" max="70" title="Good Y"></axis>
+                        <line fn="functions.b.updateParams({px:2, py:2, income:80})" color="grey"></line>
+                        <line fn="functions.b.updateParams({px:params.px, py:2, income:functions.u.compensatedIncome(80,2,params.px,2)})" color="red"></line>
+                        <curve fn="functions.u.setLevel([20,20])"
+                               color="darkred" label="U = 400"></curve>
+                        <point point="functions.u.decompositionBundle(80, 2, params.px, 2)" label="H"></point>
+                        <point point="[0,functions.u.compensatedIncome(80,2,params.px,2)/2]" r="3" color="red" ylabel="\frac{E}{P_y}"></point>
+                        <point point="[0,40]" r="3" color="grey" ylabel="\frac{80}{P_y}"></point>
+                        <point point="[40,0]" r="3" color="grey" xlabel="\frac{80}{2}"></point>
+                        <point point="[functions.u.compensatedIncome(80,2,params.px,2)/params.px,0]" r="3" color="red" xlabel="\frac{E}{P_x}"></point>
 
-                    <p class="fragment">You can spend that money to be<br/><b>happier than you were before</b><br/>(move
-                        to a <b>higher</b> indifference curve)</p>
+                    </graph>
 
-                    <p class="fragment">by buying more of one or both goods<br/>(depending on whether they're normal
-                        goods or inferior goods).</p>
-                    <hr/>
-                    <p class="fragment">This change in consumption would be the <b>income effect</b>.</p>
                 </div>
             </div>
+            <div class="row"><div class="col-md-6">
+                    <p>Marshallian Response with <span rendered-math>I = 80</span></p>
+                </div>
+                <div class="col-md-6">
+                    <p>Hicksian Response with <span rendered-math>U = 400</span></p>
+                </div>
+            </div>
+            <div>
+                <p rendered-math expression="P_x: \${{ params.px | number:2 }}"></p>
+                <slider value="params.px" min="1.15" max="5" precision="0.01"></slider>
+            </div>
+        </model>
+        {% endraw %}
 
-        </section>
+    </section>
+    <section>
+        <h2>How to Derive Hicksian Demand from Marshallian Demand</h2>
+        <hr/>
+        <p>Example: Cobb-Douglas <span rendered-math>u(x,y) = xy</span></p>
+        <hr/>
+        <div class="row">
+            <div class="col-md-5 fragment">Start with Marshallian demand:</div>
+            <div class="col-md-7 fragment" rendered-math>\displaystyle{x^* = \frac{I}{2P_x}, y^* = \frac{I}{2P_y}}</div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-5 fragment">Plug <span rendered-math>(x^*,y^*)</span> back into <span rendered-math>u(x,y) = xy</span><br/>to find the indirect utility function:</div>
+            <div class="col-md-7 fragment"><span rendered-math>\displaystyle{u(x^*,y^*) = \left(\frac{I}{2P_x}\right)\left(\frac{I}{2P_y}\right) }</span>
+                <span rendered-math class="fragment" style="color:green">\displaystyle{\Rightarrow V(P_x,P_y,I) = \frac{I^2}{4P_xP_y} }</span></div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-5 fragment">Set the indirect utility function equal to <span rendered-math>U</span> and solve for <span rendered-math>I</span>to find the expenditure
+                function:</div>
+            <div class="col-md-7 fragment"><span rendered-math>\displaystyle{\color{green}{\frac{I^2}{4P_xP_y}} = U}</span>
+                <span rendered-math class="fragment">\Rightarrow I^2 = 4P_xP_yU</span>
+                <span rendered-math class="fragment" style="color:blue">\displaystyle{\Rightarrow E(P_x,P_y,U) = 2P_x^\frac{1}{2}P_y^\frac{1}{2}U^\frac{1}{2}}</span>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-5 fragment">Plug this "lowest cost" back into the Marshallian demand (as the income) to get the Hicksian
+                demand:
+            </div>
+            <div class="col-md-7 fragment"><span rendered-math>\displaystyle{x^* = \frac{\color{blue}{E(P_x,P_y,U)}}{2P_x} = \frac{2P_x^\frac{1}{2}P_y^\frac{1}{2}U^\frac{1}{2}}{2P_x}}</span>
+                <span rendered-math class="fragment" style="color:red">\displaystyle{\Rightarrow x^H(P_x,P_y,U) = \left(\frac{P_y}{P_x}\right)^\frac{1}{2}U^\frac{1}{2}}</span>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Hicksian and Marshallian Demand Curves</h2>
+        <hr/>
+        {% raw %}
+
+        <model>
+            <param name="px" value="2"/>
+            <function name="u" category="utility" form="CES"></function>
+            <div class="row">
+            <div class="col-md-8">
+                <graph height="600" width="600">
+                <axis dim="x" min="0" max="65" title="Quantity of X" ticks="0"></axis>
+                <axis dim="y" min="0" max="6" title="Price of X"></axis>
+                    <curve fn="functions.u.updateParams({alpha:0.5,s:0}).demandCurve({maxPrice: 10, income: 80, otherPrice: 2, samplePoints: 200})"
+                           color="blue" label="D^M"></curve>
+                    <curve fn="functions.u.updateParams({alpha:0.5,s:0}).demandCurve({minPrice: 0.2, maxPrice: 10, income: 80, compensationPrice: 3, otherPrice: 2, samplePoints: 200})"
+                           color="red" label="D^H_{P_x=3}"></curve>
+                    <curve fn="functions.u.updateParams({alpha:0.5,s:0}).demandCurve({minPrice: 0.5, maxPrice: 10, income: 80, compensationPrice: 1, otherPrice: 2, samplePoints: 200})"
+                           color="red" label="D^H_{P_x=1}" show="params.showSecondHicks"></curve>
+                    <point point="[functions.u.optimalBundle(80, 3, 2)[0],3]"
+                       droplines="both" xlabel="x^*(3)"></point>
+                    <point point="[functions.u.optimalBundle(80, 1, 2)[0],1]"
+                           droplines="both" xlabel="x^*(1)" show="params.showSecondHicks"></point>
+                    </graph>
+            </div>
+                <div class="col-md-4" style="text-align:left">
+                    <p><span rendered-math style="color:blue">D^M</span> shows the Marshallian demand for Good X.</p>
+                    <hr/>
+                    <p><span rendered-math style="color:red">D^H_{P_x = 3}</span> shows the Hicksian ("compensated") demand for
+                        Good X, if at every price the consumer's income is adjusted so that she can still attain the same utility as when <span rendered-math>P_x = 3</span>.</p>
+                    <hr/>
+                    <toggle param="params.showSecondHicks" init="false">{{ params.showSecondHicks ? "Hide" : "Show" }} Hicksian Demand for <span rendered-math>P_x = 1</span> </toggle>
+
+                    </div>
+            </div>
+        </model>
+        {% endraw %}
+
+    </section>
+</section>
+    <section>
+    <h1>Ten Minute Break</h1>
+    </section>
+    <section>
+    <section>
+        <h1>Compensating and Equivalent Variation</h1>
+        <hr/>
+        <h2>Graphical Analysis</h2>
+    </section>
         <section>
-            <h1>The Slutzky Decomposition Diagram</h1>
-            <hr/>
-            <table class="table">
-                <tr style="background-color:darkblue; color:white">
-                    <td>Point</td>
-                    <td>Description</td>
-                    <td>Utility</td>
-                    <td>Price</td>
-                    <td>Income</td>
-
-
-                </tr>
-                <tr>
-                    <td>A</td>
-                    <td>Initial bundle</td>
-                    <td>Initial utility</td>
-                    <td>Initial price</td>
-                    <td>Actual income</td>
-
-
-                </tr>
-                <tr class="fragment">
-                    <td>B</td>
-                    <td>"Decomposition" bundle</td>
-                    <td style="background-color:lightgreen" class="fragment">Initial utility</td>
-                    <td style="background-color:lightgreen" class="fragment">Final price</td>
-                    <td style="background-color:lightgreen" class="fragment">Compensated income</td>
-
-                </tr>
-                <tr>
-                    <td>C</td>
-                    <td>Final bundle</td>
-                    <td>Final utility</td>
-                    <td>Final price</td>
-                    <td>Actual income</td>
-                </tr>
-            </table>
-
-        </section>
-        <section>
-            <img src="{{ url_for('static',filename='images/econ50/lecture7/slutzky1.png') }}">
-            <p>Point A is the optimal bundle for the consumer's income with the original price of X.</p>
-        </section>
-        <section>
-            <img src="{{ url_for('static',filename='images/econ50/lecture7/slutzky2.png') }}">
-
-            <p>Point C is the optimal bundle for the consumer's income with at the new price of X.</p>
-
-        </section>
-        <section>
-            <img src="{{ url_for('static',filename='images/econ50/lecture7/slutzky3.png') }}">
-            <p>Point B is the "decomposition point" on the original indifference curve <span rendered-math>(U_1)</span>.</p>
-            <p>At the new price of X, the consumer could afford it with less income <span rendered-math>(BL_d)</span>.</p>
-        </section>
-        <section>
-            <h1>Let's generate the Slutztky Diagram for a simple CES utility function</h1>
-            <hr/>
-            <h2 rendered-math>u(x,y) = x^r + y^r</h2>
-            <h2 rendered-math>I = 60</h2>
-
-            <h2 rendered-math>P_{x_1} = 3</h2>
-            <h2 rendered-math>P_{x_2} = 1</h2>
-            <h2 rendered-math>P_y = 1</h2>
-            <hr/>
-
-
-            <p>Initial budget line <span rendered-math>(BL_1)</span>: <span rendered-math>3x + y = 60</span></p>
-
-            <p>New budget line <span rendered-math>(BL_2)</span>: <span rendered-math>2x + y = 60</span></p>
-        </section>
-        <section>
-            <h2>Slutzky Diagram for a CES Utility Function</h2>
+            <h2>Recall: Slutsky Diagram (not Slutzky...oops)</h2>
             {% raw %}
             <model>
 
@@ -917,7 +523,7 @@
                 <param name="px1" value="3"/>
                 <param name="px2" value="1"/>
                 <param name="py" value="1"/>
-                <param name="income" value="60"/>
+                <param name="income" value="30"/>
                 <param name="alpha" value="0.5"/>
                 <param name="s" value="-0.2"/>
 
@@ -934,29 +540,40 @@
                         <graph height="700" width="700">
                             <axis dim="x" min="0" max="70" title="" ticks="0"></axis>
                             <axis dim="y" min="0" max="70" title="" ticks="0"></axis>
-                            <line fn="functions.b.updateParams({px:params.px1, py:params.py, income:params.income})" color="blue"></line>
+                            <line fn="functions.b.updateParams({px:params.px1, py:params.py, income:params.income})"
+                                  color="blue"></line>
                             <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px1, params.py)"
                                    color="darkblue" label="U_1"></curve>
-                            <point point="functions.u.optimalBundle(params.income, params.px1, params.py)"
-                                   droplines="both" xlabel="x_A" ylabel="y_A" label="A"></point>
-                            <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:params.income})" color="red"></line>
+                            <point point="functions.u.optimalBundle(params.income, params.px1, params.py)" label="A"></point>
+                            <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:params.income})"
+                                  color="red"></line>
                             <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px2, params.py)"
                                    color="darkred" label="U_2"></curve>
-                            <point point="functions.u.optimalBundle(params.income, params.px2, params.py)"
-                                   droplines="both" xlabel="x_C" ylabel="y_C" label="C"></point>
-                            <point point="functions.u.decompositionBundle(params.income, params.px1, params.px2, params.py)"
-                                   droplines="both" xlabel="x_B" ylabel="y_B" label="B" show="params.showDecompositionPoint"></point>
                             <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)})"
                                   color="red" show="params.showDecompositionPoint"></line>
-                            <point color="purple" point="[0,params.income/params.py]" droplines="none" ylabel="\displaystyle{\frac{I}{P_y}}"></point>
-                            <point color="red" point="[params.income/params.px2,0]" droplines="none" xlabel="\displaystyle{\frac{I}{P_{x_2}}}"></point>
-                            <point color="blue" point="[params.income/params.px1,0]" droplines="none" xlabel="\displaystyle{\frac{I}{P_{x_1}}}"></point>
-                            <point color="red" point="[functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)/params.px2,0]" droplines="none"
-                                   xlabel="\displaystyle{\frac{I_d}{P_{x_2}}}" show="params.showDecompositionPoint"></point>
+                            <point color="purple" point="[0,params.income/params.py]" droplines="none"
+                                   ylabel="\displaystyle{\frac{I}{P_y}}" r="3"></point>
+                            <point color="red" point="[params.income/params.px2,0]" droplines="none"
+                                   xlabel="\displaystyle{\frac{I}{P_{x_2}}}" r="3"></point>
+                            <point color="blue" point="[params.income/params.px1,0]" droplines="none"
+                                   xlabel="\displaystyle{\frac{I}{P_{x_1}}}" r="3"></point>
+                            <point color="red"
+                                   point="[functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)/params.px2,0]"
+                                   droplines="none"
+                                   xlabel="\displaystyle{\frac{I_d}{P_{x_2}}}"
+                                   show="params.showDecompositionPoint" r="3"></point>
                             <point color="red"
                                    point="[0,functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)/params.py]"
                                    droplines="none"
-                                   ylabel="\displaystyle{\frac{I_d}{P_{y}}}" show="params.showDecompositionPoint"></point>
+                                   ylabel="\displaystyle{\frac{I_d}{P_{y}}}"
+                                   show="params.showDecompositionPoint" r="3"></point>
+
+                            <point point="functions.u.optimalBundle(params.income, params.px2, params.py)"
+                                   label="C"></point>
+                            <point point="functions.u.decompositionBundle(params.income, params.px1, params.px2, params.py)"
+                                   label="B"
+                                   show="params.showDecompositionPoint"></point>
+
 
 
                         </graph>
@@ -965,7 +582,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="well">
-                            <h6>Budget Parameters</h6>
+                            <h6>Parameters</h6>
                             <hr/>
                             <p style="color:blue" rendered-math expression="P_{x_1}: \${{ params.px1 | number:2 }}"></p>
                             <slider value="params.px1" min="1" max="6" precision="0.25"></slider>
@@ -973,17 +590,19 @@
                             <slider value="params.px2" min="1" max="6" precision="0.25"></slider>
                             <p>Income: ${{ params.income | number:0}}</p>
                             <slider value="params.income" min="5" max="120" precision="1"></slider>
+                            <p>Substitutability:
+                                <span ng-if="params.s < 0">Complements</span>
+                                <span ng-if="params.s == 0">Neutral</span>
+                                <span ng-if="params.s > 0">Substitutes</span></p>
+                            <slider value="params.s" min="-1" max="1" precision="0.1"></slider>
                         </div>
                         <hr/>
                         <div class="well">
-                            <h6>Utility Parameters</h6>
-                            <hr/>
-                            <p>Substitutability</p>
-                            <slider value="params.s" min="-1" max="1" precision="0.1"></slider>
-                            <toggle param="params.showDecompositionPoint" init="false">{{ params.showIndifferenceMap ?
+                            <toggle param="params.showDecompositionPoint" init="false">{{ params.showDecompositionPoint ?
                                 "Hide" :
-                                "Show" }} Descomposition Point
+                                "Show" }} Decomposition Point
                             </toggle>
+
                         </div>
 
                     </div>
@@ -991,32 +610,270 @@
             </model>
             {% endraw %}
         </section>
+        <section>
+            {% raw %}
+            <model>
+
+
+                <!-- Model parameters -->
+                <param name="px1" value="3"/>
+                <param name="px2" value="1"/>
+                <param name="py" value="1"/>
+                <param name="income" value="35"/>
+                <param name="alpha" value="0.5"/>
+                <param name="s" value="-0.2"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+
+
+                    <div class="col-md-6">
+
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="70" title="" ticks="0"></axis>
+                            <axis dim="y" min="0" max="70" title="" ticks="0"></axis>
+                            <line fn="functions.b.updateParams({px:params.px1, py:params.py, income:params.income})"
+                                  color="blue"></line>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px1, params.py)"
+                                   color="darkblue" label="U_1"></curve>
+                            <point point="functions.u.optimalBundle(params.income, params.px1, params.py)"
+                                   label="A"></point>
+                            <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:params.income})"
+                                  color="red"></line>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px2, params.py)"
+                                   color="darkred" label="U_2"></curve>
+                            <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)})"
+                                  color="red"></line>
+                            <point color="purple" point="[0,params.income/params.py]" droplines="none"
+                                   ylabel="\displaystyle{\frac{I}{P_y}}" r="3"></point>
+                            <point color="red" point="[params.income/params.px2,0]" droplines="none"
+                                   xlabel="\displaystyle{\frac{I}{P_{x_2}}}" r="3"></point>
+                            <point color="blue" point="[params.income/params.px1,0]" droplines="none"
+                                   xlabel="\displaystyle{\frac{I}{P_{x_1}}}" r="3"></point>
+                            <point color="red"
+                                   point="[functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)/params.px2,0]"
+                                   droplines="none"
+                                   xlabel="\displaystyle{\frac{E(U_1,P_{x_2},P_y)}{P_{x_2}}}" r="3"></point>
+                            <point color="red"
+                                   point="[0,functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)/params.py]"
+                                   droplines="none"
+                                   ylabel="\displaystyle{\frac{E(U_1,P_{x_2},P_y)}{P_{y}}}" r="3"></point>
+                            <point point="functions.u.optimalBundle(params.income, params.px2, params.py)"
+                                   label="C"></point>
+                            <point point="functions.u.decompositionBundle(params.income, params.px1, params.px2, params.py)"
+                                   label="B"></point>
 
 
 
+                        </graph>
+                        <p>Compensating Variation: <span rendered-math>I - E(U_1,P_{x_2},P_y)</span> </p>
 
-    </section>
 
+                    </div>
+                    <div class="col-md-6 fragment">
+
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="70" title="" ticks="0"></axis>
+                            <axis dim="y" min="0" max="70" title="" ticks="0"></axis>
+                            <line fn="functions.b.updateParams({px:params.px1, py:params.py, income:params.income})"
+                                  color="blue"></line>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px1, params.py)"
+                                   color="darkblue" label="U_1"></curve>
+                            <point point="functions.u.optimalBundle(params.income, params.px1, params.py)"
+                                   label="A"></point>
+                            <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:params.income})"
+                                  color="red"></line>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px2, params.py)"
+                                   color="darkred" label="U_2"></curve>
+                            <point color="purple" point="[0,params.income/params.py]" droplines="none"
+                                   ylabel="\displaystyle{\frac{I}{P_y}}" r="3"></point>
+                            <point color="red" point="[params.income/params.px2,0]" droplines="none"
+                                   xlabel="\displaystyle{\frac{I}{P_{x_2}}}" r="3"></point>
+                            <point color="blue" point="[params.income/params.px1,0]" droplines="none"
+                                   xlabel="\displaystyle{\frac{I}{P_{x_1}}}" r="3"></point>
+                            <line fn="functions.b.updateParams({px:params.px1, py:params.py, income:functions.u.compensatedIncome(params.income,params.px2,params.px1,params.py)})"
+                                  color="blue"></line>
+                            <point color="blue"
+                                   point="[functions.u.compensatedIncome(params.income,params.px2,params.px1,params.py)/params.px1,0]"
+                                   droplines="none"
+                                   xlabel="\displaystyle{\frac{E(U_2,P_{x_1},P_y)}{P_{x_1}}}" r="3"></point>
+                            <point color="blue"
+                                   point="[0,functions.u.compensatedIncome(params.income,params.px2,params.px1,params.py)/params.py]"
+                                   droplines="none"
+                                   ylabel="\displaystyle{\frac{E(U_2,P_{x_1},P_y)}{P_{y}}}" r="3"></point>
+                            <point point="functions.u.optimalBundle(params.income, params.px2, params.py)"
+                                   label="C"></point>
+                            <point point="functions.u.decompositionBundle(params.income, params.px2, params.px1, params.py)"
+                                   label="E"></point>
+                        </graph>
+                        <p>Equivalent Variation: <span rendered-math>E(U_2,P_{x_1},P_y) - I</span></p>
+
+
+                    </div>
+                    </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Parameters:</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p style="color:blue" rendered-math expression="P_{x_1}: \${{ params.px1 | number:2 }}"></p>
+                        <slider value="params.px1" min="1" max="6" precision="0.25"></slider>
+
+                    </div>
+                    <div class="col-md-4">
+                        <p style="color:red" rendered-math expression="P_{x_2}: \${{ params.px2 | number:2 }}"></p>
+                        <slider value="params.px2" min="1" max="6" precision="0.25"></slider>
+                    </div>
+                </div>
+
+            </model>
+            {% endraw %}
+        </section>
     <section>
-        <h2>Summary: Income and Substitution Effects</h2>
+        {% raw %}
+        <model>
+
+
+            <!-- Model parameters -->
+            <param name="px1" value="3"/>
+            <param name="px2" value="1"/>
+            <param name="py" value="1"/>
+            <param name="income" value="45"/>
+            <param name="alpha" value="0.5"/>
+            <param name="s" value="-0.2"/>
+
+
+            <!-- Model functions -->
+            <function name="u" category="utility" form="CES"></function>
+            <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+            <div class="row">
+
+
+                <div class="col-md-6">
+
+                    <graph height="600" width="600">
+                        <axis dim="x" min="0" max="70" title="Quantity of X" ticks="0"></axis>
+                        <axis dim="y" min="0" max="70" title="Quantity of Y" ticks="0"></axis>
+                        <line fn="functions.b.updateParams({px:params.px1, py:params.py, income:params.income})"
+                              color="blue"></line>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px1, params.py)"
+                               color="darkblue" label="U_1"></curve>
+                        <point point="functions.u.optimalBundle(params.income, params.px1, params.py)"
+                               label="A" droplines="vertical" xlabel="x_A"></point>
+                        <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:params.income})"
+                              color="red"></line>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px2, params.py)"
+                               color="darkred" label="U_2"></curve>
+                        <line fn="functions.b.updateParams({px:params.px2, py:params.py, income:functions.u.compensatedIncome(params.income,params.px1,params.px2,params.py)})"
+                              color="red"></line>
+                        <line fn="functions.b.updateParams({px:params.px1, py:params.py, income:functions.u.compensatedIncome(params.income,params.px2,params.px1,params.py)})"
+                              color="blue"></line>
+                        <point point="functions.u.optimalBundle(params.income, params.px2, params.py)"
+                               label="C" droplines="vertical" xlabel="x_C"></point>
+                        <point point="functions.u.decompositionBundle(params.income, params.px1, params.px2, params.py)"
+                               label="B" droplines="vertical" xlabel="x_B"></point>
+                        <point point="functions.u.decompositionBundle(params.income, params.px2, params.px1, params.py)"
+                               label="E" droplines="vertical" xlabel="x_E"></point>
+
+
+                    </graph>
+                    <p>Budget Lines / Indifference Curves</p>
+
+
+                </div>
+                <div class="col-md-6">
+
+                    <graph height="600" width="600">
+                        <axis dim="x" min="0" max="65" title="Quantity of X" ticks="0"></axis>
+                        <axis dim="y" min="0" max="6" title="Price of X" ticks="0"></axis>
+                        <area fn="functions.u.demandCurve({minPrice: params.px1, maxPrice: params.px2, income: params.income, otherPrice: params.py, samplePoints: 200})"
+                               color="green" label="D^M" show="params.showCS"/>
+                        <area fn="functions.u.demandCurve({minPrice: params.px1, maxPrice: params.px2, income: params.income, compensationPrice: params.px1, otherPrice: params.py, samplePoints: 200})"
+                               color="blue" label="D^H_1" show="params.showCV"/>
+                        <area fn="functions.u.demandCurve({minPrice: params.px1, maxPrice: params.px2, income: params.income, compensationPrice: params.px2, otherPrice: params.py, samplePoints: 200})"
+                               color="red" label="D^H_2" show="params.showEV"/>
+
+                        <curve fn="functions.u.demandCurve({maxPrice: 10, income: params.income, otherPrice: params.py, samplePoints: 200})"
+                               color="green" label="D^M"></curve>
+                        <curve fn="functions.u.demandCurve({minPrice: 0.2, maxPrice: 10, income: params.income, compensationPrice: params.px1, otherPrice: params.py, samplePoints: 200})"
+                               color="blue" label="D^H_1"></curve>
+                        <curve fn="functions.u.demandCurve({minPrice: 0.5, maxPrice: 10, income: params.income, compensationPrice: params.px2, otherPrice: params.py, samplePoints: 200})"
+                               color="red" label="D^H_2"></curve>
+                        <point point="[functions.u.optimalBundle(params.income, params.px2, params.py)[0],params.px2]"
+                               droplines="horizontal" ylabel="P_{x_2}" color="red" r="3"></point>
+                        <point point="[functions.u.optimalBundle(params.income, params.px1, params.py)[0],params.px1]"
+                               droplines="horizontal" ylabel="P_{x_1}" color="blue" r="3"></point>
+                        <point point="[functions.u.optimalBundle(params.income, params.px2, params.py)[0],params.px2]"
+                               droplines="vertical" xlabel="x_C" label="C"></point>
+                        <point point="[functions.u.optimalBundle(params.income, params.px1, params.py)[0],params.px1]"
+                               droplines="vertical" xlabel="x_A" label="A"></point>
+                        <point point="[functions.u.decompositionBundle(params.income, params.px2, params.px1, params.py)[0],params.px1]"
+                               droplines="vertical" xlabel="x_E" label="E"></point>
+                        <point point="[functions.u.decompositionBundle(params.income, params.px1, params.px2, params.py)[0],params.px2]"
+                               droplines="vertical" xlabel="x_B" label="B"></point>
+                    </graph>
+                    <p>Demand Curves</p>
+
+
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <p style="color:blue" rendered-math expression="P_{x_1}: \${{ params.px1 | number:2 }}"></p>
+                    <slider value="params.px1" min="1" max="6" precision="0.25"></slider>
+
+                </div>
+                <div class="col-md-4">
+                    <p style="color:red" rendered-math expression="P_{x_2}: \${{ params.px2 | number:2 }}"></p>
+                    <slider value="params.px2" min="1" max="6" precision="0.25"></slider>
+                </div>
+                <div class="col-md-4">
+                    <toggle param="params.showCV" init="false" style="color:blue">{{ params.showCV ? "Hide" : "Show" }} CV</toggle>
+                    <toggle param="params.showEV" init="false" style="color:red">{{ params.showEV ? "Hide" : "Show" }} EV</toggle>
+                    <toggle param="params.showCS" init="false" style="color:green">{{ params.showCS ? "Hide" : "Show" }} CS</toggle>
+                </div>
+
+            </div>
+
+        </model>
+        {% endraw %}
+    </section>
+    <section>
+        <h1>MAGNITUDE OF CS, CV, AND EV</h1>
         <hr/>
-        <p class="fragment">Memorize and understand the demand for the three "canonical" functional forms:<br/>Cobb-Douglas, Perfect Complements, Perfect Substitutes.</p>
-        <p class="fragment">Know how to derive the demand for new functional forms. <span class="fragment highlight-red">[Midterm alert!]</span></p>
-        <p class="fragment">Know how to demonstrate comparative statics<br/>
-            <b>visually</b> (price consumption curve, income consumption curve, Engel Curve),<br/>
-            <b>quantitatively</b> (own-price, cross-price, and income elasticities),<br/>
-            and <b>verbally</b> (complements/substitutes/neither, normal/inferior)
-        </p>
+        <h2>In general:</h2>
+        <h2>For a price drop, CV < CS < EV</h2>
+        <h2>For a price increase, CV > CS > EV</h2>
+    </section>
+    <section>
+        <img src="{{ url_for('static',filename='images/econ50/lecture8/besanko_5e_fig_05_16.jpg') }}">
+        <p>Special Case: Quasilinear Utility => CV = CS = EV</p>
     </section>
 
-    <section>
-        <h1>Next time:</h1>
-        <hr/>
-        <h2>Deep Dive into Price Changes</h2>
-        <p>Income Effect</p>
-        <p>Substitution Effect</p>
-        <p>Changes in Consumer Surplus</p>
     </section>
+    <section>
+    <h1>SUMMARY</h1>
+    <hr/>
+        <p class="fragment">Welfare analysis tries to quantify the harm/good done to people<br/> by some change (in this case, price).</p>
+        <p class="fragment">By analyzing the change in income required to keep someone at the same level of utility,<br/>we avoid having to quantify utility changes.</p>
+        <p class="fragment">We saw several new mathematical constructs:<br/>compensated demand, indirect utility functions, and expenditure functions.<br/>These are all just different ways of parsing the same optimization problem.</p>
+        <p class="fragment">Looking forward: we're going to use this cost minimization approach<br/>a lot when we get to producer theory.</p>
+    </section>
+    <section>
+        <h1>Next Time</h1>
+        <hr/>
+        <h2>Intertemporal Consumption</h2>
+        <h2>Review of Consumer Theory</h2>
+    </section>
+
+
 
 
 

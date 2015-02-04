@@ -40,7 +40,8 @@ kgAngular.directive('point', function () {
                             shapes.circles.push({
                                 color: scope.color,
                                 cx: cx,
-                                cy: cy
+                                cy: cy,
+                                r: scope.r
                             });
 
                         }
@@ -113,7 +114,7 @@ kgAngular.directive('point', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { point: '&', droplines: '@', label: '@', xlabel: '@', ylabel: '@', color: '@', show:'&'}
+            scope: { point: '&', droplines: '@', label: '@', xlabel: '@', ylabel: '@', color: '@', show:'&', r: '@'}
         }
     }
 );

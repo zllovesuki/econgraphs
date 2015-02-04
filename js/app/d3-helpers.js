@@ -5,7 +5,7 @@ kgAngular.service('D3Helpers', function () {
 
         circles = circles.data(data);
         circles.exit().remove();
-        circles.enter().append('circle').attr('r', 10);
+        circles.enter().append('circle');
         circles
             .attr('cx', function (d) {
                 return d.cx
@@ -18,6 +18,9 @@ kgAngular.service('D3Helpers', function () {
             })
             .attr('fill', function (d) {
                 return d.color
+            })
+            .attr('r', function (d) {
+                return d.r || 10;
             });
         return circles;
 
