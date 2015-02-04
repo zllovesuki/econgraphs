@@ -1,0 +1,838 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 9</h2>
+
+        <h1>Consumer Theory:<br/>Applications and Reflections</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>February 4, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Exchange</h2>
+
+        <h2 class="fragment">Intertemporal Consumption</h2>
+        <hr/>
+        <h2>Ten Minute Break</h2>
+        <hr/>
+        <h2 class="fragment">Labor Supply Decisions</h2>
+
+        <h2 class="fragment">Tax Policy for Externalities</h2>
+
+        <h2 class="fragment">Reflections and Questions</h2>
+    </section>
+    <section>
+        <section>
+            <h1>Framework: Exchange Economies</h1>
+            <hr/>
+            <h2>Instead of an <b>income</b>,</h2>
+
+            <h2>you start with an <b>endowment</b>:</h2>
+
+            <h2 rendered-math>(x_0,y_0)</h2>
+            <hr/>
+            <p class="fragment">Then your "income" is the value of your endowment at current prices -<br/>but this
+                changes as prices change!</p>
+        </section>
+        <section>
+            <h1>EXCHANGE BUDGET CONSTRAINT</h1>
+            <hr/>
+            <p>For a starting endowment of <span rendered-math>(x_0,y_0)</span> at prices <span
+                    rendered-math>P_x,P_y</span>:</p>
+            <hr/>
+            <h2 rendered-math>P_xx + P_yy = P_xx_0 + P_yy_0</h2>
+            <hr/>
+            <div class="fragment"><p>or, dividing through by <span rendered-math>P_y</span>:</p>
+                <hr/>
+                <h2 rendered-math>\frac{P_x}{P_y}x + y = \frac{P_x}{P_y}x_0 + y_0</h2>
+            </div>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>If you start with an endowment of some of each good, what happens when the price of X
+                    increases?</h2>
+                <clicker-option letter="A">The budget line pivots around the Y-intercept</clicker-option>
+                <clicker-option letter="B">The budget line pivots around the X-intercept</clicker-option>
+                <clicker-option letter="C">The budget line pivots clockwise around the endowment point</clicker-option>
+                <clicker-option letter="D">The budget line bends inward (becomes convex)</clicker-option>
+                <clicker-option letter="E">The budget line bends outward (becomes concave)</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h2>Starting from an Endowment</h2>
+            {% raw %}
+            <model>
+
+
+                <!-- Model parameters -->
+                <param name="x" value="10"/>
+                <param name="y" value="20"/>
+                <param name="px" value="1"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="s" value="0"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="50" title="Good X"></axis>
+                            <axis dim="y" min="0" max="50" title="Good Y"></axis>
+                            <line fn="functions.b.updateParams({px:params.px, py:params.py, income:(params.px * params.x + params.py * params.y)})"></line>
+                            <curve fn="functions.u.priceConsumptionCurve({good:'x', endowment: {x: params.x, y:params.y}, otherPrice: params.py, minPrice:0.1, maxPrice:50, samplePoints: 200}) "
+                                   color="blue" label="\text{Offer Curve}" show="params.showOfferCurve"></curve>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px * params.x + params.py * params.y), params.px, params.py)"
+                                   color="green"></curve>
+                            <point point="[params.x,params.y]" color="purple" label="E"
+                                   droplines="both" xlabel="x_0" ylabel="y_0"></point>
+                            <point point="functions.u.optimalBundle((params.px * params.x + params.py * params.y), params.px, params.py)"
+                                   droplines="both" xlabel="x^*" ylabel="y^*"></point>
+                            <point point="[0,(params.px * params.x + params.py * params.y)/params.py]" r="3"
+                                   ylabel="\frac{\color{purple}{ {{ params.px * params.x + params.py * params.y | number:2 }} } }{\color{red}{ {{params.py | number:2 }} }}"
+                                   show="params.showInterceptValues"></point>
+                            <point point="[(params.px * params.x + params.py * params.y)/params.px,0]" r="3"
+                                   xlabel="\frac{\color{purple}{ {{ params.px * params.x + params.py * params.y | number:2 }} } }{\color{blue}{ {{params.px | number:2 }} }}"
+                                   show="params.showInterceptValues"></point>
+                        </graph>
+                        <hr/>
+                        <p>Value of Endowment:</p>
+                        <table>
+                            <tr>
+                                <td rendered-math>P_xx_0 + P_yy_0</td>
+                                <td rendered-math
+                                    expression="= \${{ params.px |number : 2}} \times {{ params.x }} + \${{ params.py | number: 2}} \times {{ params.y }}"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= \${{ params.px * params.x + params.py * params.y | number:2 }}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="well">
+                            <h6>Endowment</h6>
+                            <hr/>
+                            <div class="row" style="color:purple">
+                                <div class="col-md-6">
+                                    <p rendered-math expression="x_0: {{ params.x }}"></p>
+                                    <slider value="params.x" min="0" max="40" precision="1"></slider>
+                                </div>
+                                <div class="col-md-6">
+                                    <p rendered-math expression="y_0: {{ params.y }}"></p>
+                                    <slider value="params.y" min="0" max="40" precision="1"></slider>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr/>
+                        <div class="well">
+                            <h6>Prices</h6>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6" style="color:blue">
+                                    <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                                    <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+
+                                </div>
+                                <div class="col-md-6" style="color:red">
+                                    <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
+                                    <slider value="params.py" min="1" max="6" precision="0.25"></slider>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <toggle param="params.showInterceptValues" init="false">{{ params.showInterceptValues ?
+                            "Hide" :
+                            "Show" }} Intercept Values
+                        </toggle>
+                        <hr/>
+                        <toggle param="params.showOfferCurve" init="false">{{ params.showOfferCurve ?
+                            "Hide" :
+                            "Show" }} Offer Curve
+                        </toggle>
+                        <div class="fragment">
+                            <hr/>
+                            <p ng-if="params.y -
+                                functions.u.optimalBundle((params.px * params.x +
+                                params.py * params.y), params.px,
+                                params.py)[1] > 0">At this price ratio, the consumer will offer<br/> to sell {{ params.y
+                                -
+                                functions.u.optimalBundle((params.px * params.x +
+                                params.py * params.y), params.px,
+                                params.py)[1] | number:2}} units of good Y
+                                <br/>in order to buy {{
+                                functions.u.optimalBundle((params.px * params.x + params.py * params.y), params.px,
+                                params.py)[0] - params.x | number:2}} units of good X.</p>
+
+                            <p ng-if="params.y -
+                                functions.u.optimalBundle((params.px * params.x +
+                                params.py * params.y), params.px,
+                                params.py)[1] < 0">At this price ratio, the consumer will offer<br/> to sell {{ params.x
+                                -
+                                functions.u.optimalBundle((params.px * params.x + params.py * params.y), params.px,
+                                params.py)[0] | number:2}} units of good X
+                                <br/>in order to buy {{
+                                functions.u.optimalBundle((params.px * params.x + params.py * params.y), params.px,
+                                params.py)[1] - params.y | number:2}} units of good Y.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Preview of Econ 51</h1>
+            <hr/>
+            <h2>Imagine an exchange economy with lots of people...</h2>
+
+            <h2 class="fragment">At different prices, they will offer to buy and sell different quantities</h2>
+
+            <h2 class="fragment">The price ratio will adjust until the quantity supplied of <b>every</b> good equals the
+                quantity demanded.</h2>
+        </section>
+    </section>
+
+
+
+    <section>
+    <section>
+        <h1>Intertemporal Consumption</h1>
+        <hr/>
+        <h2>B&B, 5e, pp. 128-132, 146-151</h2>
+    </section>
+
+    <section>
+        <h1>Intertemporal Consumption</h1>
+        <hr/>
+        <h3>Consider just a 2-period model: "Period 1" and "Period 2."</h3>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6 fragment">
+                <h3>Endowment</h3>
+
+                <p><span rendered-math>I_1</span> = Income in Period 1</p>
+
+                <p><span rendered-math>I_2</span> = Income in Period 2</p>
+            </div>
+            <div class="col-md-6 fragment">
+                <h3>Consumption</h3>
+
+                <p><span rendered-math>c_1</span> = Consumption in Period 1</p>
+
+                <p><span rendered-math>c_2</span> = Consumption in Period 2</p>
+            </div>
+
+        </div>
+        <hr/>
+        <p class="fragment">For now, assume you can borrow or save at interest rate <span rendered-math>r</span>.</p>
+    </section>
+    <section>
+        <h2>Budget Constraint with Savings:</h2>
+        <hr/>
+        <p>If I consume <span rendered-math>c_1 < I_1</span> in Period 1, my savings is <span
+                rendered-math>I_1 - c_1</span>.</p>
+
+        <p class="fragment">If I get interest rate <span rendered-math>r</span> on this savings, it grows to <span
+                rendered-math>(I_1 - c_1)(1+r)</span>.</p>
+
+        <div class="fragment">
+            <p>Therefore the amount I can consume in Period 2 is given by this,<br/>plus my income in Period 2:</p>
+            <hr/>
+            <p rendered-math>c_2 = (1+r)(I_1 - c_1) + I_2</p>
+
+        </div>
+        <div class="fragment">
+            <hr/>
+            <p>Bringing all the consumption to the left:</p>
+            <hr/>
+            <h2 rendered-math class="fragment">(1+r)c_1 + c_2 = (1+r)I_1 + I_2</h2>
+        </div>
+        <div class="fragment">
+            <hr/>
+            <p>Note the similarity to the exchange budget constraint:</p>
+
+            <p rendered-math class="fragment">\frac{P_x}{P_y}x + y = \frac{P_x}{P_y}x_0 + y_0</p>
+        </div>
+        <div class="fragment">
+            <hr/>
+            <p>Intuition: <span rendered-math>1+r = \frac{P_x}{P_y}</span></p>
+        </div>
+    </section>
+    <section>
+        <h2>Budget Constraint with Borrowing:</h2>
+        <hr/>
+        <p>If I consume <span rendered-math>c_2 < I_2</span> in Period 2, I can pay back loans worth <span
+                rendered-math>I_2 - c_2</span>.</p>
+
+        <p class="fragment">If I'm charged interest rate <span rendered-math>r</span> on this borrowing,<br/>I can
+            borrow up to <span
+                    rendered-math>\displaystyle{\frac{I_2 - c_2}{1+r}}</span> in Period 1.</p>
+
+        <div class="fragment">
+            <p>Therefore the amount I can consume in Period 1 is given by this,<br/>plus my income in Period 1:</p>
+            <hr/>
+            <p rendered-math>\displaystyle{c_1 = I_1 + \frac{I_2 - c_2}{1+r}}</p>
+
+        </div>
+        <div class="fragment">
+            <hr/>
+            <p>Bringing all the consumption to the left:</p>
+            <hr/>
+            <h2 rendered-math class="fragment">\displaystyle{c_1 + \frac{c_2}{1+r} = I_1 + \frac{I_2}{1+r}}</h2>
+        </div>
+    </section>
+
+    <section>
+        <h1>INTERTEMPORAL BUDGET CONSTRAINTS</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <p>For Savings:</p>
+                <hr/>
+                <h2 rendered-math class="fragment">\displaystyle{(1+r)c_1 + c_2 = (1+r)I_1 +
+                    I_2\color{white}{\frac{I_1}{r}}}</h2>
+                <hr/>
+                <p>"Future Value"</p>
+            </div>
+            <div class="col-md-6">
+                <p>For Borrowing:</p>
+                <hr/>
+                <h2 rendered-math class="fragment">\displaystyle{c_1 + \frac{c_2}{1+r} = I_1 + \frac{I_2}{1+r}}</h2>
+                <hr/>
+                <p>"Present Value"</p>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6 fragment">
+                <p>If save 100%:</p>
+                <hr/>
+                <h2 rendered-math>c_2 = (1+r)I_1 + I_2</h2>
+            </div>
+            <div class="col-md-6 fragment">
+                <p>If borrow 100%:</p>
+                <hr/>
+                <h2 rendered-math>\displaystyle{c_1 = I_1 +
+                    \frac{I_2}{1+r}}</h2>
+            </div>
+        </div>
+    </section>
+    <section>
+        <p>Suppose you earn $100,000 this year and expect to earn $110,000 next year.</p>
+
+        <p>You can borrow or save at 10% interest. What are the intercepts of your budget
+            line?</p>
+        <table class="table">
+            <tr>
+                <td>Option</td>
+                <td>Maximum this year</td>
+                <td>Maximum next year</td>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>200K</td>
+                <td>200K</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>200K</td>
+                <td>210K</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>200K</td>
+                <td>220K</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>210K</td>
+                <td>210K</td>
+            </tr>
+            <tr>
+                <td>E</td>
+                <td>210K</td>
+                <td>220K</td>
+            </tr>
+        </table>
+    </section>
+    <section>
+        <h2>Intertemporal Choice</h2>
+        <hr/>
+        {% raw %}
+        <model>
+
+
+            <!-- Model parameters -->
+            <param name="x" value="10"/>
+            <param name="y" value="20"/>
+            <param name="px" value="1.05"/>
+            <param name="income" value="60"/>
+            <param name="alpha" value="0.5"/>
+            <param name="s" value="0"/>
+
+
+            <!-- Model functions -->
+            <function name="u" category="utility" form="CES"></function>
+            <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+            <div class="row">
+
+
+                <div class="col-md-6">
+
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="50" title="Period 1" ticks="5"></axis>
+                        <axis dim="y" min="0" max="50" title="Period 2" ticks="5"></axis>
+                        <line fn="functions.b.updateParams({px:params.px, py:1, income:(params.px * params.x + params.y)})"></line>
+                        <curve fn="functions.u.priceConsumptionCurve({good:'x', endowment: {x: params.x, y:params.y}, otherPrice: 1, minPrice:0.1, maxPrice:50, samplePoints: 200}) "
+                               color="blue" label="\text{Offer Curve}" show="params.showOfferCurve"></curve>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px * params.x + params.y), params.px, 1)"
+                               color="green"></curve>
+                        <point point="[params.x,params.y]" color="purple" label="E"
+                               droplines="both" xlabel="I_1" ylabel="I_2"></point>
+                        <point point="functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)"
+                               droplines="both" xlabel="c_1" ylabel="c_2"></point>
+                        <point point="[0,(params.px * params.x + params.y)]" r="3"
+                               ylabel="(1 + r)I_1 + I_2"
+                                ></point>
+                        <point point="[(params.px * params.x + params.y)/params.px,0]" r="3"
+                               xlabel="I_1 + \frac{I_2}{1+r}"></point>
+                    </graph>
+
+
+                </div>
+                <div class="col-md-6">
+                    <div class="well">
+                        <h6>Income in Each Period</h6>
+                        <hr/>
+                        <div class="row" style="color:purple">
+                            <div class="col-md-6">
+                                <p rendered-math expression="I_1: {{ params.x }}"></p>
+                                <slider value="params.x" min="0" max="40" precision="1"></slider>
+                            </div>
+                            <div class="col-md-6">
+                                <p rendered-math expression="I_2: {{ params.y }}"></p>
+                                <slider value="params.y" min="0" max="40" precision="1"></slider>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr/>
+                    <div class="well">
+                        <h6>Interest Rate</h6>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-6" style="color:blue">
+                                <p rendered-math expression="r: {{ (params.px - 1) | number:2 }}"></p>
+                                <slider value="params.px" min="1" max="1.5" precision="0.01"></slider>
+                            </div>
+                            <div class="col-md-6" style="color:red">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fragment">
+                <hr/>
+                <p ng-if="functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x > 0">
+                    The consumer will borrow
+                    ${{ (functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x)*1000 | number:0 }}
+                    in period 1
+                    <br/>and repay
+                    ${{ (functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x)*params.px*1000 | number:0 }}
+                    in period 2</p>
+
+                <p ng-if="functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x < 0">
+                    The consumer will save
+                    ${{ (params.x - functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0])*1000 | number:0 }}
+                    in period 1
+                    <br/>which will grow to
+                    ${{ (params.x - functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0])*params.px*1000 | number:0 }}
+                    in period 2</p>
+            </div>
+        </model>
+        {% endraw %}
+    </section>
+    <section>
+
+        <p>Suppose you earn $100,000 this year and expect to earn $110,000 next year.</p>
+
+        <p>You can borrow at 10% interest, but only get 5% interest on savings. What are the intercepts of your budget
+            constraint?</p>
+        <table class="table">
+            <tr>
+                <td>Option</td>
+                <td>Maximum this year</td>
+                <td>Maximum next year</td>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>200K</td>
+                <td>210K</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>200K</td>
+                <td>215K</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>200K</td>
+                <td>220K</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>205K</td>
+                <td>215K</td>
+            </tr>
+            <tr>
+                <td>E</td>
+                <td>205K</td>
+                <td>220K</td>
+            </tr>
+        </table>
+
+
+    </section>
+    <section>
+<clicker-question>
+        <p>Suppose that at your endowment income, your MRS is 1.08 <span class="fragment">dollars next year per dollars this year</span>.</p>
+
+        <p>You can borrow at 10% interest, but only get 5% interest on savings. What will you do?</p>
+    <hr/>
+    <clicker-option letter="A">Borrow</clicker-option>
+    <clicker-option letter="B">Save</clicker-option>
+    <clicker-option letter="C">Neither save nor borrow</clicker-option>
+    <clicker-option letter="D">Either save or borrow; you're indifferent.</clicker-option>
+</clicker-question>
+
+
+    </section>
+    <section>
+        <h2>Intertemporal Choice with Different Interest Rates</h2>
+        {% raw %}
+        <model>
+
+
+            <!-- Model parameters -->
+            <param name="x" value="12"/>
+            <param name="y" value="15"/>
+            <param name="px1" value="1.20"/>
+            <param name="px2" value="1.30"/>
+            <param name="income" value="60"/>
+            <param name="alpha" value="0.5"/>
+            <param name="s" value="0"/>
+
+
+            <!-- Model functions -->
+            <function name="u" category="utility" form="CES"></function>
+            <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+            <div class="row">
+
+
+                <div class="col-md-6">
+
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="50" title="Period 1" ticks="5"></axis>
+                        <axis dim="y" min="0" max="50" title="Period 2" ticks="5"></axis>
+                        <segment points="[{x:0,y:params.px1 * params.x + params.y},{x:params.x,y:params.y}]"
+                                 color="red"></segment>
+                        <segment
+                                points="[{x:(params.px2 * params.x + params.y)/params.px2,y:0},{x:params.x,y:params.y}]"
+                                color="blue"></segment>
+                        <!--<line fn="functions.b.updateParams({px:params.px1, py:1, income:(params.px1 * params.x + params.y)})" color="red"></line>
+                        <line fn="functions.b.updateParams({px:params.px2, py:1, income:(params.px2 * params.x + params.y)})" color="blue"></line>-->
+                        <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px1 * params.x + params.y), params.px1, 1)"
+                               color="green"
+                               show="functions.u.optimalBundle((params.px1 * params.x + params.y), params.px1, 1)[0] < params.x"></curve>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px2 * params.x + params.y), params.px2, 1)"
+                               color="green"
+                               show="functions.u.optimalBundle((params.px2 * params.x + params.y), params.px2, 1)[0] > params.x"></curve>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px2 * params.x + params.y), params.px2, 1)"
+                               color="green"
+                               show="(functions.u.optimalBundle((params.px2 * params.x + params.y), params.px2, 1)[0] < params.x) && (functions.u.optimalBundle((params.px1 * params.x + params.y), params.px1, 1)[0] > params.x)"></curve>
+                        <point point="functions.u.optimalBundle((params.px1 * params.x + params.y), params.px1, 1)"
+                               droplines="both" xlabel="c_1" ylabel="c_2"
+                               show="functions.u.optimalBundle((params.px1 * params.x + params.y), params.px1, 1)[0] < params.x"></point>
+                        <point point="functions.u.optimalBundle((params.px2 * params.x + params.y), params.px2, 1)"
+                               droplines="both" xlabel="c_1" ylabel="c_2"
+                               show="functions.u.optimalBundle((params.px2 * params.x + params.y), params.px2, 1)[0] > params.x"></point>
+                        <point point="[params.x,params.y]" color="purple" label="E"
+                               droplines="both" xlabel="I_1" ylabel="I_2"></point>
+                        <point point="[0,params.px1 * params.x + params.y]" r="3"
+                               ylabel="(1 + r_S)I_1 + I_2" color="red"
+                                ></point>
+                        <point point="[(params.px2 * params.x + params.y)/params.px2,0]" r="3"
+                               xlabel="I_1 + \frac{I_2}{1+r_B}" color="blue"></point>
+                    </graph>
+
+
+                </div>
+                <div class="col-md-6">
+                    <div class="well">
+                        <h6>Income in Each Period</h6>
+                        <hr/>
+                        <div class="row" style="color:purple">
+                            <div class="col-md-6">
+                                <p rendered-math expression="I_1: {{ params.x }}"></p>
+                                <slider value="params.x" min="0" max="40" precision="1"></slider>
+                            </div>
+                            <div class="col-md-6">
+                                <p rendered-math expression="I_2: {{ params.y }}"></p>
+                                <slider value="params.y" min="0" max="40" precision="1"></slider>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr/>
+                    <div class="well">
+                        <h6>Interest Rates</h6>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-6" style="color:blue">
+                                <p>Rate charged<br/>to borrowers:</p>
+
+                                <p rendered-math expression="r_B: {{ (params.px2 - 1) | number:2 }}"></p>
+                                <slider value="params.px2" min="1" max="1.5" precision="0.01"></slider>
+                            </div>
+                            <div class="col-md-6" style="color:red">
+                                <p>Rate offered<br/>to savers:</p>
+
+                                <p rendered-math expression="r_S: {{ (params.px1 - 1) | number:2 }}"></p>
+                                <slider value="params.px1" min="1" max="1.5" precision="0.01"></slider>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fragment">
+                <hr/>
+                <p><span rendered-math
+                         expression="u(c_1,c_2) = c_1c_2 \Rightarrow MRS_{x,y}( {{ params.x }}, {{params.y }}) = {{ params.y/params.x | number : 2 }}"/>
+                </p>
+
+                <p>...so the consumer will borrow if they can borrow at less than a {{ (params.y/params.x - 1)*100 |
+                    number : 0 }}% interest rate,<br/>and save if the bank will offer them more than
+                    {{ (params.y/params.x - 1)*100 | number : 0 }}% return on their deposits.</p>
+            </div>
+        </model>
+        {% endraw %}
+    </section>
+    <section>
+        <h1>Extensions to the Model</h1>
+        <hr/>
+        <h2 class="fragment">Inflation/deflation</h2>
+
+        <h2 class="fragment">Impatience</h2>
+
+        <h2 class="fragment">More than two periods</h2>
+
+        <h2 class="fragment">Risk</h2>
+
+        <h2 class="fragment">Loanable funds market</h2>
+        <hr/>
+        <h2 class="fragment">(...the entire field of finance)</h2>
+    </section>
+    </section>
+    <section>
+        <h1>Ten Minute Break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Application: Labor Supply</h1>
+            <hr/>
+            <h2>B&B, 5e, Section 5.5</h2>
+        </section>
+        <section>
+            <h1>A Model of Labor Supply</h1>
+            <hr/>
+            <p class="fragment">A worker has 24 hours in the day</p>
+
+            <p class="fragment">Hours spent working earn him an hourly wage, <span rendered-math>w</span>.</p>
+
+            <p class="fragment">Consume two goods: leisure (L) and the composite good (Y).</p>
+            <hr/>
+            <div class="fragment">
+                <p>Relevant budget constraint:</p>
+
+                <p rendered-math>Y = w(24 - L)</p>
+            </div>
+            <div class="fragment">
+                <p>or</p>
+
+                <h2 rendered-math>wL + Y = 24w</h2>
+            </div>
+        </section>
+        <section>
+            <h2>The Backward-Bending Labor Supply Curve</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture9/besanko_5e_fig_05_24.jpg') }}">
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture9/besanko_5e_fig_05_25.jpg') }}">
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Why Backward-Bending?</h2>
+
+            <div class="col-md-6">
+                <table class="table">
+                    <tr>
+                        <td>A</td>
+                        <td>Leisure is an inferior good over some range of prices</td>
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>Leisure is a Giffen good over some range of prices</td>
+                    </tr>
+                    <tr>
+                        <td>C</td>
+                        <td>Consumption is an inferior good over some range of prices</td>
+                    </tr>
+                    <tr>
+                        <td>D</td>
+                        <td>Consumption and leisure are sometimes complements and sometimes substitutes</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6 fragment">
+                <img src="{{ url_for('static',filename='images/econ50/lecture9/besanko_5e_fig_05_26.jpg') }}">
+            </div>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Application: Taxes on Externalities</h1>
+            <hr/>
+            <h2>Key insights:</h2>
+
+            <h2 class="fragment">Demand is affected by <b>price ratios</b></h2>
+
+            <h2 class="fragment">You can <b>compensate</b> someone via a <b>lump-sum payment</b>.</h2>
+        </section>
+        <section>
+            <h2>Taxes and Transfers</h2>
+            {% raw %}
+            <model>
+
+
+                <!-- Model parameters -->
+                <param name="x" value="20"/>
+                <param name="y" value="10"/>
+                <param name="px" value="1"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="s" value="0"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="50" title="Good X"></axis>
+                            <axis dim="y" min="0" max="50" title="Good Y"></axis>
+                            <line fn="functions.b.updateParams({px:params.px, py:params.py, income:(params.px * params.x + params.py * params.y)})"></line>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((1 * params.x + 2 * params.y), 1, 2)"
+                                   color="grey"></curve>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px * params.x + params.py * params.y), params.px, params.py)"
+                                   color="green"></curve>
+                            <point point="[params.x,params.y]" color="purple" label="E"
+                                   droplines="both" xlabel="x_0" ylabel="y_0"></point>
+                            <point point="functions.u.optimalBundle((params.px * params.x + params.py * params.y), params.px, params.py)"
+                                   droplines="both" xlabel="x^*" ylabel="y^*"></point>
+                        </graph>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="well">
+                            <h6>Endowment</h6>
+                            <hr/>
+                            <div class="row" style="color:purple">
+                                <div class="col-md-6">
+                                    <p rendered-math expression="x_0: {{ params.x }}"></p>
+                                    <slider value="params.x" min="0" max="40" precision="1"></slider>
+                                </div>
+                                <div class="col-md-6">
+                                    <p rendered-math expression="y_0: {{ params.y }}"></p>
+                                    <slider value="params.y" min="0" max="40" precision="1"></slider>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr/>
+                        <div class="well">
+                            <h6>Prices and Taxes</h6>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6" style="color:blue">
+                                    <p rendered-math expression="\text{Tax on }X: \${{ params.px - 1 | number:2 }}"></p>
+                                    <slider value="params.px" min="1" max="2" precision="0.01"></slider>
+
+                                </div>
+                                <div class="col-md-6" style="color:blue">
+                                    <p rendered-math expression="\text{Price of }X: \${{ params.px | number:2 }}"></p>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="well">
+                            <h6>Transfers</h6>
+                            <hr/>
+                            <p>The consumer could have afforded his initial bundle of (20,10) with an income of $40.</p>
+                            <p>At the new price of X, the initial bundle now costs
+                                ${{ params.px * params.x + params.py * params.y | number:2 }},
+                            so the government provides him with a transfer of
+                                ${{ params.px * params.x + params.py * params.y - 40 | number:2 }}.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </model>
+            {% endraw %}
+        </section>
+
+    </section>
+    <section>
+        <h1>Reflections on Consumer Theory</h1>
+    </section>
+
+
+{% endblock %}

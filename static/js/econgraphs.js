@@ -248,7 +248,7 @@ econgraphs.functions.utility = {
             good: the good whose price we are going to vary; must be 'x' or 'y'; 'x' by default
             minPrice: the minimum price to evaluate (0 by default)
             maxPrice: the maximum price to evaluate (50 by default)
-            income: the consumer's income
+            income: the consumer's income, OR a bundle {x:x, y:y} to be evaluated at current prices
             otherPrice: the price of the other good
         }
 
@@ -265,13 +265,19 @@ econgraphs.functions.utility = {
                         minPrice = pccParams['minPrice'] || 0,
                         maxPrice = pccParams['maxPrice'] || 100,
                         income = pccParams['income'],
+                        endowment = pccParams['endowment'],
                         samplePoints = pccParams['samplePoints'] || 51,
                         px = isGoodX ? minPrice : pccParams['otherPrice'],
                         py = isGoodX ? pccParams['otherPrice'] : minPrice,
                         step = calculateStep(minPrice, maxPrice, samplePoints),
                         points = [];
 
+
+
                     for (var i = 0; i < samplePoints; i++) {
+                        if (endowment.hasOwnProperty('x')) {
+                            income = endowment.x * px + endowment.y * py;
+                        }
                         if(u.optimalBundle(income,px,py)) {
                             optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
                             if (onGraph(optimalBundle, xDomain, yDomain)) {
