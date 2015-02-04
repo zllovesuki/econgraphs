@@ -1,0 +1,375 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 9</h2>
+
+        <h1>Consumer Theory:<br/>Summary and Applications</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>February 4, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2>Part I : Review of Consumer Theory</h2>
+        <h3 class="fragment">Elasticity</h3>
+        <h3 class="fragment">Preferences and Utility</h3>
+        <h3 class="fragment">Optimization, With and Without Calculus</h3>
+        <h3 class="fragment">Comparative Statics</h3>
+        <hr/>
+        <h2 class="fragment">10 minute break</h2>
+        <hr/>
+        <h2>Part II : Consumer Theory Applications</h2>
+        <h3 class="fragment">Intertemporal Consumption</h3>
+        <h3 class="fragment">Labor Supply Decisions</h3>
+        <h3 class="fragment">Tax Policy for Externalities</h3>
+    </section>
+    <section>
+        <section>
+            <h1>Elasticity</h1>
+            <hr/>
+            <h2>Lecture 2</h2>
+            <hr/>
+            <p>Purpose 1: To Quantify Change</p>
+            <p>Purpose 2: To Identify Positive/Negative Correlations</p>
+        </section>
+        <section>
+            <h2>Calculating Elasticities: The General Case</h2>
+            <hr/>
+            <p>Suppose <span
+                    rendered-math expression="y"></span> is a continuously differentiable function of <span
+                    rendered-math expression="x"></span>.</p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math expression="\displaystyle{\epsilon_{y,x}}" align="right"></td>
+                            <td style="width:200px" rendered-math
+                                expression="\displaystyle{= \frac{\%\Delta y}{\%\Delta x} }"></td>
+                            <td>Percent change in <span
+                                    rendered-math expression="y"></span> per 1% change in <span
+                                    rendered-math expression="x"></span></td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\Delta y / y}{\Delta x / x} }"></td>
+                            <td>By definition, <span rendered-math
+                                                     expression="\displaystyle{\%\Delta x = \frac{\Delta x}{x}}"></span>
+                                and
+                                <span rendered-math expression="\displaystyle{\%\Delta y = \frac{\Delta y}{y}}"></span>
+                            </td>
+                        </tr>
+                        <tr style="height:100px" class="fragment">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\Delta y}{\Delta x} \times \frac{x}{y} }"></td>
+                            <td>Rearranging terms</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div height="150px" class="fragment"><p>In the limit, as <span rendered-math
+                                                                           expression="\Delta x \rightarrow 0"></span>:
+            </p>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <table>
+                        <tr style="height:100px" class="fragment">
+                            <td rendered-math expression="\displaystyle{\epsilon_{y,x}}" align="right"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{dy}{dx} \times \frac{x}{y} }"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>For a general downward-sloping</h2>
+
+                <h2>straight-line demand curve:</h2>
+                <clicker-option letter="A">Demand is equally elastic at every point.</clicker-option>
+                <clicker-option letter="B">Demand is most elastic toward the upper-left.</clicker-option>
+                <clicker-option letter="C">Demand is most elastic toward the lower-right.</clicker-option>
+                <clicker-option letter="D">None of the above is true (it depends on the precise functional form)!
+                </clicker-option>
+            </clicker-question>
+            <clicker-file></clicker-file>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+                <!-- Model parameters -->
+                <param name="P" value="2"/>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <div class="row-fluid">
+                    <div class="col-md-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="15" title="Quantity (Q)"></axis>
+                            <axis dim="y" min="0" max="15" title="Price (P)"></axis>
+                            <line fn="functions.b.updateParams({income:12, px:1, py:2})" color="blue"></line>
+                            <point point="[12 - 2*params.P, params.P]" droplines="both" xlabel="Q" ylabel="P"
+                                   color="green"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <p rendered-math expression="P = \${{ params.P | number:2}}"></p>
+                            <slider value="params.P" min="0" max="6" precision="0.5"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td rendered-math expression="Q^D(P)" align="right"></td>
+                                <td rendered-math expression="= 12 - 2P"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math
+                                    expression="= 12 - 2 \times {{ params.P | number }}"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td rendered-math expression="= {{ 12 - 2*params.P | number}}"></td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <table>
+                            <tr style="height:100px">
+                                <td rendered-math expression="\displaystyle{\epsilon_{Q^D,P}}" align="right"></td>
+                                <td rendered-math
+                                    expression="\displaystyle{= \frac{dQ^D(P)}{dP} \times \frac{P}{Q^D}}"></span>
+                                </td>
+                            </tr>
+                            <tr style="height:100px">
+                                <td></td>
+                                <td rendered-math
+                                    expression="\displaystyle{= -2 \times \frac{ {{ params.P | number }} }{ {{ 12 - 2*params.P | number}} } }"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <span ng-if="params.P == 6" rendered-math expression="= -\infty"></span>
+                                        <span ng-if="params.P < 6" rendered-math
+                                              expression="= {{ -2*params.P/(12 - 2*params.P) | number:2 }}"></span>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <hr/>
+                        <p>
+                            <span ng-if="params.P == 6">(perfectly elastic)</span>
+                            <span ng-if="params.P < 6 && params.P > 3">(elastic)</span>
+                            <span ng-if="params.P == 3">(unitary elastic)</span>
+                            <span ng-if="params.P < 3 && params.P > 0">(inelastic)</span>
+                            <span ng-if="params.P == 0">(perfectly inelastic)</span>
+                        </p>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>Demand Elasticities</h2>
+            <hr/>
+            <p>A demand <i>function</i>, <span rendered-math expression="Q_{x}^D(P_{x},P{_y},I)"></span>,
+                <br/>shows how the quantity demanded for some good, <span rendered-math expression="X"></span>,
+                <br/>depends on its <i>own</i> price (<span
+                        rendered-math expression="P_{x}"></span>) and on other variables<br/>such as income (<span
+                        rendered-math
+                        expression="I"></span>) and the prices of other goods (<span
+                        rendered-math expression="P_{y}"></span>)</p>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>(Own) Price Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,P_{x}}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\%\Delta Q_{x}^D}{\%\Delta P_{x} }}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial P_{x}} \times \frac{P_{x}}{Q_{x}^D}}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <p>Cross Price Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,P_{y}}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\%\Delta Q_{x}^D}{\%\Delta P_{y} }}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial P_{y}} \times \frac{P_{y}}{Q_{x}^D}}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <p>Income Elasticity</p>
+                    <hr/>
+                    <table>
+                        <tr style="height:100px">
+                            <td rendered-math
+                                expression="\displaystyle{\epsilon_{Q_{x}^D,I}}"></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\%\Delta Q_{x}^D}{\%\Delta I }}"></td>
+                        </tr>
+                        <tr style="height:100px">
+                            <td></td>
+                            <td rendered-math
+                                expression="\displaystyle{= \frac{\partial Q_{x}^D}{\partial I} \times \frac{I}{Q_{x}^D}}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Price Elasticity of Supply</h2>
+            <hr/>
+            <h2>The percentage change in the quantity supplied of a good</h2>
+            <h2>per percentage change in the price of that good</h2>
+            <hr/>
+            <h2 class="fragment" rendered-math
+                expression="\displaystyle{\epsilon_{Q^S,P} = \frac{\%\Delta Q^S}{\%\Delta P} }"></h2>
+        </section>
+        <section>
+            <h1>GENERAL, IMPORTANT RESULT</h1>
+            <hr/>
+            <p>Suppose <span
+                    rendered-math expression="y"></span> is a continuously differentiable function of <span
+                    rendered-math expression="x"></span>.</p>
+            <hr/>
+            <p>Then the elasticity of <span
+                    rendered-math expression="y"></span> with respect to <span
+                    rendered-math expression="x"></span> may be calculated as</p>
+            <hr/>
+            <p rendered-math expression="\displaystyle{\epsilon_{y,x} = \frac{d\ln(y)}{d\ln(x)}}"></p>
+            <hr/>
+            <p>(as long as <span
+                    rendered-math expression="x"></span> and <span
+                    rendered-math expression="y"></span> are both strictly positive)</p>
+            <hr/>
+            <p><i>You don't have to calculate elasticities in this way, but it often makes the math easier.</i></p>
+
+        </section>
+
+
+    </section>
+    <section>
+        <section>
+            <h1>Preferences and Utility</h1>
+            <hr/>
+            <h2>Lectures 3-4</h2>
+            <hr/>
+            <p>Purpose: Develop a robust framework for analyzing consumer behavior</p>
+            <p>Particularly interested in responses to changes in <b>prices</b>.</p>
+        </section>
+        <section>
+            <h1>Consumer Preferences: Fundamental Assumptions</h1>
+
+            <p/>
+            <table class="table">
+                <tr class="fragment">
+                    <td>Preferences are <b>complete</b>.</td>
+                    <td>Any two bundles can be compared.</td>
+                    <td>For any <span rendered-math>A</span> and <span rendered-math>B</span>,<br/>either <span
+                            rendered-math>A \succeq B</span> or <span rendered-math>B \succeq A</span>.
+                    </td>
+                </tr>
+                <tr class="fragment">
+                    <td>Preferences are <b>transitive</b>.</td>
+                    <td>If you like <span rendered-math>A</span> at least as much as <span rendered-math>B</span>,<br/>and
+                        you like
+                        <span rendered-math>B</span> at least as much as <span rendered-math>C</span>,<br/>then you like
+                        <span rendered-math>A</span> at least as much as <span rendered-math>C</span>.
+                    </td>
+                    <td>If <span rendered-math>A \succeq B</span> and <span rendered-math>B \succeq C</span>,<br/>then
+                        <span rendered-math>A \succeq C</span>.
+                    </td>
+                </tr>
+
+            </table>
+            <hr/>
+            <h2 class="fragment">Together, these assumptions mean that consumers can rank all possible consumption
+                bundles in a coherent way.</h2>
+        </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Optimization</h1>
+            <hr/>
+            <h2>Lectures 5-6</h2>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Comparative Statics</h1>
+            <hr/>
+            <h2>Lectures 6-8</h2>
+        </section>
+    </section>
+    <section>
+        <h1>Ten Minute Break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Application: Intertemporal Consumption</h1>
+            <hr/>
+            <h2>B&B, 5e, pp. 128-132, 146-151</h2>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Application: Labor Supply</h1>
+            <hr/>
+            <h2>B&B, 5e, Section 5.5</h2>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Application: Taxes</h1>
+            <hr/>
+            <h2></h2>
+        </section>
+    </section>
+
+
+
+
+
+
+
+{% endblock %}
