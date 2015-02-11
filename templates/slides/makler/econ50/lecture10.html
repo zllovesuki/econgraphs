@@ -422,6 +422,63 @@
                 \frac{K}{L}}\right)}</h2>
             </div>
         </section>
+        <section>
+            <h2>The CES Production Function </h2>
+            {% raw %}
+            <model>
+
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="beta" value="0.5"/>
+                <param name="s" value="0"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="2" title="Good X"></axis>
+                            <axis dim="y" min="0" max="2" title="Good Y"></axis>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).setLevel(1)"
+                                   label="q=1"></curve>
+
+
+
+                        </graph>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <span rendered-math>f(L,K) = \left[L^\frac{\sigma - 1}{\sigma} + K^\frac{\sigma - 1}{\sigma}\right]^\frac{\sigma}{\sigma - 1}</span>
+                        <hr/>
+                        <div class="well">
+                            <p>Elasticity of Substitution</p>
+                            <div ng-if="params.s < 1">
+                                <p ng-if="params.s <= 0" rendered-math
+                                   expression="\sigma: {{ params.s + 1 | number:2}}"></p>
+                                <p ng-if="params.s > 0" rendered-math
+                                   expression="\sigma: {{ 1/(1-params.s) | number:2}}"></p>
+                            </div>
+                            <p ng-if="params.s == 1" rendered-math>\sigma: \infty</p>
+                            <slider value="params.s" min="-0.99" max="0.99" precision="0.01"></slider>
+                        </div>
+
+
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
     </section>
     <section>
         <section>
