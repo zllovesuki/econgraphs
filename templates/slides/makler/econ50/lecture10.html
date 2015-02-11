@@ -1,0 +1,377 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 11</h2>
+
+        <h1>Producer Theory:<br/>Framework</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>February 11, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Slides: Consumer and Producer Theory</h2>
+        <h2 class="fragment">At the board: Production Functions</h2>
+        <h2 class="fragment">Exercise: Your Firm's Technology</h2>
+        <hr/>
+        <h2>Ten Minute Break</h2>
+        <hr/>
+        <h2 class="fragment">Slides: Substitutability</h2>
+        <h2 class="fragment">At the board: MRTS and Elasticity of Substitution</h2>
+        <h2 class="fragment">Exercise: Your Firm's Capital-Labor Mix</h2>
+    </section>
+    <section>
+        <section>
+            <h1>Production vs. Consumption</h1>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Consumer Theory</h1>
+                    <hr/>
+                </div>
+                <div class="col-md-6">
+                    <h1>Producer Theory</h1>
+                    <hr/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Objective:</h2>
+
+                    <h2><b>Utility maximization</b></h2>
+                </div>
+                <div class="col-md-6">
+                    <h2>Objective:</h2>
+
+                    <h2><b>Profit maximization</b></h2>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1>From utility to production...</h1>
+            <hr/>
+            <table class="table">
+                <tr style="background-color:darkblue; color:white">
+                    <td/>
+                    <td>Consumer Theory</td>
+                    <td>Producer Theory</td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Function:</td>
+                    <td><b>Utility Function <span rendered-math>u(x,y)</span></b></td>
+                    <td class="fragment"><b>Production Function <span rendered-math>f(L,K)</span></b></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Inputs:</td>
+                    <td><b>quantities consumed <span rendered-math>(x,y)</span></b></td>
+                    <td class="fragment"><b>labor <span rendered-math>(L)</span>, capital <span rendered-math>(K)</span></b></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Output:</td>
+                    <td><b>utility <span rendered-math>(u)</span></b></td>
+                    <td class="fragment"><b>quantity produced <span rendered-math>(q)</span></b></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Level curves:</td>
+                    <td><b>indifference curves</b><br/>(combinations of <span rendered-math>x</span> and <span rendered-math>y</span><br/>that generate the same utility)</td>
+                    <td class="fragment"><b>isoquants</b><br/>(combinations of <span rendered-math>L</span> and <span
+                            rendered-math>K</span><br/>that produce the same output)</td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Expenditure:</td>
+                    <td><b>budget lines</b></td>
+                    <td class="fragment"><b>isocost lines</b></td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2>Marginal Analysis</h2>
+            <hr/>
+            <table class="table">
+                <tr style="background-color:darkblue; color:white">
+                    <td/>
+                    <td>Consumer Theory</td>
+                    <td>Producer Theory</td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Function:</td>
+                    <td><b>Utility Function <span rendered-math>u(x,y)</span></b></td>
+                    <td><b>Production Function <span rendered-math>f(L,K)</span></b></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Partial derivative:</td>
+                    <td><b>Marginal Utility</b></td>
+                    <td class="fragment"><b>Marginal Product</b></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Formula:</td>
+                    <td>
+                        <p rendered-math>\displaystyle{MU_x = \frac{\partial u(x,y)}{\partial x}}</p>
+                        <p rendered-math>\displaystyle{MU_y = \frac{\partial u(x,y)}{\partial y}}</p>
+                    </td>
+                    <td class="fragment">
+                        <p rendered-math>\displaystyle{MP_L = \frac{\partial f(L,K)}{\partial L}}</p>
+                        <p rendered-math>\displaystyle{MU_K = \frac{\partial f(L,K)}{\partial K}}</p>
+                    </td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Intuition:</td>
+                    <td>Additional utility from an additional unit of X or Y</td>
+                    <td class="fragment">Additional output from hiring an additional worker or purchasing another unit of capital</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h1>Similarities: Math is exactly the same!</h1>
+            <hr/>
+            <h2>Functional forms</h2>
+            <h3>Cobb-Douglas ("Fixed-Share Production Function")</h3>
+            <h3>Perfect Complements ("Fixed-Proportion Production Function")</h3>
+            <h3>Perfect Substitutes</h3>
+            <h3>CES</h3>
+        </section>
+
+        <section>
+            <h1>MAJOR DIFFERENCE: OUTPUT IS REAL!</h1>
+            <hr/>
+            <h2>No longer dealing in "utils!"</h2>
+            <h2>Monotonic transformations no longer benign!</h2>
+        </section>
+        <section>
+            <h2>CD Utility: Indifference Map for (10,10), (20,20), (40,40)</h2>
+            <hr/>
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="alpha" value="0.8"/>
+                <param name="beta" value="0.2"/>
+                <param name="a" value="0.5"/>
+                <param name="b" value="0.5"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="120" title="Good X"></axis>
+                            <axis dim="y" min="0" max="120" title="Good Y"></axis>
+                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.b}).setLevel([10,10])"
+                                   label="U_A"></curve>
+                            <curve fn="functions.u.setLevel([20,20])" label="U_B"></curve>
+                            <curve fn="functions.u.setLevel([40,40])" label="U_D"></curve>
+                            <segment points="[{x:0,y:0},{x:120,y:120}]" color="blue"></segment>
+                            <point point="[10,10]" label="A" color="blue" droplines="both"/>
+                            <point point="[20,20]" label="B" color="blue" droplines="both"/>
+                            <point point="[40,40]" label="C" color="blue" droplines="both"/>
+
+
+                        </graph>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div rendered-math align="center" style="{font-size: 14pt}"
+                             expression="U(x,y) = x^ay^b = x^{ {{ params.a | number:2}} }y^{
+                                 {{ params.b | number:2}} }"></div>
+                        <hr/>
+                        <div class="well">
+                            <p rendered-math expression="a: {{ params.a | number:2}}"></p>
+                            <slider value="params.a" min="0.4" max="0.6" precision="0.01"></slider>
+                            <p rendered-math expression="b: {{ params.b | number:2}}"></p>
+                            <slider value="params.b" min="0.4" max="0.6" precision="0.01"></slider>
+                        </div>
+
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>C-D Production: Isoquants for Q = 10, 20, 40</h2>
+            <hr/>
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="a" value="0.5"/>
+                <param name="b" value="0.5"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="120" title="Units of Labor (L)"></axis>
+                            <axis dim="y" min="0" max="120" title="Units of Capital (K)"></axis>
+                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.b}).setLevel(10)"
+                                   label="Q = 10"></curve>
+                            <curve fn="functions.u.setLevel(20)" label="Q = 20"></curve>
+                            <curve fn="functions.u.setLevel(40)" label="Q = 40"></curve>
+                            <segment points="[{x:0,y:0},{x:120,y:120}]" color="blue"></segment>
+                            <point point="functions.u.lowestCostBundle(10,params.a,params.b)" label="A" color="blue"
+                                   droplines="both"></point>
+                            <point point="functions.u.lowestCostBundle(20,params.a,params.b)" label="B" color="blue"
+                                   droplines="both"></point>
+                            <point point="functions.u.lowestCostBundle(40,params.a,params.b)" label="C"
+                                   color="blue" droplines="both"></point>
+                        </graph>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div rendered-math align="center" style="{font-size: 14pt}"
+                             expression="f(L,K) = L^\alpha K^\beta = L^{ {{ params.a | number:2}} }K^{
+                                 {{ params.b | number:2}} }"></div>
+                        <hr/>
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.a | number:2}}"></p>
+                            <slider value="params.a" min="0.40" max="0.60" precision="0.01"></slider>
+                            <p rendered-math expression="\beta: {{ params.b | number:2}}"></p>
+                            <slider value="params.b" min="0.40" max="0.60" precision="0.01"></slider>
+                        </div>
+                        <hr/>
+                        <div>
+                            <table class="table">
+                                <tr>
+                                    <td>Point</td>
+                                    <td>Quantity</td>
+                                    <td><span rendered-math>K = L</span></td>
+                                </tr>
+                                <tr>
+                                    <td>A</td>
+                                    <td>10</td>
+                                    <td>{{ functions.u.lowestCostBundle(10,params.a,params.b)[0] | number:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>B</td>
+                                    <td>20</td>
+                                    <td>{{ functions.u.lowestCostBundle(20,params.a,params.b)[0] | number:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>C</td>
+                                    <td>40</td>
+                                    <td>{{ functions.u.lowestCostBundle(40,params.a,params.b)[0] | number:2 }}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Shifts in technology</h1>
+            <h2>If capital or labor becomes more productive,</h2>
+            <h2>it requires fewer resources to produce the same amount</h2>
+            <h2 class="fragment">...so isoquants shift <b>in</b>.</h2>
+        </section>
+        <sections>
+            <h1>Categories of Technology Change</h1>
+        </sections>
+
+    </section>
+    <section>
+
+        <section>
+            <h1>Returns to scale</h1>
+            <hr/>
+            <div class="fragment">
+                <h3>Suppose that if you use</h3>
+                <h3><span rendered-math>L</span> units of labor and <span rendered-math>K</span> units of capital</h3>
+                <h3>you produce <span rendered-math>q = f(L,K)</span> units of output.</h3>
+            </div>
+            <hr/>
+            <h3 class="fragment">If you use <span rendered-math>tL</span> and <span rendered-math>tK</span> for some
+                <span rendered-math>t > 1</span>,</h3>
+
+            <h3 class="fragment">is the amount you produce - that is,
+                <span rendered-math>f(tL,tK)</span> -</h3>
+
+            <h3 class="fragment">more or less than <span rendered-math>tq</span> units of output?</h3>
+            <hr/>
+            <p class="fragment">(Colloquially: "If you double all inputs,<br/>do you double your output, or produce more, or less?")</p>
+            <hr/>
+        </section>
+        <section>
+            <h1>RETURNS TO SCALE: DEFINITIONS</h1>
+            <hr/>
+            <table class="table">
+                <tr>
+                    <td><b>Decreasing</b><br/>returns to scale</td>
+                    <td rendered-math>f(tL,tK) < tf(L,K)</td>
+                    <td>"Doubling all inputs produces<br/>less than double the output."</td>
+                </tr>
+                <tr>
+                    <td><b>Constant</b><br/>returns to scale</td>
+                    <td rendered-math>f(tL,tK) = tf(L,K)</td>
+                    <td>"Doubling all inputs produces<br/>exactly double the output."</td>
+                </tr>
+                <tr>
+                    <td><b>Increasing</b><br/>returns to scale</td>
+                    <td rendered-math>f(tL,tK) > tf(L,K)</td>
+                    <td>"Doubling all inputs produces<br/>more than double the output."</td>
+                </tr>
+            </table>
+        </section>
+    </section>
+    <section>
+        <h3>Group Exercise: Production Technology</h3>
+        <hr/>
+        <p>Enter the results in the spreadsheet at <a href="http://tinyurl.com/econ50googledocs" target="_blank">http://tinyurl.com/econ50googledocs</a>;<br/>click on "Lecture 10 Group Activities".</p>
+        <p><b>You have a firm with production technology <span rendered-math>q = f(L,K) = L^\alpha K^\frac{1}{2}</span>.</b></p>
+        <ol>
+            <li>Let <span rendered-math>\alpha</span> be the fraction of your group that is men.</li>
+            <li>Let <span rendered-math>K</span> be the number of women in your group.</li>
+            <li>Calculate your output for <span rendered-math>L = 10</span>, <span rendered-math>L = 20</span>, and
+                <span rendered-math>L = 30</span>.</li>
+            <li>Calculate your <span rendered-math>MP_L</span> for <span rendered-math>L = 10</span>, <span
+                    rendered-math>L = 20</span>, and
+                <span rendered-math>L = 30</span>.</li>
+            <li>Is the <span rendered-math>MP_L</span> diminishing, constant, or increasing?</li>
+            <li>Now calculate your output for <span rendered-math>L = 20</span> and you double your capital. Compare this to the case where
+                <span rendered-math>L = 10</span> with your original level of capital. Does your firm have constant, increasing, or decreasing returns to scale?</li>
+            <li>Use <a href="http://desmos.com">desmos.com</a> to draw an isoquant for Q = 100 with your original level of capital. Now add another isoquant for Q = 100 if you double your value of <span rendered-math>\alpha</span>. What happens?</li>
+        </ol>
+    </section>
+    <section>
+        <h1>Ten minute break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Substitutability between Inputs</h1>
+            <hr/>
+        </section>
+    </section>
+
+
+{% endblock %}
