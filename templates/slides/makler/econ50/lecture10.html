@@ -25,8 +25,9 @@
     <section>
         <h1>Today's Agenda</h1>
         <hr/>
-        <h2 class="fragment">Slides: Consumer and Producer Theory</h2>
-        <h2 class="fragment">At the board: Production Functions</h2>
+        <h2 class="fragment">Motivation and Context</h2>
+        <h2 class="fragment">Slides: Consumer and Producer Theory, Compared</h2>
+        <h2 class="fragment">At the board: Returns to Scale</h2>
         <h2 class="fragment">Exercise: Your Firm's Technology</h2>
         <hr/>
         <h2>Ten Minute Break</h2>
@@ -34,6 +35,35 @@
         <h2 class="fragment">Slides: Substitutability</h2>
         <h2 class="fragment">At the board: MRTS and Elasticity of Substitution</h2>
         <h2 class="fragment">Exercise: Your Firm's Capital-Labor Mix</h2>
+    </section>
+    <section>
+        <h2>Context: Producer Theory (4 lectures)</h2>
+        <hr/>
+        <p></p>
+        <table class="table">
+            <tr class="fragment" style="background-color:lightgreen">
+                <td>Week 6</td>
+                <td><b>Production Framework</b>: Production Functions,<br/>Isoquants, Substitutability between Inputs</td>
+                <td>Chapter 6</td>
+            </tr>
+            <tr class="fragment">
+                <td>Week 7</td>
+                <td><b>Optimal Choice I: Cost Minimization</b><br/><span rendered-math>(L^*, K^*)</span> as a function
+                    of
+                    <span rendered-math>(w, r, q)</span>.
+                </td>
+                <td>Chapter 7</td>
+            </tr>
+            <tr class="fragment">
+                <td>Week 8</td>
+                <td><b>Optimal Choice II: Profit Maximization</b><br/><span rendered-math>(q^*)</span> as a
+                    function
+                    of
+                    <span rendered-math>(w, r, P)</span>.
+                </td>
+                <td>Chapters 8, 9.1-9.2</td>
+            </tr>
+        </table>
     </section>
     <section>
         <section>
@@ -127,7 +157,7 @@
                     </td>
                     <td class="fragment">
                         <p rendered-math>\displaystyle{MP_L = \frac{\partial f(L,K)}{\partial L}}</p>
-                        <p rendered-math>\displaystyle{MU_K = \frac{\partial f(L,K)}{\partial K}}</p>
+                        <p rendered-math>\displaystyle{MP_K = \frac{\partial f(L,K)}{\partial K}}</p>
                     </td>
                 </tr>
                 <tr class="fragment">
@@ -155,17 +185,24 @@
             <h2>Monotonic transformations no longer benign!</h2>
         </section>
         <section>
-            <h2>CD Utility: Indifference Map for (10,10), (20,20), (40,40)</h2>
+            <clicker-question>
+                <h2>Consider the utility function <span rendered-math>u(x,y)=(xy)^a</span>.</h2>
+                <h2>What happens to the indifference curves passing through (10,10) and (20,20) if <span rendered-math>a</span> increases?</h2>
+                <clicker-option letter="A">They shift outward</clicker-option>
+                <clicker-option letter="B">They shift inward</clicker-option>
+                <clicker-option letter="C">They pivot clockwise</clicker-option>
+                <clicker-option letter="D">They pivot counter-clockwise</clicker-option>
+                <clicker-option letter="E">Nothing</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h2>CD Utility: Indifference Map for (10,10), (20,20)</h2>
             <hr/>
             {% raw %}
             <model>
 
                 <!-- Model parameters -->
-                <param name="alpha" value="0.8"/>
-                <param name="beta" value="0.2"/>
                 <param name="a" value="0.5"/>
-                <param name="b" value="0.5"/>
-
 
                 <!-- Model functions -->
                 <function name="u" category="utility" form="CobbDouglas"></function>
@@ -179,29 +216,23 @@
                         <graph height="600" width="600">
                             <axis dim="x" min="0" max="120" title="Good X"></axis>
                             <axis dim="y" min="0" max="120" title="Good Y"></axis>
-                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.b}).setLevel([10,10])"
+                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.a}).setLevel([10,10])"
                                    label="U_A"></curve>
                             <curve fn="functions.u.setLevel([20,20])" label="U_B"></curve>
-                            <curve fn="functions.u.setLevel([40,40])" label="U_D"></curve>
                             <segment points="[{x:0,y:0},{x:120,y:120}]" color="blue"></segment>
                             <point point="[10,10]" label="A" color="blue" droplines="both"/>
                             <point point="[20,20]" label="B" color="blue" droplines="both"/>
-                            <point point="[40,40]" label="C" color="blue" droplines="both"/>
-
-
                         </graph>
 
                     </div>
                     <div class="col-md-4">
                         <div rendered-math align="center" style="{font-size: 14pt}"
-                             expression="U(x,y) = x^ay^b = x^{ {{ params.a | number:2}} }y^{
-                                 {{ params.b | number:2}} }"></div>
+                             expression="U(x,y) = x^ay^a = x^{ {{ params.a | number:2}} }y^{
+                                 {{ params.a | number:2}} }"></div>
                         <hr/>
                         <div class="well">
                             <p rendered-math expression="a: {{ params.a | number:2}}"></p>
                             <slider value="params.a" min="0.4" max="0.6" precision="0.01"></slider>
-                            <p rendered-math expression="b: {{ params.b | number:2}}"></p>
-                            <slider value="params.b" min="0.4" max="0.6" precision="0.01"></slider>
                         </div>
 
                     </div>
@@ -210,14 +241,28 @@
             {% endraw %}
         </section>
         <section>
-            <h2>C-D Production: Isoquants for Q = 10, 20, 40</h2>
+            <clicker-question>
+                <h2>Consider the production function <span rendered-math>f(L,K)=(LK)^\alpha</span>.</h2>
+
+                <h2>What happens to the isoquants for<br/><span rendered-math>q = 10</span>, <span
+                        rendered-math>q = 20</span>, and <span rendered-math>q = 40</span> if <span
+                        rendered-math>\alpha</span> increases?</h2>
+                <clicker-option letter="A">They shift outward</clicker-option>
+                <clicker-option letter="B">They shift inward</clicker-option>
+                <clicker-option letter="C">They pivot clockwise</clicker-option>
+                <clicker-option letter="D">They pivot counter-clockwise</clicker-option>
+                <clicker-option letter="E">Nothing</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h2>C-D Production: Isoquants for q = 10, 20, 40</h2>
             <hr/>
             {% raw %}
             <model>
 
                 <!-- Model parameters -->
                 <param name="a" value="0.5"/>
-                <param name="b" value="0.5"/>
+
 
 
                 <!-- Model functions -->
@@ -232,72 +277,35 @@
                         <graph height="600" width="600">
                             <axis dim="x" min="0" max="120" title="Units of Labor (L)"></axis>
                             <axis dim="y" min="0" max="120" title="Units of Capital (K)"></axis>
-                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.b}).setLevel(10)"
-                                   label="Q = 10"></curve>
-                            <curve fn="functions.u.setLevel(20)" label="Q = 20"></curve>
-                            <curve fn="functions.u.setLevel(40)" label="Q = 40"></curve>
+                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.a}).setLevel(10)"
+                                   label="q = 10"></curve>
+                            <curve fn="functions.u.setLevel(20)" label="q = 20"></curve>
+                            <curve fn="functions.u.setLevel(40)" label="q = 40"></curve>
                             <segment points="[{x:0,y:0},{x:120,y:120}]" color="blue"></segment>
-                            <point point="functions.u.lowestCostBundle(10,params.a,params.b)" label="A" color="blue"
+                            <point point="functions.u.lowestCostBundle(10,params.a,params.a)" label="A" color="blue"
                                    droplines="both"></point>
-                            <point point="functions.u.lowestCostBundle(20,params.a,params.b)" label="B" color="blue"
+                            <point point="functions.u.lowestCostBundle(20,params.a,params.a)" label="B" color="blue"
                                    droplines="both"></point>
-                            <point point="functions.u.lowestCostBundle(40,params.a,params.b)" label="C"
+                            <point point="functions.u.lowestCostBundle(40,params.a,params.a)" label="C"
                                    color="blue" droplines="both"></point>
                         </graph>
 
                     </div>
                     <div class="col-md-4">
                         <div rendered-math align="center" style="{font-size: 14pt}"
-                             expression="f(L,K) = L^\alpha K^\beta = L^{ {{ params.a | number:2}} }K^{
-                                 {{ params.b | number:2}} }"></div>
+                             expression="f(L,K) = (LK)^\alpha = (LK)^{ {{ params.a | number:2}} }"></div>
                         <hr/>
                         <div class="well">
                             <p rendered-math expression="\alpha: {{ params.a | number:2}}"></p>
                             <slider value="params.a" min="0.40" max="0.60" precision="0.01"></slider>
-                            <p rendered-math expression="\beta: {{ params.b | number:2}}"></p>
-                            <slider value="params.b" min="0.40" max="0.60" precision="0.01"></slider>
-                        </div>
-                        <hr/>
-                        <div>
-                            <table class="table">
-                                <tr>
-                                    <td>Point</td>
-                                    <td>Quantity</td>
-                                    <td><span rendered-math>K = L</span></td>
-                                </tr>
-                                <tr>
-                                    <td>A</td>
-                                    <td>10</td>
-                                    <td>{{ functions.u.lowestCostBundle(10,params.a,params.b)[0] | number:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>B</td>
-                                    <td>20</td>
-                                    <td>{{ functions.u.lowestCostBundle(20,params.a,params.b)[0] | number:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>C</td>
-                                    <td>40</td>
-                                    <td>{{ functions.u.lowestCostBundle(40,params.a,params.b)[0] | number:2 }}</td>
-                                </tr>
 
-                            </table>
                         </div>
-
                     </div>
                 </div>
             </model>
             {% endraw %}
         </section>
-        <section>
-            <h1>Shifts in technology</h1>
-            <h2>If capital or labor becomes more productive,</h2>
-            <h2>it requires fewer resources to produce the same amount</h2>
-            <h2 class="fragment">...so isoquants shift <b>in</b>.</h2>
-        </section>
-        <sections>
-            <h1>Categories of Technology Change</h1>
-        </sections>
+
 
     </section>
     <section>
@@ -345,7 +353,7 @@
         </section>
     </section>
     <section>
-        <h3>Group Exercise: Production Technology</h3>
+        <h3>Group Exercise: Part I</h3>
         <hr/>
         <p>Enter the results in the spreadsheet at <a href="http://tinyurl.com/econ50googledocs" target="_blank">http://tinyurl.com/econ50googledocs</a>;<br/>click on "Lecture 10 Group Activities".</p>
         <p><b>You have a firm with production technology <span rendered-math>q = f(L,K) = L^\alpha K^\frac{1}{2}</span>.</b></p>
@@ -360,8 +368,7 @@
             <li>Is the <span rendered-math>MP_L</span> diminishing, constant, or increasing?</li>
             <li>Now calculate your output for <span rendered-math>L = 20</span> and you double your capital. Compare this to the case where
                 <span rendered-math>L = 10</span> with your original level of capital. Does your firm have constant, increasing, or decreasing returns to scale?</li>
-            <li>Use <a href="http://desmos.com">desmos.com</a> to draw an isoquant for Q = 100 with your original level of capital. Now add another isoquant for Q = 100 if you double your value of <span rendered-math>\alpha</span>. What happens?</li>
-        </ol>
+            </ol>
     </section>
     <section>
         <h1>Ten minute break</h1>
@@ -369,9 +376,213 @@
     <section>
         <section>
             <h1>Substitutability between Inputs</h1>
+        </section>
+        <section>
+            <h2>Substitutability</h2>
             <hr/>
+            <table class="table">
+                <tr style="background-color:darkblue; color:white">
+                    <td/>
+                    <td>Consumer Theory</td>
+                    <td>Producer Theory</td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Slope of...</td>
+                    <td>indifference curve</td>
+                    <td>isoquant</td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">is called the...</td>
+                    <td><b>Marginal Rate of Substitution</b></td>
+                    <td><b>Marginal Rate of Technical Substitution</b></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Formula:</td>
+                    <td rendered-math>\displaystyle{MRS_{x,y} = \frac{MU_x}{MU_y}}</td>
+                    <td rendered-math class="fragment">\displaystyle{MRTS_{L,K} = \frac{MP_L}{MP_K}}</td>
+
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align:right">Intuition:</td>
+                    <td>Amount of Y the consumer<br/>is willing to give up<br/>for an additional unit of X<br/>and still have the same utility</td>
+                    <td class="fragment">Amount of capital the firm<br/>can stop using<br/>if they hire an additional unit of labor<br/>and still produce the same output
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h1>New Concept: Elasticity of Substitution</h1>
+            <hr/>
+            <h2 rendered-math>\displaystyle{\sigma = \frac{\%\Delta \frac{K}{L}}{\%\Delta MRTS}}</h2>
+            <div class="fragment"><hr/>
+            <p>Since it's more natural to think of the <span rendered-math>MRTS</span> as a function of <span rendered-math>\frac{K}{L}</span>...</p>
+            <hr/>
+            <h2 rendered-math>\displaystyle{\sigma =
+                \frac{1}{\left(\frac{\%\Delta MRTS}{\%\Delta \frac{K}{L}}\right)}}= \frac{1}{\left(\frac{d\ln MRTS}{d\ln
+                \frac{K}{L}}\right)}</h2>
+            </div>
+        </section>
+        <section>
+            <h2>The CES Production Function </h2>
+            {% raw %}
+            <model>
+
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="beta" value="0.5"/>
+                <param name="s" value="0"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="2" title="Good X"></axis>
+                            <axis dim="y" min="0" max="2" title="Good Y"></axis>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).setLevel(1)"
+                                   label="q=1"></curve>
+
+
+
+                        </graph>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <span rendered-math>f(L,K) = \left[L^\frac{\sigma - 1}{\sigma} + K^\frac{\sigma - 1}{\sigma}\right]^\frac{\sigma}{\sigma - 1}</span>
+                        <hr/>
+                        <div class="well">
+                            <p>Elasticity of Substitution</p>
+                            <div ng-if="params.s < 1">
+                                <p ng-if="params.s <= 0" rendered-math
+                                   expression="\sigma: {{ params.s + 1 | number:2}}"></p>
+                                <p ng-if="params.s > 0" rendered-math
+                                   expression="\sigma: {{ 1/(1-params.s) | number:2}}"></p>
+                            </div>
+                            <p ng-if="params.s == 1" rendered-math>\sigma: \infty</p>
+                            <slider value="params.s" min="-0.99" max="0.99" precision="0.01"></slider>
+                        </div>
+
+
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
         </section>
     </section>
+    <section>
+        <section>
+            <h1>Shifts in technology</h1>
 
+            <h2>If capital or labor becomes more productive,</h2>
+
+            <h2>it requires fewer resources to produce the same amount</h2>
+
+            <h2 class="fragment">...so isoquants shift <b>in</b>.</h2>
+        </section>
+        <section>
+            <h1>Categories of Technology Change</h1>
+            <hr/>
+            <h2>Capital-Enhancing: <span rendered-math>\displaystyle{\frac{MP_L}{MP_K}}</span> unchanged</h2>
+
+            <h2>Neutral: <span rendered-math>\displaystyle{\frac{MP_L}{MP_K}}</span> unchanged</h2>
+
+            <h2>Labor-Enhancing: <span rendered-math>\displaystyle{\frac{MP_L}{MP_K}}</span> unchanged</h2>
+
+        </section>
+        <section>
+            <h2>Productivity Change for Cobb-Douglas</h2>
+            <hr/>
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="a" value="0.5"/>
+                <param name="b" value="0.5"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="120" title="Units of Labor (L)"></axis>
+                            <axis dim="y" min="0" max="120" title="Units of Capital (K)"></axis>
+                            <segment points="[{x:0,y:0},{x:120,y:120}]" color="grey"></segment>
+                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.b}).setLevel(40)"
+                                   label="q = 40"></curve>
+                            <line fn="functions.u.mrsTangentLine(functions.u.lowestCostBundle(40,params.a,params.b))"
+                                  color="red"></line>
+                            <point point="functions.u.lowestCostBundle(40,params.a,params.b)" label="A" color="blue"
+                                   droplines="both"></point>
+
+
+                        </graph>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div rendered-math align="center" style="{font-size: 14pt}"
+                             expression="f(L,K) = L^\alpha K^\beta = L^{ {{ params.a | number:2}} }K^{ {{ params.b | number:2}} }"></div>
+                        <hr/>
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.a | number:2}}"></p>
+                            <slider value="params.a" min="0.40" max="1" precision="0.01"></slider>
+                            <p rendered-math expression="\beta: {{ params.b | number:2}}"></p>
+                            <slider value="params.b" min="0.40" max="1" precision="0.01"></slider>
+                        </div>
+                        <hr/>
+                        <p>The firm can produce 40 units using <span style="color:blue" rendered-math
+                                                                     expression="L = K = {{ functions.u.lowestCostBundle(10,params.a,params.b)[0] | number:2 }}"></span>
+                            (point A).</p>
+
+                        <p>At this point, the Marginal Rate of Technical Substitution is
+                            <span rendered-math
+                                  expression="MRTS_{L,K} = {{ functions.u.mrs(functions.u.lowestCostBundle(10,params.a,params.b)) | number:2 }}"
+                                  style="color:red"></span><br/> (negative of the slope<br/>of the red line).</p>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Group Exercise, Part II</h1>
+            <hr/>
+            <p>(for these questions, use your original level of K -- i.e., the number of women in your group)</p>
+            <ol>
+                <li>Calculate your output when L = K (for your level of capital).</li>
+                <li>Calculate the MRTS when L = K (for your level of capital).</li>
+                <li>Calculate the percentage change in MRTS for a 1% change in the K/L ratio; confirm that this is 1.</li>
+                <li>Use <a href="http://desmos.com">desmos.com</a> to draw an isoquant for the quantity you found above.</li>
+                <li>In Desmos, add another isoquant for the same quantity if you double your value of <span
+                            rendered-math>\alpha</span>. What happens?
+                </li>
+                <li>Calculate your MRTS at the new (doubled) level of <span rendered-math>\alpha</span> if you continue to produce the same quantity, and keep your capital/labor ratio constant (at 1).</li>
+            </ol>
+        </section>
+    </section>
+    <section>
+        <h1>BIG IDEAS</h1>
+        <hr/>
+        <h2>Mathematical framework identical to consumer theory.</h2>
+        <h2>Utility function is <b>ordinal</b>; production function is <b>cardinal</b>.</h2>
+    </section>
+    <section>
+        <h1>Next time: Cost Minimization (Chapter 7)</h1>
+    </section>
 
 {% endblock %}
