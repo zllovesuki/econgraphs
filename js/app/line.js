@@ -37,14 +37,13 @@ kgAngular.directive('line', function (D3Helpers) {
 
                         var label = scope.label || 'none';
 
-                        // Add associated labels only if each is in its dimension fo the graph domain
                         if (label != 'none') {
                             var labelObject = D3Helpers.configLabel({
                                 graph: graph,
                                 html: label,
-                                point: points[0],
-                                xOffset: scope.xLabelOffset,
-                                yOffset: scope.yLabelOffset
+                                point: points[1],
+                                xOffset: parseInt(scope.labelOffsetX),
+                                yOffset: parseInt(scope.labelOffsetY)
                             });
                             labelObject.color = scope.color;
 
@@ -63,7 +62,7 @@ kgAngular.directive('line', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', color: '@', show:'&', params: '&', label:'@', xLabelOffset:'@', yLabelOffset:'@'}
+            scope: { fn: '&', color: '@', show:'&', params: '&', label:'@', labelOffsetX:'&', labelOffsetY:'&'}
         }
     }
 );

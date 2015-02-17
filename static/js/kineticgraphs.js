@@ -642,11 +642,21 @@ kg.functions.Linear = (function() {
                 points.push({x: xTop, y: yDomain.max})
             }
 
+            if (points.length == 2) {
+                return points.sort(sortObjects('x'));
+            }
+
             // Add intersection with left border of horizontal range,
             // if that point lies within the vertical range.
             var yLeft = l.yValue(xDomain.min);
             if(inRange(yLeft, yDomain)) {
-                points.push({x: xDomain.min, y: yLeft})
+                if(points.length == 0 || points[0].x > xDomain.min){
+                    points.push({x: xDomain.min, y: yLeft})
+                }
+            }
+
+            if (points.length == 2) {
+                return points.sort(sortObjects('x'));
             }
 
             // Add intersection with right border of horizontal range
