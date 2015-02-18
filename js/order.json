@@ -59,7 +59,9 @@
             "utility/complements.js",
             "utility/substitutes.js",
             "utility/ces.js",
-            "utility/inferior.js"
+            "utility/inferior.js",
+            "production/production.js",
+            "production/cobbdouglasproduction.js"
         ]
     },
     {
