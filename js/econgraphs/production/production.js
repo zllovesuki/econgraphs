@@ -30,7 +30,6 @@ econgraphs.functions.production = {
             }
             }
 
-
         };
 
         return f;

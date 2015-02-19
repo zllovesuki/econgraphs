@@ -21,6 +21,7 @@
         "order": [
             "app.js",
             "d3-helpers.js",
+            "graph-helpers.js",
             "clicker.js",
             "model.js",
             "math.js",
