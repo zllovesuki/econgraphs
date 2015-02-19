@@ -101,12 +101,12 @@ kgAngular.directive('graph', function (D3Helpers) {
             y_axis = scope.graph_definition.vis.append('g').attr('class', 'y axis');
             x_axis_label = x_axis.append("text")
                 .attr("x", scope.graph_definition.width / 2)
-                .attr("y", "5em")
+                .attr("y", "4em")
                 .style("text-anchor", "middle");
             y_axis_label = y_axis.append("text")
                 .attr("transform", "rotate(-90)")
                 .attr("x", -scope.graph_definition.height / 2)
-                .attr("y", "-5em")
+                .attr("y", "-4em")
                 .style("text-anchor", "middle");
 
 

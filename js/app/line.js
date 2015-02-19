@@ -42,8 +42,8 @@ kgAngular.directive('line', function (D3Helpers) {
                                 graph: graph,
                                 html: label,
                                 point: points[1],
-                                xOffset: parseInt(scope.labelOffsetX),
-                                yOffset: parseInt(scope.labelOffsetY)
+                                xOffset: parseInt(scope.labelOffsetX()),
+                                yOffset: parseInt(scope.labelOffsetY())
                             });
                             labelObject.color = scope.color;
 
