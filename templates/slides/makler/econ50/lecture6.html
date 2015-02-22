@@ -650,7 +650,7 @@
                             <graph height="350" width="350">
                                 <axis dim="x" min="0" max="65" title="Quantity of X"></axis>
                                 <axis dim="y" min="0" max="150" title="Income"></axis>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).engelCurve({maxIncome:140, px:params.px, py:params.py, samplePoints: 50})"
+                                <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).engelCurve({px:params.px, py:params.py, samplePoints: 2})"
                                        color="blue" label="\text{Engel}_X"></curve>
                                 <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0],params.income]"
                                        droplines="both" xlabel="x^*(I)" ylabel="I"></point>
@@ -660,7 +660,7 @@
                             <graph height="350" width="350">
                                 <axis dim="x" min="0" max="65" title="Quantity of Y"></axis>
                                 <axis dim="y" min="0" max="150" title="Income"></axis>
-                                <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).engelCurve({good:'y',maxIncome:140, px:params.px, py:params.py, samplePoints: 50})"
+                                <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).engelCurve({good:'y', px:params.px, py:params.py, samplePoints: 2})"
                                        color="red" label="\text{Engel}_Y"></curve>
                                 <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[1],params.income]"
                                        droplines="both" xlabel="y^*(I)" ylabel="I"></point>

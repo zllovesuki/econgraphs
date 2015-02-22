@@ -35,7 +35,7 @@ function pointAsObject(point) {
 
 function inRange(v, domain) {
     domain = domainAsObject(domain);
-    if (v == 'undefined') {
+    if (v == 'undefined' || isNaN(v)) {
         return false
     }
     return (v >= domain.min && v <= domain.max)
@@ -54,6 +54,8 @@ function sortObjects(key, descending) {
 }
 
 function functionPoints(fn, xDomain, yDomain, params) {
+
+    params = params || {};
 
     function getBoundary(minOrMax) {
 
@@ -95,7 +97,7 @@ function functionPoints(fn, xDomain, yDomain, params) {
             default:
                 candidatePoint = pointAsObject(fn(ind)); // (x,y) as a function of t
         }
-        if (candidatePoint.hasOwnProperty('x') && candidatePoint.hasOwnProperty('x') && onGraph(candidatePoint, xDomain, yDomain)) {
+        if (candidatePoint.hasOwnProperty('x') && candidatePoint.hasOwnProperty('y') && onGraph(candidatePoint, xDomain, yDomain)) {
             points.push(candidatePoint);
         }
         ind += step;

@@ -8,7 +8,7 @@
         <hr/>
         <br/>
 
-        <h2>Lecture 11</h2>
+        <h2>Lecture 12</h2>
 
         <h1>Producer Theory:<br/>Cost Minimization</h1>
         <br/>
@@ -26,20 +26,26 @@
         <h1>Today's Agenda</h1>
         <hr/>
         <h2 class="fragment">Motivation and Context</h2>
+
         <h2 class="fragment">Intro to Cost Minimization</h2>
+
         <h2 class="fragment">Cost Minimization with Calculus</h2>
+
         <h2 class="fragment">Cost Minimization: Kinks & Corners</h2>
         <hr/>
         <h2>Ten Minute Break</h2>
         <hr/>
         <h2 class="fragment">Comparative Statics</h2>
+
         <h2 class="fragment">Exercise: Toward Cost Curves</h2>
     </section>
     <section>
         <section>
             <h1>Motivation</h1>
             <hr/>
-            <h2><a href="http://www.nytimes.com/2015/02/18/business/as-rivals-falter-indias-economy-is-surging-ahead.html" target="_blank">As Rivals Falter, India's Economy is Surging Ahead</a></h2>
+            <h2>
+                <a href="http://www.nytimes.com/2015/02/18/business/as-rivals-falter-indias-economy-is-surging-ahead.html"
+                   target="_blank">As Rivals Falter, India's Economy is Surging Ahead</a></h2>
             <img src="{{ url_for('static',filename='images/econ50/lecture11/nyt-india.jpg') }}">
         </section>
         <section>
@@ -74,10 +80,11 @@
                 </tr>
             </table>
         </section>
-        </section>
+    </section>
     <section>
         <section>
             <h1>Cost Minimization</h1>
+
             <h1>and Profit Maximization:</h1>
             <hr/>
             <h1>Two Sides of the Same Coin</h1>
@@ -95,9 +102,13 @@
         </section>
         <section>
             <h2>Given a production function <span rendered-math>\color{red}{q} = f(\color{green}{L,K})</span></h2>
+
             <h2 class="fragment">input prices <span rendered-math>(w,r)</span>,</h2>
+
             <h2 class="fragment">and the market price of output <span rendered-math>(P)</span>,</h2>
+
             <h2 class="fragment">there are two ways of thinking about the firm's problem:</h2>
+
             <div style="height:50px; color:white">.</div>
             <table class="table">
                 <tr class="fragment">
@@ -137,24 +148,30 @@
         <section>
             <h2>We want to find <span rendered-math>TC(\color{red}{q})</span>, given current input prices</h2>
             <hr/>
-            <h3>(the <b>lowest possible cost</b> of producing <span rendered-math>q</span> units,<br/>given wage rate <span
-                    rendered-math>w</span> and rental rate of capital <span rendered-math>r</span>)</h3>
+            <h3>(the <b>lowest possible cost</b> of producing <span rendered-math>q</span> units,<br/>given wage
+                rate <span
+                        rendered-math>w</span> and rental rate of capital <span rendered-math>r</span>)</h3>
             <hr/>
             <div style="height:50px; color:white">.</div>
             <table class="table">
                 <tr class="fragment">
                     <td><h2><b>Step 1</b>:</h2></td>
-                    <td><h2>Find cost-minimizing <span rendered-math>\color{green}{L^*}(w,r,\color{red}{q})</span> and <span rendered-math>\color{green}{K^*}(w,r,\color{red}{q})</span>,
+                    <td><h2>Find cost-minimizing <span rendered-math>\color{green}{L^*}(w,r,\color{red}{q})</span> and
+                        <span rendered-math>\color{green}{K^*}(w,r,\color{red}{q})</span>,
                     </h2></td>
                 </tr>
                 <tr class="fragment">
                     <td><h2><b>Step 2</b>:</h2></td>
                     <td><h2>Plug back into expenditure function:</h2>
-                        <h2 rendered-math>TC(w,r,\color{red}{q}) = w\color{green}{L^*}(w,r,\color{red}{q}) + r\color{green}{K^*}(w,r,\color{red}{q})</h2></td>
+
+                        <h2 rendered-math>TC(w,r,\color{red}{q}) = w\color{green}{L^*}(w,r,\color{red}{q}) +
+                            r\color{green}{K^*}(w,r,\color{red}{q})</h2></td>
                 </tr>
             </table>
             <div style="height:50px; color:white">.</div>
-            <h2 class="fragment"><span rendered-math>\color{green}{L^*}(w,r,\color{red}{q})</span> and <span rendered-math>\color{green}{K^*}(w,r,\color{red}{q})</span> are called the <b>conditional demand</b><br/>for labor and capital (i.e., conditional on <span rendered-math>\color{red}{q}</span>).</h2>
+            <h2 class="fragment"><span rendered-math>\color{green}{L^*}(w,r,\color{red}{q})</span> and <span
+                    rendered-math>\color{green}{K^*}(w,r,\color{red}{q})</span> are called the <b>conditional demand</b><br/>for
+                labor and capital (i.e., conditional on <span rendered-math>\color{red}{q}</span>).</h2>
         </section>
 
     </section>
@@ -163,8 +180,11 @@
             <h1>Cost Minimization</h1>
             <hr/>
             <h2>Analogous problem to utility maximization</h2>
+
             <h2>"Indifference Curves" => "Isoquants"</h2>
+
             <h2>"Budget Lines" => "Isocost Lines"</h2>
+
             <h2>Hold <b>quantity of output</b> constant (not income/expenditure)</h2>
         </section>
         <section>
@@ -205,10 +225,15 @@
                             <axis dim="x" min="0" max="30" title="Quantity (q)"></axis>
                             <axis dim="y" min="0" max="20000" title="" ticks="0"></axis>
                             <curve fn="functions.f.longRunTotalCostCurve(10,10)" label="TC(q)"></curve>
-                            <point point="[20,8000]" label="A" droplines="horizontal" ylabel="\$8,000" show="params.showA"></point>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,400)" label="TC(q)"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,200)" label="TC(q)"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,100)" label="TC(q)"></curve>
+                            <point point="[20,8000]" label="A" droplines="horizontal" ylabel="\$8,000"
+                                   show="params.showA"></point>
                             <point point="[20,10000]" label="B" droplines="horizontal" ylabel="\$10,000"
                                    show="params.showB"></point>
-                            <point point="[20,17000]" label="C" droplines="both" ylabel="\$17,000" show="params.showC"></point>
+                            <point point="[20,17000]" label="C" droplines="both" ylabel="\$17,000"
+                                   show="params.showC"></point>
                         </graph>
                     </div>
                 </div>
@@ -220,7 +245,9 @@
                         <td>Cost if <span rendered-math>w = r = 10</span></td>
                     </tr>
                     <tr>
-                        <td><toggle param="params.showA" init="false">A</toggle> </td>
+                        <td>
+                            <toggle param="params.showA" init="false">A</toggle>
+                        </td>
                         <td>400</td>
                         <td>400</td>
                         <td>$8,000</td>
@@ -248,7 +275,7 @@
             {% endraw %}
         </section>
         <section>
-            <h2>Cost Minimization in  <b>Consumer Theory</b> and <b>Producer Theory</b></h2>
+            <h2>Cost Minimization in <b>Consumer Theory</b> and <b>Producer Theory</b></h2>
             <hr/>
             <div class="row">
                 <div class="col-md-6">
@@ -292,24 +319,31 @@
             <div class="row">
                 <div class="col-md-6 fragment">
                     <p><b>Hicksian Demand Functions</b>:</p>
+
                     <p rendered-math>x^*(U,P_x,P_y), y^*(U,P_x,P_y)</p>
                 </div>
                 <div class="col-md-6 fragment">
                     <p><b>Conditional Demand Functions</b>:</p>
+
                     <p rendered-math>L^*(w,r,q), K^*(w,r,q)</p>
                 </div>
             </div>
             <hr/>
             <p>Plug optimal quantities back into the objective function:</p>
+
             <div class="row">
                 <div class="col-md-6 fragment">
                     <p><b>Expenditure Function</b>:</p>
+
                     <p rendered-math>E(U,P_x,P_y) = P_xx^*(U,P_x,P_y) + P_yy^*(U, P_x,P_y)</p>
+
                     <p>(Cost of cost-minimizing choice)</p>
                 </div>
                 <div class="col-md-6 fragment">
                     <p><b>Total Cost Function</b>:</p>
+
                     <p rendered-math>TC(w,r,q) = wL^*(w,r,q) + rK^*(w,r,q)</p>
+
                     <p>(Cost of cost-minimizing inputs)</p>
                 </div>
             </div>
@@ -321,6 +355,7 @@
     <section>
         <section>
             <h1>Cost Minimization</h1>
+
             <h1>when Calculus Works</h1>
         </section>
         <section>
@@ -469,22 +504,29 @@
         </section>
         <section>
             <h1>Derivation:</h1>
+
             <h1 rendered-math>f(L,K) = L^\frac{1}{4}K^\frac{1}{4}</h1>
             <hr/>
             <ol>
                 <li>Draw an isoquant for Q = 10.</li>
                 <li>Derive an expression for <span rendered-math>MRTS_{L,K}</span>.</li>
-                <li>Derive the conditional demands for labor and capital<br/> -- that is, <span rendered-math>L^*(w,r,q)</span> and <span
-                        rendered-math>K^*(w,r,q)</span>.</li>
-                <li>Find the total cost of producing <span rendered-math>q</span> units of output, for general <span rendered-math>w</span> and <span rendered-math>r</span>.</li>
+                <li>Derive the conditional demands for labor and capital<br/> -- that is, <span
+                        rendered-math>L^*(w,r,q)</span> and <span
+                        rendered-math>K^*(w,r,q)</span>.
+                </li>
+                <li>Find the total cost of producing <span rendered-math>q</span> units of output, for general <span
+                        rendered-math>w</span> and <span rendered-math>r</span>.
+                </li>
                 <li>Confirm that when <span rendered-math>w = 9</span> and <span rendered-math>r = 16</span>, we obtain
-                    <span rendered-math>L^* = 133, K^*=75, TC=\$2,400</span> if we want to produce <span rendered-math>q = 10</span></span> </li>
+                    <span rendered-math>L^* = 133, K^*=75, TC=\$2,400</span> if we want to produce <span rendered-math>q = 10</span></span>
+                </li>
             </ol>
         </section>
     </section>
     <section>
         <section>
             <h1>Cost Minimization</h1>
+
             <h1>when Calculus Doesn't Work</h1>
         </section>
         <section>
@@ -519,20 +561,25 @@
 
     </section>
     <section>
-    <h1>Ten Minute Break</h1>
+        <h1>Ten Minute Break</h1>
     </section>
     <section>
         <h1>Comparative Statics</h1>
         <hr/>
         <h2>Changes in Technology</h2>
+
         <h2>Changes in Input Prices</h2>
+
         <h2>Changes in Quantity</h2>
     </section>
     <section>
         <section>
             <h1>Shifts in technology (B&B Section 6.6)</h1>
+
             <h2>If capital or labor becomes more productive,</h2>
+
             <h2>it requires fewer resources to produce the same amount</h2>
+
             <h2 class="fragment">...so isoquants shift <b>in</b>.</h2>
         </section>
         <section>
@@ -641,6 +688,7 @@
     <section>
         <section>
             <h1>Changes in input prices:</h1>
+
             <h1>Conditional Demand Elasticity</h1>
             <hr/>
             <h2>(B&B Section 7.3)</h2>
@@ -648,7 +696,9 @@
         <section>
             <clicker-question>
                 <h2>As the elasticity of substitution</h2>
+
                 <h2>between labor and capital increases,</h2>
+
                 <h2>the elasticity of demand for labor...</h2>
                 <clicker-option letter="A">Increases</clicker-option>
                 <clicker-option letter="B">Decreases</clicker-option>
@@ -658,11 +708,14 @@
         </section>
         <section>
             <img src="{{ url_for('static',filename='images/econ50/lecture11/besanko_5e_fig_07_11.jpg') }}">
+
             <p>The more substitutable inputs are, the more elastic their demand.</p>
         </section>
         <section>
-            <h2>Which of these shows the conditional labor demand for the production function <span rendered-math>f(L,K) = \min(L,K)</span>?</h2>
-            <img src="{{ url_for('static',filename='images/econ50/lecture11/complementsLaborDemand.png') }}" height="604" width="850">
+            <h2>Which of these shows the conditional labor demand for the production function <span rendered-math>f(L,K) = \min(L,K)</span>?
+            </h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture11/complementsLaborDemand.png') }}"
+                 height="604" width="850">
 
         </section>
 
@@ -671,24 +724,30 @@
     <section>
         <section>
             <h1>Changes in output:</h1>
+
             <h1>The Expansion Path</h1>
             <hr/>
             <h2>(B&B Sections 7.3, 7.4)</h2>
         </section>
         <section>
             <img src="{{ url_for('static',filename='images/econ50/lecture11/besanko_5e_fig_07_08.jpg') }}">
+
             <p>Expansion Path if Labor and Capital are both Normal</p>
         </section>
         <section>
             <img src="{{ url_for('static',filename='images/econ50/lecture11/besanko_5e_fig_07_09.jpg') }}">
+
             <p>Expansion Path if Labor is an Inferior Input</p>
         </section>
         <section>
             <h1>"In the long run, we are all dead."</h1>
+
             <h2>John Maynard Keynes</h2>
             <hr/>
             <h2 class="fragment">(in micro...)</h2>
+
             <h1 class="fragment">In the short run, some things are fixed.</h1>
+
             <h1 class="fragment">In the very long run, everything is variable.</h1>
         </section>
         <section>
@@ -700,6 +759,7 @@
         </section>
         <section>
             <img src="{{ url_for('static',filename='images/econ50/lecture11/besanko_5e_fig_07_14.jpg') }}">
+
             <p>Short-Run and Long-Run Expansion Paths</p>
         </section>
         <section>
@@ -709,9 +769,11 @@
 
             <h2>Assign an amount of capital to each person at the table: 9, 16, 25 or 36.</h2>
 
-            <h2>Suppose <span rendered-math>w = r = 10</span> and <span rendered-math>f(L,K)=L^\frac{1}{4}K^\frac{1}{4}</span>.</h2>
+            <h2>Suppose <span rendered-math>w = r = 10</span> and <span
+                    rendered-math>f(L,K)=L^\frac{1}{4}K^\frac{1}{4}</span>.</h2>
 
-            <h2>For <span rendered-math>q=3,4,5,6</span>, calculate each person's labor requirements<br/>and total cost of
+            <h2>For <span rendered-math>q=3,4,5,6</span>, calculate each person's labor requirements<br/>and total cost
+                of
                 producing <span rendered-math>q</span> units.</h2>
 
             <h2>Have the scribe create a table and graph showing total cost of producing 3, 4, 5, and 6 units.</h2>

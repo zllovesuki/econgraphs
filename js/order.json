@@ -61,7 +61,8 @@
             "utility/ces.js",
             "utility/inferior.js",
             "production/production.js",
-            "production/cobbdouglasproduction.js"
+            "production/cobbdouglasproduction.js",
+            "production/translog.js"
         ]
     },
     {
