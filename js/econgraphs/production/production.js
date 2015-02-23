@@ -34,6 +34,21 @@ econgraphs.functions.production = {
             return r*k;
         };
 
+        f.shortRunFixedCostCurve = function (r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunFixedCost = function (q) {
+                        return f.shortRunFixedCost(r, k)
+                    };
+
+                    return functionPoints(shortRunFixedCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
         f.shortRunVariableCost = function(q,w,k) {
             return w* f.laborToProduceQ(q,k);
         };
@@ -114,26 +129,74 @@ econgraphs.functions.production = {
             return f.longRunTotalCost(q, w, r)/q;
         };
 
+        f.longRunAverageCostCurve = function (w, r) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var longRunAverageCost = function (q) {
+                        return f.longRunAverageCost(q, w, r)
+                    };
+
+                    return functionPoints(longRunAverageCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
         f.shortRunAverageCost = function (q, w, r, k) {
             return f.shortRunTotalCost(q, w, r, k) / q;
         };
+
+        f.shortRunAverageCostCurve = function (w, r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunAverageCost = function (q) {
+                        return f.shortRunAverageCost(q, w, r, k)
+                    };
+
+                    return functionPoints(shortRunAverageCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.shortRunAverageFixedCost = function (q, r, k) {
+            return r * k / q;
+        };
+
+        f.shortRunAverageFixedCostCurve = function (r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunAverageFixedCost = function (q) {
+                        return f.shortRunAverageFixedCost(q, r, k)
+                    };
+
+                    return functionPoints(shortRunAverageFixedCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
 
         f.shortRunAverageVariableCost = function (q, w, k) {
             return f.shortRunVariableCost(q,w,k) / q;
         };
 
-
-
-        f.shortRunTotalCostCurve = function (w, r, k) {
+        f.shortRunAverageVariableCostCurve = function (w, r, k) {
 
             return {
                 points: function (xDomain, yDomain) {
 
-                    var shortRunTotalCost = function (q) {
-                        return f.shortRunTotalCost(q, w, r, k)
+                    var shortRunAverageVariableCost = function (q) {
+                        return f.shortRunAverageVariableCost(q, w, r, k)
                     };
 
-                    return functionPoints(shortRunTotalCost, xDomain, yDomain);
+                    return functionPoints(shortRunAverageVariableCost, xDomain, yDomain);
                 }
             }
 

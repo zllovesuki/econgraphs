@@ -1026,7 +1026,9 @@ kgAngular.directive('curve', function (D3Helpers) {
                             var labelObject = D3Helpers.configLabel({
                                 graph: graph,
                                 html:label,
-                                point: allPoints[allPoints.length - 1]
+                                point: allPoints[allPoints.length - 1],
+                                xOffset: parseInt(scope.labelOffsetX()),
+                                yOffset: parseInt(scope.labelOffsetY())
                             });
                             labelObject.color = scope.color;
 
@@ -1048,7 +1050,7 @@ kgAngular.directive('curve', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', label:'@', ind: '@', color: '@', show: '&' }
+            scope: { fn: '&', label:'@', ind: '@', color: '@', show: '&', labelOffsetX: '&', labelOffsetY: '&' }
         }
     }
 );
@@ -1123,7 +1125,7 @@ kgAngular.directive('line', function (D3Helpers) {
     }
 );
 
-kgAngular.directive('segment', function () {
+kgAngular.directive('segment', function (D3Helpers) {
 
         function link(scope, element, attrs, graphCtrl) {
 
@@ -1149,6 +1151,23 @@ kgAngular.directive('segment', function () {
 
                         shapes.lines.push({x1: x1, y1: y1, x2: x2, y2: y2, color: scope.color});
 
+                        // Add label to last point
+
+                        var label = scope.label || 'none';
+
+                        if (label != 'none') {
+                            var labelObject = D3Helpers.configLabel({
+                                graph: graph,
+                                html: label,
+                                point: points[1],
+                                xOffset: parseInt(scope.labelOffsetX()),
+                                yOffset: parseInt(scope.labelOffsetY())
+                            });
+                            labelObject.color = scope.color;
+
+                            shapes.divs.push(labelObject);
+                        }
+
                     }
 
                     return shapes;
@@ -1162,7 +1181,7 @@ kgAngular.directive('segment', function () {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { points: '&', color: '@', show:'&'}
+            scope: { points: '&', color: '@', show:'&', label: '@', labelOffsetX: '&', labelOffsetY: '&'}
         }
     }
 );

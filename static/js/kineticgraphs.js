@@ -80,7 +80,7 @@ function functionPoints(fn, xDomain, yDomain, params) {
     var dependentVariable = params['dependentVariable'] || 'x',
         min = getBoundary('min'),
         max = getBoundary('max'),
-        samplePoints = params['samplePoints'] || 51,
+        samplePoints = params['samplePoints'] || 201,
         step = calculateStep(min, max, samplePoints),
         points = [],
         candidatePoint = {x: 0, y: 0},
