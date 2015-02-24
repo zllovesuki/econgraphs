@@ -59,7 +59,9 @@ kgAngular.directive('curve', function (D3Helpers) {
                             var labelObject = D3Helpers.configLabel({
                                 graph: graph,
                                 html:label,
-                                point: allPoints[allPoints.length - 1]
+                                point: allPoints[allPoints.length - 1],
+                                xOffset: parseInt(scope.labelOffsetX()),
+                                yOffset: parseInt(scope.labelOffsetY())
                             });
                             labelObject.color = scope.color;
 
@@ -81,7 +83,7 @@ kgAngular.directive('curve', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { fn: '&', label:'@', ind: '@', color: '@', show: '&' }
+            scope: { fn: '&', label:'@', ind: '@', color: '@', show: '&', labelOffsetX: '&', labelOffsetY: '&' }
         }
     }
 );

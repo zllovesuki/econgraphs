@@ -1,0 +1,919 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 12</h2>
+
+        <h1>Cost Curves</h1>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>February 23, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Motivation and Context</h2>
+        <h2 class="fragment">First Click</h2>
+        <h2 class="fragment">Finishing Exercise from Last Time</h2>
+        <h2 class="fragment">Breaking Down Costs</h2>
+        <hr/>
+        <h2>Ten Minute Break</h2>
+        <hr/>
+        <h2 class="fragment">Cost Curves: Cobb Douglas</h2>
+        <h2 class="fragment">Shephard's Lemma</h2>
+    </section>
+    <section>
+        <section><h1>Motivation and Context</h1></section>
+        <section>
+            <h2>Context: Producer Theory (4 lectures)</h2>
+            <hr/>
+            <p></p>
+            <table class="table">
+                <tr class="fragment">
+                    <td>Week 6</td>
+                    <td><b>Production Framework</b>: Production Functions,<br/>Isoquants, Substitutability between
+                        Inputs
+                    </td>
+                    <td>Chapter 6</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 7</td>
+                    <td><b>Optimal Choice I: Cost Minimization</b><br/><span rendered-math>(L^*, K^*)</span> as a
+                        function
+                        of
+                        <span rendered-math>(w, r, q)</span>.
+                    </td>
+                    <td>Chapter 7</td>
+                </tr>
+                <tr class="fragment" style="background-color:lightgreen">
+                    <td>Week 8</td>
+                    <td><b>Optimal Choice II: Profit Maximization</b><br/><span rendered-math>(q^*)</span> as a
+                        function
+                        of
+                        <span rendered-math>(w, r, P)</span>.
+                    </td>
+                    <td>Chapters 8, 9.1-9.2</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2>Airbus A380</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture12/1280px-Air_France_A380_F-HPJA.jpg') }}">
+
+                    <div>"<a
+                            href="http://commons.wikimedia.org/wiki/File:Air_France_A380_F-HPJA.jpg#mediaviewer/File:Air_France_A380_F-HPJA.jpg">Air
+                        France A380 F-HPJA</a>" by <a href="//commons.wikimedia.org/wiki/User:Jovianeye"
+                                                      title="User:Jovianeye">Joe
+                        Ravi</a>. Licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0"
+                                                    title="Creative Commons Attribution-Share Alike 3.0">CC BY-SA
+                        3.0</a>
+                        via <a
+                                href="//commons.wikimedia.org/wiki/">Wikimedia Commons</a>.
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li class="fragment">Typical layout: 525 passengers</li>
+                        <li class="fragment">Unit cost $428 million</li>
+                        <li class="fragment">Air France has 10 of these</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/hbr-health-title.png') }}">
+
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <p align="left" class="fragment">Many believe that most costs in health care are fixed because so much care is delivered using shared
+                    staff, space, and
+                    equipment.</p>
+                <p align="left" class="fragment">The result of this misguided thinking is that cost reduction efforts tend to focus on
+                    only the small fraction of costs seen as variable, such as drugs and supplies, which are sometimes
+                    referred to as marginal or incremental costs...</p>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <p align="left" class="fragment">If most costs were fixed, growth in demand for health care would increase only that small
+                    fraction of costs that are variable, leading to lower average costs in the system, not the
+                    dramatically higher share of GDP now being devoted to health care.</p>
+                <a href="https://hbr.org/2011/09/how-to-solve-the-cost-crisis-in-health-care">Harvard Business Review, November 2011</a>
+            </div>
+
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture12/serenityprayer2.gif') }}" height="800px"/>
+        </section>
+        <section>
+            <h1>Next lecture: we finally get to <span rendered-math>P = MC</span>.</h1>
+            <hr/>
+            <h1>This lecture: think a lot about fixed vs. variable costs.</h1>
+            <hr/>
+            <h1>Most<sup style="color:blue; font-size:medium">[citation needed]</sup> big<sup
+                    style="color:blue; font-size:medium">[citation needed]</sup> problems facing us today involve high fixed costs</h1>
+        </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>First Click</h1>
+        </section>
+        <section>
+            <h2>Consider a firm with production function <span rendered-math>f(L,K) = L + K</span>.</h2>
+            <h2>It can hire as much capital as it likes at a price of <span rendered-math>r = 10</span> per unit.</h2>
+            <h2>It can hire up to ten units of labor for <span rendered-math>w = 8</span> each, but any additional units will each cost <span rendered-math>w = 12</span>.</h2>
+            <h2>Describe this firm's cost-minimizing behavior, and draw its (long-run) expansion path.</h2>
+        </section>
+        <section>
+            <h2>What would the output expansion path for this firm look like?</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/clickerquestion.png') }}" height="800px"/>
+        </section>
+        <section>
+            <h2>All four of these diagrams have something to do with this!</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/clickeranswer.png') }}" height="800px"/>
+        </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Review from Last Time</h1>
+            <h2>Total Costs in the Short and Long Run</h2>
+        </section>
+        <section>
+            <h1>Group exercise</h1>
+            <hr/>
+            <h2>Split into groups of 5: four firms and a scribe.</h2>
+
+            <h2>Assign an amount of capital to each person at the table: 9, 16, 25 or 36.</h2>
+
+            <h2>Suppose <span rendered-math>w = r = 10</span> and <span
+                    rendered-math>f(L,K)=L^\frac{1}{4}K^\frac{1}{4}</span>.</h2>
+
+            <h2>For <span rendered-math>q=3,4,5,6</span>, calculate each person's labor requirements<br/>and total cost
+                of
+                producing <span rendered-math>q</span> units.</h2>
+
+            <h2>Have the scribe create a table and graph showing total cost of producing 3, 4, 5, and 6 units.</h2>
+
+            <h2></h2>
+        </section>
+        <section>
+            <h2>Labor required to produce <span rendered-math>q</span>, if capital is fixed at <span rendered-math>\overline{K}</span>:</h2>
+            <hr/>
+            <table>
+                <tr class="fragment">
+                    <td style="text-align: right" width="500px"><h2 rendered-math>L^\frac{1}{4}\overline{K}^\frac{1}{4}</h2></td>
+                    <td><h2 rendered-math>= q</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align: right"><h2 rendered-math>L\overline{K}</h2></td>
+                    <td><h2 rendered-math>= q^4</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align: right"><h2 rendered-math>L</h2></td>
+                    <td><h2 rendered-math>= \color{blue}{\frac{q^4}{\overline{K}}}</h2></td>
+                </tr>
+            </table>
+            <div style="height:50px;color:white">.</div>
+
+            <h2>Cost of producing <span rendered-math>q</span>, if <span
+                    rendered-math>w = r = 10</span> and <span rendered-math>K = \overline{K}</span>:
+            </h2>
+            <hr/>
+            <table>
+                <tr class="fragment">
+                    <td style="text-align: right" width="500px"><h2 rendered-math>
+                        TC(q)</h2></td>
+                    <td><h2 rendered-math>= 10L + 10\overline{K}</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td/>
+                    <td><h2 rendered-math>= 10\color{blue}{\frac{q^4}{\overline{K}}} + 10\overline{K}</h2></td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2>Given <span rendered-math>TC(q) = 10\frac{q^4}{\overline{K}} + 10\overline{K}</span>,</h2>
+            <h2>calculate costs of producing <span rendered-math>q = 3,4,5,6</span></h2>
+            <h2>for <span rendered-math>\overline{K} = 9, 16, 25, 36</span>:</h2>
+            <table class="table">
+                <tr>
+                    <td>Capital</td>
+                    <td>Total Cost</td>
+                    <td rendered-math>TC(3)</td>
+                    <td rendered-math>TC(4)</td>
+                    <td rendered-math>TC(5)</td>
+                    <td rendered-math>TC(6)</td>
+                </tr>
+                <tr>
+                    <td rendered-math>\overline{K} = 9</td>
+                    <td rendered-math>10\frac{q^4}{9} + 90</td>
+                    <td class="fragment highlight-red">180</td>
+                    <td>374</td>
+                    <td>784</td>
+                    <td>1530</td>
+                </tr>
+                <tr>
+                    <td rendered-math>\overline{K} = 16</td>
+                    <td rendered-math>10\frac{q^4}{16} + 160</td>
+                    <td>211</td>
+                    <td class="fragment highlight-red">320</td>
+                    <td>551</td>
+                    <td>970</td>
+                </tr>
+                <tr style="color:purple">
+                    <td rendered-math>\overline{K} = 25</td>
+                    <td rendered-math>10\frac{q^4}{25} + 250</td>
+                    <td>282</td>
+                    <td>352</td>
+                    <td class="fragment highlight-red">500</td>
+                    <td>768</td>
+                </tr>
+                <tr>
+                    <td rendered-math>\overline{K} = 36</td>
+                    <td rendered-math>10\frac{q^4}{36} + 360</td>
+                    <td>382</td>
+                    <td>431</td>
+                    <td>534</td>
+                    <td class="fragment highlight-red">720</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2>Costs <span rendered-math>f(L,K) = L^\frac{1}{4}K^\frac{1}{4}</span></h2>
+            <hr/>
+            {% raw %}
+            <model>
+
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="80" title="Units of Labor (L)" ticks="5"></axis>
+                            <axis dim="y" min="0" max="80" title="Units of Capital (K)" ticks="5"></axis>
+                            <curve fn="functions.f.setLevel(3)"
+                                   label="q = 3" color="red"></curve>
+                            <curve fn="functions.f.setLevel(4)"
+                                   label="q = 4" color="red"></curve>
+                            <curve fn="functions.f.setLevel(5)"
+                                   label="q = 5" color="red"></curve>
+                            <curve fn="functions.f.setLevel(6)"
+                                   label="q = 6" color="red"></curve>
+                            <curve color="darkorange" fn="functions.f.incomeConsumptionCurve({minIncome: 0, maxIncome: 200, px: 1, py: 1})" label="\text{LR Exp. Path}"></curve>
+                            <line fn="functions.f.mrsTangentLine(functions.f.lowestCostBundle(3,1,1))"
+                                  color="green"></line>
+                            <line fn="functions.f.mrsTangentLine(functions.f.lowestCostBundle(4,1,1))"
+                                  color="green"></line>
+                            <line fn="functions.f.mrsTangentLine(functions.f.lowestCostBundle(5,1,1))"
+                                  color="green"></line>
+                            <line fn="functions.f.mrsTangentLine(functions.f.lowestCostBundle(6,1,1))"
+                                  color="green"></line>
+                            <segment points="[{x:0,y:25},{x:80,y:25}]" color="purple" label="\text{SR Exp Path}_{\overline{K} = 25}"></segment>
+                            <point point="[3.24,25]" label="A"></point>
+                            <point point="[10.24,25]" label="B"></point>
+                            <point point="[25,25]" label="C"></point>
+                            <point point="[51.84,25]" label="D"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-6">
+                        <graph width="500" height="500">
+                            <axis dim="x" min="0" max="8" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="1200" title="Total Cost (TC)"></axis>
+                            <curve fn="functions.f.longRunTotalCostCurve(10,10)" label="TC(q)"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,25)" label="STC(q)_{\overline{K} = 25}" label-offset-x="-80" label-offset-y="-15" color="purple"></curve>
+                            <point point="[3,282]" label="A"></point>
+                            <point point="[4,352]" label="B"></point>
+                            <point point="[5,500]" label="C" droplines="vertical"></point>
+                            <point point="[6,768]" label="D"></point>
+                        </graph>
+                    </div>
+                </div>
+
+
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="8" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="1200" title="Total Cost (TC)"></axis>
+                            <curve fn="functions.f.longRunTotalCostCurve(10,10)" label="TC(q)"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,9)" label="STC(q)_{\overline{K} = 9}"
+                                   label-offset-x="-80" label-offset-y="-2" color="green" show="params.show9"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,16)" label="STC(q)_{\overline{K} = 16}"
+                                   label-offset-x="-60" label-offset-y="-2" color="red" show="params.show16"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,25)" label="STC(q)_{\overline{K} = 25}"
+                                   label-offset-x="-80" label-offset-y="-2" color="purple"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,36)" label="STC(q)_{\overline{K} = 36}"
+                                   label-offset-x="-80" label-offset-y="-5" color="blue" show="params.show36"></curve>
+                            <point point="[3,180]" droplines="vertical" color="green" show="params.show9"></point>
+                            <point point="[4,320]" droplines="vertical" color="red" show="params.show16"></point>
+                            <point point="[5,500]" droplines="vertical" color="purple"></point>
+                            <point point="[6,720]" droplines="vertical" color="blue" show="params.show36"></point>
+
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <toggle param="params.show9" init="false">{{ params.show9 ? 'Hide' : 'Show' }} <span rendered-math>STC(q)_{\overline{K}=9}</span></toggle>
+                        <toggle param="params.show16" init="false">{{ params.show16 ? 'Hide' : 'Show' }} <span
+                                rendered-math>STC(q)_{\overline{K}=16}</span></toggle>
+                        <toggle param="params.show36" init="false">{{ params.show36 ? 'Hide' : 'Show' }} <span
+                                rendered-math>STC(q)_{\overline{K}=36}</span></toggle>
+                        <hr/>
+                        <p class="fragment">Each colored curve is a short-run total cost (STC) curve for some fixed
+                            level of capital, <span rendered-math>\overline{K}</span>.</p>
+<hr/>
+                        <p class="fragment">The black curve is the long-run total cost (TC) curve if capital can
+                            vary.</p>
+<hr/>
+                        <p class="fragment">The TC curve is the "lower envelope" of the STC curves.</p>
+                    </div>
+                </div>
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="8" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="1200" title="Total Cost (TC)"></axis>
+                            <curve fn="functions.f.longRunTotalCostCurve(10,10)" label="TC(q)"></curve>
+                            <curve fn="functions.f.shortRunTotalCostCurve(10,10,params.k)" label="STC(q)_{\overline{K} = {{ params.k }} }"
+                                   label-offset-x="-80" label-offset-y="-2" color="purple"></curve>
+
+
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <h2>Note</h2>
+                        <hr/>
+                        <p>Where STC = TC, their slopes are the same!</p>
+                    </div>
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Breaking Down Costs</h1>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class="fragment">total</h1>
+
+                    <h1 class="fragment">average</h1>
+
+                    <h1 class="fragment">marginal</h1>
+                </div>
+                <div class="col-md-6">
+                    <h1 class="fragment">long run</h1>
+
+                    <h1 class="fragment">short run</h1>
+                </div>
+            </div>
+
+        </section>
+        <section>
+            <h1>Costs in the Long Run</h1>
+            <hr/>
+            <div class="row fragment">
+                <div class="col-md-6">
+                    <h2>Total Cost</h2>
+                    <p>(dollars)</p>
+                </div>
+                <div class="col-md-6" style="text-align: left">
+                    <h2 rendered-math>TC(q)</h2>
+                </div>
+            </div>
+            <div class="row fragment">
+                <div class="col-md-6">
+                    <h2>Average Cost</h2>
+                    <p>(dollars per unit)</p>
+                </div>
+                <div class="col-md-6" style="text-align: left">
+                    <h2 rendered-math>AC(q) = \frac{TC(q)}{q}</h2>
+                </div>
+            </div>
+            <div class="row fragment">
+                <div class="col-md-6">
+                    <h2>Marginal Cost</h2>
+                    <p>(dollars per unit)</p>
+                </div>
+                <div class="col-md-6" style="text-align: left">
+                    <h2> <span rendered-math>MC(q) = \frac{dTC(q)}{dq}</span></h2>
+                </div>
+            </div>
+
+
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/besanko_5e_fig_08_07.jpg') }}" height="800">
+
+            <p>Long-Run Total, Average, and Marginal Costs: B&B, Fig. 8.7</p>
+        </section>
+
+
+
+
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/besanko_5e_fig_08_09.jpg') }}">
+
+            <p>Relationship between Average & Marginal Costs: B&B, Fig. 8.9</p>
+        </section>
+        <section>
+            <h1>Costs and Returns to Scale</h1>
+            <hr/>
+            <h2>Decreasing AC => Economies of Scale, Increasing Returns to Scale</h2>
+
+            <h2>Constant AC => Neither Economies nor Diseconomies of Scale, Constant Returns to Scale</h2>
+
+            <h2>Increasing AC => Diseconomies of Scale, Decreasing Returns to Scale</h2>
+        </section>
+        <section>
+            <h1>Costs and Returns to Scale</h1>
+            <hr/>
+            <h2>Output Elasticity: % change in TC for 1% increase in output</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/besanko_5e_table_08_03.jpg') }}">
+        </section>
+        <section>
+            <h1>Costs in the Short Run</h1>
+            <hr/>
+            <div class="row fragment">
+                <div class="col-md-3">
+                    <h2>Total Cost</h2>
+                    <p>(dollars)</p>
+                </div>
+                <div class="col-md-9" style="text-align: left">
+                    <h2 class="fragment">Total Fixed Cost <span rendered-math>TFC = r\overline{K}</span></h2>
+
+                    <h2 class="fragment">+ Total Variable Cost <span rendered-math>TVC(q) = wL</span></h2>
+
+                    <h2 class="fragment">= Short-Run Total Cost <span rendered-math>STC(q)</span></h2>
+                </div>
+            </div>
+            <hr/>
+            <div class="row fragment">
+                <div class="col-md-3">
+                    <h2>Average Costs</h2>
+                    <p>(dollars per unit)</p>
+                </div>
+                <div class="col-md-9" style="text-align: left">
+                    <h2 class="fragment">Average Fixed Cost <span rendered-math>AFC = \frac{TFC}{q}</span></h2>
+
+                    <h2 class="fragment">+ Average Variable Cost <span rendered-math>AVC(q) = \frac{TVC(q)}{q}</span>
+                    </h2>
+
+                    <h2 class="fragment">= Short-Run Average Cost <span rendered-math>SAC(q) = \frac{STC(q)}{q}</span>
+                    </h2>
+
+                </div>
+            </div>
+            <div class="row fragment">
+                <div class="col-md-3">
+                    <h2>Marginal Cost</h2>
+
+                    <p>(dollars per unit)</p>
+                </div>
+                <div class="col-md-9" style="text-align: left">
+                    <h2 class="fragment" rendered-math>SMC(q) = \frac{dSTC(q)}{dq}</h2>
+                </div>
+            </div>
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/besanko_5e_fig_08_13.jpg') }}">
+            <p>Besanko & Braeutigam, Figure 8.13</p>
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/besanko_5e_fig_08_16.jpg') }}">
+            <p>Short-Run Average and Marginal Costs: B&B, Fig. 8.16</p>
+        </section>
+        <section>
+            <h1>Relationship between LR and SR</h1>
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/besanko_5e_fig_08_17.jpg') }}">
+            <p>LR and SR Average Cost Curves: B&B, Fig. 8.17</p>
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/besanko_5e_fig_08_18.jpg') }}">
+
+            <p>LR and SR Marginal and Average Cost Curves: B&B, Fig. 8.18</p>
+        </section>
+        <section>
+            <h1>Minimum Efficient Scale</h1>
+            <hr/>
+            <h2>If the LR average cost curve is U-shaped,</h2>
+            <h2>the MES is its lowest point.</h2>
+            <hr/>
+            <h2 class="fragment">...but for many of the functional forms we're going to look at, there won't be a MES</h2>
+
+        </section>
+    </section>
+    <section>
+        <h1>Ten Minute Break</h1>
+        <hr/>
+        <h2>After the break: we'll do this with Cobb-Douglas</h2>
+    </section>
+    <section>
+        <section>
+            <h1>Cost Curves for <span rendered-math>f(L,K) = L^\frac{1}{4}K^\frac{1}{4}, w=r=10</span></h1>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="8" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="1200" title="Dollars"></axis>
+                            <curve label="TFC" fn="functions.f.shortRunFixedCostCurve(10,params.k)" color="darkorange"></curve>
+                            <curve label="TVC(q)" label-offset-x="10" fn="functions.f.shortRunVariableCostCurve(10,params.k)" color="green"></curve>
+                            <curve label="STC(q)" label-offset-x="-70" fn="functions.f.shortRunTotalCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve fn="functions.f.longRunTotalCostCurve(10,10,params.k)"
+                                   label="TC(q)" show="params.showTC"></curve>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <p style="color:darkorange" rendered-math expression="TFC = r\overline{K} = 10 \times {{ params.k }} = {{ 10*params.k }}"></p>
+
+                        <p style="color:green" rendered-math expression="TVC(q) = wL(q) = 10 \times \frac{q^4}{ {{ params.k }} } = {{ 10/params.k | number:2 }}q^4"></p>
+
+                        <p style="color:purple" rendered-math expression="STC(q) = TFC + TVC(q) = {{ 10*params.k }} + {{ 10/params.k | number:2 }}q^4"></p>
+
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} LR Total Cost</toggle>
+
+                        <hr/>
+                        <p ng-if="params.showTC" rendered-math
+                           expression="TC(q) = 20q^2"></p>
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="8" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="200" title="Dollars per Unit"></axis>
+                            <curve label="AFC(q)" fn="functions.f.shortRunAverageFixedCostCurve(10,params.k)" color="darkorange"></curve>
+                            <curve label="AVC(q)" label-offset-x="10" fn="functions.f.shortRunAverageVariableCostCurve(10,params.k)" color="green"></curve>
+                            <curve label="SAC(q)" label-offset-x="-60" fn="functions.f.shortRunAverageCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve fn="functions.f.longRunAverageCostCurve(10,10,params.k)"
+                                   label="AC(q)" show="params.showTC"></curve>
+
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <p style="color:darkorange" rendered-math
+                           expression="AFC = \frac{TFC}{q} = \frac{ {{ 10*params.k }} }{q}"></p>
+
+                        <p style="color:green" rendered-math
+                           expression="AVC(q) = \frac{TVC(q)}{q} = {{ 10/params.k | number:2 }}q^3"></p>
+
+                        <p style="color:purple" rendered-math
+                           expression="SAC(q) = AFC + AVC(q) = \frac{ {{ 10*params.k }} }{q} + {{ 10/params.k | number:2 }}q^3"></p>
+
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} LR Average Cost</toggle>
+
+                        <hr/>
+                        <p ng-if="params.showTC" rendered-math
+                           expression="AC(q) = \frac{TC(q)}{q} = 20q"></p>
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="8" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="200" title="Dollars per Unit"></axis>
+                            <curve label="SAC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunAverageCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve label="SMC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunMarginalCostCurve(10,10,params.k)" color="blue"></curve>
+                            <curve fn="functions.f.longRunAverageCostCurve(10,10,params.k)"
+                                   label="AC(q)" show="params.showTC"></curve>
+                            <curve fn="functions.f.longRunMarginalCostCurve(10,10,params.k)"
+                                   label="MC(q)" show="params.showTC" color="darkblue" label-offset-x="-20" label-offset-y="40"></curve>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <p style="color:purple" rendered-math
+                           expression="SAC(q) = AFC + AVC(q) = \frac{ {{ 10*params.k }} }{q} + {{ 10/params.k | number:2 }}q^3"></p>
+
+                        <p style="color:blue" rendered-math
+                           expression="SMC(q) = \frac{dSTC(q)}{dq} = {{ 40/params.k | number:2 }}q^3"></p>
+
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} Long-Run AC & MC</toggle>
+
+                        <hr/>
+                        <p ng-if="params.showTC" rendered-math
+                           expression="AC(q) = \frac{TC(q)}{q} = 20q"></p>
+
+                        <p ng-if="params.showTC" rendered-math
+                           expression="MC(q) = \frac{dTC(q)}{dq} = 40q"></p>
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Cost Curves for <span rendered-math>f(L,K) = L^\alpha K^\alpha, w=r=10</span></h1>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <param name="alpha" value="0.25"/>
+                <function name="f" category="production" form="CobbDouglas"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="30" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="200" title="Dollars"></axis>
+                            <curve label="TFC" fn="functions.f.updateParams({alpha:params.alpha, beta:params.alpha}).shortRunFixedCostCurve(10,params.k)"
+                                   color="darkorange"></curve>
+                            <curve label="TVC(q)" label-offset-x="10"
+                                   fn="functions.f.shortRunVariableCostCurve(10,params.k)" color="green"></curve>
+                            <curve label="STC(q)" label-offset-x="-70"
+                                   fn="functions.f.shortRunTotalCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve fn="functions.f.longRunTotalCostCurve(10,10,params.k)"
+                                   label="TC(q)" show="params.showTC"></curve>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0.1" max="1.1" precision="0.01"></slider>
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} LR Total Cost</toggle>
+
+                        <hr/>
+
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <param name="alpha" value="0.25"/>
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="30" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="20" title="Dollars per Unit"></axis>
+                            <curve label="AFC(q)" fn="functions.f.updateParams({alpha:params.alpha, beta:params.alpha}).shortRunAverageFixedCostCurve(10,params.k)"
+                                   color="darkorange"></curve>
+                            <curve label="AVC(q)" label-offset-x="10"
+                                   fn="functions.f.shortRunAverageVariableCostCurve(10,params.k)" color="green"></curve>
+                            <curve label="SAC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunAverageCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve fn="functions.f.longRunAverageCostCurve(10,10,params.k)"
+                                   label="AC(q)" show="params.showTC"></curve>
+
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0.1" max="1.1" precision="0.01"></slider>
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} LR Average Cost</toggle>
+
+                        <hr/>
+
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <param name="alpha" value="0.25"/>
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="30" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="200" title="Dollars per Unit"></axis>
+                            <curve label="SAC(q)" label-offset-x="-60"
+                                   fn="functions.f.updateParams({alpha:params.alpha, beta:params.alpha}).shortRunAverageCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve label="SMC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunMarginalCostCurve(10,10,params.k)" color="blue"></curve>
+                            <curve fn="functions.f.longRunAverageCostCurve(10,10,params.k)"
+                                   label="AC(q)" show="params.showTC"></curve>
+                            <curve fn="functions.f.longRunMarginalCostCurve(10,10,params.k)"
+                                   label="MC(q)" show="params.showTC" color="darkblue" label-offset-x="-20"
+                                   label-offset-y="40"></curve>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <p rendered-math expression="f(L,K) = L^{ {{ params.alpha }} }K^{ {{ params.alpha }} }"></p>
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0.1" max="1.1" precision="0.01"></slider>
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+
+
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} Long-Run AC & MC</toggle>
+
+
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Shephard's Lemma</h1>
+            <hr/>
+            <h2 class="fragment">If you know the total cost function,</h2>
+            <h2 class="fragment">you can "back out"</h2>
+            <h2 class="fragment">the conditional demand functions</h2>
+            <h2 class="fragment">for labor and capital (or any input).</h2>
+        </section>
+        <section>
+            <h1>For <span rendered-math>f(L,K) = L^\frac{1}{4}K^\frac{1}{4}</span>, we found:</h1>
+            <hr/>
+            <h1 rendered-math>L^*(w,r,q) = w^{-\frac{1}{2}}r^\frac{1}{2}q^2</h1>
+            <h1 rendered-math>K^*(w,r,q) = w^\frac{1}{2}r^{-\frac{1}{2}}q^2</h1>
+            <h1 rendered-math>TC(w,r,q) = wL^* + rK^* = 2w^\frac{1}{2}r^\frac{1}{2}q^2</h1>
+            <hr/>
+            <h1 class="fragment">Note: <span rendered-math>\displaystyle{\frac{\partial TC}{\partial w} = w^{-\frac{1}{2}}r^\frac{1}{2}q^2}</span><span rendered-math class="fragment">= L^*!</span></h1>
+        </section>
+        <section>
+            <h1>SHEPHARD'S LEMMA</h1>
+            <hr/>
+            <div style="height:50px;color:white">.</div>
+            <h1 rendered-math>\displaystyle{\frac{\partial TC(w,r,q)}{\partial w} = L^*(w,r,q)}</h1>
+
+            <div style="height:50px;color:white">.</div>
+
+            <h1 rendered-math>\displaystyle{\frac{\partial TC(w,r,q)}{\partial R} = K^*(w,r,q)}</h1>
+        </section>
+        <section>
+            <h2>Why does this work? (Not on test!)</h2>
+            <hr/>
+            <div style="height:50px;color:white">.</div>
+            <h2 rendered-math>TC(w,r,q) = wL^*(w,r,q) + rK^*(w,r,q)</h2>
+
+            <div style="height:30px;color:white">.</div>
+            <h2>By the chain rule:</h2>
+
+            <div style="height:20px;color:white">.</div>
+            <h2 rendered-math>\displaystyle{\frac{\partial TC(w,r,q)}{\partial w} = L^*(w,r,q) + w\frac{\partial
+                L^*(w,r,q)}{\partial w} + r\frac{\partial K^*(w,r,q)}{\partial w}}</h2>
+
+            <div style="height:30px;color:white">.</div>
+            <h2>The second and third terms must sum to zero...why?</h2>
+            <hr/>
+            <div class="fragment">
+                <h2>Tangency condition! <span rendered-math>\left(MRTS = \frac{w}{r}\right)</span></h2>
+            </div>
+        </section>
+        <section>
+            <h1>From now on, a lot of times we'll say</h1>
+            <h1>"We know by Shephard's lemma</h1>
+            <h1>that <span rendered-math>L^*</span> is this, and
+                <span rendered-math>K^*</span> is that." </h1>
+        </section>
+    </section>
+
+
+
+{% endblock %}

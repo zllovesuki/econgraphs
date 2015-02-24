@@ -26,9 +26,13 @@ function domainAsObject(domain) {
     }
 }
 
+function pointAsObject(point) {
+    return {x: point['x'] || point[0], y: point['y'] || point[1]};
+}
+
 function inRange(v, domain) {
     domain = domainAsObject(domain);
-    if (v == 'undefined') {
+    if (v == 'undefined' || isNaN(v)) {
         return false
     }
     return (v >= domain.min && v <= domain.max)
@@ -44,6 +48,60 @@ function sortObjects(key, descending) {
             higher = descending ? b[key] : a[key];
         return lower > higher ? -1 : lower < higher ? 1 : lower <= higher ? 0 : NaN;
     }
+}
+
+function functionPoints(fn, xDomain, yDomain, params) {
+
+    params = params || {};
+
+    function getBoundary(minOrMax) {
+
+        if (params.hasOwnProperty(minOrMax)) {
+            return params[minOrMax]
+        }
+
+        if (dependentVariable == 'x') {
+            return xDomain[minOrMax]
+        }
+
+        if (dependentVariable == 'y') {
+            return yDomain[minOrMax]
+        }
+
+        return {min: 0, max: 100}[minOrMax];
+    }
+
+    xDomain = domainAsObject(xDomain);
+    yDomain = domainAsObject(yDomain);
+
+    var dependentVariable = params['dependentVariable'] || 'x',
+        min = getBoundary('min'),
+        max = getBoundary('max'),
+        samplePoints = params['samplePoints'] || 201,
+        step = calculateStep(min, max, samplePoints),
+        points = [],
+        candidatePoint = {x: 0, y: 0},
+        ind = min;
+
+    for (var i = 0; i < samplePoints; i++) {
+        switch (dependentVariable) {
+            case 'x':
+                candidatePoint = {x: ind, y: fn(ind)}; // y as a function of x
+                break;
+            case 'y':
+                candidatePoint = {x: fn(ind), y: ind}; // x as a function of y
+                break;
+            default:
+                candidatePoint = pointAsObject(fn(ind)); // (x,y) as a function of t
+        }
+        if (candidatePoint.hasOwnProperty('x') && candidatePoint.hasOwnProperty('y') && onGraph(candidatePoint, xDomain, yDomain)) {
+            points.push(candidatePoint);
+        }
+        ind += step;
+    }
+
+    return points;
+
 }
 
 var kg = { functions: {

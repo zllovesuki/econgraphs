@@ -260,34 +260,25 @@ econgraphs.functions.utility = {
 
                 points: function (xDomain, yDomain) {
 
-                    var optimalBundle,
+                    var px,
+                        py,
                         isGoodX = ('y' != pccParams['good']),
                         minPrice = pccParams['minPrice'] || 0,
                         maxPrice = pccParams['maxPrice'] || 100,
                         income = pccParams['income'],
                         endowment = pccParams['endowment']||{},
                         samplePoints = pccParams['samplePoints'] || 51,
-                        px = isGoodX ? minPrice : pccParams['otherPrice'],
-                        py = isGoodX ? pccParams['otherPrice'] : minPrice,
-                        step = calculateStep(minPrice, maxPrice, samplePoints),
-                        points = [];
-
-
-
-                    for (var i = 0; i < samplePoints; i++) {
-                        if (endowment.hasOwnProperty('x')) {
-                            income = endowment.x * px + endowment.y * py;
-                        }
-                        if(u.optimalBundle(income,px,py)) {
-                            optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
-                            if (onGraph(optimalBundle, xDomain, yDomain)) {
-                                points.push(optimalBundle);
+                        otherPrice = pccParams['otherPrice'],
+                        priceConsumptionFunction = function (price) {
+                            px = isGoodX ? price : otherPrice;
+                            py = isGoodX ? otherPrice : price;
+                            if (endowment.hasOwnProperty('x')) {
+                                income = endowment.x * px + endowment.y * py;
                             }
-                        }
-                        isGoodX ? px += step : py += step;
-                    }
+                            return u.optimalBundle(income, px, py);
+                        };
 
-                    return points;
+                    return functionPoints(priceConsumptionFunction, xDomain, yDomain, {min: minPrice, max: maxPrice, dependentVariable: 'p'});
 
                 }
             }
@@ -313,27 +304,17 @@ econgraphs.functions.utility = {
 
                 points: function (xDomain, yDomain) {
 
-                    var optimalBundle,
-                        minIncome = iccParams['minIncome'] || 0,
+                    var minIncome = iccParams['minIncome'] || 0,
                         maxIncome = iccParams['maxIncome'] || 50,
                         px = iccParams['px'],
                         py = iccParams['py'],
-                        income = minIncome,
                         samplePoints = iccParams['samplePoints'] || 51,
-                        step = calculateStep(minIncome, maxIncome, samplePoints),
-                        points = [];
+                        incomeConsumptionFunction = function (income) {
+                            return u.optimalBundle(income, px, py);
+                        };
 
-                    for (var i = 0; i < samplePoints; i++) {
-                        if (u.optimalBundle(income, px, py)) {
-                            optimalBundle = {x: u.optimalBundle(income, px, py)[0], y: u.optimalBundle(income, px, py)[1]};
-                            if (onGraph(optimalBundle, xDomain, yDomain)) {
-                                points.push(optimalBundle);
-                            }
-                        }
-                        income += step;
-                    }
+                    return functionPoints(incomeConsumptionFunction, xDomain, yDomain, {min: minIncome, max: maxIncome, dependentVariable: 'i'});
 
-                    return points;
                 }
             }
         };
@@ -358,29 +339,14 @@ econgraphs.functions.utility = {
 
                 points: function (xDomain, yDomain) {
 
-                    var quantity,
-                        isGoodX = ('y' != engelParams['good']),
-                        minIncome = engelParams['minIncome'] || 0,
-                        maxIncome = engelParams['maxIncome'] || 50,
+                    var isGoodX = ('y' != engelParams['good']),
                         px = engelParams['px'],
                         py = engelParams['py'],
-                        income = minIncome,
-                        samplePoints = engelParams['samplePoints'] || 51,
-                        step = calculateStep(minIncome, maxIncome, samplePoints),
-                        points = [];
+                        engelFunction = function (income) {
+                            return isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
+                        };
 
-                    for (var i = 0; i < samplePoints; i++) {
-                        if (u.optimalBundle(income, px, py)) {
-                            quantity = isGoodX ? u.optimalBundle(income, px, py)[0] : u.optimalBundle(income, px, py)[1];
-                            if (onGraph({x: quantity, y: income}, xDomain, yDomain)) {
-                                points.push({x: quantity, y: income});
-                            }
-                        }
-
-                        income += step;
-                    }
-
-                    return points;
+                    return functionPoints(engelFunction, xDomain, yDomain, {dependentVariable: 'y'});
                 }
             }
 
@@ -406,37 +372,22 @@ econgraphs.functions.utility = {
 
                 points: function (xDomain, yDomain) {
 
-                    var price,
-                        quantity,
-                        compensatedIncome,
+                    var compensatedIncome,
                         isGoodX = ('y' != demandParams['good']),
                         compensationPrice = demandParams['compensationPrice'] || 0,
-                        minPrice = demandParams['minPrice'] || 0,
-                        maxPrice = demandParams['maxPrice'] || 50,
                         income = demandParams['income'],
-                        px = isGoodX ? minPrice : demandParams['otherPrice'],
-                        py = isGoodX ? demandParams['otherPrice'] : minPrice,
+                        otherPrice = demandParams['otherPrice'],
                         samplePoints = demandParams['samplePoints'] || 51,
-                        step = calculateStep(minPrice, maxPrice, samplePoints),
-                        points = [];
+                        demandFunction = function(price) {
+                            if (isGoodX) {
+                                compensatedIncome = (compensationPrice > 0) ? u.compensatedIncome(income, compensationPrice, price, otherPrice) : income;
+                                return u.optimalBundle(compensatedIncome, price, otherPrice)[0];
+                            } else {
+                                return u.optimalBundle(income, otherPrice, price)[1];
+                            }
+                        };
 
-                    for (var i = 0; i < samplePoints; i++) {
-                        if (isGoodX) {
-                            price = px;
-                            compensatedIncome = (compensationPrice > 0) ? u.compensatedIncome(income, compensationPrice, price, py) : income;
-                            quantity = u.optimalBundle(compensatedIncome, px, py)[0];
-                            px += step;
-                        } else {
-                            price = py;
-                            quantity = u.optimalBundle(income, px, py)[1];
-                            py += step;
-                        }
-                        if (onGraph({x: quantity, y: price}, xDomain, yDomain)) {
-                            points.push({x: quantity, y: price});
-                        }
-                    }
-
-                    return points;
+                    return functionPoints(demandFunction,xDomain,yDomain,{dependentVariable:'y'});
                 },
 
                 area: function (xDomain, yDomain) {
@@ -1121,30 +1072,199 @@ econgraphs.functions.production = {
 
     addProductionMethods: function (f, params) {
 
-        f.totalCostCurve = function (w,r) {
+        f.longRunTotalCost = function(q,w,r) {
+            return f.lowestPossibleCost(q,w,r);
+        };
 
-            return {points: function (xDomain, yDomain) {
+        f.longRunTotalCostCurve = function (w, r) {
 
-                xDomain = domainAsObject(xDomain);
-                yDomain = domainAsObject(yDomain);
+            return {
+                points: function (xDomain, yDomain) {
 
-                var points = [];
+                    var longRunTotalCost = function (q) {
+                        return f.longRunTotalCost(q, w, r)
+                    };
 
-                var x, y;
-
-                for (var i = 0; i < 51; i++) {
-
-                    x = xDomain.min + (i / 50) * (xDomain.max - xDomain.min);
-                    y = f.lowestPossibleCost(x,w,r);
-                    if (inRange(y, yDomain)) {
-                        points.push({x: x, y: y});
-                    }
+                    return functionPoints(longRunTotalCost, xDomain, yDomain);
                 }
-
-                return points;
-            }
             }
 
+        };
+
+        f.laborToProduceQ = function(q,k) {
+            f.setLevel(q);
+            return f.xValue(k);
+        };
+
+        f.shortRunFixedCost = function(r,k) {
+            return r*k;
+        };
+
+        f.shortRunFixedCostCurve = function (r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunFixedCost = function (q) {
+                        return f.shortRunFixedCost(r, k)
+                    };
+
+                    return functionPoints(shortRunFixedCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.shortRunVariableCost = function(q,w,k) {
+            return w* f.laborToProduceQ(q,k);
+        };
+
+        f.shortRunVariableCostCurve = function (w, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunVariableCost = function (q) {
+                        return f.shortRunVariableCost(q, w, k)
+                    };
+
+                    return functionPoints(shortRunVariableCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.shortRunTotalCost = function(q,w,r,k) {
+            return f.shortRunFixedCost(r,k) + f.shortRunVariableCost(q,w,k);
+        };
+
+        f.shortRunTotalCostCurve = function (w, r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunTotalCost = function (q) {
+                        return f.shortRunTotalCost(q, w, r, k)
+                    };
+
+                    return functionPoints(shortRunTotalCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.longRunMarginalCost = function(q,w,r) {
+            return (f.longRunTotalCost(q+0.01,w,r) - f.longRunTotalCost(q,w,r))*100;
+        };
+
+        f.longRunMarginalCostCurve = function (w, r) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var longRunMarginalCost = function (q) {
+                        return f.longRunMarginalCost(q, w, r)
+                    };
+
+                    return functionPoints(longRunMarginalCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.shortRunMarginalCost = function (q, w, r, k) {
+            return (f.shortRunTotalCost(q + 0.01, w, r, k) - f.shortRunTotalCost(q, w, r, k)) * 100;
+        };
+
+        f.shortRunMarginalCostCurve = function (w, r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunMarginalCost = function (q) {
+                        return f.shortRunMarginalCost(q, w, r, k)
+                    };
+
+                    return functionPoints(shortRunMarginalCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.longRunAverageCost = function (q, w, r) {
+            return f.longRunTotalCost(q, w, r)/q;
+        };
+
+        f.longRunAverageCostCurve = function (w, r) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var longRunAverageCost = function (q) {
+                        return f.longRunAverageCost(q, w, r)
+                    };
+
+                    return functionPoints(longRunAverageCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.shortRunAverageCost = function (q, w, r, k) {
+            return f.shortRunTotalCost(q, w, r, k) / q;
+        };
+
+        f.shortRunAverageCostCurve = function (w, r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunAverageCost = function (q) {
+                        return f.shortRunAverageCost(q, w, r, k)
+                    };
+
+                    return functionPoints(shortRunAverageCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+        f.shortRunAverageFixedCost = function (q, r, k) {
+            return r * k / q;
+        };
+
+        f.shortRunAverageFixedCostCurve = function (r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunAverageFixedCost = function (q) {
+                        return f.shortRunAverageFixedCost(q, r, k)
+                    };
+
+                    return functionPoints(shortRunAverageFixedCost, xDomain, yDomain);
+                }
+            }
+
+        };
+
+
+        f.shortRunAverageVariableCost = function (q, w, k) {
+            return f.shortRunVariableCost(q,w,k) / q;
+        };
+
+        f.shortRunAverageVariableCostCurve = function (w, r, k) {
+
+            return {
+                points: function (xDomain, yDomain) {
+
+                    var shortRunAverageVariableCost = function (q) {
+                        return f.shortRunAverageVariableCost(q, w, r, k)
+                    };
+
+                    return functionPoints(shortRunAverageVariableCost, xDomain, yDomain);
+                }
+            }
 
         };
 
@@ -1152,8 +1272,7 @@ econgraphs.functions.production = {
 
     }
 
-
-}
+};
 
 // production/cobbdouglasproduction.js
 /**
@@ -1168,6 +1287,132 @@ econgraphs.functions.production.CobbDouglas = function () {
         var f = new econgraphs.functions.utility.CobbDouglas(params);
 
         f = econgraphs.functions.production.addProductionMethods(f, params);
+
+        return f;
+    }
+
+}();
+
+// production/translog.js
+/**
+ * Created by cmakler on 1/26/15.
+ *
+ * Note: this implements the utility function described in http://www.hindawi.com/journals/isrn/2012/608645/
+ */
+
+econgraphs.functions.production.Translog = function () {
+
+    function translogTotalCost(q,w,r,coefficients) {
+
+        var logW = Math.log(w),
+            logR = Math.log(r);
+
+        var logQ = Math.log(q),
+            variables = [
+                1, logQ, logW, logR,
+                    logQ * logQ, logW * logW, logR * logR,
+                    logR * logW, logW * logQ, logR * logQ
+            ],
+            sum = 0;
+        for (var i = 0; i < 10; i++) {
+            sum += coefficients[i] * variables[i];
+        }
+        return Math.exp(sum);
+    }
+
+    return function (params) {
+
+        var f = new kg.functions.Generic;
+
+        f.coefficients = [1,1,1,1,1,1,1,1,1,1];
+
+        f.w = 2;
+
+        f.r = 2;
+
+        f.totalCost = {
+            points: function (xDomain, yDomain) {
+
+                function totalCostOfOutput(q) {
+
+                    return translogTotalCost(q, f.w, f.r, f.coefficients)
+
+                }
+
+                return functionPoints(totalCostOfOutput, xDomain, yDomain);
+
+            }
+        };
+
+        f.marginalCost = {
+            points: function (xDomain, yDomain) {
+
+                function marginalCostOfOutput(q) {
+
+                    return translogTotalCost(q+1, f.w, f.r, f.coefficients) - translogTotalCost(q, f.w, f.r, f.coefficients)
+
+                }
+
+                return functionPoints(marginalCostOfOutput, xDomain, yDomain);
+
+            }
+        };
+
+        f.averageCost = {
+            points: function (xDomain, yDomain) {
+
+                function averageCostOfOutput(q) {
+
+                    if(q == 0) { q = 0.01 } // avoid dividing by zero
+
+                    return translogTotalCost(q, f.w, f.r, f.coefficients)/q
+
+                }
+
+                return functionPoints(averageCostOfOutput, xDomain, yDomain);
+
+            }
+        };
+
+        f.updateParams = function(params) {
+
+            var coefficientMeaning = {
+                'constant': 0,
+                'logQ' : 1,
+                'logW' : 2,
+                'logR' : 3,
+                'logQ2' : 4,
+                'logW2' : 5,
+                'logR2' : 6,
+                'logRlogW' : 7,
+                'logQlogW' : 8,
+                'logQlogR' : 9
+            };
+
+            if (typeof params == 'function') {
+                params = params();
+            };
+
+            params = params || {};
+
+            for(var term in coefficientMeaning) {
+                if (params.hasOwnProperty(term)) {
+                    f.coefficients[coefficientMeaning[term]] = params[term];
+                }
+            }
+
+            if (params.hasOwnProperty('r')) {
+                f.r = params.r;
+            }
+
+            if (params.hasOwnProperty('w')) {
+                f.w = params.w;
+            }
+
+
+
+            return f;
+        };
 
         return f;
     }

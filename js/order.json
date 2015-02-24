@@ -21,7 +21,6 @@
         "order": [
             "app.js",
             "d3-helpers.js",
-            "graph-helpers.js",
             "clicker.js",
             "model.js",
             "math.js",
@@ -62,7 +61,8 @@
             "utility/ces.js",
             "utility/inferior.js",
             "production/production.js",
-            "production/cobbdouglasproduction.js"
+            "production/cobbdouglasproduction.js",
+            "production/translog.js"
         ]
     },
     {
