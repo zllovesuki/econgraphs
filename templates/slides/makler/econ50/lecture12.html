@@ -15,7 +15,7 @@
         <hr/>
         <br/>
 
-        <h3>February 18, 2015</h3>
+        <h3>February 23, 2015</h3>
         <hr>
         <br/>
 
@@ -26,13 +26,13 @@
         <h1>Today's Agenda</h1>
         <hr/>
         <h2 class="fragment">Motivation and Context</h2>
+        <h2 class="fragment">First Click</h2>
         <h2 class="fragment">Finishing Exercise from Last Time</h2>
-        <h2 class="fragment">Breaking Down Total Cost</h2>
-        <h2 class="fragment">Cost Curves: Graphical Analysis</h2>
+        <h2 class="fragment">Breaking Down Costs</h2>
         <hr/>
         <h2>Ten Minute Break</h2>
         <hr/>
-        <h2 class="fragment">Cost Curves: Numerical Analysis</h2>
+        <h2 class="fragment">Cost Curves: Cobb Douglas</h2>
         <h2 class="fragment">Shephard's Lemma</h2>
     </section>
     <section>
@@ -120,7 +120,7 @@
 
         </section>
         <section>
-            <img src="{{ url_for('static', filename='images/econ50/lecture12/serenityprayer2.gif') }}">
+            <img src="{{ url_for('static', filename='images/econ50/lecture12/serenityprayer2.gif') }}" height="800px"/>
         </section>
         <section>
             <h1>Next lecture: we finally get to <span rendered-math>P = MC</span>.</h1>
@@ -129,6 +129,26 @@
             <hr/>
             <h1>Most<sup style="color:blue; font-size:medium">[citation needed]</sup> big<sup
                     style="color:blue; font-size:medium">[citation needed]</sup> problems facing us today involve high fixed costs</h1>
+        </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>First Click</h1>
+        </section>
+        <section>
+            <h2>Consider a firm with production function <span rendered-math>f(L,K) = L + K</span>.</h2>
+            <h2>It can hire as much capital as it likes at a price of <span rendered-math>r = 10</span> per unit.</h2>
+            <h2>It can hire up to ten units of labor for <span rendered-math>w = 8</span> each, but any additional units will each cost <span rendered-math>w = 12</span>.</h2>
+            <h2>Describe this firm's cost-minimizing behavior, and draw its (long-run) expansion path.</h2>
+        </section>
+        <section>
+            <h2>What would the output expansion path for this firm look like?</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/clickerquestion.png') }}" height="800px"/>
+        </section>
+        <section>
+            <h2>All four of these diagrams have something to do with this!</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture12/clickeranswer.png') }}" height="800px"/>
         </section>
 
     </section>
@@ -687,6 +707,147 @@
 
                         <p ng-if="params.showTC" rendered-math
                            expression="MC(q) = \frac{dTC(q)}{dq} = 40q"></p>
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Cost Curves for <span rendered-math>f(L,K) = L^\alpha K^\alpha, w=r=10</span></h1>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <param name="alpha" value="0.25"/>
+                <function name="f" category="production" form="CobbDouglas"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="30" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="200" title="Dollars"></axis>
+                            <curve label="TFC" fn="functions.f.updateParams({alpha:params.alpha, beta:params.alpha}).shortRunFixedCostCurve(10,params.k)"
+                                   color="darkorange"></curve>
+                            <curve label="TVC(q)" label-offset-x="10"
+                                   fn="functions.f.shortRunVariableCostCurve(10,params.k)" color="green"></curve>
+                            <curve label="STC(q)" label-offset-x="-70"
+                                   fn="functions.f.shortRunTotalCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve fn="functions.f.longRunTotalCostCurve(10,10,params.k)"
+                                   label="TC(q)" show="params.showTC"></curve>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0.1" max="1.1" precision="0.01"></slider>
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} LR Total Cost</toggle>
+
+                        <hr/>
+
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <param name="alpha" value="0.25"/>
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="30" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="20" title="Dollars per Unit"></axis>
+                            <curve label="AFC(q)" fn="functions.f.updateParams({alpha:params.alpha, beta:params.alpha}).shortRunAverageFixedCostCurve(10,params.k)"
+                                   color="darkorange"></curve>
+                            <curve label="AVC(q)" label-offset-x="10"
+                                   fn="functions.f.shortRunAverageVariableCostCurve(10,params.k)" color="green"></curve>
+                            <curve label="SAC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunAverageCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve fn="functions.f.longRunAverageCostCurve(10,10,params.k)"
+                                   label="AC(q)" show="params.showTC"></curve>
+
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0.1" max="1.1" precision="0.01"></slider>
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} LR Average Cost</toggle>
+
+                        <hr/>
+
+
+
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="k" value="25"/>
+                <param name="alpha" value="0.25"/>
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="800" height="800">
+                            <axis dim="x" min="0" max="30" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="200" title="Dollars per Unit"></axis>
+                            <curve label="SAC(q)" label-offset-x="-60"
+                                   fn="functions.f.updateParams({alpha:params.alpha, beta:params.alpha}).shortRunAverageCostCurve(10,10,params.k)" color="purple"></curve>
+                            <curve label="SMC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunMarginalCostCurve(10,10,params.k)" color="blue"></curve>
+                            <curve fn="functions.f.longRunAverageCostCurve(10,10,params.k)"
+                                   label="AC(q)" show="params.showTC"></curve>
+                            <curve fn="functions.f.longRunMarginalCostCurve(10,10,params.k)"
+                                   label="MC(q)" show="params.showTC" color="darkblue" label-offset-x="-20"
+                                   label-offset-y="40"></curve>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <p rendered-math expression="f(L,K) = L^{ {{ params.alpha }} }K^{ {{ params.alpha }} }"></p>
+                        <div class="well">
+                            <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                            <slider value="params.alpha" min="0.1" max="1.1" precision="0.01"></slider>
+                            <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                            <slider value="params.k" min="1" max="50" precision="1"></slider>
+                        </div>
+                        <hr/>
+
+
+                        <toggle param="params.showTC">{{ params.showTC ? "Hide" : "Show" }} Long-Run AC & MC</toggle>
+
+
 
 
                     </div>
