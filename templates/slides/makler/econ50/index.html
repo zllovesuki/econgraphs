@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Econ 50 Lecture Notes</h1>
-{% for lecture in ['lecture1','lecture2','lecture3','lecture4','lecture5','lecture6','lecture7','lecture8','lecture9','lecture10','lecture11','lecture12'] %}
+{% for lecture in ['lecture1','lecture2','lecture3','lecture4','lecture5','lecture6','lecture7','lecture8','lecture9','lecture10','lecture11','lecture12','lecture13'] %}
 <p><a href="{{ url_for('slides', course_name='econ50', prof_name='makler', slide_name=lecture) }}">Lecture {{ loop.index }}</a></p>
 {% endfor %}
 </body>
