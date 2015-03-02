@@ -67,6 +67,118 @@ kgAngular.directive('line', function (D3Helpers) {
     }
 );
 
+kgAngular.directive('rule', function (D3Helpers) {
+
+        function link(scope, element, attrs, graphCtrl) {
+
+            // Show unless there is an attribute determining show/hide behavior
+            if (!attrs['show']) {
+                scope.show = function () {
+                    return true
+                }
+            }
+
+            graphCtrl.addObject({
+
+                update: function (shapes, graph) {
+
+                    if (scope.show()) {
+
+                        var direction = scope.direction || 'vertical',
+                            xDomain = domainAsObject(graph.xDomain),
+                            yDomain = domainAsObject(graph.yDomain);
+
+                        var value = (typeof scope.fn == 'function') ? scope.fn() : scope.fn;
+
+                        if (value != undefined) {
+
+                            var labelPoint = {},
+                                axisLabelPoint= {};
+
+                            if(direction == 'vertical' && value >= xDomain.min && value <= xDomain.max) {
+                                shapes.lines.push(
+                                    {
+                                        x1: graph.x(value),
+                                        y1: graph.y(yDomain.min),
+                                        x2: graph.x(value),
+                                        y2: graph.y(yDomain.max),
+                                        color: scope.color
+                                    }
+                                );
+
+                                labelPoint = {x: value, y: yDomain.max};
+                            }
+
+                            if (direction == 'horizontal' && value >= yDomain.min && value <= yDomain.max) {
+                                shapes.lines.push(
+                                    {
+                                        x1: graph.x(xDomain.min),
+                                        y1: graph.y(value),
+                                        x2: graph.x(xDomain.max),
+                                        y2: graph.y(value),
+                                        color: scope.color
+                                    }
+                                );
+
+                                labelPoint = {x: xDomain.max, y: value};
+                                axisLabelPoint = {x: xDomain.max, y: value};
+                            }
+
+                            // Add label to last point
+
+                            var label = scope.label || 'none';
+
+                            if (label != 'none') {
+                                var labelObject = D3Helpers.configLabel({
+                                    graph: graph,
+                                    html: label,
+                                    point: labelPoint,
+                                    xOffset: parseInt(scope.labelOffsetX()),
+                                    yOffset: parseInt(scope.labelOffsetY())
+                                });
+                                labelObject.color = scope.color;
+
+                                shapes.divs.push(labelObject);
+                            }
+
+                            // Add axis label
+
+                            var axisLabel = scope.axisLabel || 'none';
+
+                            if (axisLabel != 'none') {
+                                var axisLabelObject = D3Helpers.configLabel({
+                                    graph: graph,
+                                    html: axisLabel,
+                                    point: axisLabelPoint,
+                                    xOffset: parseInt(scope.labelOffsetX()),
+                                    yOffset: parseInt(scope.labelOffsetY())
+                                });
+                                axisLabelObject.color = scope.color;
+
+                                shapes.divs.push(axisLabelObject);
+                            }
+
+                        }
+
+
+                    }
+
+                    return shapes;
+
+                }
+            });
+
+        }
+
+        return {
+            link: link,
+            require: '^graph',
+            restrict: 'E',
+            scope: { fn: '&', direction: '@', color: '@', show: '&', axisLabel: '@', label: '@', labelOffsetX: '&', labelOffsetY: '&'}
+        }
+    }
+);
+
 kgAngular.directive('segment', function (D3Helpers) {
 
         function link(scope, element, attrs, graphCtrl) {
@@ -98,10 +210,13 @@ kgAngular.directive('segment', function (D3Helpers) {
                         var label = scope.label || 'none';
 
                         if (label != 'none') {
+
+                            var labelPoint = ('center' == scope.labelPosition) ? {x : 0.5*(points[0].x + points[1].x), y: 0.5 * (points[0].y + points[1].y)} : points[1];
+
                             var labelObject = D3Helpers.configLabel({
                                 graph: graph,
                                 html: label,
-                                point: points[1],
+                                point: labelPoint,
                                 xOffset: parseInt(scope.labelOffsetX()),
                                 yOffset: parseInt(scope.labelOffsetY())
                             });
@@ -123,7 +238,7 @@ kgAngular.directive('segment', function (D3Helpers) {
             link: link,
             require: '^graph',
             restrict: 'E',
-            scope: { points: '&', color: '@', show:'&', label: '@', labelOffsetX: '&', labelOffsetY: '&'}
+            scope: { points: '&', color: '@', show:'&', label: '@', labelOffsetX: '&', labelOffsetY: '&', labelPosition: '@'}
         }
     }
 );

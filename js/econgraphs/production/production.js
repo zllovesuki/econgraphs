@@ -202,6 +202,54 @@ econgraphs.functions.production = {
 
         };
 
+        f.shortRunProfit = function(q,p,w,r,k) {
+            return p * f.shortRunTotalCost(q,w,r,k);
+        };
+
+        f.longRunProfitMaxQ = function(p,w,r) {
+            //TODO Currently hard-coded for f(L,K) = (LK)^0.25
+            return 0.25*Math.pow(w * r, -0.5) * p;
+        };
+
+        f.shortRunProfitMaxQ = function(p,w,r,k) {
+            //TODO Currently hard-coded for f(L,K) = (LK)^0.25
+            return Math.pow(0.25*p*k/w,0.33333);
+        };
+
+        f.shortRunSupplyCurve = function(w,r,k,n) {
+
+            return {
+                points: function(xDomain,yDomain) {
+                    var shortRunSupplyQuantity = function(p) {
+                        return f.shortRunProfitMaxQ(p,w,r,k)*n;
+                    };
+
+                    return functionPoints(shortRunSupplyQuantity, xDomain, yDomain, {dependentVariable:'y'})
+                }
+            }
+        };
+
+        f.profitArea = function(p,q,w,r,k) {
+            return {
+                area: function(xDomain,yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var ac = Math.min(f.shortRunAverageCost(q,w,r,k), yDomain.max),
+                        price = Math.min(p, yDomain.max),
+                        quantity = Math.min(q, xDomain.max);
+
+                    return [
+                        {x:xDomain.min, y:ac},
+                        {x:quantity, y:ac},
+                        {x:quantity, y:price},
+                        {x:xDomain.min, y:price}
+                    ]
+                }
+            }
+        };
+
         return f;
 
     }

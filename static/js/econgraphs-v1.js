@@ -1203,7 +1203,7 @@ function drawIndividualDemandGraph($scope,id) {
 }
 
 // individual_and_market_demand/market.js
-function drawMarketGraph($scope,id) {
+function drawMarketDemandGraph($scope,id) {
 
     var market_graph_data = {
         id : id,
@@ -1280,7 +1280,7 @@ econGraphsApp.controller('IndividualAndMarketDemandController', function($scope)
         d3.select('svg').remove();
 
         drawIndividualDemandGraph($scope,"left_graph");
-        drawMarketGraph($scope,"right_graph");
+        drawMarketDemandGraph($scope,"right_graph");
 
     }
 });

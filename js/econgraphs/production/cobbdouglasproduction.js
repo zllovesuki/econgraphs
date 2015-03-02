@@ -11,6 +11,10 @@ econgraphs.functions.production.CobbDouglas = function () {
 
         f = econgraphs.functions.production.addProductionMethods(f, params);
 
+        f._shortRunProfitMaxQ = function(p,w,r,k) {
+            return 3;
+        };
+
         return f;
     }
 
