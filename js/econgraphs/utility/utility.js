@@ -244,14 +244,15 @@ econgraphs.functions.utility = {
                         isGoodX = ('y' != demandParams['good']),
                         compensationPrice = demandParams['compensationPrice'] || 0,
                         income = demandParams['income'],
+                        numberOfConsumers = demandParams['numberOfConsumers'] || 1,
                         otherPrice = demandParams['otherPrice'],
                         samplePoints = demandParams['samplePoints'] || 51,
                         demandFunction = function(price) {
                             if (isGoodX) {
                                 compensatedIncome = (compensationPrice > 0) ? u.compensatedIncome(income, compensationPrice, price, otherPrice) : income;
-                                return u.optimalBundle(compensatedIncome, price, otherPrice)[0];
+                                return u.optimalBundle(compensatedIncome, price, otherPrice)[0] * numberOfConsumers;
                             } else {
-                                return u.optimalBundle(income, otherPrice, price)[1];
+                                return u.optimalBundle(income, otherPrice, price)[1] * numberOfConsumers;
                             }
                         };
 

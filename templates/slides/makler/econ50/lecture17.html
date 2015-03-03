@@ -8,14 +8,14 @@
         <hr/>
         <br/>
 
-        <h2>Lecture 13</h2>
+        <h2>Lecture 17</h2>
 
-        <h1>Profit Maximization</h1>
+        <h1>Wrapping Up</h1>
         <br/>
         <hr/>
         <br/>
 
-        <h3>February 25, 2015</h3>
+        <h3>March 2, 2015</h3>
         <hr>
         <br/>
 
@@ -26,14 +26,16 @@
         <h1>Today's Agenda</h1>
         <hr/>
         <h2 class="fragment">First Click</h2>
-        <h2 class="fragment">Choosing Q, or L and K, to maximize profit</h2>
-        <h2 class="fragment">Profit-maximizing input demands</h2>
-        <h2 class="fragment">Hotelling's Lemma</h2>
-        <h2 class="fragment">Shutting Down or Changing Industries</h2>
+        <h2 class="fragment">Additional Topics in Consumer Theory</h2>
+        <h2 class="fragment">Additional Topics in Producer Theory</h2>
+        <h2 class="fragment">Additional Topics in Market Structures</h2>
         <hr/>
         <h2>Ten Minute Break</h2>
         <hr/>
-        <h2 class="fragment">Exercise: Profit Maximization for <span rendered-math>L^\frac{1}{4}K^\frac{1}{4}</span></h2>
+        <h2 class="fragment">Additional Topics in Consumer Theory</h2>
+        <h2 class="fragment">Additional Topics in Producer Theory</h2>
+        <h2 class="fragment">Additional Topics in Market Structures</h2>
+
     </section>
     <section>
         <section>
@@ -41,31 +43,56 @@
         </section>
         <section>
             <clicker-question>
-                <h2>The production function <span rendered-math>f(L,K) = L^\frac{2}{3}K^\frac{1}{3}</span> has:</h2>
-                <clicker-option letter="A">Diminishing <span rendered-math>MP_L</span> and decreasing returns to scale
-                </clicker-option>
-                <clicker-option letter="B">Constant <span rendered-math>MP_L</span> and decreasing returns to scale
-                </clicker-option>
-                <clicker-option letter="C">Diminishing <span rendered-math>MP_L</span> and constant returns to scale
-                </clicker-option>
-                <clicker-option letter="D">Constant <span rendered-math>MP_L</span> and constant returns to scale</clicker-option>
+                <h2>Remember the utility-maximization Lagrangian</h2>
+                <h2 rendered-math>\Lagr(x,y,\lambda) = u(x,y) + \lambda[I - P_xx - P_yy]</h2>
+                <h2>What did the <span rendered-math>\lambda</span> represent?</h2>
+                <clicker-option letter="A">Marginal Rate of Substitution</clicker-option>
+                <clicker-option letter="B">Marginal utility from an additional unit of X or Y</clicker-option>
+                <clicker-option letter="C">Marginal utility from an additional dollar of income</clicker-option>
+                <clicker-option letter="D">Marginal cost of one more "util"</clicker-option>
             </clicker-question>
         </section>
         <section>
-            <h1>Marginal Returns and Returns to Scale</h1>
+            <h2>Recall: when we take first-order conditions,</h2>
             <hr/>
-            <h2>A firm exhibits <b>diminishing marginal product of labor</b> if:</h2>
-            <h2 rendered-math>\displaystyle{\frac{\partial ^2f(L,K)}{\partial L^2}} < 0</h2>
-            <hr/>
-            <h2>A firm exhibits <b>decreasing returns to scale</b> if:</h2>
 
-            <h2 rendered-math>f(tL,tK) < tf(L,K)</h2>
-            <h2>for some <span rendered-math>t > 1</span> </h2>
+            <h2 rendered-math>\displaystyle{\lambda = \frac{MU_x}{P_x} = \frac{MU_y}{P_y}}</h2>
+            <hr/>
+
+            <h2 class="fragment"><span rendered-math>\frac{MU}{P}</span> is "bang for your buck" : measured in utils per dollar</h2>
+
+            <table class="table fragment" align="center">
+                <tr>
+                    <td><h2 rendered-math>\Lagr(x,y,\lambda) = </h2></td>
+                    <td><h2 rendered-math>u(x,y)</h2></td>
+                    <td><h2 rendered-math>+</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>\lambda</h2></td>
+                    <td><h2 rendered-math>[I - P_xx - P_yy]</h2></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center">(utils)</td>
+                    <td></td>
+                    <td>(utils/dollar)</td>
+                    <td style="text-align: center">(dollars)</td>
+                </tr>
+            </table>
+
+            <h2 class="fragment">It's also the derivative of the objective function<br/>(the utility we're trying to maximize)<br/>with respect to the constraint (income)</h2>
+
         </section>
         <section>
-            <h2>For Cobb-Douglas of the form <span rendered-math>f(L,K) = L^\alpha K^\beta</span>:</h2>
-            <h2 rendered-math>\displaystyle{\frac{\partial f(L,K)}{\partial L} = \alpha L^{\alpha-1} K^\beta} </h2>
-            <h2 rendered-math>\displaystyle{\frac{\partial ^2f(L,K)}{\partial L^2} = \alpha(\alpha - 1)L^{\alpha-2}K^\beta}</h2>
+            <clicker-question>
+                <h2>Consider the <b>cost-minimization</b> Lagrangian</h2>
+                <h2 rendered-math>\Lagr(L,K,\lambda) = wL + rK + \lambda[q - f(L,K)]</h2>
+                <h2>What does the <span rendered-math>\lambda</span> represent now?</h2>
+                <clicker-option letter="A">Marginal Rate of Technical Substitution</clicker-option>
+                <clicker-option letter="B">Marginal cost of an additional unit of output</clicker-option>
+                <clicker-option letter="C">Marginal product of an additional unit of labor or capital</clicker-option>
+                <clicker-option letter="D">Marginal revenue product of an additional unit of labor or capital</clicker-option>
+            </clicker-question>
+            <h2 class="fragment">Again, derivative of the objective function<br/> (the cost we're trying to minimize)<br/>with respect to the constraint (quantity)</h2>
+
         </section>
 
     </section>

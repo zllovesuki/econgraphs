@@ -1,0 +1,1005 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 13</h2>
+
+        <h1>Perfect Competition:</h1>
+
+        <h1>Short-Run and Long-Run Equilibrium</h1>
+
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>March 2, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">First Click</h2>
+        <h2 class="fragment">Review: The Role of Prices</h2>
+        <h2 class="fragment">Market Demand and Supply</h2>
+        <h2 class="fragment">Demand and Supply of Labor and Capital</h2>
+        <hr/>
+        <h2>Ten Minute Break</h2>
+        <hr/>
+        <h2 class="fragment">Short-Run Competitive Equilibrium</h2>
+        <h2 class="fragment">Long-Run Competitive Equilibrium</h2>
+    </section>
+    <section>
+        <section>
+            <h1>First Click</h1>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Which of the following does not seem to be a reasonable conditional labor demand function?</h2>
+                <clicker-option letter="A"><span rendered-math>L(w,r,q) = \frac{1}{2}\left(\frac{r}{w}\right)^\frac{1}{2}q^\frac{1}{2}</span></clicker-option>
+                <clicker-option letter="B"><span rendered-math>L(w,r,q) = \frac{1}{4}\left(\frac{r}{w}\right)^\frac{1}{2}q^2</span></clicker-option>
+                <clicker-option letter="C"><span rendered-math>L(w,r,q) = \frac{1}{100}q</span></clicker-option>
+                <clicker-option letter="D"><span rendered-math>L(w,r,q) = \frac{q}{w^\frac{3}{2}r^\frac{1}{2}}</span></clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h1>Homogeneity of Degree Zero</h1>
+            <hr/>
+            <h2>A function <span rendered-math>f(x,y)</span> is homogeneous of degree zero if <span
+                    rendered-math>f(x,y) = f(tx,ty)</span> for any nonzero <span rendered-math>t</span>.</h2>
+            <h2 class="fragment">The conditional demand function must yield the same value for <span rendered-math>L</span> when all
+                <span rendered-math>w</span> and <span rendered-math>r</span> increase by the same factor.</h2>
+            <h2 class="fragment">In other words, the conditional labor demand<br/>must depend only on the ratio <span rendered-math>\frac{r}{w}</span>.</h2>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Which of the following is true?</h2>
+                <clicker-option letter="A">If a firm is minimizing its costs, it is maximizing its profit.</clicker-option>
+                <clicker-option letter="B">If a firm is maximizing its profit, it is minimizing its costs.</clicker-option>
+                <clicker-option letter="C">Both A and B</clicker-option>
+                <clicker-option letter="D">Neither A nor B.</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h2>Profit maximization:</h2>
+            <div style="height:50px; color:white">.</div>
+            <table class="table">
+                <tr class="fragment">
+                    <td/>
+                    <td style="text-align: right"><h2>Profit</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center"><h2>Total Revenue</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2>Total Costs</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td><h2>Choosing <b>inputs</b>:</h2></td>
+                    <td style="text-align: right"><h2 rendered-math>\pi(\color{green}{L,K})</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>P \times f(\color{green}{L,K})</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2 rendered-math>(w\color{green}{L} + r\color{green}{K})</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td><h2>Choosing <b>output</b>:</h2></td>
+                    <td style="text-align: right"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2 rendered-math>TC(\color{red}{q})</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td><h2>(combination):</h2></td>
+                    <td style="text-align: right"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2 rendered-math>\min_{\color{green}{L,K}}(w\color{green}{L} + r\color{green}{K})</h2>
+
+                        <h2 rendered-math>\text{s.t. }\color{red}{q} = f(\color{green}{L,K})</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td/>
+                    <td/>
+                    <td/>
+                    <td style="text-align: center">(Value of q)</td>
+                    <td/>
+                    <td>(Min. possible cost of q)</td>
+                </tr>
+
+            </table>
+        </section>
+        <section>
+            <h1>You can find the <b>minimum cost</b><br/>of producing any quantity <span rendered-math>q</span>.</h1>
+
+            <h1>In general, only one value of <span rendered-math>q</span><br/>will be <b>profit-maximizing</b>.</h1>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Review: The Role of Prices</h1>
+            <hr/>
+            <h2 class="fragment"><b>Optimization:</b><br/>prices => decisions</h2>
+            <h2 class="fragment"><b>Comparative statics:</b><br/>changes in prices => changes in decisions</h2>
+            <h2 class="fragment">...if we hold various things constant.</h2>
+        </section>
+        <section>
+            <h2>(1) Hold income constant</h2>
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="s" value="0"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="50" title="Good X"></axis>
+                            <axis dim="y" min="0" max="50" title="Good Y"></axis>
+                            <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})" label="P_xx + P_yy = I" label-offset-y="-10"></line>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve(params.income, params.px, params.py)"
+                                   color="green" label="U^*(P_x,P_y,I)"></curve>
+                            <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
+                                   droplines="both" xlabel="x^*" ylabel="y^*"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                            <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+                            <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
+                            <slider value="params.py" min="1" max="6" precision="0.25"></slider>
+                        </div>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>(2) Hold output/utility constant</h2>
+            <hr/>
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="a" value="0.25"/>
+                <param name="b" value="0.25"/>
+                <param name="w" value="10"/>
+                <param name="r" value="10"/>
+                <param name="q" value="20"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="1000" title="Units of Labor (L)"></axis>
+                            <axis dim="y" min="0" max="1000" title="Units of Capital (K)"></axis>
+                            <curve fn="functions.u.updateParams({alpha:params.a, beta:params.b}).setLevel(params.q)"
+                                   label="f(L,K) = \overline{q}" color="green"></curve>
+                            <line fn="functions.u.mrsTangentLine(functions.u.lowestCostBundle(params.q,params.w,params.r))"></line>
+                            <point point="functions.u.lowestCostBundle(params.q,params.w,params.r)" label="A"
+                                   droplines="both"></point>
+                        </graph>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <p rendered-math expression="w: \${{ params.w | number:0}}"></p>
+                            <slider value="params.w" min="1" max="20" precision="1"></slider>
+
+                        </div>
+                        <div class="well">
+                            <p rendered-math expression="r: \${{ params.r | number:0}}"></p>
+                            <slider value="params.r" min="1" max="20" precision="1"></slider>
+                        </div>
+                        </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>(3) Hold endowment constant</h2>
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="x" value="22"/>
+                <param name="y" value="22"/>
+                <param name="px" value="2"/>
+                <param name="py" value="3"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="s" value="0"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="50" title="Good X"></axis>
+                            <axis dim="y" min="0" max="50" title="Good Y"></axis>
+                            <line fn="functions.b.updateParams({px:params.px, py:params.py, income:(params.px * params.x + params.py * params.y)})"
+                                  label="P_xx + P_yy = P_xx_0 + P_yy_0" label-offset-y="-10"></line>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px * params.x + params.py * params.y), params.px, params.py)"
+                                   color="green" label="U^*(P_x,P_y,x_0,y_0)"></curve>
+                            <point point="[params.x,params.y]" color="purple" label="E"
+                                   droplines="both" xlabel="x_0" ylabel="y_0"></point>
+                            <point point="functions.u.optimalBundle((params.px * params.x + params.py * params.y), params.px, params.py)"
+                                   droplines="both" xlabel="x^*" ylabel="y^*"></point>
+                        </graph>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                            <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+                            <p rendered-math expression="P_{y}: \${{ params.py | number:2 }}"></p>
+                            <slider value="params.py" min="1" max="6" precision="0.25"></slider>
+
+                        </div>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>(4) Hold capital constant</h2>
+            {% raw %}
+            <model>
+
+                <param name="k" value="30"/>
+                <param name="p" value="140"/>
+
+                <function name="f" category="production" form="CobbDouglas"
+                          fn-params="{alpha: 0.25,beta:0.25}"></function>
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph width="700" height="700">
+                            <axis dim="x" min="0" max="8" title="Quantity (q)"></axis>
+                            <axis dim="y" min="0" max="200" title="Dollars per Unit"></axis>
+                            <curve label="SAC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunAverageCostCurve(10,10,30)" color="purple"></curve>
+                            <curve label="MC(q)" label-offset-x="-60"
+                                   fn="functions.f.shortRunMarginalCostCurve(10,10,30)" color="darkorange"></curve>
+                            <point point="[functions.f.shortRunProfitMaxQ(params.p,10,10,30),params.p]" droplines="vertical" xlabel="q^*(P)"></point>
+                            <rule fn="params.p" direction="horizontal" label="P"></rule>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="P: {{ params.p | number:0}}"></p>
+                            <slider value="params.p" min="40" max="180" precision="1"></slider>
+                        </div>
+                    </div>
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+
+        <section>
+            <h1>Now that we know how consumers and firms respond to prices, we can put it all together to see where those prices come from.</h1>
+        </section>
+        <section>
+            <h2>Context: Market Structures (3 lectures)</h2>
+            <hr/>
+            <p></p>
+            <table class="table">
+                <tr class="fragment" style="background-color:lightgreen">
+                    <td>Week 9</td>
+                    <td><b>Perfect Competition</b>: Equilibrium price occurs at the price<br/>at which <span rendered-math>Q^D(P) = Q^S(P)</span>
+                    </td>
+                    <td>Chapters 9 & 10</td>
+                </tr>
+                <tr class="fragment">
+                    <td>Week 10</td>
+                    <td><b>Monopoly and Monopsony</b>: A single firm, or a cartel,<br/> chooses a price to maximize profits.
+                    </td>
+                    <td>Chapter 11</td>
+                </tr>
+            </table>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Market Demand and Supply</h1>
+
+        </section>
+        <section>
+            <h1>Market Demand and Supply</h1>
+            <h2>Suppose there are <span rendered-math>N_C</span> consumers and <span rendered-math>N_F</span> firms.</h2>
+            <table class="table">
+                <tr>
+                    <td></td>
+                    <td>Individual</td>
+                    <td>Market, if Identical</td>
+                    <td>Market, if Different</td>
+
+                </tr>
+                <tr>
+                    <td style="vertical-align: middle">Demand</td>
+                    <td rendered-math style="vertical-align: middle">\displaystyle{q^D(P)}</td>
+                    <td class="fragment" rendered-math style="vertical-align: middle">\displaystyle{Q^D(P) = N_C \times q^D(P)}</td>
+                    <td class="fragment" rendered-math>\displaystyle{Q^D(P) = \sum_{i=1}^{N_C}q^D_i(P)}</td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: middle">Supply</td>
+                    <td rendered-math style="vertical-align: middle">\displaystyle{q^S(P)}</td>
+                    <td class="fragment" rendered-math style="vertical-align: middle">\displaystyle{Q^S(P) = N_F \times q^S(P)}</td>
+                    <td class="fragment" rendered-math>\displaystyle{Q^S(P) = \sum_{j=1}^{N_F}q^S_j(P)}</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Suppose there are 100 identical consumers,</br>each of whom has an income of $12<br/>and preferences given by <span rendered-math>u(x,y) = xy^2</span>.</h2>
+                <h2>What will the market demand for X be?</h2>
+                <clicker-option letter="A"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{6}{P_x}}</span> </clicker-option>
+                <clicker-option letter="B"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{600}{P_x}}</span>
+                </clicker-option>
+                <clicker-option letter="C"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{4}{P_x}}</span>
+                </clicker-option>
+                <clicker-option letter="D"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{400}{P_x}}</span>
+                </clicker-option>
+            </clicker-question>
+            <h2 class="fragment">Remember, if <span rendered-math>u(x,y) = x^ay^b</span>,<br/>the consumer will spend <span rendered-math>\frac{a}{a+b}I</span> on good X...</h2>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Suppose there are 100 consumers,</br>each of whom has an income of $12.</h2>
+                <h2>50 have preferences <span rendered-math>u(x,y) = xy^2</span>.</h2>
+                <h2>50 have preferences <span rendered-math>u(x,y) = x^2y</span>.</h2>
+
+                <h2>What will the market demand for X be?</h2>
+                <clicker-option letter="A"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{6}{P_x}}</span>
+                </clicker-option>
+                <clicker-option letter="B"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{600}{P_x}}</span>
+                </clicker-option>
+                <clicker-option letter="C"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{4}{P_x}}</span>
+                </clicker-option>
+                <clicker-option letter="D"><span rendered-math>\displaystyle{Q^D(P_x) = \frac{400}{P_x}}</span>
+                </clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h1>Visually, get to market demand or supply</h1>
+            <h1>by <b>horizontally summing</b> the individual curves.</h1>
+        </section>
+        <section>
+            <h2>Demand with Two Types of Consumers (B&B, Ch. 5)</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_table_05_01.jpg') }}" height="200px"/>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_05_21.jpg') }}" height="400px"/>
+        </section>
+        <section>
+            <h2>Supply with Two Types of Firms (B&B, Ch. 9)</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_table_09_04.jpg') }}"
+                 height="200px"/>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_09_06.jpg') }}"
+                 height="400px"/>
+
+        </section>
+        <section>
+            <h2>Simpler math:</h2>
+            <h1>Just assume everyone's the same.</h1>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/Matrix-Clones.jpg') }}"
+                 height="400px"/>
+            <h2 class="fragment">(We don't really believe that.)</h2>
+
+            <h2 class="fragment">(We just really don't like doing crazy math.)</h2>
+        </section>
+        <section>
+
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="beta" value="0.5"/>
+                <param name="xLabel" value="Good X" type="string"/>
+                <param name="yLabel" value="Good Y" type="string"/>
+                <param name="nc" value="2"/>
+                <param name="nf" value="0.4"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <function name="f" category="production" form="CobbDouglas"></function>
+
+                <div style="position:absolute;top:0px;left:0px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="50" title="" ticks="5"></axis>
+                        <axis dim="y" min="0" max="50" title="Individual Quantity of Y Demanded"
+                              ticks="5"></axis>
+                        <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"></line>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).optimalIndifferenceCurve(params.income, params.px, params.py)"
+                               color="green" label="U^*"></curve>
+                        <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
+                               droplines="vertical" xlabel="x^*" color="blue"></point>
+                    </graph>
+                </div>
+                <div style="position:absolute;top:350px;left:0px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="50" title="Individual Quantity of X Demanded"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="10" title="Price of X"></axis>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).demandCurve({maxPrice: 10, income: params.income, otherPrice: params.py, samplePoints: 200})"
+                               color="blue" label="d"></curve>
+                        <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0],params.px]"
+                               droplines="both" xlabel="q^D_x(P_x)" ylabel="P_x" color="blue"></point>
+                        <rule fn="params.px" direction="horizontal"></rule>
+                        <rule fn="functions.u.optimalBundle(params.income, params.px, params.py)[0]"
+                              direction="vertical"></rule>
+                    </graph>
+                </div>
+                <div style="position:absolute;top:350px;left:350px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="25" title="Market Quantity of X (1000's)"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="10" title=""></axis>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).demandCurve({maxPrice: 10, income: params.income, otherPrice: params.py, samplePoints: 200, numberOfConsumers: params.nc})"
+                               color="blue" label="D"></curve>
+                        <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0]*params.nc,params.px]"
+                               droplines="vertical" xlabel="Q^D" ylabel="P_x" color="blue"></point>
+                        <rule fn="params.px" direction="horizontal"></rule>
+
+                    </graph>
+                </div>
+
+                <div style="position:absolute; top:0px;left:400px;width:700px;height:350px">
+                    <h2>Deriving Demand</h2>
+
+                    <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                    <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+
+
+
+                </div>
+                <div style="position:absolute; top:200px;left:400px;width:350px;height:350px">
+                     <p rendered-math expression="N_C: {{ params.nc*1000 | number:0 }}"></p>
+                    <slider value="params.nc" min="0.1" max="3" precision="0.1"></slider>
+
+   </div>
+
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+
+
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="beta" value="0.5"/>
+                <param name="xLabel" value="Good X" type="string"/>
+                <param name="yLabel" value="Good Y" type="string"/>
+                <param name="nc" value="2"/>
+                <param name="nf" value="0.4"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <function name="f" category="production" form="CobbDouglas"></function>
+
+
+                <div style="position:absolute;top:350px;left:350px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="25" title="Market Quantity of X (1000's)"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="10" title="Price of X"></axis>
+                        <curve fn="functions.f.shortRunSupplyCurve(0.1,0.1,5000,params.nf)"
+                               color="darkorange" label="S"></curve>
+                        <point point="[functions.f.shortRunProfitMaxQ(params.px,0.1,0.1,5000)*params.nf,params.px]"
+                               droplines="vertical" xlabel="Q^S" color="darkorange" ylabel="P_x"></point>
+                        <rule fn="params.px" direction="horizontal"></rule>
+
+                    </graph>
+                </div>
+                <div style="position:absolute;top:350px;left:700px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="50" title="Individual Quantity Supplied"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="10" title=""></axis>
+                        <curve fn="functions.f.shortRunSupplyCurve(0.1,0.1,5000,1)"
+                               color="darkorange" label="MC"></curve>
+                        <point point="[functions.f.shortRunProfitMaxQ(params.px,0.1,0.1,5000),params.px]"
+                               droplines="both" xlabel="q^S_x(P_x)" color="darkorange"></point>
+                        <rule fn="params.px" direction="horizontal"></rule>
+
+                    </graph>
+                </div>
+                <div style="position:absolute; top:0px;left:400px;width:700px;height:350px">
+                    <h2>Deriving Supply</h2>
+
+                    <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                    <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+
+
+                </div>
+
+                <div style="position:absolute; top:200px;left:800px;width:350px;height:350px">
+                    <p rendered-math expression="N_F: {{ params.nf*1000 | number:0 }}"></p>
+                    <slider value="params.nf" min="0.05" max="0.5" precision="0.01"></slider>
+
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+
+
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="px" value="3"/>
+                <param name="py" value="2"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="beta" value="0.5"/>
+                <param name="xLabel" value="Good X" type="string"/>
+                <param name="yLabel" value="Good Y" type="string"/>
+                <param name="nc" value="2"/>
+                <param name="nf" value="0.4"/>
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+                <function name="f" category="production" form="CobbDouglas"></function>
+
+                <div style="position:absolute;top:0px;left:0px;width:350px;height:350px;">
+
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="50" title="" ticks="5"></axis>
+                        <axis dim="y" min="0" max="50" title="Individual Quantity of Y Demanded"
+                              ticks="5"></axis>
+                        <line fn="functions.b.updateParams({px:params.px, py:params.py, income:params.income})"></line>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).optimalIndifferenceCurve(params.income, params.px, params.py)"
+                               color="green" label="U^*"></curve>
+                        <point point="functions.u.optimalBundle(params.income, params.px, params.py)"
+                               droplines="vertical" xlabel="x^*" color="blue"></point>
+                        <point point="functions.u.optimalBundle(params.income, params.px, params.py)"></point>
+                    </graph>
+
+                </div>
+                <div style="position:absolute;top:350px;left:0px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="50" title="Individual Quantity of X Demanded"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="10" title="Price of X"></axis>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).demandCurve({maxPrice: 10, income: params.income, otherPrice: params.py, samplePoints: 200})"
+                               color="blue" label="d"></curve>
+                        <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0],params.px]"
+                               droplines="both" xlabel="q^D_x(P_x)" ylabel="P_x"></point>
+                        <rule fn="params.px" direction="horizontal"></rule>
+                        <rule fn="functions.u.optimalBundle(params.income, params.px, params.py)[0]"
+                              direction="vertical"></rule>
+                    </graph>
+                </div>
+                <div style="position:absolute;top:350px;left:350px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="25" title="Market Quantity of X (1000's)"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="10" title=""></axis>
+                        <curve fn="functions.u.updateParams({alpha:params.alpha,beta:params.beta}).demandCurve({maxPrice: 10, income: params.income, otherPrice: params.py, samplePoints: 200, numberOfConsumers: params.nc})"
+                               color="blue" label="D"></curve>
+                        <curve fn="functions.f.shortRunSupplyCurve(0.1,0.1,5000,params.nf)"
+                               color="darkorange" label="S"></curve>
+                        <point point="[functions.u.optimalBundle(params.income, params.px, params.py)[0]*params.nc,params.px]"
+                               droplines="vertical" xlabel="Q^D" color="blue"></point>
+                        <point point="[functions.f.shortRunProfitMaxQ(params.px,0.1,0.1,5000)*params.nf,params.px]"
+                               droplines="vertical" xlabel="Q^S" color="darkorange"></point>
+                        <rule fn="params.px" direction="horizontal"></rule>
+
+                    </graph>
+                </div>
+                <div style="position:absolute;top:350px;left:700px;width:350px;height:350px;">
+                    <graph height="350" width="350">
+                        <axis dim="x" min="0" max="50" title="Individual Quantity Supplied"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="10" title=""></axis>
+                        <curve fn="functions.f.shortRunSupplyCurve(0.1,0.1,5000,1)"
+                               color="darkorange" label="MC"></curve>
+                        <point point="[functions.f.shortRunProfitMaxQ(params.px,0.1,0.1,5000),params.px]"
+                               droplines="both" xlabel="q^S_x(P_x)" color="darkorange"></point>
+                        <rule fn="params.px" direction="horizontal"></rule>
+
+                    </graph>
+                </div>
+                <div style="position:absolute; top:0px;left:400px;width:700px;height:350px">
+                    <h2>Supply and Demand Together</h2>
+
+                    <p rendered-math expression="P_{x}: \${{ params.px | number:2 }}"></p>
+                    <slider value="params.px" min="1" max="6" precision="0.25"></slider>
+
+
+                </div>
+                <div style="position:absolute; top:200px;left:400px;width:350px;height:350px">
+                    <p rendered-math expression="N_C: {{ params.nc*1000 | number:0 }}"></p>
+                    <slider value="params.nc" min="0.1" max="3" precision="0.1"></slider>
+
+                </div>
+                <div style="position:absolute; top:200px;left:800px;width:350px;height:350px">
+                    <p rendered-math expression="N_F: {{ params.nf*1000 | number:0 }}"></p>
+                    <slider value="params.nf" min="0.05" max="0.5" precision="0.01"></slider>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+
+
+
+    </section>
+    <section>
+        <section>
+            <h1>Factor Markets</h1>
+        </section>
+        <section>
+            <h1>Last week</h1>
+            <hr/>
+            <h2>Profit-maximizing demand for labor and capital</h2>
+            <h2 rendered-math>L^{SR}(w,r,P,\overline{K}), L^{LR}(w,r,P), K^{LR}(w,r,P)</h2>
+            <hr/>
+            <h2 class="fragment">Side note: can use Hotelling's Lemma to obtain these:</h2>
+            <h2 class="fragment" rendered-math>\displaystyle{\frac{\partial \pi}{\partial w} = \text{profit maximizing }L^*}</h2>
+
+            <h2 class="fragment" rendered-math>\displaystyle{\frac{\partial \pi}{\partial r} = \text{profit maximizing
+                }K^*}</h2>
+        </section>
+        <section>
+            <h1>...but remember, producer theory wasn't the first time we saw the prices <span rendered-math>w</span> and <span rendered-math>r</span></h1>
+        </section>
+        <section>
+            <h2>Intertemporal Choice: Selling Capital</h2>
+            <hr/>
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="x" value="10"/>
+                <param name="y" value="20"/>
+                <param name="px" value="1.05"/>
+                <param name="income" value="60"/>
+                <param name="alpha" value="0.5"/>
+                <param name="s" value="0"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CES"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+
+
+                    <div class="col-md-6">
+
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="50" title="Period 1" ticks="5"></axis>
+                            <axis dim="y" min="0" max="50" title="Period 2" ticks="5"></axis>
+                            <line fn="functions.b.updateParams({px:params.px, py:1, income:(params.px * params.x + params.y)})"></line>
+                            <curve fn="functions.u.priceConsumptionCurve({good:'x', endowment: {x: params.x, y:params.y}, otherPrice: 1, minPrice:0.1, maxPrice:50, samplePoints: 200}) "
+                                   color="blue" label="\text{Offer Curve}" show="params.showOfferCurve"></curve>
+                            <curve fn="functions.u.updateParams({alpha:params.alpha, s:params.s}).optimalIndifferenceCurve((params.px * params.x + params.y), params.px, 1)"
+                                   color="green"></curve>
+                            <point point="[params.x,params.y]" color="purple" label="E"
+                                   droplines="both" xlabel="I_1" ylabel="I_2"></point>
+                            <point point="functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)"
+                                   droplines="both" xlabel="c_1" ylabel="c_2"></point>
+                            <point point="[0,(params.px * params.x + params.y)]" r="3"
+                                   ylabel="(1 + r)I_1 + I_2"
+                                    ></point>
+                            <point point="[(params.px * params.x + params.y)/params.px,0]" r="3"
+                                   xlabel="I_1 + \frac{I_2}{1+r}"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="well">
+                            <h6>Income in Each Period</h6>
+                            <hr/>
+                            <div class="row" style="color:purple">
+                                <div class="col-md-6">
+                                    <p rendered-math expression="I_1: {{ params.x }}"></p>
+                                    <slider value="params.x" min="0" max="40" precision="1"></slider>
+                                </div>
+                                <div class="col-md-6">
+                                    <p rendered-math expression="I_2: {{ params.y }}"></p>
+                                    <slider value="params.y" min="0" max="40" precision="1"></slider>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr/>
+                        <div class="well">
+                            <h6>Interest Rate</h6>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6" style="color:blue">
+                                    <p rendered-math expression="r: {{ (params.px - 1) | number:2 }}"></p>
+                                    <slider value="params.px" min="1" max="1.5" precision="0.01"></slider>
+                                </div>
+                                <div class="col-md-6" style="color:red">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment">
+                    <hr/>
+                    <p ng-if="functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x > 0">
+                        The consumer will borrow
+                        ${{ (functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x)*1000 | number:0 }}
+                        in period 1
+                        <br/>and repay
+                        ${{ (functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x)*params.px*1000 | number:0 }}
+                        in period 2</p>
+
+                    <p ng-if="functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0] - params.x < 0">
+                        The consumer will save
+                        ${{ (params.x - functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0])*1000 | number:0 }}
+                        in period 1
+                        <br/>which will grow to
+                        ${{ (params.x - functions.u.optimalBundle((params.px * params.x + params.y), params.px, 1)[0])*params.px*1000 | number:0 }}
+                        in period 2</p>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h2>Leisure/Consumption Tradeoff: Selling Labor</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture9/besanko_5e_fig_05_24.jpg') }}">
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture9/besanko_5e_fig_05_25.jpg') }}">
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1>The Circular Flow</h1>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>Consumers sell <span rendered-math>L</span> and <span rendered-math>K</span></h2>
+
+                    <h2>and buy <span rendered-math>X</span> and <span rendered-math>Y</span></h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>Firms buy <span rendered-math>L</span> and <span rendered-math>K</span></h2>
+
+                    <h2>and sell <span rendered-math>X</span> and <span rendered-math>Y</span></h2>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>A change in <span rendered-math>P_x</span> or <span rendered-math>P_y</span></h2>
+
+                    <h2>has an <b>income effect</b></h2>
+
+                    <h2>and a <b>substitution effect</b></h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>A change in <span rendered-math>w</span> or <span rendered-math>r</span></h2>
+
+                    <h2>has a <b>quantity effect</b></h2>
+
+                    <h2>and a <b>substitution effect</b><br/>(in the long run)</h2>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1>Labor supply and demand</h1>
+            <h1>and capital supply and demand</h1>
+            <h1>are fair game* for the final!</h1>
+            <hr/>
+            <h2>(*to the extent that they're on the last homework)</h2>
+        </section>
+    </section>
+    <section>
+        <h1>Ten Minute Break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Short-Run Competitive Equilibrium</h1>
+            <hr/>
+            <h2 class="fragment">Number of consumers and firms is fixed</h2>
+            <h2 class="fragment">Capital is fixed</h2>
+            <h2 class="fragment">Wages, other prices, preferences might fluctuate</h2>
+            <h2 class="fragment">Prices adjust so that <span rendered-math>Q^S(P) = Q^D(P)</span></h2>
+        </section>
+        <section>
+            <h2>Firm and Market Supply: 100 Firms</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_09_08.jpg') }}"/>
+        </section>
+        <section>
+            <h2>Given: <span rendered-math>u(x,y), f(L,K), P_y, I, w, r, \overline{K}, N_C, N_F</span>.</h2>
+            <h2>Goal: equilibribium price and quantity of X</h2>
+            <hr/>
+            <table class="table">
+                <tr class="fragment">
+                    <td><b>1.</b></td>
+                    <td>Derive individual consumer demand for X, <span rendered-math>q^D(P_x)</span>, as a function of <span
+                            rendered-math>P_x, P_y, I</span><br/> using the tools of consumer theory.</td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>2.</b></td>
+                    <td>Multiply <span rendered-math>q^D(P_x)</span> by <span rendered-math>N_C</span> to get the market demand,
+                        <span rendered-math>Q^D(P_x, P_y, I, N_C)</span>.</td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>3.</b></td>
+                    <td>Derive individual firm supply of X, <span rendered-math>q^S(P_x)</span>, as a function
+                        of <span
+                                rendered-math>w, r, \overline{K}</span><br/> using the tools of producer theory.</td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>4.</b></td>
+                    <td>Multiply <span rendered-math>q^S(P_x)</span> by <span rendered-math>N_F</span> to get the market
+                        supply,
+                        <span rendered-math>Q^S(P_x, w, r, \overline{K}, N_F)</span>.
+                    </td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>5.</b></td>
+                    <td>Set <span rendered-math>Q^D(P_x,P_y,I,N_C) = Q^S(P_x, w, r, \overline{K}, N_F)</span> and solve for the equilibrium price, <span rendered-math>P_x^*</span>.
+                    </td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>6.</b></td>
+                    <td>Plug <span rendered-math>P_x^*</span> back into either <span rendered-math>Q^D(P_x,P_y,I,N_C)</span> or <span rendered-math>Q^S(P_x, w, r, \overline{K}, N_F)</span> to find
+                        <span rendered-math>Q^*_x</span>.
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h1>Short-Run Comparative Statics</h1>
+            <hr/>
+            <h2>Once you have <span rendered-math>Q^*</span> and <span rendered-math>P^*</span> in terms of</h2>
+            <h2>the <b>exogenous variables</b> like income or the wage rate,</h2>
+            <h2>you can take elasticity with respect to any of those variables.</h2>
+            <hr/>
+            <h2>Example: what is the % change<br/>in equilibrium price from a 1% increase in<br/>the number of consumers in the market?</h2>
+        </section>
+        <section>
+            <h2>Short run: shift in demand => move along supply curve</h2>
+
+            <h2>Effect on price depends on supply elasticity</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_09_10.jpg') }}"/>
+        </section>
+        <section>
+            <h1>Homework Questions 1 & 2</h1>
+            <h1>Back up Econ 1 intuition<br/>with Econ 50 math</h1>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Long-Run Equilibrium</h1>
+            <hr/>
+            <h2>All inputs can be varied</h2>
+            <h2>Entry and exit can occur</h2>
+        </section>
+        <section>
+            <h1>Long-Run Dynamics</h1>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="fragment">High price</h2>
+
+                    <h2 class="fragment">=> Profits</h2>
+
+                    <h2 class="fragment">=> Entry</h2>
+
+                    <h2 class="fragment">=> Shift S to Right</h2>
+
+                    <h2 class="fragment">=> Lower prices</h2>
+
+                    <h2 class="fragment">=> Zero profit</h2>
+                </div>
+                <div class="col-md-6">
+                    <h2 class="fragment">Low price</h2>
+
+                    <h2 class="fragment">=> Losses</h2>
+
+                    <h2 class="fragment">=> Exit</h2>
+
+                    <h2 class="fragment">=> Shift S to Left</h2>
+
+                    <h2 class="fragment">=> Higher prices</h2>
+
+                    <h2 class="fragment">=> Zero Profit</h2>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Long run: shift in demand => entry => move along LS curve</h2>
+
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_09_15.jpg') }}"/>
+        </section>
+        <section>
+            <h1>Shape of the LR Industry Supply Curve</h1>
+            <hr/>
+            <table class="table">
+                <tr class="fragment">
+                    <td><b>Increasing-cost industry</b></td>
+                    <td>More firms mean higher input costs for everyone;<br/> LS curve slopes upward</td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>Constant-cost industry</b></td>
+                    <td>More firms don't affect input costs;<br/> LS curve is horizontal</td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>Decreasing-cost industry</b></td>
+                    <td>More firms mean lower input costs;<br/> LS curve slopes downward</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2>Increasing and Decreasing Cost Industries</h2>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_09_18.jpg') }}" height="400px"/>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_09_19.jpg') }}" height="400px"/>
+        </section>
+        <section>
+            <h1>Firms with Exceptional Technologies</h1>
+            <hr/>
+            <img src="{{ url_for('static',filename='images/econ50/lecture14/besanko_5e_fig_09_21.jpg') }}"/>
+
+        </section>
+        <section>
+            <h1>A Note on Adjustment Times</h1>
+            <hr/>
+            <h2>In some industries, firms might enter faster<br/>than existing firms can acquire more capital.</h2>
+            <h2>In other industries, existing firms might be able to adjust capital more quickly than new firms can enter.</h2>
+            <h2 class="fragment">No hard and fast rules!</h2>
+            <h2 class="fragment">...Just be clear on what you're assuming about the "long run."</h2>
+            <h2 class="fragment">(In HW, question 3, assumes capital can be changed faster than entry...)</h2>
+        </section>
+    </section>
+    <section>
+        <h1>SUMMARY</h1>
+        <hr/>
+        <h2>Today we moved from individuals, who take prices as given,<br/>to the markets where prices are determined.</h2>
+        <h2>Next week we'll look at firms with market power,<br/>who can set prices to maximize their profits.</h2>
+    </section>
+    <section>
+        <h1>Next time: play with this model some more...</h1>
+    </section>
+{% endblock %}

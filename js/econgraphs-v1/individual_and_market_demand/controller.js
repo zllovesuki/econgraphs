@@ -41,7 +41,7 @@ econGraphsApp.controller('IndividualAndMarketDemandController', function($scope)
         d3.select('svg').remove();
 
         drawIndividualDemandGraph($scope,"left_graph");
-        drawMarketGraph($scope,"right_graph");
+        drawMarketDemandGraph($scope,"right_graph");
 
     }
 });

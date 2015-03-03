@@ -1,4 +1,4 @@
-function drawMarketGraph($scope,id) {
+function drawMarketDemandGraph($scope,id) {
 
     var market_graph_data = {
         id : id,

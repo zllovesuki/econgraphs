@@ -158,11 +158,18 @@ kgAngular.service('D3Helpers', function () {
         var width = labelParams['width'] || 100,
             xOffset = labelParams['xOffset'] || 0,
             yOffset = labelParams['yOffset'] || 0,
-            xCoord = labelParams.hasOwnProperty('point') && labelParams.point != undefined ? labelParams['point']['x'] || labelParams['point'][0] : 0,
-            yCoord = labelParams.hasOwnProperty('point') && labelParams.point != undefined ? labelParams['point']['y'] || labelParams['point'][1] : 0,
-            x = labelParams['graph'].x(xCoord) + xOffset,
+            xCoord = 0,
+            yCoord = 0;
+
+        if(labelParams.hasOwnProperty('point') && labelParams.point != undefined) {
+            xCoord = labelParams.point['x'] || labelParams.point[0] || xCoord;
+            yCoord = labelParams.point['y'] || labelParams.point[1] || yCoord;
+        }
+
+        var x = labelParams['graph'].x(xCoord) + xOffset,
             y = labelParams['graph'].y(yCoord) + yOffset - 20,
             align = labelParams['align'] || 'left';
+
         if(align == 'right') {
             x -= width;
         }
