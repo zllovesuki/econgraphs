@@ -25,8 +25,8 @@ kgAngular.directive('point', function () {
 
                         var label = scope.label || 'none';
 
-                        var x = p[0],
-                            y = p[1];
+                        var x = p[0] || p.x,
+                            y = p[1] || p.y;
 
                         var xInDomain = (x <= graph.xDomain[1] && x >= graph.xDomain[0]),
                             yInDomain = (y <= graph.yDomain[1] && y >= graph.yDomain[0]);

@@ -1,0 +1,612 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 15</h2>
+
+        <h1>Perfect Competition:</h1>
+
+        <h1>Applications and Extensions</h1>
+
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>March 4, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Econ in the News: Raises at Walmart</h2>
+        <h2 class="fragment">Clarification: HW6, Question 2</h2>
+        <h2 class="fragment">Review: Exit and Entry</h2>
+        <h2 class="fragment">Review: Labor Supply</h2>
+        <hr/>
+        <h2>Ten Minute Break</h2>
+        <hr/>
+        <h2 class="fragment">Welfare Analysis of Supply and Demand</h2>
+        <h3 class="fragment">Consumer and Producer Surplus</h3>
+        <h3 class="fragment">Applications: Taxes, Price Controls</h3>
+    </section>
+    <section>
+        <h1>Econ in the News</h1>
+        <h2><a href="http://www.nytimes.com/2015/03/02/opinion/paul-krugman-walmarts-visible-hand.html">NYT: Walmart's Visible Hand</a></h2>
+    </section>
+    <section>
+        <section>
+            <h1>Clarification: HW 6, Question 2</h1>
+        </section>
+            <section>
+                {% raw %}
+                <model>
+
+                    <param name="k" value="5"/>
+                    <param name="alpha" value="0.5"/>
+                    <param name="beta" value="1.5"/>
+                    <function name="f" category="production" form="CobbDouglas"></function>
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <graph width="800" height="800">
+                                <axis dim="x" min="0" max="80" title="Quantity (q)"></axis>
+                                <axis dim="y" min="0" max="300" title="Dollars"></axis>
+                                <curve fn="functions.f.updateParams({alpha: params.alpha, beta:params.beta}).longRunTotalCostCurve(10,10,params.k)"
+                                       label="TC(q)"></curve>
+                                <curve ng-repeat="k in [1,2,3,4,5,6,7,8,9,10]"
+                                       fn="functions.f.shortRunTotalCostCurve(10,10,k)"
+                                       color="grey" show="k != params.k && params.showFamily"></curve>
+                                <curve label="STC(q | \overline{K} = {{ params.k }})" label-offset-x="-70"
+                                       fn="functions.f.shortRunTotalCostCurve(10,10,params.k)" color="purple"></curve>
+                                <curve fn="functions.f.longRunTotalCostCurve(10,10,params.k)"
+                                       label="TC(q)"></curve>
+                            </graph>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 rendered-math expression="f(L,K) = L^{ {{ params.alpha | number:2 }} } K^{ {{ params.beta | number:2 }} }"></h2>
+                            <div class="well">
+                                <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                                <slider value="params.alpha" min="0.25" max="2" precision="0.05"></slider>
+                                <p rendered-math expression="\beta: {{ params.beta | number:2}}"></p>
+                                <slider value="params.beta" min="0.25" max="2" precision="0.05"></slider>
+                                <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                                <slider value="params.k" min="1" max="10" precision="1"></slider>
+                                <toggle param="params.showFamily" init="false">{{ params.showFamily ? "Hide" : "Show" }} all STC curves
+                                </toggle>
+                            </div>
+                            <hr/>
+                            <p ng-if="params.alpha < 1" rendered-math>\alpha < 1 \Rightarrow STC(q)\text{ convex}</p>
+                            <p ng-if="params.alpha == 1" rendered-math>\alpha = 1 \Rightarrow STC(q)\text{ linear}</p>
+                            <p ng-if="params.alpha > 1" rendered-math>\alpha > 1 \Rightarrow STC(q)\text{ concave}</p>
+
+                            <p ng-if="params.alpha + params.beta < 1" rendered-math>\alpha + \beta < 1 \Rightarrow TC(q) \text{ convex}</p>
+
+                            <p ng-if="params.alpha + params.beta == 1" rendered-math>\alpha + \beta = 1 \Rightarrow TC(q)\text{ linear}</p>
+
+                            <p ng-if="params.alpha + params.beta > 1" rendered-math>\alpha + \beta > 1 \Rightarrow TC(q)\text{ concave}</p>
+                        </div>
+
+                    </div>
+                </model>
+
+                {% endraw %}
+            </section>
+            <section>
+                {% raw %}
+                <model>
+
+                    <param name="k" value="5"/>
+                    <param name="alpha" value="0.4"/>
+                    <param name="beta" value="0.4"/>
+                    <param name="w" value="10"/>
+                    <param name="r" value="10"/>
+                    <param name="q" value="6"/>
+                    <function name="f" category="production" form="CobbDouglas"></function>
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div style="position:absolute;top:0px;left:0px;width:800px;height:350px;">
+                                <graph width="800" height="400">
+                                    <axis dim="x" min="0" max="20" title="" ticks="5"></axis>
+                                    <axis dim="y" min="0" max="1000" title="Dollars" ticks="5"></axis>
+                                    <curve label="STC(q)" label-offset-x="-70"
+                                           fn="functions.f.updateParams({alpha:params.alpha,beta:params.beta}).shortRunTotalCostCurve(params.w,params.r,params.k)"
+                                           color="purple"></curve>
+                                    <segment points="[{x:params.q, y:functions.f.shortRunTotalCost(params.q, params.w, params.r, params.k)},{x:0,y:0}]" label="\text{slope} = {{ functions.f.shortRunAverageCost(params.q,params.w,params.r,params.k) | number:0}}" label-offset-y="-10" label-offset-x="10"></segment>
+                                    <point point="[params.q,functions.f.shortRunTotalCost(params.q, params.w, params.r, params.k)]"
+                                          droplines="vertical"></point>
+                                </graph>
+                            </div>
+                            <div style="position:absolute;top:400px;left:0px;width:800px;height:350px;">
+                                <graph width="800" height="350">
+                                    <axis dim="x" min="0" max="20" title="Quantity (q)" ticks="5"></axis>
+                                    <axis dim="y" min="0" max="100" title="Dollars per Unit" ticks="5"></axis>
+                                    <curve label="SAC(q)" label-offset-x="-60"
+                                           fn="functions.f.updateParams({alpha:params.alpha,beta:params.beta}).shortRunAverageCostCurve(params.w,params.r,params.k)"
+                                           color="purple"></curve>
+                                    <rule fn="functions.f.shortRunAverageCost(params.q,params.w,params.r,params.k)" direction="horizontal" label="SAC = {{ functions.f.shortRunAverageCost(params.q,params.w,params.r,params.k) | number: 0}}"></rule>
+                                    <rule fn="params.q"
+                                          direction="vertical"></rule>
+                                    <point point="[params.q,functions.f.shortRunAverageCost(params.q, params.w, params.r, params.k)]" xlabel="q"
+                                           ></point>
+                                </graph>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 rendered-math
+                                expression="f(L,K) = L^{ {{ params.alpha | number:2 }} } K^{ {{ params.beta | number:2 }} }"></h2>
+
+                            <div class="well">
+                                <p rendered-math expression="\alpha: {{ params.alpha | number:2}}"></p>
+                                <slider value="params.alpha" min="0.25" max="2" precision="0.05"></slider>
+                                <p rendered-math expression="\beta: {{ params.beta | number:2}}"></p>
+                                <slider value="params.beta" min="0.25" max="2" precision="0.05"></slider>
+                                <p rendered-math expression="w: {{ params.w | number:0}}"></p>
+                                <slider value="params.w" min="0" max="100" precision="1"></slider>
+                                <p rendered-math expression="r: {{ params.r | number:0}}"></p>
+                                <slider value="params.r" min="0" max="100" precision="1"></slider>
+                                <p rendered-math expression="\overline{K}: {{ params.k | number:0}}"></p>
+                                <slider value="params.k" min="1" max="10" precision="1"></slider>
+                                <p rendered-math expression="q: {{ params.q | number:2}}"></p>
+                                <slider value="params.q" min="1" max="18" precision="0.1"></slider>
+
+                            </div>
+                            <hr/>
+
+                        </div>
+
+                    </div>
+                </model>
+
+                {% endraw %}
+            </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Review: Exit and Entry</h1>
+            <hr/>
+            <h3>(useful for HW7, question 3)</h3>
+        </section>
+        <section>
+            <h1>The Entry/Exit Decision</h1>
+            <hr/>
+            <h2>Even in the long run, there is another "economic" cost:</h2>
+
+            <h2>the opportunity cost of the firm's next best option.</h2>
+            <hr/>
+            <h2>Let's call this <span rendered-math>\pi_{\text{other}}</span></h2>
+        </section>
+        <section>
+            <h2>A firm will exit the industry if:</h2>
+            <table class="table">
+                <tr>
+                    <td style="text-align: center"><h2>Profit if Stay</h2></td>
+                    <td><h2 rendered-math><</h2></td>
+                    <td style="text-align: center"><h2>Profit if Leave</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align: center"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
+                    <td><h2 rendered-math><</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>\pi_\text{other}</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align: center"><h2 rendered-math>TR(\color{red}{q}) - TC(
+                        \color{red}{q})</h2></td>
+                    <td><h2 rendered-math><</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>\pi_\text{other}</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align: center"><h2 rendered-math>TR(\color{red}{q})</h2></td>
+                    <td><h2 rendered-math><</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>\pi_\text{other} + TC( \color{red}{q})</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td/>
+                    <td/>
+                    <td style="text-align: center"><h2>(sort of like <span
+                            rendered-math>FC + TVC( \color{red}{q})</span>)</h2></td>
+                </tr>
+
+            </table>
+            <h2>A firm's very-long run cost function includes this opportunity cost!</h2>
+
+            <h2>This results in a U-shaped average cost even if all inputs are flexible.</h2>
+        </section>
+        <section>
+            <h1>Example</h1>
+            <hr/>
+            <h2>Production function: <span rendered-math>f(L) = L^\frac{1}{2}</span></h2>
+            <h2>Wage rate: <span rendered-math>w = 1</span></h2>
+            <h2>Best alternative profit: <span rendered-math>\pi_\text{other} = 100</span></h2>
+            <h2>Number of firms: 6,000</h2>
+            <h2>Demand: <span rendered-math>Q^D(P) = 80,000 - 1,000P</span></h2>
+            <h1><b>What is the long-run equilibrium?</b></h1>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="demand" value="80"/>
+                <param name="nf" value="6000"/>
+                <function name="d" category="market" form="LinearDemand"></function>
+                <function name="s" category="market" form="LinearSupply"></function>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="30" title="Firm Quantity (units)"
+                                  ticks="5"></axis>
+                            <axis dim="y" min="0" max="100" title="Dollars per Unit"></axis>
+                            <curve fn="functions.s.marginalCostCurve" color="#D67E2C" label="MC"></curve>
+                            <curve fn="functions.s.averageCostCurve" color="#0885A1" label="AC"></curve>
+                            <area fn="functions.s.profitArea(functions.s.marketPrice(functions.d))" color="{{ functions.s.marketPrice(functions.d) > 20 ? 'green' : 'red' }}"/>
+                            <rule fn="functions.s.marketPrice(functions.d)" direction="horizontal" label="P"></rule>
+                            <point point="{x: functions.s.qEquilibrium(functions.d),y: functions.s.marketPrice(functions.d)}" droplines="vertical"></point>
+                        </graph>
+                    </div>
+
+                    <div class="col-md-6">
+                    <graph height="500" width="500">
+                        <axis dim="x" min="0" max="150" title="Market Quantity (1000's of units)"
+                              ticks="5"></axis>
+                        <axis dim="y" min="0" max="100" title=""></axis>
+                        <line fn="functions.s.updateParams({n:params.nf})" color="#D67E2C" label="S"></line>
+                        <line fn="functions.d.updateParams({intercept:params.demand})" color="#383D96" label="D" label-offset-y="-10"></line>
+                        <point point="functions.s.linearIntersection(functions.d)" droplines="both"></point>
+                    </graph>
+                        </div>
+                </div>
+                <hr/>
+                <div style="height:50px;color:white">.</div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p rendered-math expression="N_F: {{ params.nf | number:0}}"></p>
+                        <slider value="params.nf" min="2000" max="10000" precision="100"></slider>
+                    </div>
+                    <div class="col-md-6">
+                        <p rendered-math expression="\text{Demand Intercept}: {{ params.demand | number:0}},000"></p>
+                        <slider value="params.demand" min="40" max="120" precision="1"></slider>
+                    </div>
+                </div>
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Review: Labor Supply</h1>
+        </section>
+        <section>
+            <h1>Recall, from Lecture 9</h1>
+            <hr/>
+            <p class="fragment">A worker has 24 hours in the day</p>
+
+            <p class="fragment">Hours spent working earn her an hourly wage, <span rendered-math>w</span>.</p>
+
+            <p class="fragment">Consume two goods: leisure (L) and the composite good (Y).</p>
+            <hr/>
+            <div class="fragment">
+                <p>Relevant budget constraint:</p>
+
+                <p rendered-math>Y = w(24 - L)</p>
+            </div>
+            <div class="fragment">
+                <p>or</p>
+
+                <h2 rendered-math>wL + Y = 24w</h2>
+            </div>
+        </section>
+        <section>
+            <h2>Suppose <span rendered-math>u(L,Y) = LY</span></h2>
+            <h2>How much will this person choose to work at wage <span rendered-math>w</span>?</h2>
+            <h2>What if they had additional income, <span rendered-math>I</span>. so <span rendered-math>Y = I + w(24 - L)</span>?</h2>
+            <hr/>
+            <h2>(Hint: write down the relevant budget constraint!)</h2>
+        </section>
+        <section>
+            <h2>Labor/Consumption Choice with Nonwage Income</h2>
+            {% raw %}
+            <model>
+
+
+                <!-- Model parameters -->
+                <param name="income" value="0"/>
+                <param name="w" value="6"/>
+                <param name="alpha" value="0.5"/>
+                <param name="s" value="0"/>
+
+
+                <!-- Model functions -->
+                <function name="u" category="utility" form="CobbDouglas"></function>
+                <function name="b" category="budget" form="SimpleBudgetConstraint"></function>
+
+                <div class="row">
+
+
+                    <div class="col-md-9">
+
+                        <graph height="800" width="800">
+                            <axis dim="x" min="0" max="24" title="Leisure (L)" ticks="6"></axis>
+                            <axis dim="y" min="0" max="600" title="Consumption (Y)" ticks="6"></axis>
+                            <segment points="[{x:0,y:24*params.w + params.income},{x:24,y:params.income}]" color="purple"></segment>
+                            <curve fn="functions.u.optimalIndifferenceCurve(24*params.w + params.income, params.w, 1)"
+                                   color="green"
+                                   show="functions.u.optimalBundle(24*params.w + params.income, params.w, 1)[0] < 24"></curve>
+                            <curve fn="functions.u.setLevel([24,params.income])"
+                                   color="green"
+                                   show="functions.u.optimalBundle(24*params.w + params.income, params.w, 1)[0] >= 24"></curve>
+                            <point point="[24,params.income]" r="3" dropline="both"
+                                   droplines="both" ylabel="I" xlabel="24" color="purple" show="params.income > 0"
+                                    ></point>
+                            <point point="[24,params.income]" r="3" dropline="both"
+                                   droplines="none" xlabel="24" color="purple" show="params.income == 0"
+                                    ></point>
+                            <point point="functions.u.optimalBundle(24*params.w + params.income, params.w, 1)"
+                                   droplines="both" xlabel="L" ylabel="Y"
+                                   show="functions.u.optimalBundle(24*params.w + params.income, params.w, 1)[0] < 24"></point>
+                            <point point="[24,params.income]"
+                                   droplines="both" xlabel="L" ylabel="Y"
+                                   show="functions.u.optimalBundle(24*params.w + params.income, params.w, 1)[0] >= 24"></point>
+                            <point point="[0,24*params.w + params.income]" r="3"
+                                   ylabel="I + 24w" color="purple"
+                                    ></point>
+                        </graph>
+
+
+                    </div>
+                    <div class="col-md-3">
+
+                        <div class="well">
+                            <p rendered-math expression="w: \${{ params.w | number:2 }}"></p>
+                            <slider value="params.w" min="1" max="20" precision="0.10"></slider>
+                        </div>
+                        <div class="well">
+                            <p rendered-math expression="I: \${{ params.income | number:0 }}"></p>
+                            <slider value="params.income" min="0" max="100" precision="1"></slider>
+                        </div>
+                    </div>
+                </div>
+
+            </model>
+            {% endraw %}
+        </section>
+    </section>
+    <section>
+        <h1>Ten Minute Break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Welfare Analysis of Supply and Demand</h1>
+            <hr/>
+            <h2>Producer and Consumer Surplus</h2>
+            <h2>Taxes</h2>
+            <h2>Price Ceilings and Price Floors</h2>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Consumer Surplus</h1>
+                    <hr/>
+                    <h1 rendered-math>\int_P^\infty Q^D(p)dp</h1>
+                </div>
+                <div class="col-md-6">
+                    <h1>Producer Surplus</h1>
+                    <hr/>
+                    <h1 rendered-math>\int_0^P Q^S(p)dp</h1>
+                </div>
+            </div>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="demand" value="80"/>
+                <param name="tax" value="0"/>
+                <function name="d" category="market" form="LinearDemand"></function>
+                <function name="s" category="market" form="LinearSupply"></function>
+
+                <h2>Equilibrium: <span rendered-math>Q^D(P) = 80 - P, Q^S(P) = P</span></h2>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-8">
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="100" title="Market Quantity (1000's of units)"
+                                  ticks="5"></axis>
+                            <axis dim="y" min="0" max="100" title="" ticks="5"></axis>
+                            <line fn="functions.s" color="#D67E2C" label="S"></line>
+                            <line fn="functions.d.updateParams({intercept:params.demand})" color="#383D96" label="D"
+                                  label-offset-y="-10"></line>
+                            <area fn="functions.d.consumerSurplus(functions.d.marketPrice(functions.s,-params.tax))"
+                                  color="#383D96">
+                            <area fn="functions.s.producerSurplus(functions.s.marketPrice(functions.d,params.tax))"
+                                  color="#D67E2C">
+                            <area fn="functions.s.taxWedge(functions.d,params.tax)" color="green">
+                            <point point="functions.s.linearIntersection(functions.d)" droplines="both" xLabel="Q^*"
+                                   yLabel="P^*" show="params.tax == 0"></point>
+                            <point point="functions.s.linearIntersection(functions.d,params.tax)" color="#D67E2C"
+                                   droplines="horizontal" yLabel="P_F" show="params.tax > 0"></point>
+                            <point point="functions.d.linearIntersection(functions.s,-params.tax)" color="#383D96"
+                                   droplines="both" yLabel="P_C" xLabel="Q^*" show="params.tax > 0"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-4">
+                        <table>
+                            <tr>
+                                <td><h2 rendered-math>Q^S</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math>Q^D</h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>P</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math>80 - P</h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>2P</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math>80</h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>P^*</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math>40</h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>Q^*</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math>Q(P^*) = 40</h2></td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+
+                </div>
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            <clicker-question>
+                <h2>Suppose you have a tax of $20 per unit. What happens to the supply and demand diagram?</h2>
+                <clicker-option letter="A">The supply curve shifts up by 20</clicker-option>
+                <clicker-option letter="B">The supply curve shifts left by 20</clicker-option>
+                <clicker-option letter="C">The demand curve shifts down by 20</clicker-option>
+                <clicker-option letter="D">The demand curve shifts left by 20</clicker-option>
+                <clicker-option letter="E">All four of those answers are profoundly wrong.</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h1>Econ 50: Model Responses to Prices</h1>
+            <hr/>
+            <h2>The supply and demand curves show<br/>how people respond to prices.</h2>
+            <h2>Does the imposition of a tax <b>change</b><br/>how they respond to prices?</h2>
+<hr/>
+            <div class="row">
+                <div class="col-md-4 fragment">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture15/gas_prices_2.jpg') }}"/>
+                </div>
+                <div class="col-md-4 fragment">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture15/gas_prices_1.jpg') }}"/>
+                </div>
+                <div class="col-md-4 fragment">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture15/gas_price_tax_sticker.jpg') }}"/>
+                </div>
+            </div>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="demand" value="80"/>
+                <param name="tax" value="0"/>
+                <function name="d" category="market" form="LinearDemand"></function>
+                <function name="s" category="market" form="LinearSupply"></function>
+
+                <h2>Equilibrium with a Tax: <span rendered-math>Q^D(P_C) = 80 - P_C, Q^S(P_F) = P_F</span></h2>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-8">
+                        <graph height="600" width="600">
+                            <axis dim="x" min="0" max="100" title="Market Quantity (1000's of units)"
+                                  ticks="5"></axis>
+                            <axis dim="y" min="0" max="100" title="" ticks="5"></axis>
+                            <line fn="functions.s" color="#D67E2C" label="S"></line>
+                            <line fn="functions.d.updateParams({intercept:params.demand})" color="#383D96" label="D"
+                                  label-offset-y="-10"></line>
+                            <area fn="functions.d.consumerSurplus(functions.d.marketPrice(functions.s,-params.tax))"
+                                  color="#383D96">
+                            <area fn="functions.s.producerSurplus(functions.s.marketPrice(functions.d,params.tax))"
+                                  color="#D67E2C">
+                            <area fn="functions.s.taxWedge(functions.d,params.tax)" color="green">
+                            <area fn="functions.s.taxDWL(functions.d,params.tax)">
+                            <point point="functions.s.linearIntersection(functions.d)" droplines="both" xLabel="Q^*" yLabel="P^*" show="params.tax == 0"></point>
+                            <point point="functions.s.linearIntersection(functions.d,params.tax)" color="#D67E2C" droplines="horizontal" yLabel="P_F^*" show="params.tax > 0"></point>
+                            <point point="functions.d.linearIntersection(functions.s,-params.tax)" color="#383D96" droplines="both" yLabel="P_C^*" xLabel="Q^*" show="params.tax > 0"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="well">
+                            <p rendered-math expression="\text{Tax per unit}: {{ params.tax | number:0}}"></p>
+                            <slider value="params.tax" min="0" max="40" precision="2"></slider>
+                        </div>
+                        <hr/>
+                        <table>
+                            <tr>
+                                <td><h2 rendered-math>Q^S(P_F)</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math>Q^D(P_C)</h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>P_F</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math>80 - P_C</h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>P_F</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math expression="80 - (P_F + {{ params.tax | number:0 }})"></h2></td>
+
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>2P_F</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math expression="80 - {{ params.tax | number:0 }}"></h2></td>
+
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>P_F^*</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math expression="{{ 40 - 0.5*params.tax | number:0 }}"></h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>P_C^*</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math expression="P_F + {{ params.tax | number:0 }} = {{ (40 + 0.5*params.tax) | number:0 }}"></h2></td>
+                            </tr>
+                            <tr>
+                                <td><h2 rendered-math>Q^*</h2></td>
+                                <td><h2 rendered-math>=</h2></td>
+                                <td><h2 rendered-math
+                                        expression="Q^D(P_C^*) = Q^S(P_F^*) = {{ (40 - 0.5*params.tax) | number:0 }}"></h2>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+
+                </div>
+                </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Price ceilings and floors</h1>
+            <hr/>
+            <h2>(on board)</h2>
+        </section>
+    </section>
+    <section>
+        <h1>Bottom line: the math doesn't lie.</h1>
+        <hr/>
+        <h2>It reveals where Econ 1 logic is squishy.</h2>
+        <h2>It leads into <b>estimation</b>.</h2>
+    </section>
+    <section>
+        <h1>Next time: monopoly and monopsony (Chapter 11)</h1>
+    </section>
+{% endblock %}
