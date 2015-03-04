@@ -419,7 +419,7 @@
                 <function name="d" category="market" form="LinearDemand"></function>
                 <function name="s" category="market" form="LinearSupply"></function>
 
-                <h2>Equilibrium: <span rendered-math>Q^D(P) = 80 - P, Q^D(P) = P</span></h2>
+                <h2>Equilibrium: <span rendered-math>Q^D(P) = 80 - P, Q^S(P) = P</span></h2>
                 <hr/>
                 <div class="row">
                     <div class="col-md-8">
@@ -517,7 +517,7 @@
                 <function name="d" category="market" form="LinearDemand"></function>
                 <function name="s" category="market" form="LinearSupply"></function>
 
-                <h2>Equilibrium with a Tax: <span rendered-math>Q^D(P) = 80 - P, Q^D(P) = P</span></h2>
+                <h2>Equilibrium with a Tax: <span rendered-math>Q^D(P_C) = 80 - P_C, Q^S(P_F) = P_F</span></h2>
                 <hr/>
                 <div class="row">
                     <div class="col-md-8">
@@ -547,9 +547,9 @@
                         <hr/>
                         <table>
                             <tr>
-                                <td><h2 rendered-math>Q^S</h2></td>
+                                <td><h2 rendered-math>Q^S(P_F)</h2></td>
                                 <td><h2 rendered-math>=</h2></td>
-                                <td><h2 rendered-math>Q^D</h2></td>
+                                <td><h2 rendered-math>Q^D(P_C)</h2></td>
                             </tr>
                             <tr>
                                 <td><h2 rendered-math>P_F</h2></td>
@@ -582,7 +582,7 @@
                                 <td><h2 rendered-math>Q^*</h2></td>
                                 <td><h2 rendered-math>=</h2></td>
                                 <td><h2 rendered-math
-                                        expression="Q^D(P_C^*) = Q^S(P_F^*) = {{ (40 + 0.5*params.tax) | number:0 }}"></h2>
+                                        expression="Q^D(P_C^*) = Q^S(P_F^*) = {{ (40 - 0.5*params.tax) | number:0 }}"></h2>
                                 </td>
                             </tr>
 
