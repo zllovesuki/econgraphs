@@ -728,6 +728,35 @@ kg.functions.Linear = (function() {
             
         };
 
+        l.linearIntersection = function(ol,delta) {
+
+            delta = delta || 0;
+
+            var diffLine = new kg.functions.Linear({
+                    definitionType: 'standard',
+                    a: l.a()*ol.b()- l.b()*ol.a(),
+                    b: l.b()*ol.b(),
+                    c: ol.b()*l.c() - ol.c()*l.b() - delta
+                }),
+                x = diffLine.xIntercept(),
+                y = l.yValue(x);
+
+            /*delta = delta || 0;
+            var x, y;
+
+            if(l.b() == ol.b()) {
+                x = (ol.c() - l.c())/(l.a() - ol.a());
+                y = l.yValue(x)
+            }
+
+            else {
+                y = (l.c() - ol.c() + l.a() - ol.a()) / (ol.b() - l.b());
+                x = l.xValue(y)
+            }*/
+
+            return {x: x, y: y};
+        };
+
         return l;
 
     }

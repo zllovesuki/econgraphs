@@ -62,7 +62,10 @@
             "utility/inferior.js",
             "production/production.js",
             "production/cobbdouglasproduction.js",
-            "production/translog.js"
+            "production/translog.js",
+            "market/market.js",
+            "market/lineardemand.js",
+            "market/linearsupply.js"
         ]
     },
     {
