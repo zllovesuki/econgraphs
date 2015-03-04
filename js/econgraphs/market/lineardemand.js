@@ -57,11 +57,20 @@ econgraphs.functions.market.LinearDemand = function () {
                     var q = d.quantityDemanded(p),
                         qmax = d.quantityDemanded(yDomain.max);
 
-                    return [
-                        {x: xDomain.min, y: yDomain.min},
-                        {x: q, y: p},
-                        {x: xDomain.min, y: p}
-                    ]
+                    if(qmax > 0) {
+                        return [
+                            {x: xDomain.min, y: p},
+                            {x: q, y: p},
+                            {x: qmax, y: yDomain.max},
+                            {x: xDomain.min, y: yDomain.max}
+                        ]
+                    } else {
+                        return [
+                            {x: xDomain.min, y: p},
+                            {x: q, y: p},
+                            {x: xDomain.min, y: d.yIntercept()}
+                        ]
+                    }
                 }
             }
         };

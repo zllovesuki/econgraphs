@@ -1543,11 +1543,20 @@ econgraphs.functions.market.LinearDemand = function () {
                     var q = d.quantityDemanded(p),
                         qmax = d.quantityDemanded(yDomain.max);
 
-                    return [
-                        {x: xDomain.min, y: yDomain.min},
-                        {x: q, y: p},
-                        {x: xDomain.min, y: p}
-                    ]
+                    if(qmax > 0) {
+                        return [
+                            {x: xDomain.min, y: p},
+                            {x: q, y: p},
+                            {x: qmax, y: yDomain.max},
+                            {x: xDomain.min, y: yDomain.max}
+                        ]
+                    } else {
+                        return [
+                            {x: xDomain.min, y: p},
+                            {x: q, y: p},
+                            {x: xDomain.min, y: d.yIntercept()}
+                        ]
+                    }
                 }
             }
         };
@@ -1636,12 +1645,12 @@ econgraphs.functions.market.LinearSupply = function () {
 
         s.updateParams(params);
 
-        s.qEquilibrium = function(demand){
-            return s.q(s.marketPrice(demand));
+        s.qEquilibrium = function(demand, tax){
+            return s.q(s.marketPrice(demand, tax));
         };
 
-        s.marketPrice = function(demand) {
-            return s.linearIntersection(demand).y;
+        s.marketPrice = function(demand, tax) {
+            return s.linearIntersection(demand, tax).y;
         };
 
         s.profit = function(p) {
@@ -1665,6 +1674,52 @@ econgraphs.functions.market.LinearSupply = function () {
                 }
             }
         };
+
+        s.taxWedge = function(demand,tax) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var pc = Math.min(s.marketPrice(demand,-tax),yDomain.max),
+                        pf = Math.min(s.marketPrice(demand,tax),yDomain.max),
+                        q = s.quantitySupplied(pf);
+
+                    return [
+                        {x: xDomain.min, y:pc},
+                        {x: q, y: pc},
+                        {x: q, y: pf},
+                        {x: xDomain.min, y: pf}
+                    ]
+
+                }
+            }
+        };
+
+        s.taxDWL = function (demand, tax) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var pc = Math.min(s.marketPrice(demand, -tax), yDomain.max),
+                        pf = Math.min(s.marketPrice(demand, tax), yDomain.max),
+                        qt = s.quantitySupplied(pf),
+                        pe = s.marketPrice(demand),
+                        qe = s.quantitySupplied(pe);
+
+                    return [
+                        {x: qt, y: pc},
+                        {x: qe, y: pe},
+                        {x: qt, y: pf}
+
+                    ]
+
+                }
+            }
+        }
 
         return s;
     }
