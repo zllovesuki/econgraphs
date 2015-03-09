@@ -1494,8 +1494,10 @@ econgraphs.functions.market.LinearDemand = function () {
 
         var d = new kg.functions.Linear({definitionType: 'slope-intercept'});
 
-        d.intercept = 40;
-        d.slope = -1;
+        d.qIntercept = 40;
+        d.dQdP = -1;
+
+        d.marginalRevenue = new kg.functions.Linear({definitionType: 'slope-intercept'});
 
         d.updateParams = function (params) {
 
@@ -1507,19 +1509,21 @@ econgraphs.functions.market.LinearDemand = function () {
 
             // intercept is quantity demanded at P = 0
             if (params.hasOwnProperty('intercept')) {
-                d.intercept = params.intercept;
+                d.qIntercept = params.intercept;
             }
 
             // slope is dQ/dP
             if (params.hasOwnProperty('slope')) {
-                d.slope = params.slope;
+                d.dQdP = params.slope;
             }
 
             // invert the slope and intercept
-            d.setIntercept(-d.intercept / d.slope);
-            d.setSlope(1/ d.slope);
+            d.setIntercept(-d.qIntercept / d.dQdP);
+            d.setSlope(1/ d.dQdP);
 
-            console.log('set intercept to ' + d.intercept + 'and slope to ' + d.slope);
+            // set new slope and intercept for marginal revenue
+            d.marginalRevenue.setIntercept(d.intercept);
+            d.marginalRevenue.setSlope(2*d.slope);
 
             return d;
 
@@ -1527,6 +1531,14 @@ econgraphs.functions.market.LinearDemand = function () {
 
         d.quantityDemanded = function(p) {
             return d.xValue(p);
+        };
+
+        d.maximumPrice = function(q) {
+            return d.yValue(q);
+        };
+
+        d.revenue = function(q) {
+            return q* d.maximumPrice(q);
         };
 
         d.marketPrice = function (supply,tax) {
@@ -1560,6 +1572,119 @@ econgraphs.functions.market.LinearDemand = function () {
                 }
             }
         };
+
+        d.marginalRevenueLoss = function (q1,q2) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var p1 = d.maximumPrice(q1),
+                        p2 = d.maximumPrice(q2),
+                        right = Math.min(q1,q2,xDomain.max),
+                        lowerPrice = Math.min(p1,p2),
+                        higherPrice = Math.max(p1,p2),
+                        bottom = Math.min(lowerPrice, yDomain.max),
+                        top = Math.min(higherPrice, yDomain.max);
+
+                    return [
+                        {x: xDomain.min, y: bottom},
+                        {x: right, y: bottom},
+                        {x: right, y: top},
+                        {x: xDomain.min, y: top}
+                    ]
+
+                }
+            }
+        };
+
+        d.marginalRevenueGain = function (q1, q2) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var p1 = d.maximumPrice(q1),
+                        p2 = d.maximumPrice(q2),
+                        top = Math.min(p1, p2, yDomain.max),
+                        lowerQuantity = Math.min(q1, q2),
+                        higherQuantity = Math.max(q1, q2),
+                        left = Math.min(lowerQuantity, xDomain.max),
+                        right = Math.min(higherQuantity, xDomain.max);
+
+                    return [
+                        {x: left, y: yDomain.min},
+                        {x: right, y: yDomain.min},
+                        {x: right, y: top},
+                        {x: left, y: top}
+                    ]
+
+                }
+            }
+        };
+
+        d.unchangedRevenue = function (q1, q2) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var quantity = Math.min(q1, q2),
+                        price = d.maximumPrice(quantity),
+                        top = Math.min(price, yDomain.max),
+                        right = Math.min(quantity, xDomain.max);
+
+                    return [
+                        {x: xDomain.min, y: yDomain.min},
+                        {x: right, y: yDomain.min},
+                        {x: right, y: top},
+                        {x: xDomain.min, y: top}
+                    ]
+
+                }
+            }
+        };
+
+        d.totalRevenue = function (quantity) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var price = d.maximumPrice(quantity),
+                        top = Math.min(price, yDomain.max),
+                        right = Math.min(quantity, xDomain.max);
+
+                    return [
+                        {x: xDomain.min, y: yDomain.min},
+                        {x: right, y: yDomain.min},
+                        {x: right, y: top},
+                        {x: xDomain.min, y: top}
+                    ]
+
+                }
+            }
+        };
+
+        d.totalRevenueCurve = function () {
+            return {
+                points: function (xDomain, yDomain) {
+                    return functionPoints(d.revenue, xDomain, yDomain);
+                }
+            }
+        };
+
+        d.mrTangentLine = function (q) {
+            var point = {x: q, y: d.revenue(q)},
+                slope = d.marginalRevenue.yValue(q),
+                l = new kg.functions.Linear({definitionType: 'point-slope', point: point, slope: slope});
+            return l;
+        };
+
 
         d.updateParams(params);
 
@@ -1722,6 +1847,155 @@ econgraphs.functions.market.LinearSupply = function () {
         }
 
         return s;
+    }
+
+}();
+
+// market/monopoly.js
+/**
+ * Created by cmakler on 3/3/15.
+ */
+
+econgraphs.functions.market.Monopoly = function () {
+
+    return function (params) {
+
+        var m = {};
+
+        // We're assuming a monopoly's cost structure is defined by its (linear) marginal cost
+
+        m.marginalCost = new kg.functions.Linear({definitionType: 'slope-intercept'});
+
+        m.marginalCost.setSlope(0);
+        m.marginalCost.setIntercept(1);
+
+        // If MC =
+
+        m.fixedCost = 12;
+
+        m.updateParams = function (params) {
+
+            if (typeof params == 'function') {
+                params = params();
+            }
+
+            params = params || {};
+
+            if (params.hasOwnProperty('mcSlope')) {
+                m.marginalCost.setSlope(params['mcSlope']);
+            }
+
+            if (params.hasOwnProperty('mcIntercept')) {
+                m.marginalCost.setIntercept(params['mcIntercept']);
+            }
+
+            if (params.hasOwnProperty('fixedCost')) {
+                m.fixedCost = params['fixedCost']
+            }
+
+            return m;
+
+        };
+
+        m.updateParams(params);
+
+        // total cost is FC plus the integral of marginal cost
+        // MC = a + bq
+        // TC = FC + aq + 0.5bq^2
+        m.totalCost = function (q) {
+            return m.fixedCost + q * m.marginalCost.intercept + 0.5 * q * q * m.marginalCost.slope;
+        };
+
+        m.averageCost = function (q) {
+            return m.totalCost(q)/q;
+        };
+
+        m.totalCostCurve = function () {
+            return {
+                points: function (xDomain, yDomain) {
+                    return functionPoints(m.totalCost, xDomain, yDomain);
+                }
+            }
+        };
+
+        m.averageCostCurve = function () {
+            return {
+                points: function (xDomain, yDomain) {
+                    return functionPoints(m.averageCost, xDomain, yDomain);
+                }
+            }
+        };
+
+        m.optimalCondition = function(demand) {
+            return m.marginalCost.linearIntersection(demand.marginalRevenue)
+        };
+
+        m.optimalOffer = function(demand) {
+            return {x: m.Q(demand), y: m.P(demand)};
+        };
+
+        m.Q = function(demand) {
+            return m.optimalCondition(demand).x;
+        };
+
+        m.P = function (demand) {
+            return demand.yValue(m.Q(demand));
+        };
+
+        m.profit = function(demand) {
+            var offer = m.optimalOffer(demand),
+                revenue = offer.x * offer.y,
+                cost = m.totalCost(offer.x);
+
+            return revenue - cost;
+        };
+
+        m.profitArea = function (demand) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var price = Math.min(m.P(demand), yDomain.max),
+                        quantity = Math.min(m.Q(demand), xDomain.max),
+                        ac = Math.min(m.averageCost(quantity), yDomain.max);
+
+                    return [
+                        {x: xDomain.min, y: ac},
+                        {x: quantity, y: ac},
+                        {x: quantity, y: price},
+                        {x: xDomain.min, y: price}
+                    ]
+                }
+            }
+        };
+
+        m.producerSurplus = function(demand) {
+            return {
+                area: function(xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    var price = Math.min(m.P(demand), yDomain.max),
+                        quantity = Math.min(m.Q(demand), xDomain.max),
+                        mcZero = Math.min(m.marginalCost.yValue(0), yDomain.max),
+                        mcQuantity = Math.min(m.marginalCost.yValue(quantity), yDomain.max);
+
+                    return [
+                        {x: xDomain.min, y: mcZero},
+                        {x: quantity, y: mcQuantity},
+                        {x: quantity, y: price},
+                        {x: xDomain.min, y: price}
+                    ]
+
+                }
+            }
+        };
+
+
+        return m;
     }
 
 }();

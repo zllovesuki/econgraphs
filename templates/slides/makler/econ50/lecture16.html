@@ -1,0 +1,697 @@
+{% extends 'slides/slide-template.html' %}
+
+{% block slides %}
+
+    <section>
+        <h2>Econ 50</h2>
+        <br/>
+        <hr/>
+        <br/>
+
+        <h2>Lecture 16</h2>
+
+        <h1>Market Power:</h1>
+
+        <h1>Monopoly and Monopsony</h1>
+
+        <br/>
+        <hr/>
+        <br/>
+
+        <h3>March 9, 2015</h3>
+        <hr>
+        <br/>
+
+        <p style="color:grey">Controls: N for next slide | P for previous slide | ESC for map | refresh if glitchy</p>
+
+    </section>
+    <section>
+        <h1>Today's Agenda</h1>
+        <hr/>
+        <h2 class="fragment">Market Power</h2>
+        <h2 class="fragment">Marginal Revenue</h2>
+        <h2 class="fragment">Monopoly Profit Maximization</h2>
+        <h2 class="fragment">Quantifying Market Power</h2>
+        <hr/>
+        <h2>Ten Minute Break</h2>
+        <hr/>
+        <h2 class="fragment">Monopsony</h2>
+        <h2 class="fragment">Welfare and Regulation</h2>
+    </section>
+    <section>
+        <section>
+            <h1>First click</h1>
+            <hr/>
+            <h2>How much do you remember for Econ 1?</h2>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>If a firm gains monopoly power</h2>
+                <h2>in the market for its product, then it will:</h2>
+                <clicker-option letter="A">Increase production</clicker-option>
+                <clicker-option letter="B">Charge P > MC</clicker-option>
+                <clicker-option letter="C">Reduce wages</clicker-option>
+                <clicker-option letter="D">Both A and B</clicker-option>
+                <clicker-option letter="E">A, B, and C</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>For a monopolist, the demand curve</h2>
+                <h2>can also be interpreted as:</h2>
+                <clicker-option letter="A">supply</clicker-option>
+                <clicker-option letter="B">average revenue</clicker-option>
+                <clicker-option letter="C">marginal cost</clicker-option>
+                <clicker-option letter="D">average benefit</clicker-option>
+            </clicker-question>
+        </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Market power</h1>
+            <hr/>
+            <h2>Don’t take prices as given.</h2>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Perfect Competition</h1>
+                </div>
+                <div class="col-md-6">
+                    <h1>Monopoly/Monopsony</h1>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>Firms take prices as given</h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>Firms set prices<br/>(have <b>market power</b>)</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>Can always buy/sell more at the market price</h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>Increasing quantity (often) requires a price change</h2>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1>Monopoly as Metaphor</h1>
+            <hr/>
+            <h2 class="fragment">Actual monopolies are rare</h2>
+            <hr/>
+            <h2 class="fragment">Firms with some market power are common</h2>
+            <hr/>
+            <h2 class="fragment">We'll use "monopoly" as a shorthand for any firm<br/> that faces a downward-sloping demand curve,<br/>instead of taking prices as given.</h2>
+        </section>
+       <section>
+            <h1>Single price monopolist</h1>
+            <hr/>
+            <h2 class="fragment">Sells all units for the same price</h2>
+
+            <h2 class="fragment">If it produces <span rendered-math>Q</span> units, sells them at <span rendered-math>P(Q)</span>
+            </h2>
+
+            <h2 class="fragment">To sell more, has to lower price <span
+                    rendered-math>\left(\frac{dP}{dQ} < 0\right)</span></h2>
+
+            <h2 class="fragment"><b>Marginal revenue</b> is the <br/>net change in total revenue<br/>from an increase in
+                Q:</h2>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Demand</h1>
+                </div>
+                <div class="col-md-6">
+                    <h1>Inverse Demand</h1>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>“How much quantity (Q)<br/>do consumers demand<br/>at price P?”</h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>“What's the highest price (P)<br/>that I can charge<br/>and still sell quantity Q?”</h2>
+
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h1 rendered-math>Q^D(P) = 100 - 2P</h1>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h1 rendered-math>P(Q) = 50 - \frac{1}{2}Q</h1>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="Q1" value="20"/>
+                <param name="Q2" value="30"/>
+                <function name="d" category="market" form="LinearDemand" fn-params="{intercept:100}"></function>
+
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <graph height="500" width="500">
+                            <axis dim="x" min="0" max="120" title="Quantity (Units)" ticks="0"></axis>
+                            <axis dim="y" min="0" max="120" title="Price (Dollars per unit)" ticks="0"></axis>
+                            <line fn="functions.d" color="#383D96" label="P(Q) = 100 - Q"
+                                  label-offset-y="-10"></line>
+                            <area fn="functions.d.unchangedRevenue(params.Q1,params.Q2)">
+                            <area fn="functions.d.marginalRevenueLoss(params.Q1,params.Q2)" color="red">
+                            <area fn="functions.d.marginalRevenueGain(params.Q1,params.Q2)" color="green">
+                            <point point="[params.Q1, functions.d.yValue(params.Q1)]" droplines="both" label="A" xlabel="{{ params.Q1 }}" ylabel="{{ functions.d.yValue(params.Q1) }}"></point>
+                            <point point="[params.Q2, functions.d.yValue(params.Q2)]" droplines="both" label="B" xlabel="{{ params.Q2 }}" ylabel="{{ functions.d.yValue(params.Q2) }}"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p rendered-math expression="Q_A: {{ params.Q1 }}"></p>
+                                <slider value="params.Q1" min="1" max="params.Q2" precision="1"></slider>
+                            </div>
+                            <div class="col-md-6">
+                                <p rendered-math expression="Q_B: {{ params.Q2 }}"></p>
+                                <slider value="params.Q2" min="params.Q1" max="99" precision="1"></slider>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p rendered-math expression="P_A: \${{ functions.d.maximumPrice(params.Q1)}}"></p>
+
+                                <p rendered-math expression="TR_A: \${{ functions.d.maximumPrice(params.Q1)*params.Q1 | number:0}}"></p>
+
+                            </div>
+                            <div class="col-md-6">
+                                <p rendered-math expression="P_B: \${{ functions.d.maximumPrice(params.Q2)}}"></p>
+
+                                <p rendered-math
+                                   expression="TR_B: \${{ functions.d.maximumPrice(params.Q2)*params.Q2 | number:0}}"></p>
+
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <table class="table">
+                            <tr>
+                                <td>Change in revenue:</td>
+                                <td>${{ functions.d.maximumPrice(params.Q2)*params.Q2 -
+                                    functions.d.maximumPrice(params.Q1)*params.Q1 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="color:green">Gain from new sales:</td>
+                                </tr>
+                            <tr>
+                                <td style="color:green;text-align: right" rendered-math
+                                               expression="({{ params.Q2 }} - {{ params.Q1 }}) \times \${{ functions.d.maximumPrice(params.Q2) }} ="/>
+                                </td>
+
+                                <td style="color:green" rendered-math
+                                    expression="\${{ (params.Q2 - params.Q1)*functions.d.maximumPrice(params.Q2)}}"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="color:red">Loss from lower price</td>
+                            </tr>
+                            <tr>
+                                <td style="color:red; text-align:right" rendered-math
+                                    expression="(\${{ functions.d.maximumPrice(params.Q1) }} - \${{ functions.d.maximumPrice(params.Q2) }}) \times {{ params.Q1 }} ="></td>
+                                <td style="color:red" rendered-math
+                                    expression="\${{ (functions.d.maximumPrice(params.Q1) - functions.d.maximumPrice(params.Q2))*params.Q1 }}"></td>
+
+                            </tr>
+                        </table>
+
+
+
+
+                    </div>
+
+                </div>
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="Q" value="20"/>
+                <param name="elasticity" value="1"/>
+                <function name="d" category="market" form="LinearDemand" fn-params="{intercept:100}"></function>
+
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <h3>Quantity and Price</h3>
+                        <div style="position:absolute;top:100px;left:0px;width:500px;height:500px">
+                            <graph height="500" width="500">
+                                <axis dim="x" min="0" max="120" title="Quantity (Units)" ticks="0"></axis>
+                                <axis dim="y" min="0" max="120" title="Price (Dollars per unit)" ticks="0"></axis>
+                                <line fn="functions.d.updateParams({slope:-params.elasticity, intercept:(1+params.elasticity)*50})" color="#383D96" label="P(Q)"
+                                      label-offset-y="-10"></line>
+                                <area fn="functions.d.totalRevenue(params.Q)" color="green">
+
+                                <point point="[params.Q, functions.d.maximumPrice(params.Q)]" droplines="both"
+                                       xlabel="{{ params.Q }}" ylabel="{{ functions.d.yValue(params.Q) }}" color="green"></point>
+                                <point point="[params.Q, functions.d.marginalRevenue.yValue(params.Q)]"
+                                       show="params.showMR" droplines="both"
+                                       ylabel="{{ functions.d.marginalRevenue.yValue(params.Q) }}"></point>
+                                <line fn="functions.d.marginalRevenue" show="params.showMR" label="MR"
+                                      label-offset-y="-10"></line>
+
+                            </graph>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-5">
+                        <h3>Total Revenue</h3>
+
+                        <div style="position:absolute;top:100px;left:0px;width:500px;height:500px">
+                            <graph height="500" width="500">
+                                <axis dim="x" min="0" max="120" title="Quantity (Units)" ticks="0"></axis>
+                                <axis dim="y" min="0" max="3000" title="Total Revenue (Dollars)" ticks="0"></axis>
+                                <curve fn="functions.d.totalRevenueCurve()" color="green" label="TR"
+                                      label-offset-y="-10"></curve>
+                                <point point="[params.Q, functions.d.revenue(params.Q)]" droplines="both"
+                                       xlabel="{{ params.Q }}" ylabel="{{ functions.d.revenue(params.Q) }}"></point>
+                                <line fn="functions.d.mrTangentLine(params.Q)" show="params.showMR"
+                                      label="\text{slope}=MR=\${{ functions.d.marginalRevenue.yValue(params.Q)}}\text{ per unit}"></line>
+
+
+                            </graph>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="well">
+                            <p rendered-math expression="Q: {{ params.Q }}"></p>
+                            <slider value="params.Q" min="1" max="99" precision="1"></slider>
+                            <toggle param="params.showMR" init="false">{{ params.showMR ? 'Hide' : 'Show' }} MR</toggle>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture2/besanko_5e_fig_02_17.jpg') }}" width="60%"
+                 height="60%">
+
+            <p style="color:grey">Besanko & Braeutigam, <i>Microeconomics</i>, 5th ed., Figure 2.17</p>
+        </section>
+        <section>
+            <h2>Calculating Marginal Revenue</h2>
+            <hr/>
+            <h2>Remember from calculus: product rule:</h2>
+            <h2 rendered-math>\frac{d}{dx}f(x)g(x) = f(x) \times \frac{dg(x)}{dx} + \frac{df(x)}{dx} \times g(x)</h2>
+            <hr/>
+            <h2 class="fragment">and by extension, if <span rendered-math>g(x) = x</span>:</h2>
+
+            <h2 rendered-math class="fragment">\frac{d}{dx}f(x)x = f(x) \times 1 + \frac{df(x)}{dx} \times x</h2>
+            <hr/>
+            <h2 class="fragment">Therefore, since <span rendered-math>TR(Q) = P(Q)Q</span>:</h2>
+            <table align="center">
+                <tr class="fragment">
+                    <td style="text-align: right; width:500px"><h2 rendered-math>MR</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center"><h2 rendered-math style="color:green">P(Q) \times 1</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>+</h2></td>
+                    <td style="text-align: center"><h2 rendered-math style="color:red">\frac{dP}{dQ} \times Q</h2></td>
+
+                </tr>
+                <tr class="fragment">
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: center; color:green">(revenue gained<br/>on new sales)</td>
+                    <td></td>
+                    <td style="text-align: center; color:red">(revenue lost<br/>on existing sales)</td>
+
+                </tr>
+            </table>
+
+        </section>
+        <section>
+            <h1>Marginal Revenue and Elasticity</h1>
+            <hr/>
+            <h2><span rendered-math>\displaystyle{\epsilon_{Q,P} = \frac{dQ}{dP}\frac{P}{Q}}</span></h2>
+            <hr/>
+            <h2 class="fragment">We can express MR in terms of P and elasticity:</h2>
+            <hr/>
+            <h2><span rendered-math class="fragment">\displaystyle{MR = P + \frac{dP}{dQ}Q}</span><span rendered-math class="fragment">\displaystyle{ = P\left(1 + \frac{dP}{dQ}\frac{Q}{P}\right)}</span><span
+                    rendered-math class="fragment">\displaystyle{ = P\left(1 + \frac{1}{\epsilon_{Q,P}}\right)}</span></h2>
+        </section>
+        <section>
+            <clicker-question>
+                <h2>We just showed that <span rendered-math>\displaystyle{MR = P\left(1 + \frac{1}{\epsilon_{Q,P}}\right)}</span>. </h2>
+                <h2>For a firm facing perfectly elastic demand, therefore</h2>
+                <h2>marginal revenue is equal to:</h2>
+                <clicker-option letter="A">Zero</clicker-option>
+                <clicker-option letter="B">One</clicker-option>
+                <clicker-option letter="C">Infinity</clicker-option>
+                <clicker-option letter="D">Price</clicker-option>
+            </clicker-question>
+        </section>
+
+
+    </section>
+
+    <section>
+        <section>
+            <h1>Monopoly Profit Maximization</h1>
+        </section>
+        <section>
+            <h2>Profit maximization:</h2>
+
+            <div style="height:50px; color:white">.</div>
+            <table class="table">
+                <tr class="fragment">
+                    <td style="text-align: right"><h2>Total Profit</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center" colspan="3"><h2>Total Revenue</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2>Total Costs</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align: right"><h2 rendered-math>\Pi(Q)</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center" colspan="3"><h2 rendered-math>P(Q) \times Q</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2 rendered-math>TC(Q)</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td style="text-align: right"><h2>Marginal Profit</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center" colspan="3"><h2>Marginal Revenue</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2>Marginal Cost</h2></td>
+                </tr>
+
+                <tr class="fragment">
+                    <td style="text-align: right"><h2 rendered-math>\frac{d\Pi(Q)}{dQ}</h2></td>
+                    <td><h2 rendered-math>=</h2></td>
+                    <td style="text-align: center"><h2 rendered-math style="color:green">P(Q) \times 1</h2></td>
+                    <td style="text-align: center"><h2 rendered-math>+</h2></td>
+                    <td style="text-align: center"><h2 rendered-math style="color:red">\frac{dP}{dQ} \times Q</h2></td>
+                    <td><h2 rendered-math>-</h2></td>
+                    <td><h2 rendered-math>MC(Q)</h2></td>
+                </tr>
+                <tr class="fragment">
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: center; color:green">(revenue gained<br/>on new sales)</td>
+                    <td></td>
+                    <td style="text-align: center; color:red">(revenue lost<br/>on existing sales)</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+            </table>
+        </section>
+        <section>
+            <h1>Monopoly Profit Maximization</h1>
+            <p>[General Procedure when Everything's Cool]</p>
+            <hr/>
+            <ol>
+                <li>Find the Q that sets MR = MC</li>
+                <li>Find the P that consumers will pay for that Q</li>
+                <li>Profits = P*Q - TC(Q) = (P - AC)*Q</li>
+            </ol>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="demand" value="10"/>
+                <param name="demandSlope" value="-1"/>
+                <param name="fixedCost" value="12"/>
+                <param name="mcIntercept" value="2"/>
+                <param name="mcSlope" value="0"/>
+                <function name="d" category="market" form="LinearDemand"></function>
+                <function name="m" category="market" form="Monopoly"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="20" title="Quantity (Units)"
+                                  ticks="5"></axis>
+                            <axis dim="y" min="0" max="20" title="Dollars per Unit"></axis>
+                            <line fn="functions.d.updateParams({intercept:params.demand, slope:params.demandSlope})" color="#383D96" label="D"
+                                  label-offset-y="-10"></line>
+                            <line fn="functions.m.updateParams(params).marginalCost" color="#D67E2C" label="MC"></line>
+                            <line fn="functions.d.marginalRevenue" label="MR"
+                                  label-offset-y="-10"></line>
+
+                            <curve fn="functions.m.averageCostCurve()" color="#0885A1" label="AC" show="params.showAC"></curve>
+                            <area fn="functions.m.profitArea(functions.d)"
+                                  color="{{ functions.m.profit(functions.d) > 0 ? 'green' : 'red' }}" show="params.showProfit">
+                            <!--<area fn="functions.d.consumerSurplus(functions.m.P(functions.d))"
+                                  color="#383D96">
+                            <area fn="functions.m.producerSurplus(functions.d)"
+                                  color="#D67E2C">-->
+
+                            <point point="functions.m.optimalCondition(functions.d)" color="#D67E2C"></point>
+                            <point point="functions.m.optimalOffer(functions.d)" droplines="both" ylabel="P^*"
+                                   xlabel="Q^*"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="FC: \${{ params.fixedCost | number:2}}"></p>
+                            <slider value="params.fixedCost" min="0" max="24" precision="0.5"></slider>
+                            <p rendered-math expression="MC\text{intercept}: \${{ params.mcIntercept | number:2}}"></p>
+                            <slider value="params.mcIntercept" min="0" max="10" precision="0.5"></slider>
+                            <p rendered-math expression="MC\text{ slope}: \${{ params.mcSlope | number:2}}"></p>
+                            <slider value="params.mcSlope" min="0" max="1" precision="0.01"></slider>
+                            <p rendered-math
+                               expression="\text{Demand Intercept}: {{ params.demand | number:0}}"></p>
+
+                            <slider value="params.demand" min="5" max="20" precision="1"></slider>
+                            <p rendered-math
+                               expression="\text{Demand Slope}: {{ params.demandSlope | number:1}}"></p>
+                            <slider value="params.demandSlope" min="-5" max="-0.5" precision="0.1"></slider>
+                            <hr/>
+                            <toggle param="params.showAC">{{ params.showAC ? 'Hide' : 'Show' }} AC</toggle>
+                            <hr/>
+                            <toggle param="params.showProfit">{{ params.showProfit ? 'Hide' : 'Show' }} Profit</toggle>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="demand" value="100"/>
+                <param name="demandSlope" value="-1"/>
+                <param name="fixedCost" value="200"/>
+                <param name="mcIntercept" value="10"/>
+                <param name="mcSlope" value="0.5"/>
+                <function name="d" category="market" form="LinearDemand"></function>
+                <function name="m" category="market" form="Monopoly"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <div style="position:absolute;top:0px;left:0px;width:800px;height:400px;">
+                        <graph height="400" width="800">
+                            <axis dim="x" min="0" max="120" title=""
+                                  ticks="0"></axis>
+                            <axis dim="y" min="0" max="2500" title="Dollars" ticks="0"></axis>
+                            <curve fn="functions.d.totalRevenueCurve()" color="green" label="TR"
+                                   label-offset-y="-10"></curve>
+                            <curve fn="functions.m.totalCostCurve()" color="#D67E2C" label="TC"
+                                   label-offset-y="-10"></curve>
+                            <point point="[functions.m.Q(functions.d), functions.d.revenue(functions.m.Q(functions.d))]" color="green" droplines="both" ylabel="P^* \times Q^*" xlabel="Q^*"></point>
+                            <point point="[functions.m.Q(functions.d), functions.m.totalCost(functions.m.Q(functions.d))]"
+                                   droplines="horizontal" ylabel="TC(Q^*)" color="#D67E2C"></point>
+                            <line fn="functions.d.mrTangentLine(params.Q)" show="params.showMR"
+                                  label="\text{slope}=MR=\${{ functions.d.marginalRevenue.yValue(functions.m.Q(functions.d))}}\text{ per unit}"></line>
+                        </graph>
+                        </div>
+                        <div style="position:absolute;top:350px;left:0px;width:800px;height:400px;">
+                            <graph height="400" width="800">
+                                <axis dim="x" min="0" max="120" title="Quantity (Units)"
+                                      ticks="0"></axis>
+                                <axis dim="y" min="0" max="120" title="Dollars per Unit" ticks="0"></axis>
+                                <line fn="functions.d.updateParams({intercept:params.demand, slope:params.demandSlope})"
+                                      color="#383D96" label="D"
+                                      label-offset-y="-10"></line>
+                                <line fn="functions.m.updateParams(params).marginalCost" color="#D67E2C"
+                                      label="MC"></line>
+                                <line fn="functions.d.marginalRevenue" label="MR"
+                                      label-offset-y="-10"></line>
+
+                                <curve fn="functions.m.averageCostCurve()" color="#0885A1" label="AC"
+                                       show="params.showAC"></curve>
+                                <point point="[functions.m.Q(functions.d),functions.m.averageCost(functions.m.Q(functions.d))]" color="#0885A1"
+                                       show="params.showAC" droplines="horizontal" ylabel="AC(Q^*)"></point>
+
+                                <area fn="functions.m.profitArea(functions.d)"
+                                      color="{{ functions.m.profit(functions.d) > 0 ? 'green' : 'red' }}"
+                                      show="params.showProfit">
+                                <!--<area fn="functions.d.consumerSurplus(functions.m.P(functions.d))"
+                                      color="#383D96">
+                                <area fn="functions.m.producerSurplus(functions.d)"
+                                      color="#D67E2C">-->
+
+                                <point point="functions.m.optimalCondition(functions.d)" color="#D67E2C" droplines="horizontal" ylabel="MC = \color{black}{MR}"></point>
+                                <point point="functions.m.optimalOffer(functions.d)" droplines="both" ylabel="P^*"
+                                       xlabel="Q^*"></point>
+                            </graph>
+                        </div>
+                        </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p>Fixed Cost</p>
+                            <slider value="params.fixedCost" min="0" max="600" precision="1"></slider>
+                            <p>MC Intercept</p>
+                            <slider value="params.mcIntercept" min="0" max="40" precision="1"></slider>
+                            <p>MC Slope</p>
+                            <slider value="params.mcSlope" min="0" max="1" precision="0.01"></slider>
+                            <p>Demand Intercept</p>
+                            <slider value="params.demand" min="60" max="120" precision="1"></slider>
+                            <p>Deamnd Slope</p>
+                            <slider value="params.demandSlope" min="-5" max="-0.5" precision="0.1"></slider>
+                            <hr/>
+                            <toggle param="params.showAC">{{ params.showAC ? 'Hide' : 'Show' }} AC</toggle>
+                            <hr/>
+                            <toggle param="params.showProfit">{{ params.showProfit ? 'Hide' : 'Show' }} Profit</toggle>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+
+    </section>
+    <section>
+        <section>
+            <h1>Inverse Elasticity Pricing Rule</h1>
+            <hr/>
+            <h2>How much is price set above marginal cost?</h2>
+        </section>
+        <section>
+            <h2>INVERSE ELASTICITY PRICING RULE</h2>
+            <hr/>
+            <h2>Recall from before: <span
+                    rendered-math>\displaystyle{MR = P\left(1 + \frac{1}{\epsilon_{Q,P}}\right)}</span>. </h2>
+            <hr/>
+            <h2>Profit maximization => set MC = MR:</h2>
+            <h2 rendered-math>\displaystyle{MC(Q^*) = P^*\left(1 + \frac{1}{\epsilon_{Q,P}}\right)}</h2>
+            <hr/>
+            <h2>Rearrange:</h2>
+
+            <h2 rendered-math>\displaystyle{\frac{P^* - MC(Q^*)}{P^*} = -\frac{1}{\epsilon_{Q,P}}}</h2>
+        </section>
+        <section>
+            <h2>LERNER INDEX: Quantifying Market Power</h2>
+            <hr/>
+            <div class="fragment">
+                <h2>Inverse Elasticity Pricing Rule: <span rendered-math>\displaystyle{\frac{P^* - MC(Q^*)}{P^*} = -\frac{1}{\epsilon_{Q,P}}}</span></h2>
+            </div>
+            <hr/>
+            <div class="fragment">
+                <h2>We don't observe demand elasticity directly;</h2>
+                <h2>but we can observe price markup above marginal cost!</h2>
+            </div>
+            <hr/>
+            <div class="fragment">
+                <h2>Lerner Index: <span rendered-math>\displaystyle{\frac{P - MC}{P}}</span></h2>
+                <h2>0 for a perfectly competitive industry;</h2>
+                <h2>increases with market power</h2>
+            </div>
+        </section>
+    </section>
+
+
+    <section>
+        <h1>Ten Minute Break</h1>
+    </section>
+    <section>
+        <section>
+            <h1>Monopsony</h1>
+            <hr/>
+            <h2>Buyer with market power</h2>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2><b>Monopoly</b></h2>
+                </div>
+                <div class="col-md-6">
+                    <h2><b>Monopsony</b></h2>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>Market power in<br/><b>product market</b></h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>Market power in<br/><b>input market</b></h2>
+                </div>
+            </div>
+            <hr/><div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>Faces downward-sloping<br/><b>demand curve</b></h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>Faces upward-sloping<br/><b>supply curve</b></h2>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6 fragment">
+                    <h2 rendered-math>MR = P + \frac{dP}{dQ}Q</h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2 rendered-math>ME_L = w + \frac{dw}{dL}L</h2>
+                </div>
+            </div>
+            <hr/><div class="row">
+                <div class="col-md-6 fragment">
+                    <h2>(price received minus losses from lowering price on existing sales)</h2>
+                </div>
+                <div class="col-md-6 fragment">
+                    <h2>(wage paid plus expenses of giving raises to current workers)</h2>
+                </div>
+            </div>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='') }}">
+        </section>
+    </section>
+{% endblock %}
