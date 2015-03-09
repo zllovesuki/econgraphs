@@ -140,6 +140,29 @@ econgraphs.functions.market.Monopoly = function () {
             }
         };
 
+        m.deadWeightLoss = function (demand) {
+            return {
+                area: function (xDomain, yDomain) {
+
+                    xDomain = domainAsObject(xDomain);
+                    yDomain = domainAsObject(yDomain);
+
+                    // TODO handle cases where one or more points is off the graph
+
+                    var monopolyPrice = m.P(demand),
+                        monopolyQuantity = m.Q(demand),
+                        monopolyMC = m.marginalCost.yValue(monopolyQuantity);
+
+                    return [
+                        {x: monopolyQuantity, y: monopolyMC},
+                        {x: monopolyQuantity, y: monopolyPrice},
+                        m.marginalCost.linearIntersection(demand)
+                    ]
+
+                }
+            }
+        };
+
 
         return m;
     }

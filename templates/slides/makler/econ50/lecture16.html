@@ -691,7 +691,129 @@
             </div>
         </section>
         <section>
-            <img src="{{ url_for('static', filename='') }}">
+            <img src="{{ url_for('static', filename='images/econ50/lecture16/besanko_5e_fig_11_18.jpg') }}">
         </section>
+        <section>
+            <clicker-question>
+                <h2>If a firm is a monopsony purchaser of labor, then it will pay:</h2>
+                <clicker-option letter="A">a higher wage, the more elastic the labor supply</clicker-option>
+                <clicker-option letter="B">a higher wage, the less elastic the labor supply</clicker-option>
+            </clicker-question>
+        </section>
+        <section>
+            <h1>Elasticity and Monopsony</h1>
+            <hr/>
+            <h2>Analog to the IEPR:</h2>
+            <hr/>
+            <h2 rendered-math>\displaystyle{\frac{MRP_L - w}{w} = \frac{1}{\epsilon_{L_w}}}</h2>
+            <hr/>
+            <h2 class="fragment">Left-hand side: amount by which firms with market power underpay workers</h2>
+            <h2 class="fragment">Right-hand-side: zero when labor supply perfectly elastic</h2>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Welfare Analysis of Market Power</h1>
+            <hr/>
+            <h2>Producer Surplus and Consumer Surplus</h2>
+            <h2>Price Controls</h2>
+        </section>
+        <section>
+            {% raw %}
+            <model>
+
+                <param name="demand" value="10"/>
+                <param name="demandSlope" value="-1"/>
+                <param name="fixedCost" value="12"/>
+                <param name="mcIntercept" value="2"/>
+                <param name="mcSlope" value="0"/>
+                <function name="d" category="market" form="LinearDemand"></function>
+                <function name="m" category="market" form="Monopoly"></function>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="20" title="Quantity (Units)"
+                                  ticks="5"></axis>
+                            <axis dim="y" min="0" max="20" title="Dollars per Unit"></axis>
+                            <line fn="functions.d.updateParams({intercept:params.demand, slope:params.demandSlope})"
+                                  color="#383D96" label="D"
+                                  label-offset-y="-10"></line>
+                            <line fn="functions.m.updateParams(params).marginalCost" color="#D67E2C" label="MC"></line>
+                            <line fn="functions.d.marginalRevenue" label="MR"
+                                  label-offset-y="-10"></line>
+
+                            <curve fn="functions.m.averageCostCurve()" color="#0885A1" label="AC"
+                                   show="params.showAC"></curve>
+                            <area fn="functions.m.profitArea(functions.d)"
+                                  color="{{ functions.m.profit(functions.d) > 0 ? 'green' : 'red' }}"
+                                  show="params.showProfit">
+                            <area fn="functions.d.consumerSurplus(functions.m.P(functions.d))"
+                                  color="#383D96">
+                            <area fn="functions.m.producerSurplus(functions.d)"
+                                  color="#D67E2C">
+                            <area fn="functions.m.deadWeightLoss(functions.d)">
+
+                            <point point="functions.m.optimalCondition(functions.d)" color="#D67E2C"></point>
+                            <point point="functions.m.optimalOffer(functions.d)" droplines="both" ylabel="P^*"
+                                   xlabel="Q^*"></point>
+                        </graph>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="well">
+                            <p rendered-math expression="FC: \${{ params.fixedCost | number:2}}"></p>
+                            <slider value="params.fixedCost" min="0" max="24" precision="0.5"></slider>
+                            <p rendered-math expression="MC\text{intercept}: \${{ params.mcIntercept | number:2}}"></p>
+                            <slider value="params.mcIntercept" min="0" max="10" precision="0.5"></slider>
+                            <p rendered-math expression="MC\text{ slope}: \${{ params.mcSlope | number:2}}"></p>
+                            <slider value="params.mcSlope" min="0" max="1" precision="0.01"></slider>
+                            <p rendered-math
+                               expression="\text{Demand Intercept}: {{ params.demand | number:0}}"></p>
+
+                            <slider value="params.demand" min="5" max="20" precision="1"></slider>
+                            <p rendered-math
+                               expression="\text{Demand Slope}: {{ params.demandSlope | number:1}}"></p>
+                            <slider value="params.demandSlope" min="-5" max="-0.5" precision="0.1"></slider>
+                            <hr/>
+                            <toggle param="params.showAC">{{ params.showAC ? 'Hide' : 'Show' }} AC</toggle>
+                            <hr/>
+                            <toggle param="params.showProfit">{{ params.showProfit ? 'Hide' : 'Show' }} Profit</toggle>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </model>
+
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Problem!</h1>
+            <hr/>
+            <h2>Maximizing CS + PS might cause the monopoly to leave the market...</h2>
+            <h2 class="fragment">Remember: a "natural" monopoly has decreasing AC, but AC > MC.</h2>
+            <h2 class="fragment">Setting P = MC maximizes surplus but causes negative profits!!</h2>
+        </section>
+        <section>
+            <h1>Average Cost Pricing</h1>
+            <hr/>
+            <h2>Impose a zero-economic-profit condition on a monopoly: P = AC</h2>
+            <h2>Does not necessarily maximize </h2>
+        </section>
+    </section>
+    <section>
+        <h1>Moral of the Story</h1>
+        <hr/>
+        <h2 class="fragment">Market Power is EVERYWHERE, in greater or lesser degree</h2>
+        <h2 class="fragment">Huge impact for policymaking and industry</h2>
+        <h2 class="fragment">Leads into some of the most fun models in econ... :)</h2>
+    </section>
+    <section>
+        <h1>Next time: final class!</h1>
+        <hr/>
+        <h2>Some worked examples of monopoly and monopsony</h2>
+        <h2>Quick exposition of some topics we've missed</h2>
+        <h2>Looking ahead at the econ major</h2>
     </section>
 {% endblock %}
