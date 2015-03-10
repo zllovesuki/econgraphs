@@ -65,7 +65,8 @@
             "production/translog.js",
             "market/market.js",
             "market/lineardemand.js",
-            "market/linearsupply.js"
+            "market/linearsupply.js",
+            "market/monopoly.js"
         ]
     },
     {
