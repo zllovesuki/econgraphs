@@ -15,7 +15,7 @@
         <hr/>
         <br/>
 
-        <h3>March 2, 2015</h3>
+        <h3>March 11, 2015</h3>
         <hr>
         <br/>
 
@@ -39,22 +39,18 @@
         <section>
             <h1>Monopoly: Worked Example</h1>
             <hr/>
-            <h2>Cost function: <span rendered-math>TC(w,r,Q) = F_0 + 100w^\frac{1}{2}r^frac{1}{2}Q</span></h2>
+            <h2>Cost function: <span rendered-math>TC(w,r,Q) = F_0 + 100w^\frac{1}{2}r^\frac{1}{2}Q</span></h2>
 
             <h2>Demand: <span rendered-math>Q^D(P) = 400 - \frac{1}{2}P</span></h2>
             <hr/>
             <ol>
                 <li>Derive the monopoly's optimal price and quantity.</li>
-                <li>Find he monopoly's maximized profits.</li>
-                <li>Find the firm's conditional demands for labor and capital</li>
-                <li>Derive the firm's profit function</li>
-                <li>Find the firm's profit-maximizing demands for labor and capital.</li>
-                <li>Find the price ceiling for average cost pricing</li>
-                <li>Does Hotelling's Lemma hold for this monopoly firm?</li>
+                <li>Find the monopoly's maximized profits.</li>
+                <li>Use Shephard's Lemma to find the conditional input demands</li>
+                <li>Derive the firm's production function from its conditional input demands (!)</li>
+                <li>Find the firm's profit-maximizing demands for labor and capital;<br/>confirm using Hotelling's Lemma</li>
+                <li>Find the welfare-optimizing price ceiling if <span rendered-math>w = r = 2</span> and <span rendered-math>F_0 = 25,000</span></li>
             </ol>
-        </section>
-        <section>
-
         </section>
     </section>
     <section>
@@ -245,7 +241,43 @@
         </section>
     </section>
     <section>
-        <h1>Final Thoughts</h1>
+        <section>
+            <h1>Final Thoughts</h1>
+            <hr/>
+            <h2>Let's look back at the photos we looked at in Lecture 1.</h2>
+
+            <h2>Photos from the <a
+                    href="http://www.nytimes.com/interactive/2014/12/28/sunday-review/2014-year-in-pictures.html"
+                    target="-_blank"><i>New York Times</i> 2014 Year in Pictures</a></h2>
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-immigrants.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-explosion.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-detroit.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-ferguson.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-ebola.jpg') }}">
+        </section>
+        <section>
+            <img src="{{ url_for('static', filename='images/econ50/lecture1/nyt-2014-drought.jpg') }}">
+        </section>
+        <section>
+            <h1>Takeaways</h1>
+            <hr/>
+            <h2 class="fragment">Everyone faces constrained optimization problems.</h2>
+            <h2 class="fragment">In the short run, you solve the problem in front of you.</h2>
+            <h2 class="fragment">In the long run, you try to change the problem you face.</h2>
+            <h2 class="fragment">Understanding how people, firms, societies, etc. respond to incentives is the <b>first necessary step</b> to solving big problems.</h2>
+            <hr/>
+            <h1 class="fragment">Good luck on your next step. :)</h1>
+        </section>
     </section>
 
 {% endblock %}
