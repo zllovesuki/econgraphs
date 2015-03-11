@@ -25,532 +25,227 @@
     <section>
         <h1>Today's Agenda</h1>
         <hr/>
-        <h2 class="fragment">First Click</h2>
-        <h2 class="fragment">Additional Topics in Consumer Theory</h2>
-        <h2 class="fragment">Additional Topics in Producer Theory</h2>
-        <h2 class="fragment">Additional Topics in Market Structures</h2>
+        <h2 class="fragment">Monopoly: Worked Example</h2>
         <hr/>
         <h2>Ten Minute Break</h2>
         <hr/>
         <h2 class="fragment">Additional Topics in Consumer Theory</h2>
         <h2 class="fragment">Additional Topics in Producer Theory</h2>
         <h2 class="fragment">Additional Topics in Market Structures</h2>
+        <h2 class="fragment">Final thoughts</h2>
 
     </section>
     <section>
         <section>
-            <h1>First Click</h1>
-        </section>
-        <section>
-            <clicker-question>
-                <h2>Remember the utility-maximization Lagrangian</h2>
-                <h2 rendered-math>\Lagr(x,y,\lambda) = u(x,y) + \lambda[I - P_xx - P_yy]</h2>
-                <h2>What did the <span rendered-math>\lambda</span> represent?</h2>
-                <clicker-option letter="A">Marginal Rate of Substitution</clicker-option>
-                <clicker-option letter="B">Marginal utility from an additional unit of X or Y</clicker-option>
-                <clicker-option letter="C">Marginal utility from an additional dollar of income</clicker-option>
-                <clicker-option letter="D">Marginal cost of one more "util"</clicker-option>
-            </clicker-question>
-        </section>
-        <section>
-            <h2>Recall: when we take first-order conditions,</h2>
+            <h1>Monopoly: Worked Example</h1>
             <hr/>
+            <h2>Cost function: <span rendered-math>TC(w,r,Q) = F_0 + 100w^\frac{1}{2}r^frac{1}{2}Q</span></h2>
 
-            <h2 rendered-math>\displaystyle{\lambda = \frac{MU_x}{P_x} = \frac{MU_y}{P_y}}</h2>
+            <h2>Demand: <span rendered-math>Q^D(P) = 400 - \frac{1}{2}P</span></h2>
             <hr/>
-
-            <h2 class="fragment"><span rendered-math>\frac{MU}{P}</span> is "bang for your buck" : measured in utils per dollar</h2>
-
-            <table class="table fragment" align="center">
-                <tr>
-                    <td><h2 rendered-math>\Lagr(x,y,\lambda) = </h2></td>
-                    <td><h2 rendered-math>u(x,y)</h2></td>
-                    <td><h2 rendered-math>+</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>\lambda</h2></td>
-                    <td><h2 rendered-math>[I - P_xx - P_yy]</h2></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td style="text-align: center">(utils)</td>
-                    <td></td>
-                    <td>(utils/dollar)</td>
-                    <td style="text-align: center">(dollars)</td>
-                </tr>
-            </table>
-
-            <h2 class="fragment">It's also the derivative of the objective function<br/>(the utility we're trying to maximize)<br/>with respect to the constraint (income)</h2>
-
+            <ol>
+                <li>Derive the monopoly's optimal price and quantity.</li>
+                <li>Find he monopoly's maximized profits.</li>
+                <li>Find the firm's conditional demands for labor and capital</li>
+                <li>Derive the firm's profit function</li>
+                <li>Find the firm's profit-maximizing demands for labor and capital.</li>
+                <li>Find the price ceiling for average cost pricing</li>
+                <li>Does Hotelling's Lemma hold for this monopoly firm?</li>
+            </ol>
         </section>
         <section>
-            <clicker-question>
-                <h2>Consider the <b>cost-minimization</b> Lagrangian</h2>
-                <h2 rendered-math>\Lagr(L,K,\lambda) = wL + rK + \lambda[q - f(L,K)]</h2>
-                <h2>What does the <span rendered-math>\lambda</span> represent now?</h2>
-                <clicker-option letter="A">Marginal Rate of Technical Substitution</clicker-option>
-                <clicker-option letter="B">Marginal cost of an additional unit of output</clicker-option>
-                <clicker-option letter="C">Marginal product of an additional unit of labor or capital</clicker-option>
-                <clicker-option letter="D">Marginal revenue product of an additional unit of labor or capital</clicker-option>
-            </clicker-question>
-            <h2 class="fragment">Again, derivative of the objective function<br/> (the cost we're trying to minimize)<br/>with respect to the constraint (quantity)</h2>
 
         </section>
-
-    </section>
-    <section>
-        <section>
-            <h1>Choosing Q, or L and K, to Maximize Profit</h1>
-        </section>
-        <section>
-            <h2>Given a production function <span rendered-math>\color{red}{q} = f(\color{green}{L,K})</span></h2>
-
-            <h2 class="fragment">input prices <span rendered-math>(w,r)</span>,</h2>
-
-            <h2 class="fragment">and the market price of output <span rendered-math>(P)</span>,</h2>
-
-            <h2 class="fragment">there are two ways of thinking about the firm's problem:</h2>
-
-            <div style="height:50px; color:white">.</div>
-            <table class="table">
-                <tr class="fragment">
-                    <td/>
-                    <td style="text-align: right"><h2>Profit</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2>Total Revenue</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2>Total Costs</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Choosing <b>inputs</b>:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\pi(\color{green}{L,K})</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times f(\color{green}{L,K})</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>(w\color{green}{L} + r\color{green}{K})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Choosing <b>output</b>:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>TC(\color{red}{q})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td/>
-                    <td/>
-                    <td/>
-                    <td style="text-align: center">(Value of output)</td>
-                    <td/>
-                    <td>(Cost of inputs)</td>
-                </tr>
-            </table>
-        </section>
-        <section>
-            <h1>Choosing Inputs</h1>
-            <table class="table">
-                <tr class="fragment">
-                    <td/>
-                    <td style="text-align: right"><h2>Profit</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2>Total Revenue</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2>Total Costs</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td/>
-                    <td/>
-                    <td/>
-                    <td style="text-align: center">(Value of output)</td>
-                    <td/>
-                    <td>(Cost of inputs)</td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Total Profit:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\pi(\color{green}{L,K})</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times f(\color{green}{L,K})</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>(w\color{green}{L} + r\color{green}{K})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Marginal Profit (L):</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\frac{\partial \pi(\color{green}{L,K})}{\partial \color{green}{L}}</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{green}{MP_L}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>w</h2></td>
-                </tr>
-
-                <tr class="fragment">
-                    <td><h2>Marginal Profit (K):</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\frac{\partial \pi(\color{green}{L,K})}{\partial
-                        \color{green}{K}}</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{green}{MP_K}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>r</h2></td>
-                </tr>
-
-
-            </table>
-            <hr/>
-            <h3 class="fragment">Marginal profit = 0 when <span rendered-math>P \times MP_L = w</span> and <span
-                    rendered-math>P \times MP_K = r</span></h3>
-
-        </section>
-        <section>
-            <h2>MARGINAL REVENUE PRODUCT OF LABOR</h2>
-            <h1 class="fragment"><span rendered-math>MRP_L = P \times MP_L</span></h1>
-            <p class="fragment">"Additional revenue from an additional unit of labor"</p>
-            <hr/>
-            <div style="height:100px;color:white">.</div>
-            <h2>MARGINAL REVENUE PRODUCT OF CAPITAL</h2>
-            <h1 class="fragment"><span rendered-math>MRP_K = P \times MP_K</span></h1>
-            <p class="fragment">"Additional revenue from an additional unit of capital"</p>
-
-        </section>
-        <section>
-            <h1>Choosing Output</h1>
-            <table class="table">
-                <tr class="fragment">
-                    <td/>
-                    <td style="text-align: right"><h2>Profit</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2>Total Revenue</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2>Total Costs</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td/>
-                    <td/>
-                    <td/>
-                    <td style="text-align: center">(Value of output)</td>
-                    <td/>
-                    <td>(Cost of inputs)</td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Total Profit:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>TC(\color{red}{q})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Marginal Profit:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>
-                        \frac{d\pi(\color{red}{q})}{d\color{red}{q}}</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>MC(\color{red}{q})</h2></td>
-                </tr>
-
-            </table>
-            <hr/>
-            <h2 class="fragment">Marginal profit = 0 when <span rendered-math>P = MC(q)</span></h2>
-
-        </section>
-        <section>
-            <img src="{{ url_for('static',filename='images/econ50/lecture13/besanko_5e_fig_09_01.jpg') }}" height="800px">
-        </section>
-        <section>
-            <h1>Visualizing Profit per Unit</h1>
-            <hr/>
-            <table class="table">
-                <tr>
-                    <td/>
-                    <td style="text-align: right"><h2>Profit</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2>Total Revenue</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2>Total Costs</h2></td>
-                </tr>
-                <tr>
-                    <td/>
-                    <td/>
-                    <td/>
-                    <td style="text-align: center">(Value of output)</td>
-                    <td/>
-                    <td>(Cost of inputs)</td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Total Profit:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>TC(\color{red}{q})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td></td>
-                    <td></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>ATC(\color{red}{q}) \times \color{red}{q}</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td></td>
-                    <td></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center" colspan="3"><h2 rendered-math>[P - ATC(\color{red}{q})] \times \color{red}{q}</h2></td>
-
-                </tr>
-
-            </table>
-            <a href="http://www.econgraphs.org/graphs/cost_curves" target="_blank">Cost Curves Graph</a>
-        </section>
-
-    </section>
-    <section>
-        <section>
-            <h1>Profit-Maximizing Input Demands</h1>
-        </section>
-        <section>
-            <h1>Recall: Conditional Demand</h1>
-            <hr/>
-            <h1 rendered-math>L^*(w,r,q)</h1>
-            <h1 rendered-math>K^*(w,r,q)</h1>
-            <hr/>
-            <h1 class="fragment">...but we now have q^*(P)</h1>
-        </section>
-        <section>
-            <h1>Profit-Maximizing Demand for Labor</h1>
-            <hr/>
-            <h2>Step 1: Find <b>conditional</b> demand for labor, <span rendered-math>L^*(w,r,q)</span> </h2>
-            <h2>Step 2: Find optimal quantity for price P, <span rendered-math>q*(P)</span></h2>
-            <h2>Step 3: Plug <span rendered-math>q*(P)</span> into <span rendered-math>L^*(q)</span> to get <span
-                    rendered-math>L^*(w,r,q^*(P))</span></h2>
-        </section>
-        <section>
-            <clicker-question>
-                <h2>Which of the following is true for any price-taking firm with production <span rendered-math>f(L,K)</span>, where <span rendered-math>K</span> is fixed in the short run?</h2>
-                <clicker-option letter="A">The conditional demand for labor is perfectly elastic</clicker-option>
-                <clicker-option letter="B">The conditional demand for labor is perfectly inelastic</clicker-option>
-                <clicker-option letter="C">The profit-maximizing demand for labor is perfectly inelastic</clicker-option>
-                <clicker-option letter="D">Both A and C</clicker-option>
-                <clicker-option letter="E">Both B and C</clicker-option>
-            </clicker-question>
-        </section>
-        <section>
-            <h1>Note</h1>
-            <hr/>
-            <h2>Short-run conditional demand for labor was <b>perfectly inelastic</b>.</h2>
-            <h2>Short-run profit-maximizing demand for labor is not! ...but why not?</h2>
-        </section>
-        <section>
-            <clicker-question>
-                <h2>Why is the short-run profit-maximizing demand for labor not perfectly inelastic?</h2>
-                <clicker-option letter="A">The firm is adjusting its capital</clicker-option>
-                <clicker-option letter="B">The firm has some pricing power</clicker-option>
-                <clicker-option letter="C">The firm is adjusting quantity in response to prices</clicker-option>
-                <clicker-option letter="D">The firm has some wage-setting power</clicker-option>
-            </clicker-question>
-        </section>
-        <section>
-            <h2>Conditional on <span rendered-math>q</span>, a change in <span rendered-math>w</span> <br/>will not affect the amount of labor used</h2>
-            <img src="{{ url_for('static',filename='images/econ50/lecture13/clickerderivation1.png') }}"
-                 height="600px">
-        </section>
-        <section>
-            <h2>...but a change in <span rendered-math>w</span> will cause <br/>a change in the profit-maximizing <span
-                    rendered-math>q</span></h2>
-            <img src="{{ url_for('static',filename='images/econ50/lecture13/clickerderivation2.png') }}"
-                 height="600px">
-        </section>
-        <section>
-            <h2>...so the labor needed to produce the profit-maximizing <span rendered-math>q</span> <br/>will depend on <span rendered-math>w</span></h2>
-            <img src="{{ url_for('static',filename='images/econ50/lecture13/clickerderivation3.png') }}"
-                 height="600px">
-        </section>
-
-    </section>
-    <section>
-        <section>
-            <h1>Hotelling's Lemma</h1>
-            <hr/>
-            <h1 rendered-math>\displaystyle{\frac{\partial \pi(w,r,P)}{\partial P} = q^*(w,r,P)}</h1>
-
-            <h2>...in the short run or the long run</h2>
-        </section>
-        <section>
-            <h1>Why? ...a little like Shephard's Lemma</h1>
-            <hr/>
-            <table class="table">
-
-                <tr>
-                    <td style="text-align: right"><h2 rendered-math>\pi(P)</h2></td>
-                    <td><h2 rendered-math>=P \times q^*(P) - TC(q^*(P))</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: right"><h2 rendered-math>\displaystyle{\frac{\partial \pi(P)}{\partial P}}</h2></td>
-                    <td><h2 rendered-math>\displaystyle{=q^*(P) + P\frac{\partial q^*}{\partial P} -
-                        \frac{\partial TC}{\partial q}\frac{\partial q^*}{\partial P}}</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td/>
-                    <td><h2 rendered-math>\displaystyle{=q^*(P) + [P - MC(q)]\frac{\partial q^*}{\partial P}}</h2></td>
-                </tr>
-
-            </table>
-
-
-            <h2 class="fragment">...and since <span rendered-math>P = MC(q)</span>, the second term is zero.</h2>
-        </section>
-
-
-    </section>
-    <section>
-        <section>
-            <h1>Shutting Down or Changing Industries</h1>
-        </section>
-        <section>
-            <h1>The Shutdown Decision</h1>
-            <hr/>
-            <table class="table">
-                <tr>
-                    <td/>
-                    <td style="text-align: right"><h2>Profit</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2>Total Revenue</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2>Total Costs</h2></td>
-                </tr>
-                <tr>
-                    <td/>
-                    <td/>
-                    <td/>
-                    <td style="text-align: center">(Value of output)</td>
-                    <td/>
-                    <td>(Cost of inputs)</td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Profit if Operate:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>[FC + TVC(\color{red}{q})]</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td><h2>Profit if Shut Down:</h2></td>
-                    <td style="text-align: right"><h2 rendered-math>\pi(\color{red}{0})</h2></td>
-                    <td><h2 rendered-math>=</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{0}</h2></td>
-                    <td><h2 rendered-math>-</h2></td>
-                    <td><h2 rendered-math>FC</h2></td>
-                </tr>
-
-            </table>
-            <a href="http://www.econgraphs.org/graphs/cost_curves" target="_blank">Cost Curves Graph</a>
-        </section>
-        <section>
-            <h2>A firm will shut down if:</h2>
-            <table class="table">
-                <tr>
-                    <td style="text-align: center"><h2>Profit if Operate</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2>Profit if Shut Down</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: center"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>\pi(\color{red}{0})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q} - [FC + TVC(
-                        \color{red}{q})]</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>- FC</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: center"><h2 rendered-math>P \times \color{red}{q}</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>TVC( \color{red}{q})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: center"><h2 rendered-math>P</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>AVC(
-                        \color{red}{q})</h2></td>
-                </tr>
-            </table>
-            <a href="http://www.econgraphs.org/graphs/cost_curves" target="_blank">Cost Curves Graph</a>
-        </section>
-        <section>
-            <img src="{{ url_for('static',filename='images/econ50/lecture13/besanko_5e_fig_09_02.jpg') }}"
-                 height="800px">
-        </section>
-        <section>
-            <h1>The Entry/Exit Decision</h1>
-            <hr/>
-            <h2>Even in the long run, there is another "economic" cost:</h2>
-
-            <h2>the opportunity cost of the firm's next best option.</h2>
-            <hr/>
-            <h2>Let's call this <span rendered-math>\pi_{\text{other}}</span> </h2>
-        </section>
-        <section>
-            <h2>A firm will exit the industry if:</h2>
-            <table class="table">
-                <tr>
-                    <td style="text-align: center"><h2>Profit if Stay</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2>Profit if Leave</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: center"><h2 rendered-math>\pi(\color{red}{q})</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>\pi_\text{other}</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: center"><h2 rendered-math>TR(\color{red}{q}) - TC(
-                        \color{red}{q})</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>\pi_\text{other}</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td style="text-align: center"><h2 rendered-math>TR(\color{red}{q})</h2></td>
-                    <td><h2 rendered-math><</h2></td>
-                    <td style="text-align: center"><h2 rendered-math>\pi_\text{other} + TC( \color{red}{q})</h2></td>
-                </tr>
-                <tr class="fragment">
-                    <td/><td/><td style="text-align: center"><h2>(sort of like <span rendered-math>FC + TVC( \color{red}{q})</span>)</h2></td>
-                </tr>
-
-            </table>
-            <h2>A firm's very-long run cost function includes this opportunity cost!</h2>
-            <h2>This results in a U-shaped average cost even if all inputs are flexible.</h2>
-        </section>
-        <section>
-            <img src="{{ url_for('static',filename='images/econ50/lecture13/besanko_5e_fig_09_13.jpg') }}"
-                 height="800px">
-        </section>
-        <section>
-            <h1>SUPPLY DECISIONS: SUMMARY</h1>
-            <hr/>
-            <h2 class="fragment"><b>Short run supply</b>: adjust variable inputs (e.g. <span rendered-math>L</span>)</h2>
-            <h2 class="fragment">to set <span rendered-math>q</span> so that <span rendered-math>P = MC(q)</span>,</h2>
-            <h2 class="fragment">as long as <span rendered-math>P > \min AVC(q)</span></h2>
-            <hr/>
-            <h2 class="fragment"><b>Long run supply</b>: adjust all inputs (e.g., <span rendered-math>K</span> and <span
-                    rendered-math>L</span>)</h2>
-            <h2 class="fragment">to set <span rendered-math>q</span> so that <span rendered-math>P = MC(q)</span>,</h2>
-            <h2 class="fragment">as long as <span rendered-math>P > \min AC(q)</span>,</h2>
-            <h2 class="fragment">including opportunity costs of leaving industry.</h2>
-        </section>
-
     </section>
     <section>
         <h1>Ten Minute Break</h1>
     </section>
     <section>
-        <h2>For <span rendered-math>f(L,K) = L^\frac{1}{4}K^\frac{1}{4}</span>,<hr/>derive the following for the short run (if <span rendered-math>\overline{K}= 4</span>) and long run:</h2>
-        <h2>Total cost function</h2>
-        <h2>Supply function</h2>
-        <h2>Profit-maximizing demand for labor</h2>
-        <h2>The firm's maximized profits if <span rendered-math>w=8</span> and <span rendered-math>r=24</span> </h2>
-        <h2>The firm's producer surplus</h2>
+        <section>
+            <h1>Additional topics in consumer theory</h1>
+            <hr/>
+            <h2>Revealed Preference (4.4)</h2>
+            <h2>Time Value of Money (Ch. 4, Appx. 2)</h2>
+        </section>
+        <section>
+            <h1>Revealed Preference (4.4)</h1>
+            <hr/>
+            <h2 class="fragment">We don't observe utility functions directly.</h2>
+            <h2 class="fragment">we observe <b>choices</b>.</h2>
+            <hr/>
+            <h2 class="fragment">If bundles A and B are both affordable,</h2>
+            <h2 class="fragment">and a consumer chooses A,</h2>
+            <h2 class="fragment">we say that A is <b>revealed preferred</b> to B.</h2>
+        </section>
+        <section>
+
+            {% raw %}
+            <model>
+
+                <!-- Model parameters -->
+                <param name="px1" value="1"/>
+                <param name="py1" value="2"/>
+                <param name="income1" value="60"/>
+                <param name="px2" value="2"/>
+                <param name="py2" value="1"/>
+                <param name="income2" value="60"/>
+
+
+
+                <!-- Model functions -->
+                <function name="b1" category="budget" form="SimpleBudgetConstraint" fn-params="{px:params.px1, py:params.py1, income:params.income1}"></function>
+                <function name="b2" category="budget" form="SimpleBudgetConstraint"
+                          fn-params="{px:params.px2, py:params.py2, income:params.income2}"></function>
+
+                <h2>Revealed Preference</h2>
+                <hr/>
+
+                <div class="row">
+
+                    <div class="col-md-8">
+                        <graph height="700" width="700">
+                            <axis dim="x" min="0" max="65" title="Good X" ticks="0"></axis>
+                            <axis dim="y" min="0" max="65" title="Good Y" ticks="0"></axis>
+                            <area fn="functions.b1" color="green"/>
+                            <area fn="functions.b2" color="red"/>
+                            <line fn="functions.b1" label="BL_1" label-offset-y="-10" color="green"></line>
+                            <line fn="functions.b2" label="BL_2" label-offset-y="-10" color="red"></line>
+
+                            <point point="[40,10]" label="A" color="green"></point>
+                            <point point="[20,20]" label="B" color="red"></point>
+                            <point point="[10,40]" label="C" color="blue"></point>
+                        </graph>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Given green budget set, chooses <span rendered-math>\color{green}{A}</span></h3>
+
+                        <h3>Given red budget set, chooses <span rendered-math>\color{red}{B}</span></h3>
+
+                        <hr/>
+
+                        <h3>What does this tell us about preferences over <span rendered-math>\color{green}{A}</span> and
+                            <span rendered-math>\color{blue}{C}</span>?</h3>
+                        <h3>A. <span rendered-math>\color{green}{A} \succeq \color{blue}{C}</span> </h3>
+                        <h3>B. <span rendered-math>\color{green}{A} \preceq \color{blue}{C}</span></h3>
+                        <h3>C. <span rendered-math>\color{green}{A} \sim \color{blue}{C}</span></h3>
+                        <h3>D. We can't tell...</h3>
+                    </div>
+                </div>
+            </model>
+            {% endraw %}
+        </section>
+        <section>
+            <h1>Time Value of Money (Ch. 4, Appendix 2)</h1>
+            <hr/>
+            <h2>We derived budget lines for two periods.</h2>
+            <h2>You can do it for more -- or even infinite periods</h2>
+        </section>
+        <section>
+            <h2>Two-Period Present Value Budget Constraint</h2>
+            <hr/>
+            <h2 rendered-math>\displaystyle{c_1 + \frac{c_2}{1+r} = I_1 + \frac{I_2}{1+r}}</h2>
+            <hr/>
+            <h2 class="fragment">T-Period Present Value Budget Constraint</h2>
+            <hr/>
+            <h2 rendered-math class="fragment">\displaystyle{\sum_{t=1}^T\frac{c_t}{(1+r)^{t-1}} =
+                \sum_{t=1}^T\frac{I_t}{(1+r)^{t-1}}}</h2>
+            <hr/>
+            <h2 class="fragment">Think about maximizing <span rendered-math>u(c_1, c_2,..., c_T)</span><br/>subject to this constraint...</h2>
+        </section>
     </section>
+    <section>
+        <section>
+            <h1>Additional topics in producer theory</h1>
+            <hr/>
+            <h2>Average Product (6.2)</h2>
+            <h2>Economies of Scope/Experience (8.3)</h2>
+        </section>
+        <section>
+            <h1>Average Product (6.2)</h1>
+            <hr/>
+            <h2 class="fragment">Suppose we have a production function that only uses labor.</h2>
+            <h1 rendered-math class="fragment">AP_L = \frac{f(L)}{L}</h1>
+            <h2 class="fragment">This is used to analyze <b>productivity</b>.</h2>
+        </section>
+        <section>
+            <img src="{{ url_for('static',filename='images/econ50/lecture17/besanko_5e_fig_06_04.jpg') }}" height="700px"/>
+        </section>
+        <section>
+            <h1>Scale, Scope, Experience (8.3)</h1>
+            <hr/>
+            <table class="table">
+                <tr class="fragment">
+                    <td><b>Economies of Scale</b></td>
+                    <td>Cost savings when firms produce large quantities</td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>Economies of Scope</b></td>
+                    <td>Cost savings when firms produce more than one product</td>
+                </tr>
+                <tr class="fragment">
+                    <td><b>Economies of Experience</b></td>
+                    <td>Cost savings when firms' technology improves over time</td>
+                </tr>
+            </table>
+            <hr/>
+            <h2 class="fragment"><a href="http://store.apple.com/us" target="_blank">A relevant recent example...</a></h2>
+        </section>
+    </section>
+    <section>
+        <section>
+            <h1>Additional topics in market structures</h1>
+            <hr/>
+            <h2>Economic Rent (9.5)</h2>
+            <h2>Tariffs and Quotas (10.5)</h2>
+            <h2>Multi-Plant Monopolies (11.4)</h2>
+            <h2>Cartels (11.4)</h2>
+        </section>
+        <section>
+            <h1>Economic Rent (9.5)</h1>
+            <hr/>
+            <h2 class="fragment">The portion of income<br/>paid to a factor of production<br/>in excess of that which is needed<br/>to keep it in its current use.</h2>
+            <hr/>
+            <h2 class="fragment">Arises from (often artificial) scarcity (e.g., price controls).</h2>
+            <hr/>
+            <h2 class="fragment"><b>Rent-seeking behavior</b>: trying to make things more scarce (e.g., guilds, political corruption).</h2>
+            <p>Interesting podcast: <a href="http://www.econtalk.org/archives/2008/05/nye_on_wine_war.html">Why the British Drink Beer</a></p>
+        </section>
+        <section>
+            <h1>Import Tariffs and Quotas (10.5)</h1>
+            <hr/>
+            <h2 class="fragment">Two types of firms: foreign and domestic</h2>
+            <h2 class="fragment">Tariff: tax on imported quantity</h2>
+            <h2 class="fragment">Quota: restriction on imported quantity</h2>
+        </section>
+        <section>
+            <h1>Multi-Plant Monopolies (11.4)</h1>
+            <hr/>
+            <h2 class="fragment">Production function split among different plants,<br/>with different cost structures</h2>
+            <h2 class="fragment">Basically: equalize marginal cost of last unit produced at each plant.</h2>
+        </section>
+        <section>
+            <h1>Cartels (11.4)</h1>
+            <hr/>
+            <h2 class="fragment">A group of firms getting together to act like a monopolist</h2>
+            <h2 class="fragment">Restricting output helps them all, but each faces an incentive to produce more</h2>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture17/besanko_5e_fig_11_14.jpg') }}"/>
+                    <h2>Multi-Plant Monopoly</h2>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static',filename='images/econ50/lecture17/besanko_5e_fig_11_15.jpg') }}"/>
+                    <h2>Cartel</h2>
+                </div>
+            </div>
+        </section>
+    </section>
+    <section>
+        <h1>Final Thoughts</h1>
+    </section>
+
 {% endblock %}
