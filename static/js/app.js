@@ -422,10 +422,7 @@ kgAngular.directive('model', function () {
         // Redraw graph objects when parameters change
         $scope.$watchCollection('params',function(){$scope.$broadcast('redraw');});
 
-        // Resize all elements when window changes size
-        angular.element($window).on('resize', function () {
-            $scope.$broadcast('resize');
-        });
+
 
 
         // Setters for parameters and functions

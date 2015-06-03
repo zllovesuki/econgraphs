@@ -240,11 +240,15 @@ econgraphs.functions.utility = {
 
                 points: function (xDomain, yDomain) {
 
+                    yDomain = domainAsObject(yDomain);
+
                     var compensatedIncome,
                         isGoodX = ('y' != demandParams['good']),
                         compensationPrice = demandParams['compensationPrice'] || 0,
                         income = demandParams['income'],
                         numberOfConsumers = demandParams['numberOfConsumers'] || 1,
+                        minPrice = demandParams['minPrice'] || yDomain.min,
+                        maxPrice = demandParams['maxPrice'] || yDomain.max,
                         otherPrice = demandParams['otherPrice'],
                         samplePoints = demandParams['samplePoints'] || 51,
                         demandFunction = function(price) {
@@ -256,7 +260,7 @@ econgraphs.functions.utility = {
                             }
                         };
 
-                    return functionPoints(demandFunction,xDomain,yDomain,{dependentVariable:'y'});
+                    return functionPoints(demandFunction,xDomain,yDomain,{dependentVariable:'y', min:minPrice, max:maxPrice});
                 },
 
                 area: function (xDomain, yDomain) {
@@ -266,8 +270,8 @@ econgraphs.functions.utility = {
 
 
                     var points = this.points(xDomain,yDomain),
-                        minPrice = demandParams['minPrice'] || 0,
-                        maxPrice = demandParams['maxPrice'] || 50;
+                        minPrice = demandParams['minPrice'] || yDomain.min,
+                        maxPrice = demandParams['maxPrice'] || yDomain.max;
 
                     points.push({x: 0, y: maxPrice});
                     points.push({x: 0, y: minPrice});
