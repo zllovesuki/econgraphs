@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<title>Market Model</title>
+    <link href="{{ url_for('static', filename='css/capm-style.css') }}" rel="stylesheet"/>
+</head>
+<body>
+{% raw %}
+<div ng-controller="Controller">
+    <div id="graph"></div>
+    <div style="position:absolute;left:1000px; width:300px; top:50px; height: 400px;">
+    <table>
+        <tr>
+            <td>Beta</td>
+            <td><input ng-model="params.beta" type="range" min="-2" max="10" step="0.5"></td>
+            <td>{{params.beta | number:1}}</td>
+        </tr>
+        <tr>
+            <td>Sigma</td>
+            <td><input ng-model="params.sigma" type="range" min="0.05" max="0.3" step="0.01"></td>
+            <td>{{params.sigma | number:2}}</td>
+        </tr>
+        <tr>
+            <td>Risk-Free Return (RF)</td>
+            <td><input ng-model="params.rf" type="range" min="0" max="0.10" step="0.01"></td>
+            <td>{{params.rf | number:2}}</td>
+        </tr>
+        <tr>
+            <td>MRP</td>
+            <td><input ng-model="params.MRP" type="range" min="0.01" max="0.12" step="0.001"></td>
+            <td>{{params.MRP | number:3}}</td>
+        </tr>
+        <tr>
+            <td>Years (T)</td>
+            <td><input ng-model="params.T" type="range" min="1" max="50" step="1"></td>
+            <td>{{params.T | number:0}}</td>
+        </tr>
+        <tr>
+            <td>Number of Draws</td>
+            <td><input ng-model="params.numDraws" type="range" min="1" max="1000" step="1"></td>
+            <td>{{params.numDraws | number:0}}</td>
+        </tr>
+    </table>
+        <hr/>
+        <button ng-click="updateShocks()">Get new shocks</button>
+        <hr/>
+        <label><input ng-model="params.showDraws" type="checkbox"/> Show all draws</label>
+    </div>
+</div>
+{% endraw %}
+<script src="{{ url_for('static', filename='js/kg-head.js') }}"></script>
+<script src="{{ url_for('static', filename='js/capm.js') }}"></script>
+</body>
+</html>
