@@ -103,6 +103,24 @@
             "supply_and_demand/market.js",
             "supply_and_demand/controller.js"
         ]
+    },
+    {
+        "name": "kg-head",
+        "order": [
+            "jquery.min.js",
+            "angular.min.js",
+            "d3.min.js",
+            "underscore-min.js",
+            "katex.min.js",
+            "kinetic-graphs.js"
+        ]
+    },
+    {
+        "name": "capm",
+        "order": [
+            "vis.js",
+            "capm.js"
+        ]
     }
 ]
 
