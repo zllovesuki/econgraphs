@@ -10,7 +10,8 @@ app.controller('Controller', function ($scope) {
         MRP: 0.06,
         S0: 1,
         numDraws: 10,
-        showDraws: false
+        showDraws: false,
+        max: 3
     };
 
     function debounce(fn,time) {
@@ -125,7 +126,7 @@ app.controller('Controller', function ($scope) {
         var d = new Date().getTime();
         $scope.data = generateData($scope.params, $scope.epsilon);
         console.log("generateData time ", (new Date().getTime() - d)/1000, "s");
-        makeChart($scope.plotdata($scope.data, $scope.params.showDraws));
+        makeChart($scope.plotdata($scope.data, $scope.params.showDraws),$scope.params.max);
 
     }
     //$scope.data = generateData($scope.params, $scope.epsilon);
@@ -137,5 +138,7 @@ app.controller('Controller', function ($scope) {
     };
 
     update();
+
+
     
 });

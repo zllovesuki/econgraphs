@@ -7,6 +7,14 @@ return M.access(a,b,c)},removeData:function(a,b){M.remove(a,b)},_data:function(a
 void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?void 0:e):null!==c?d&&"set"in d&&void 0!==(e=d.set(a,c,b))?e:(a.setAttribute(b,c+""),c):void n.removeAttr(a,b))},removeAttr:function(a,b){var c,d,e=0,f=b&&b.match(E);if(f&&1===a.nodeType)while(c=f[e++])d=n.propFix[c]||c,n.expr.match.bool.test(c)&&(a[d]=!1),a.removeAttribute(c)},attrHooks:{type:{set:function(a,b){if(!k.radioValue&&"radio"===b&&n.nodeName(a,"input")){var c=a.value;return a.setAttribute("type",b),c&&(a.value=c),b}}}}}),Za={set:function(a,b,c){return b===!1?n.removeAttr(a,c):a.setAttribute(c,c),c}},n.each(n.expr.match.bool.source.match(/\w+/g),function(a,b){var c=$a[b]||n.find.attr;$a[b]=function(a,b,d){var e,f;return d||(f=$a[b],$a[b]=e,e=null!=c(a,b,d)?b.toLowerCase():null,$a[b]=f),e}});var _a=/^(?:input|select|textarea|button)$/i;n.fn.extend({prop:function(a,b){return J(this,n.prop,a,b,arguments.length>1)},removeProp:function(a){return this.each(function(){delete this[n.propFix[a]||a]})}}),n.extend({propFix:{"for":"htmlFor","class":"className"},prop:function(a,b,c){var d,e,f,g=a.nodeType;if(a&&3!==g&&8!==g&&2!==g)return f=1!==g||!n.isXMLDoc(a),f&&(b=n.propFix[b]||b,e=n.propHooks[b]),void 0!==c?e&&"set"in e&&void 0!==(d=e.set(a,c,b))?d:a[b]=c:e&&"get"in e&&null!==(d=e.get(a,b))?d:a[b]},propHooks:{tabIndex:{get:function(a){return a.hasAttribute("tabindex")||_a.test(a.nodeName)||a.href?a.tabIndex:-1}}}}),k.optSelected||(n.propHooks.selected={get:function(a){var b=a.parentNode;return b&&b.parentNode&&b.parentNode.selectedIndex,null}}),n.each(["tabIndex","readOnly","maxLength","cellSpacing","cellPadding","rowSpan","colSpan","useMap","frameBorder","contentEditable"],function(){n.propFix[this.toLowerCase()]=this});var ab=/[\t\r\n\f]/g;n.fn.extend({addClass:function(a){var b,c,d,e,f,g,h="string"==typeof a&&a,i=0,j=this.length;if(n.isFunction(a))return this.each(function(b){n(this).addClass(a.call(this,b,this.className))});if(h)for(b=(a||"").match(E)||[];j>i;i++)if(c=this[i],d=1===c.nodeType&&(c.className?(" "+c.className+" ").replace(ab," "):" ")){f=0;while(e=b[f++])d.indexOf(" "+e+" ")<0&&(d+=e+" ");g=n.trim(d),c.className!==g&&(c.className=g)}return this},removeClass:function(a){var b,c,d,e,f,g,h=0===arguments.length||"string"==typeof a&&a,i=0,j=this.length;if(n.isFunction(a))return this.each(function(b){n(this).removeClass(a.call(this,b,this.className))});if(h)for(b=(a||"").match(E)||[];j>i;i++)if(c=this[i],d=1===c.nodeType&&(c.className?(" "+c.className+" ").replace(ab," "):"")){f=0;while(e=b[f++])while(d.indexOf(" "+e+" ")>=0)d=d.replace(" "+e+" "," ");g=a?n.trim(d):"",c.className!==g&&(c.className=g)}return this},toggleClass:function(a,b){var c=typeof a;return"boolean"==typeof b&&"string"===c?b?this.addClass(a):this.removeClass(a):this.each(n.isFunction(a)?function(c){n(this).toggleClass(a.call(this,c,this.className,b),b)}:function(){if("string"===c){var b,d=0,e=n(this),f=a.match(E)||[];while(b=f[d++])e.hasClass(b)?e.removeClass(b):e.addClass(b)}else(c===U||"boolean"===c)&&(this.className&&L.set(this,"__className__",this.className),this.className=this.className||a===!1?"":L.get(this,"__className__")||"")})},hasClass:function(a){for(var b=" "+a+" ",c=0,d=this.length;d>c;c++)if(1===this[c].nodeType&&(" "+this[c].className+" ").replace(ab," ").indexOf(b)>=0)return!0;return!1}});var bb=/\r/g;n.fn.extend({val:function(a){var b,c,d,e=this[0];{if(arguments.length)return d=n.isFunction(a),this.each(function(c){var e;1===this.nodeType&&(e=d?a.call(this,c,n(this).val()):a,null==e?e="":"number"==typeof e?e+="":n.isArray(e)&&(e=n.map(e,function(a){return null==a?"":a+""})),b=n.valHooks[this.type]||n.valHooks[this.nodeName.toLowerCase()],b&&"set"in b&&void 0!==b.set(this,e,"value")||(this.value=e))});if(e)return b=n.valHooks[e.type]||n.valHooks[e.nodeName.toLowerCase()],b&&"get"in b&&void 0!==(c=b.get(e,"value"))?c:(c=e.value,"string"==typeof c?c.replace(bb,""):null==c?"":c)}}}),n.extend({valHooks:{option:{get:function(a){var b=n.find.attr(a,"value");return null!=b?b:n.trim(n.text(a))}},select:{get:function(a){for(var b,c,d=a.options,e=a.selectedIndex,f="select-one"===a.type||0>e,g=f?null:[],h=f?e+1:d.length,i=0>e?h:f?e:0;h>i;i++)if(c=d[i],!(!c.selected&&i!==e||(k.optDisabled?c.disabled:null!==c.getAttribute("disabled"))||c.parentNode.disabled&&n.nodeName(c.parentNode,"optgroup"))){if(b=n(c).val(),f)return b;g.push(b)}return g},set:function(a,b){var c,d,e=a.options,f=n.makeArray(b),g=e.length;while(g--)d=e[g],(d.selected=n.inArray(d.value,f)>=0)&&(c=!0);return c||(a.selectedIndex=-1),f}}}}),n.each(["radio","checkbox"],function(){n.valHooks[this]={set:function(a,b){return n.isArray(b)?a.checked=n.inArray(n(a).val(),b)>=0:void 0}},k.checkOn||(n.valHooks[this].get=function(a){return null===a.getAttribute("value")?"on":a.value})}),n.each("blur focus focusin focusout load resize scroll unload click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup error contextmenu".split(" "),function(a,b){n.fn[b]=function(a,c){return arguments.length>0?this.on(b,null,a,c):this.trigger(b)}}),n.fn.extend({hover:function(a,b){return this.mouseenter(a).mouseleave(b||a)},bind:function(a,b,c){return this.on(a,null,b,c)},unbind:function(a,b){return this.off(a,null,b)},delegate:function(a,b,c,d){return this.on(b,a,c,d)},undelegate:function(a,b,c){return 1===arguments.length?this.off(a,"**"):this.off(b,a||"**",c)}});var cb=n.now(),db=/\?/;n.parseJSON=function(a){return JSON.parse(a+"")},n.parseXML=function(a){var b,c;if(!a||"string"!=typeof a)return null;try{c=new DOMParser,b=c.parseFromString(a,"text/xml")}catch(d){b=void 0}return(!b||b.getElementsByTagName("parsererror").length)&&n.error("Invalid XML: "+a),b};var eb=/#.*$/,fb=/([?&])_=[^&]*/,gb=/^(.*?):[ \t]*([^\r\n]*)$/gm,hb=/^(?:about|app|app-storage|.+-extension|file|res|widget):$/,ib=/^(?:GET|HEAD)$/,jb=/^\/\//,kb=/^([\w.+-]+:)(?:\/\/(?:[^\/?#]*@|)([^\/?#:]*)(?::(\d+)|)|)/,lb={},mb={},nb="*/".concat("*"),ob=a.location.href,pb=kb.exec(ob.toLowerCase())||[];function qb(a){return function(b,c){"string"!=typeof b&&(c=b,b="*");var d,e=0,f=b.toLowerCase().match(E)||[];if(n.isFunction(c))while(d=f[e++])"+"===d[0]?(d=d.slice(1)||"*",(a[d]=a[d]||[]).unshift(c)):(a[d]=a[d]||[]).push(c)}}function rb(a,b,c,d){var e={},f=a===mb;function g(h){var i;return e[h]=!0,n.each(a[h]||[],function(a,h){var j=h(b,c,d);return"string"!=typeof j||f||e[j]?f?!(i=j):void 0:(b.dataTypes.unshift(j),g(j),!1)}),i}return g(b.dataTypes[0])||!e["*"]&&g("*")}function sb(a,b){var c,d,e=n.ajaxSettings.flatOptions||{};for(c in b)void 0!==b[c]&&((e[c]?a:d||(d={}))[c]=b[c]);return d&&n.extend(!0,a,d),a}function tb(a,b,c){var d,e,f,g,h=a.contents,i=a.dataTypes;while("*"===i[0])i.shift(),void 0===d&&(d=a.mimeType||b.getResponseHeader("Content-Type"));if(d)for(e in h)if(h[e]&&h[e].test(d)){i.unshift(e);break}if(i[0]in c)f=i[0];else{for(e in c){if(!i[0]||a.converters[e+" "+i[0]]){f=e;break}g||(g=e)}f=f||g}return f?(f!==i[0]&&i.unshift(f),c[f]):void 0}function ub(a,b,c,d){var e,f,g,h,i,j={},k=a.dataTypes.slice();if(k[1])for(g in a.converters)j[g.toLowerCase()]=a.converters[g];f=k.shift();while(f)if(a.responseFields[f]&&(c[a.responseFields[f]]=b),!i&&d&&a.dataFilter&&(b=a.dataFilter(b,a.dataType)),i=f,f=k.shift())if("*"===f)f=i;else if("*"!==i&&i!==f){if(g=j[i+" "+f]||j["* "+f],!g)for(e in j)if(h=e.split(" "),h[1]===f&&(g=j[i+" "+h[0]]||j["* "+h[0]])){g===!0?g=j[e]:j[e]!==!0&&(f=h[0],k.unshift(h[1]));break}if(g!==!0)if(g&&a["throws"])b=g(b);else try{b=g(b)}catch(l){return{state:"parsererror",error:g?l:"No conversion from "+i+" to "+f}}}return{state:"success",data:b}}n.extend({active:0,lastModified:{},etag:{},ajaxSettings:{url:ob,type:"GET",isLocal:hb.test(pb[1]),global:!0,processData:!0,async:!0,contentType:"application/x-www-form-urlencoded; charset=UTF-8",accepts:{"*":nb,text:"text/plain",html:"text/html",xml:"application/xml, text/xml",json:"application/json, text/javascript"},contents:{xml:/xml/,html:/html/,json:/json/},responseFields:{xml:"responseXML",text:"responseText",json:"responseJSON"},converters:{"* text":String,"text html":!0,"text json":n.parseJSON,"text xml":n.parseXML},flatOptions:{url:!0,context:!0}},ajaxSetup:function(a,b){return b?sb(sb(a,n.ajaxSettings),b):sb(n.ajaxSettings,a)},ajaxPrefilter:qb(lb),ajaxTransport:qb(mb),ajax:function(a,b){"object"==typeof a&&(b=a,a=void 0),b=b||{};var c,d,e,f,g,h,i,j,k=n.ajaxSetup({},b),l=k.context||k,m=k.context&&(l.nodeType||l.jquery)?n(l):n.event,o=n.Deferred(),p=n.Callbacks("once memory"),q=k.statusCode||{},r={},s={},t=0,u="canceled",v={readyState:0,getResponseHeader:function(a){var b;if(2===t){if(!f){f={};while(b=gb.exec(e))f[b[1].toLowerCase()]=b[2]}b=f[a.toLowerCase()]}return null==b?null:b},getAllResponseHeaders:function(){return 2===t?e:null},setRequestHeader:function(a,b){var c=a.toLowerCase();return t||(a=s[c]=s[c]||a,r[a]=b),this},overrideMimeType:function(a){return t||(k.mimeType=a),this},statusCode:function(a){var b;if(a)if(2>t)for(b in a)q[b]=[q[b],a[b]];else v.always(a[v.status]);return this},abort:function(a){var b=a||u;return c&&c.abort(b),x(0,b),this}};if(o.promise(v).complete=p.add,v.success=v.done,v.error=v.fail,k.url=((a||k.url||ob)+"").replace(eb,"").replace(jb,pb[1]+"//"),k.type=b.method||b.type||k.method||k.type,k.dataTypes=n.trim(k.dataType||"*").toLowerCase().match(E)||[""],null==k.crossDomain&&(h=kb.exec(k.url.toLowerCase()),k.crossDomain=!(!h||h[1]===pb[1]&&h[2]===pb[2]&&(h[3]||("http:"===h[1]?"80":"443"))===(pb[3]||("http:"===pb[1]?"80":"443")))),k.data&&k.processData&&"string"!=typeof k.data&&(k.data=n.param(k.data,k.traditional)),rb(lb,k,b,v),2===t)return v;i=n.event&&k.global,i&&0===n.active++&&n.event.trigger("ajaxStart"),k.type=k.type.toUpperCase(),k.hasContent=!ib.test(k.type),d=k.url,k.hasContent||(k.data&&(d=k.url+=(db.test(d)?"&":"?")+k.data,delete k.data),k.cache===!1&&(k.url=fb.test(d)?d.replace(fb,"$1_="+cb++):d+(db.test(d)?"&":"?")+"_="+cb++)),k.ifModified&&(n.lastModified[d]&&v.setRequestHeader("If-Modified-Since",n.lastModified[d]),n.etag[d]&&v.setRequestHeader("If-None-Match",n.etag[d])),(k.data&&k.hasContent&&k.contentType!==!1||b.contentType)&&v.setRequestHeader("Content-Type",k.contentType),v.setRequestHeader("Accept",k.dataTypes[0]&&k.accepts[k.dataTypes[0]]?k.accepts[k.dataTypes[0]]+("*"!==k.dataTypes[0]?", "+nb+"; q=0.01":""):k.accepts["*"]);for(j in k.headers)v.setRequestHeader(j,k.headers[j]);if(k.beforeSend&&(k.beforeSend.call(l,v,k)===!1||2===t))return v.abort();u="abort";for(j in{success:1,error:1,complete:1})v[j](k[j]);if(c=rb(mb,k,b,v)){v.readyState=1,i&&m.trigger("ajaxSend",[v,k]),k.async&&k.timeout>0&&(g=setTimeout(function(){v.abort("timeout")},k.timeout));try{t=1,c.send(r,x)}catch(w){if(!(2>t))throw w;x(-1,w)}}else x(-1,"No Transport");function x(a,b,f,h){var j,r,s,u,w,x=b;2!==t&&(t=2,g&&clearTimeout(g),c=void 0,e=h||"",v.readyState=a>0?4:0,j=a>=200&&300>a||304===a,f&&(u=tb(k,v,f)),u=ub(k,u,v,j),j?(k.ifModified&&(w=v.getResponseHeader("Last-Modified"),w&&(n.lastModified[d]=w),w=v.getResponseHeader("etag"),w&&(n.etag[d]=w)),204===a||"HEAD"===k.type?x="nocontent":304===a?x="notmodified":(x=u.state,r=u.data,s=u.error,j=!s)):(s=x,(a||!x)&&(x="error",0>a&&(a=0))),v.status=a,v.statusText=(b||x)+"",j?o.resolveWith(l,[r,x,v]):o.rejectWith(l,[v,x,s]),v.statusCode(q),q=void 0,i&&m.trigger(j?"ajaxSuccess":"ajaxError",[v,k,j?r:s]),p.fireWith(l,[v,x]),i&&(m.trigger("ajaxComplete",[v,k]),--n.active||n.event.trigger("ajaxStop")))}return v},getJSON:function(a,b,c){return n.get(a,b,c,"json")},getScript:function(a,b){return n.get(a,void 0,b,"script")}}),n.each(["get","post"],function(a,b){n[b]=function(a,c,d,e){return n.isFunction(c)&&(e=e||d,d=c,c=void 0),n.ajax({url:a,type:b,dataType:e,data:c,success:d})}}),n._evalUrl=function(a){return n.ajax({url:a,type:"GET",dataType:"script",async:!1,global:!1,"throws":!0})},n.fn.extend({wrapAll:function(a){var b;return n.isFunction(a)?this.each(function(b){n(this).wrapAll(a.call(this,b))}):(this[0]&&(b=n(a,this[0].ownerDocument).eq(0).clone(!0),this[0].parentNode&&b.insertBefore(this[0]),b.map(function(){var a=this;while(a.firstElementChild)a=a.firstElementChild;return a}).append(this)),this)},wrapInner:function(a){return this.each(n.isFunction(a)?function(b){n(this).wrapInner(a.call(this,b))}:function(){var b=n(this),c=b.contents();c.length?c.wrapAll(a):b.append(a)})},wrap:function(a){var b=n.isFunction(a);return this.each(function(c){n(this).wrapAll(b?a.call(this,c):a)})},unwrap:function(){return this.parent().each(function(){n.nodeName(this,"body")||n(this).replaceWith(this.childNodes)}).end()}}),n.expr.filters.hidden=function(a){return a.offsetWidth<=0&&a.offsetHeight<=0},n.expr.filters.visible=function(a){return!n.expr.filters.hidden(a)};var vb=/%20/g,wb=/\[\]$/,xb=/\r?\n/g,yb=/^(?:submit|button|image|reset|file)$/i,zb=/^(?:input|select|textarea|keygen)/i;function Ab(a,b,c,d){var e;if(n.isArray(b))n.each(b,function(b,e){c||wb.test(a)?d(a,e):Ab(a+"["+("object"==typeof e?b:"")+"]",e,c,d)});else if(c||"object"!==n.type(b))d(a,b);else for(e in b)Ab(a+"["+e+"]",b[e],c,d)}n.param=function(a,b){var c,d=[],e=function(a,b){b=n.isFunction(b)?b():null==b?"":b,d[d.length]=encodeURIComponent(a)+"="+encodeURIComponent(b)};if(void 0===b&&(b=n.ajaxSettings&&n.ajaxSettings.traditional),n.isArray(a)||a.jquery&&!n.isPlainObject(a))n.each(a,function(){e(this.name,this.value)});else for(c in a)Ab(c,a[c],b,e);return d.join("&").replace(vb,"+")},n.fn.extend({serialize:function(){return n.param(this.serializeArray())},serializeArray:function(){return this.map(function(){var a=n.prop(this,"elements");return a?n.makeArray(a):this}).filter(function(){var a=this.type;return this.name&&!n(this).is(":disabled")&&zb.test(this.nodeName)&&!yb.test(a)&&(this.checked||!T.test(a))}).map(function(a,b){var c=n(this).val();return null==c?null:n.isArray(c)?n.map(c,function(a){return{name:b.name,value:a.replace(xb,"\r\n")}}):{name:b.name,value:c.replace(xb,"\r\n")}}).get()}}),n.ajaxSettings.xhr=function(){try{return new XMLHttpRequest}catch(a){}};var Bb=0,Cb={},Db={0:200,1223:204},Eb=n.ajaxSettings.xhr();a.attachEvent&&a.attachEvent("onunload",function(){for(var a in Cb)Cb[a]()}),k.cors=!!Eb&&"withCredentials"in Eb,k.ajax=Eb=!!Eb,n.ajaxTransport(function(a){var b;return k.cors||Eb&&!a.crossDomain?{send:function(c,d){var e,f=a.xhr(),g=++Bb;if(f.open(a.type,a.url,a.async,a.username,a.password),a.xhrFields)for(e in a.xhrFields)f[e]=a.xhrFields[e];a.mimeType&&f.overrideMimeType&&f.overrideMimeType(a.mimeType),a.crossDomain||c["X-Requested-With"]||(c["X-Requested-With"]="XMLHttpRequest");for(e in c)f.setRequestHeader(e,c[e]);b=function(a){return function(){b&&(delete Cb[g],b=f.onload=f.onerror=null,"abort"===a?f.abort():"error"===a?d(f.status,f.statusText):d(Db[f.status]||f.status,f.statusText,"string"==typeof f.responseText?{text:f.responseText}:void 0,f.getAllResponseHeaders()))}},f.onload=b(),f.onerror=b("error"),b=Cb[g]=b("abort");try{f.send(a.hasContent&&a.data||null)}catch(h){if(b)throw h}},abort:function(){b&&b()}}:void 0}),n.ajaxSetup({accepts:{script:"text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"},contents:{script:/(?:java|ecma)script/},converters:{"text script":function(a){return n.globalEval(a),a}}}),n.ajaxPrefilter("script",function(a){void 0===a.cache&&(a.cache=!1),a.crossDomain&&(a.type="GET")}),n.ajaxTransport("script",function(a){if(a.crossDomain){var b,c;return{send:function(d,e){b=n("<script>").prop({async:!0,charset:a.scriptCharset,src:a.url}).on("load error",c=function(a){b.remove(),c=null,a&&e("error"===a.type?404:200,a.type)}),l.head.appendChild(b[0])},abort:function(){c&&c()}}}});var Fb=[],Gb=/(=)\?(?=&|$)|\?\?/;n.ajaxSetup({jsonp:"callback",jsonpCallback:function(){var a=Fb.pop()||n.expando+"_"+cb++;return this[a]=!0,a}}),n.ajaxPrefilter("json jsonp",function(b,c,d){var e,f,g,h=b.jsonp!==!1&&(Gb.test(b.url)?"url":"string"==typeof b.data&&!(b.contentType||"").indexOf("application/x-www-form-urlencoded")&&Gb.test(b.data)&&"data");return h||"jsonp"===b.dataTypes[0]?(e=b.jsonpCallback=n.isFunction(b.jsonpCallback)?b.jsonpCallback():b.jsonpCallback,h?b[h]=b[h].replace(Gb,"$1"+e):b.jsonp!==!1&&(b.url+=(db.test(b.url)?"&":"?")+b.jsonp+"="+e),b.converters["script json"]=function(){return g||n.error(e+" was not called"),g[0]},b.dataTypes[0]="json",f=a[e],a[e]=function(){g=arguments},d.always(function(){a[e]=f,b[e]&&(b.jsonpCallback=c.jsonpCallback,Fb.push(e)),g&&n.isFunction(f)&&f(g[0]),g=f=void 0}),"script"):void 0}),n.parseHTML=function(a,b,c){if(!a||"string"!=typeof a)return null;"boolean"==typeof b&&(c=b,b=!1),b=b||l;var d=v.exec(a),e=!c&&[];return d?[b.createElement(d[1])]:(d=n.buildFragment([a],b,e),e&&e.length&&n(e).remove(),n.merge([],d.childNodes))};var Hb=n.fn.load;n.fn.load=function(a,b,c){if("string"!=typeof a&&Hb)return Hb.apply(this,arguments);var d,e,f,g=this,h=a.indexOf(" ");return h>=0&&(d=n.trim(a.slice(h)),a=a.slice(0,h)),n.isFunction(b)?(c=b,b=void 0):b&&"object"==typeof b&&(e="POST"),g.length>0&&n.ajax({url:a,type:e,dataType:"html",data:b}).done(function(a){f=arguments,g.html(d?n("<div>").append(n.parseHTML(a)).find(d):a)}).complete(c&&function(a,b){g.each(c,f||[a.responseText,b,a])}),this},n.each(["ajaxStart","ajaxStop","ajaxComplete","ajaxError","ajaxSuccess","ajaxSend"],function(a,b){n.fn[b]=function(a){return this.on(b,a)}}),n.expr.filters.animated=function(a){return n.grep(n.timers,function(b){return a===b.elem}).length};var Ib=a.document.documentElement;function Jb(a){return n.isWindow(a)?a:9===a.nodeType&&a.defaultView}n.offset={setOffset:function(a,b,c){var d,e,f,g,h,i,j,k=n.css(a,"position"),l=n(a),m={};"static"===k&&(a.style.position="relative"),h=l.offset(),f=n.css(a,"top"),i=n.css(a,"left"),j=("absolute"===k||"fixed"===k)&&(f+i).indexOf("auto")>-1,j?(d=l.position(),g=d.top,e=d.left):(g=parseFloat(f)||0,e=parseFloat(i)||0),n.isFunction(b)&&(b=b.call(a,c,h)),null!=b.top&&(m.top=b.top-h.top+g),null!=b.left&&(m.left=b.left-h.left+e),"using"in b?b.using.call(a,m):l.css(m)}},n.fn.extend({offset:function(a){if(arguments.length)return void 0===a?this:this.each(function(b){n.offset.setOffset(this,a,b)});var b,c,d=this[0],e={top:0,left:0},f=d&&d.ownerDocument;if(f)return b=f.documentElement,n.contains(b,d)?(typeof d.getBoundingClientRect!==U&&(e=d.getBoundingClientRect()),c=Jb(f),{top:e.top+c.pageYOffset-b.clientTop,left:e.left+c.pageXOffset-b.clientLeft}):e},position:function(){if(this[0]){var a,b,c=this[0],d={top:0,left:0};return"fixed"===n.css(c,"position")?b=c.getBoundingClientRect():(a=this.offsetParent(),b=this.offset(),n.nodeName(a[0],"html")||(d=a.offset()),d.top+=n.css(a[0],"borderTopWidth",!0),d.left+=n.css(a[0],"borderLeftWidth",!0)),{top:b.top-d.top-n.css(c,"marginTop",!0),left:b.left-d.left-n.css(c,"marginLeft",!0)}}},offsetParent:function(){return this.map(function(){var a=this.offsetParent||Ib;while(a&&!n.nodeName(a,"html")&&"static"===n.css(a,"position"))a=a.offsetParent;return a||Ib})}}),n.each({scrollLeft:"pageXOffset",scrollTop:"pageYOffset"},function(b,c){var d="pageYOffset"===c;n.fn[b]=function(e){return J(this,function(b,e,f){var g=Jb(b);return void 0===f?g?g[c]:b[e]:void(g?g.scrollTo(d?a.pageXOffset:f,d?f:a.pageYOffset):b[e]=f)},b,e,arguments.length,null)}}),n.each(["top","left"],function(a,b){n.cssHooks[b]=ya(k.pixelPosition,function(a,c){return c?(c=xa(a,b),va.test(c)?n(a).position()[b]+"px":c):void 0})}),n.each({Height:"height",Width:"width"},function(a,b){n.each({padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){var f=arguments.length&&(c||"boolean"!=typeof d),g=c||(d===!0||e===!0?"margin":"border");return J(this,function(b,c,d){var e;return n.isWindow(b)?b.document.documentElement["client"+a]:9===b.nodeType?(e=b.documentElement,Math.max(b.body["scroll"+a],e["scroll"+a],b.body["offset"+a],e["offset"+a],e["client"+a])):void 0===d?n.css(b,c,g):n.style(b,c,d,g)},b,f?d:void 0,f,null)}})}),n.fn.size=function(){return this.length},n.fn.andSelf=n.fn.addBack,"function"==typeof define&&define.amd&&define("jquery",[],function(){return n});var Kb=a.jQuery,Lb=a.$;return n.noConflict=function(b){return a.$===n&&(a.$=Lb),b&&a.jQuery===n&&(a.jQuery=Kb),n},typeof b===U&&(a.jQuery=a.$=n),n});
 //# sourceMappingURL=jquery.min.map
 
+// bootstrap.min.js
+/*!
+ * Bootstrap v3.1.1 (http://getbootstrap.com)
+ * Copyright 2011-2014 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires jQuery");+function(a){"use strict";function b(){var a=document.createElement("bootstrap"),b={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var c in b)if(void 0!==a.style[c])return{end:b[c]};return!1}a.fn.emulateTransitionEnd=function(b){var c=!1,d=this;a(this).one(a.support.transition.end,function(){c=!0});var e=function(){c||a(d).trigger(a.support.transition.end)};return setTimeout(e,b),this},a(function(){a.support.transition=b()})}(jQuery),+function(a){"use strict";var b='[data-dismiss="alert"]',c=function(c){a(c).on("click",b,this.close)};c.prototype.close=function(b){function c(){f.trigger("closed.bs.alert").remove()}var d=a(this),e=d.attr("data-target");e||(e=d.attr("href"),e=e&&e.replace(/.*(?=#[^\s]*$)/,""));var f=a(e);b&&b.preventDefault(),f.length||(f=d.hasClass("alert")?d:d.parent()),f.trigger(b=a.Event("close.bs.alert")),b.isDefaultPrevented()||(f.removeClass("in"),a.support.transition&&f.hasClass("fade")?f.one(a.support.transition.end,c).emulateTransitionEnd(150):c())};var d=a.fn.alert;a.fn.alert=function(b){return this.each(function(){var d=a(this),e=d.data("bs.alert");e||d.data("bs.alert",e=new c(this)),"string"==typeof b&&e[b].call(d)})},a.fn.alert.Constructor=c,a.fn.alert.noConflict=function(){return a.fn.alert=d,this},a(document).on("click.bs.alert.data-api",b,c.prototype.close)}(jQuery),+function(a){"use strict";var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d),this.isLoading=!1};b.DEFAULTS={loadingText:"loading..."},b.prototype.setState=function(b){var c="disabled",d=this.$element,e=d.is("input")?"val":"html",f=d.data();b+="Text",f.resetText||d.data("resetText",d[e]()),d[e](f[b]||this.options[b]),setTimeout(a.proxy(function(){"loadingText"==b?(this.isLoading=!0,d.addClass(c).attr(c,c)):this.isLoading&&(this.isLoading=!1,d.removeClass(c).removeAttr(c))},this),0)},b.prototype.toggle=function(){var a=!0,b=this.$element.closest('[data-toggle="buttons"]');if(b.length){var c=this.$element.find("input");"radio"==c.prop("type")&&(c.prop("checked")&&this.$element.hasClass("active")?a=!1:b.find(".active").removeClass("active")),a&&c.prop("checked",!this.$element.hasClass("active")).trigger("change")}a&&this.$element.toggleClass("active")};var c=a.fn.button;a.fn.button=function(c){return this.each(function(){var d=a(this),e=d.data("bs.button"),f="object"==typeof c&&c;e||d.data("bs.button",e=new b(this,f)),"toggle"==c?e.toggle():c&&e.setState(c)})},a.fn.button.Constructor=b,a.fn.button.noConflict=function(){return a.fn.button=c,this},a(document).on("click.bs.button.data-api","[data-toggle^=button]",function(b){var c=a(b.target);c.hasClass("btn")||(c=c.closest(".btn")),c.button("toggle"),b.preventDefault()})}(jQuery),+function(a){"use strict";var b=function(b,c){this.$element=a(b),this.$indicators=this.$element.find(".carousel-indicators"),this.options=c,this.paused=this.sliding=this.interval=this.$active=this.$items=null,"hover"==this.options.pause&&this.$element.on("mouseenter",a.proxy(this.pause,this)).on("mouseleave",a.proxy(this.cycle,this))};b.DEFAULTS={interval:5e3,pause:"hover",wrap:!0},b.prototype.cycle=function(b){return b||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(a.proxy(this.next,this),this.options.interval)),this},b.prototype.getActiveIndex=function(){return this.$active=this.$element.find(".item.active"),this.$items=this.$active.parent().children(),this.$items.index(this.$active)},b.prototype.to=function(b){var c=this,d=this.getActiveIndex();return b>this.$items.length-1||0>b?void 0:this.sliding?this.$element.one("slid.bs.carousel",function(){c.to(b)}):d==b?this.pause().cycle():this.slide(b>d?"next":"prev",a(this.$items[b]))},b.prototype.pause=function(b){return b||(this.paused=!0),this.$element.find(".next, .prev").length&&a.support.transition&&(this.$element.trigger(a.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},b.prototype.next=function(){return this.sliding?void 0:this.slide("next")},b.prototype.prev=function(){return this.sliding?void 0:this.slide("prev")},b.prototype.slide=function(b,c){var d=this.$element.find(".item.active"),e=c||d[b](),f=this.interval,g="next"==b?"left":"right",h="next"==b?"first":"last",i=this;if(!e.length){if(!this.options.wrap)return;e=this.$element.find(".item")[h]()}if(e.hasClass("active"))return this.sliding=!1;var j=a.Event("slide.bs.carousel",{relatedTarget:e[0],direction:g});return this.$element.trigger(j),j.isDefaultPrevented()?void 0:(this.sliding=!0,f&&this.pause(),this.$indicators.length&&(this.$indicators.find(".active").removeClass("active"),this.$element.one("slid.bs.carousel",function(){var b=a(i.$indicators.children()[i.getActiveIndex()]);b&&b.addClass("active")})),a.support.transition&&this.$element.hasClass("slide")?(e.addClass(b),e[0].offsetWidth,d.addClass(g),e.addClass(g),d.one(a.support.transition.end,function(){e.removeClass([b,g].join(" ")).addClass("active"),d.removeClass(["active",g].join(" ")),i.sliding=!1,setTimeout(function(){i.$element.trigger("slid.bs.carousel")},0)}).emulateTransitionEnd(1e3*d.css("transition-duration").slice(0,-1))):(d.removeClass("active"),e.addClass("active"),this.sliding=!1,this.$element.trigger("slid.bs.carousel")),f&&this.cycle(),this)};var c=a.fn.carousel;a.fn.carousel=function(c){return this.each(function(){var d=a(this),e=d.data("bs.carousel"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c),g="string"==typeof c?c:f.slide;e||d.data("bs.carousel",e=new b(this,f)),"number"==typeof c?e.to(c):g?e[g]():f.interval&&e.pause().cycle()})},a.fn.carousel.Constructor=b,a.fn.carousel.noConflict=function(){return a.fn.carousel=c,this},a(document).on("click.bs.carousel.data-api","[data-slide], [data-slide-to]",function(b){var c,d=a(this),e=a(d.attr("data-target")||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,"")),f=a.extend({},e.data(),d.data()),g=d.attr("data-slide-to");g&&(f.interval=!1),e.carousel(f),(g=d.attr("data-slide-to"))&&e.data("bs.carousel").to(g),b.preventDefault()}),a(window).on("load",function(){a('[data-ride="carousel"]').each(function(){var b=a(this);b.carousel(b.data())})})}(jQuery),+function(a){"use strict";var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d),this.transitioning=null,this.options.parent&&(this.$parent=a(this.options.parent)),this.options.toggle&&this.toggle()};b.DEFAULTS={toggle:!0},b.prototype.dimension=function(){var a=this.$element.hasClass("width");return a?"width":"height"},b.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var b=a.Event("show.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.$parent&&this.$parent.find("> .panel > .in");if(c&&c.length){var d=c.data("bs.collapse");if(d&&d.transitioning)return;c.collapse("hide"),d||c.data("bs.collapse",null)}var e=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[e](0),this.transitioning=1;var f=function(){this.$element.removeClass("collapsing").addClass("collapse in")[e]("auto"),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!a.support.transition)return f.call(this);var g=a.camelCase(["scroll",e].join("-"));this.$element.one(a.support.transition.end,a.proxy(f,this)).emulateTransitionEnd(350)[e](this.$element[0][g])}}},b.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var b=a.Event("hide.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.dimension();this.$element[c](this.$element[c]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse").removeClass("in"),this.transitioning=1;var d=function(){this.transitioning=0,this.$element.trigger("hidden.bs.collapse").removeClass("collapsing").addClass("collapse")};return a.support.transition?void this.$element[c](0).one(a.support.transition.end,a.proxy(d,this)).emulateTransitionEnd(350):d.call(this)}}},b.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()};var c=a.fn.collapse;a.fn.collapse=function(c){return this.each(function(){var d=a(this),e=d.data("bs.collapse"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c);!e&&f.toggle&&"show"==c&&(c=!c),e||d.data("bs.collapse",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.collapse.Constructor=b,a.fn.collapse.noConflict=function(){return a.fn.collapse=c,this},a(document).on("click.bs.collapse.data-api","[data-toggle=collapse]",function(b){var c,d=a(this),e=d.attr("data-target")||b.preventDefault()||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,""),f=a(e),g=f.data("bs.collapse"),h=g?"toggle":d.data(),i=d.attr("data-parent"),j=i&&a(i);g&&g.transitioning||(j&&j.find('[data-toggle=collapse][data-parent="'+i+'"]').not(d).addClass("collapsed"),d[f.hasClass("in")?"addClass":"removeClass"]("collapsed")),f.collapse(h)})}(jQuery),+function(a){"use strict";function b(b){a(d).remove(),a(e).each(function(){var d=c(a(this)),e={relatedTarget:this};d.hasClass("open")&&(d.trigger(b=a.Event("hide.bs.dropdown",e)),b.isDefaultPrevented()||d.removeClass("open").trigger("hidden.bs.dropdown",e))})}function c(b){var c=b.attr("data-target");c||(c=b.attr("href"),c=c&&/#[A-Za-z]/.test(c)&&c.replace(/.*(?=#[^\s]*$)/,""));var d=c&&a(c);return d&&d.length?d:b.parent()}var d=".dropdown-backdrop",e="[data-toggle=dropdown]",f=function(b){a(b).on("click.bs.dropdown",this.toggle)};f.prototype.toggle=function(d){var e=a(this);if(!e.is(".disabled, :disabled")){var f=c(e),g=f.hasClass("open");if(b(),!g){"ontouchstart"in document.documentElement&&!f.closest(".navbar-nav").length&&a('<div class="dropdown-backdrop"/>').insertAfter(a(this)).on("click",b);var h={relatedTarget:this};if(f.trigger(d=a.Event("show.bs.dropdown",h)),d.isDefaultPrevented())return;f.toggleClass("open").trigger("shown.bs.dropdown",h),e.focus()}return!1}},f.prototype.keydown=function(b){if(/(38|40|27)/.test(b.keyCode)){var d=a(this);if(b.preventDefault(),b.stopPropagation(),!d.is(".disabled, :disabled")){var f=c(d),g=f.hasClass("open");if(!g||g&&27==b.keyCode)return 27==b.which&&f.find(e).focus(),d.click();var h=" li:not(.divider):visible a",i=f.find("[role=menu]"+h+", [role=listbox]"+h);if(i.length){var j=i.index(i.filter(":focus"));38==b.keyCode&&j>0&&j--,40==b.keyCode&&j<i.length-1&&j++,~j||(j=0),i.eq(j).focus()}}}};var g=a.fn.dropdown;a.fn.dropdown=function(b){return this.each(function(){var c=a(this),d=c.data("bs.dropdown");d||c.data("bs.dropdown",d=new f(this)),"string"==typeof b&&d[b].call(c)})},a.fn.dropdown.Constructor=f,a.fn.dropdown.noConflict=function(){return a.fn.dropdown=g,this},a(document).on("click.bs.dropdown.data-api",b).on("click.bs.dropdown.data-api",".dropdown form",function(a){a.stopPropagation()}).on("click.bs.dropdown.data-api",e,f.prototype.toggle).on("keydown.bs.dropdown.data-api",e+", [role=menu], [role=listbox]",f.prototype.keydown)}(jQuery),+function(a){"use strict";var b=function(b,c){this.options=c,this.$element=a(b),this.$backdrop=this.isShown=null,this.options.remote&&this.$element.find(".modal-content").load(this.options.remote,a.proxy(function(){this.$element.trigger("loaded.bs.modal")},this))};b.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},b.prototype.toggle=function(a){return this[this.isShown?"hide":"show"](a)},b.prototype.show=function(b){var c=this,d=a.Event("show.bs.modal",{relatedTarget:b});this.$element.trigger(d),this.isShown||d.isDefaultPrevented()||(this.isShown=!0,this.escape(),this.$element.on("click.dismiss.bs.modal",'[data-dismiss="modal"]',a.proxy(this.hide,this)),this.backdrop(function(){var d=a.support.transition&&c.$element.hasClass("fade");c.$element.parent().length||c.$element.appendTo(document.body),c.$element.show().scrollTop(0),d&&c.$element[0].offsetWidth,c.$element.addClass("in").attr("aria-hidden",!1),c.enforceFocus();var e=a.Event("shown.bs.modal",{relatedTarget:b});d?c.$element.find(".modal-dialog").one(a.support.transition.end,function(){c.$element.focus().trigger(e)}).emulateTransitionEnd(300):c.$element.focus().trigger(e)}))},b.prototype.hide=function(b){b&&b.preventDefault(),b=a.Event("hide.bs.modal"),this.$element.trigger(b),this.isShown&&!b.isDefaultPrevented()&&(this.isShown=!1,this.escape(),a(document).off("focusin.bs.modal"),this.$element.removeClass("in").attr("aria-hidden",!0).off("click.dismiss.bs.modal"),a.support.transition&&this.$element.hasClass("fade")?this.$element.one(a.support.transition.end,a.proxy(this.hideModal,this)).emulateTransitionEnd(300):this.hideModal())},b.prototype.enforceFocus=function(){a(document).off("focusin.bs.modal").on("focusin.bs.modal",a.proxy(function(a){this.$element[0]===a.target||this.$element.has(a.target).length||this.$element.focus()},this))},b.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keyup.dismiss.bs.modal",a.proxy(function(a){27==a.which&&this.hide()},this)):this.isShown||this.$element.off("keyup.dismiss.bs.modal")},b.prototype.hideModal=function(){var a=this;this.$element.hide(),this.backdrop(function(){a.removeBackdrop(),a.$element.trigger("hidden.bs.modal")})},b.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},b.prototype.backdrop=function(b){var c=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var d=a.support.transition&&c;if(this.$backdrop=a('<div class="modal-backdrop '+c+'" />').appendTo(document.body),this.$element.on("click.dismiss.bs.modal",a.proxy(function(a){a.target===a.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus.call(this.$element[0]):this.hide.call(this))},this)),d&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!b)return;d?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()}else!this.isShown&&this.$backdrop?(this.$backdrop.removeClass("in"),a.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()):b&&b()};var c=a.fn.modal;a.fn.modal=function(c,d){return this.each(function(){var e=a(this),f=e.data("bs.modal"),g=a.extend({},b.DEFAULTS,e.data(),"object"==typeof c&&c);f||e.data("bs.modal",f=new b(this,g)),"string"==typeof c?f[c](d):g.show&&f.show(d)})},a.fn.modal.Constructor=b,a.fn.modal.noConflict=function(){return a.fn.modal=c,this},a(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(b){var c=a(this),d=c.attr("href"),e=a(c.attr("data-target")||d&&d.replace(/.*(?=#[^\s]+$)/,"")),f=e.data("bs.modal")?"toggle":a.extend({remote:!/#/.test(d)&&d},e.data(),c.data());c.is("a")&&b.preventDefault(),e.modal(f,this).one("hide",function(){c.is(":visible")&&c.focus()})}),a(document).on("show.bs.modal",".modal",function(){a(document.body).addClass("modal-open")}).on("hidden.bs.modal",".modal",function(){a(document.body).removeClass("modal-open")})}(jQuery),+function(a){"use strict";var b=function(a,b){this.type=this.options=this.enabled=this.timeout=this.hoverState=this.$element=null,this.init("tooltip",a,b)};b.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1},b.prototype.init=function(b,c,d){this.enabled=!0,this.type=b,this.$element=a(c),this.options=this.getOptions(d);for(var e=this.options.trigger.split(" "),f=e.length;f--;){var g=e[f];if("click"==g)this.$element.on("click."+this.type,this.options.selector,a.proxy(this.toggle,this));else if("manual"!=g){var h="hover"==g?"mouseenter":"focusin",i="hover"==g?"mouseleave":"focusout";this.$element.on(h+"."+this.type,this.options.selector,a.proxy(this.enter,this)),this.$element.on(i+"."+this.type,this.options.selector,a.proxy(this.leave,this))}}this.options.selector?this._options=a.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.getOptions=function(b){return b=a.extend({},this.getDefaults(),this.$element.data(),b),b.delay&&"number"==typeof b.delay&&(b.delay={show:b.delay,hide:b.delay}),b},b.prototype.getDelegateOptions=function(){var b={},c=this.getDefaults();return this._options&&a.each(this._options,function(a,d){c[a]!=d&&(b[a]=d)}),b},b.prototype.enter=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="in",c.options.delay&&c.options.delay.show?void(c.timeout=setTimeout(function(){"in"==c.hoverState&&c.show()},c.options.delay.show)):c.show()},b.prototype.leave=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="out",c.options.delay&&c.options.delay.hide?void(c.timeout=setTimeout(function(){"out"==c.hoverState&&c.hide()},c.options.delay.hide)):c.hide()},b.prototype.show=function(){var b=a.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){if(this.$element.trigger(b),b.isDefaultPrevented())return;var c=this,d=this.tip();this.setContent(),this.options.animation&&d.addClass("fade");var e="function"==typeof this.options.placement?this.options.placement.call(this,d[0],this.$element[0]):this.options.placement,f=/\s?auto?\s?/i,g=f.test(e);g&&(e=e.replace(f,"")||"top"),d.detach().css({top:0,left:0,display:"block"}).addClass(e),this.options.container?d.appendTo(this.options.container):d.insertAfter(this.$element);var h=this.getPosition(),i=d[0].offsetWidth,j=d[0].offsetHeight;if(g){var k=this.$element.parent(),l=e,m=document.documentElement.scrollTop||document.body.scrollTop,n="body"==this.options.container?window.innerWidth:k.outerWidth(),o="body"==this.options.container?window.innerHeight:k.outerHeight(),p="body"==this.options.container?0:k.offset().left;e="bottom"==e&&h.top+h.height+j-m>o?"top":"top"==e&&h.top-m-j<0?"bottom":"right"==e&&h.right+i>n?"left":"left"==e&&h.left-i<p?"right":e,d.removeClass(l).addClass(e)}var q=this.getCalculatedOffset(e,h,i,j);this.applyPlacement(q,e),this.hoverState=null;var r=function(){c.$element.trigger("shown.bs."+c.type)};a.support.transition&&this.$tip.hasClass("fade")?d.one(a.support.transition.end,r).emulateTransitionEnd(150):r()}},b.prototype.applyPlacement=function(b,c){var d,e=this.tip(),f=e[0].offsetWidth,g=e[0].offsetHeight,h=parseInt(e.css("margin-top"),10),i=parseInt(e.css("margin-left"),10);isNaN(h)&&(h=0),isNaN(i)&&(i=0),b.top=b.top+h,b.left=b.left+i,a.offset.setOffset(e[0],a.extend({using:function(a){e.css({top:Math.round(a.top),left:Math.round(a.left)})}},b),0),e.addClass("in");var j=e[0].offsetWidth,k=e[0].offsetHeight;if("top"==c&&k!=g&&(d=!0,b.top=b.top+g-k),/bottom|top/.test(c)){var l=0;b.left<0&&(l=-2*b.left,b.left=0,e.offset(b),j=e[0].offsetWidth,k=e[0].offsetHeight),this.replaceArrow(l-f+j,j,"left")}else this.replaceArrow(k-g,k,"top");d&&e.offset(b)},b.prototype.replaceArrow=function(a,b,c){this.arrow().css(c,a?50*(1-a/b)+"%":"")},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle();a.find(".tooltip-inner")[this.options.html?"html":"text"](b),a.removeClass("fade in top bottom left right")},b.prototype.hide=function(){function b(){"in"!=c.hoverState&&d.detach(),c.$element.trigger("hidden.bs."+c.type)}var c=this,d=this.tip(),e=a.Event("hide.bs."+this.type);return this.$element.trigger(e),e.isDefaultPrevented()?void 0:(d.removeClass("in"),a.support.transition&&this.$tip.hasClass("fade")?d.one(a.support.transition.end,b).emulateTransitionEnd(150):b(),this.hoverState=null,this)},b.prototype.fixTitle=function(){var a=this.$element;(a.attr("title")||"string"!=typeof a.attr("data-original-title"))&&a.attr("data-original-title",a.attr("title")||"").attr("title","")},b.prototype.hasContent=function(){return this.getTitle()},b.prototype.getPosition=function(){var b=this.$element[0];return a.extend({},"function"==typeof b.getBoundingClientRect?b.getBoundingClientRect():{width:b.offsetWidth,height:b.offsetHeight},this.$element.offset())},b.prototype.getCalculatedOffset=function(a,b,c,d){return"bottom"==a?{top:b.top+b.height,left:b.left+b.width/2-c/2}:"top"==a?{top:b.top-d,left:b.left+b.width/2-c/2}:"left"==a?{top:b.top+b.height/2-d/2,left:b.left-c}:{top:b.top+b.height/2-d/2,left:b.left+b.width}},b.prototype.getTitle=function(){var a,b=this.$element,c=this.options;return a=b.attr("data-original-title")||("function"==typeof c.title?c.title.call(b[0]):c.title)},b.prototype.tip=function(){return this.$tip=this.$tip||a(this.options.template)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},b.prototype.validate=function(){this.$element[0].parentNode||(this.hide(),this.$element=null,this.options=null)},b.prototype.enable=function(){this.enabled=!0},b.prototype.disable=function(){this.enabled=!1},b.prototype.toggleEnabled=function(){this.enabled=!this.enabled},b.prototype.toggle=function(b){var c=b?a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type):this;c.tip().hasClass("in")?c.leave(c):c.enter(c)},b.prototype.destroy=function(){clearTimeout(this.timeout),this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var c=a.fn.tooltip;a.fn.tooltip=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tooltip"),f="object"==typeof c&&c;(e||"destroy"!=c)&&(e||d.data("bs.tooltip",e=new b(this,f)),"string"==typeof c&&e[c]())})},a.fn.tooltip.Constructor=b,a.fn.tooltip.noConflict=function(){return a.fn.tooltip=c,this}}(jQuery),+function(a){"use strict";var b=function(a,b){this.init("popover",a,b)};if(!a.fn.tooltip)throw new Error("Popover requires tooltip.js");b.DEFAULTS=a.extend({},a.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),b.prototype=a.extend({},a.fn.tooltip.Constructor.prototype),b.prototype.constructor=b,b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle(),c=this.getContent();a.find(".popover-title")[this.options.html?"html":"text"](b),a.find(".popover-content")[this.options.html?"string"==typeof c?"html":"append":"text"](c),a.removeClass("fade top bottom left right in"),a.find(".popover-title").html()||a.find(".popover-title").hide()},b.prototype.hasContent=function(){return this.getTitle()||this.getContent()},b.prototype.getContent=function(){var a=this.$element,b=this.options;return a.attr("data-content")||("function"==typeof b.content?b.content.call(a[0]):b.content)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},b.prototype.tip=function(){return this.$tip||(this.$tip=a(this.options.template)),this.$tip};var c=a.fn.popover;a.fn.popover=function(c){return this.each(function(){var d=a(this),e=d.data("bs.popover"),f="object"==typeof c&&c;(e||"destroy"!=c)&&(e||d.data("bs.popover",e=new b(this,f)),"string"==typeof c&&e[c]())})},a.fn.popover.Constructor=b,a.fn.popover.noConflict=function(){return a.fn.popover=c,this}}(jQuery),+function(a){"use strict";function b(c,d){var e,f=a.proxy(this.process,this);this.$element=a(a(c).is("body")?window:c),this.$body=a("body"),this.$scrollElement=this.$element.on("scroll.bs.scroll-spy.data-api",f),this.options=a.extend({},b.DEFAULTS,d),this.selector=(this.options.target||(e=a(c).attr("href"))&&e.replace(/.*(?=#[^\s]+$)/,"")||"")+" .nav li > a",this.offsets=a([]),this.targets=a([]),this.activeTarget=null,this.refresh(),this.process()}b.DEFAULTS={offset:10},b.prototype.refresh=function(){var b=this.$element[0]==window?"offset":"position";this.offsets=a([]),this.targets=a([]);{var c=this;this.$body.find(this.selector).map(function(){var d=a(this),e=d.data("target")||d.attr("href"),f=/^#./.test(e)&&a(e);return f&&f.length&&f.is(":visible")&&[[f[b]().top+(!a.isWindow(c.$scrollElement.get(0))&&c.$scrollElement.scrollTop()),e]]||null}).sort(function(a,b){return a[0]-b[0]}).each(function(){c.offsets.push(this[0]),c.targets.push(this[1])})}},b.prototype.process=function(){var a,b=this.$scrollElement.scrollTop()+this.options.offset,c=this.$scrollElement[0].scrollHeight||this.$body[0].scrollHeight,d=c-this.$scrollElement.height(),e=this.offsets,f=this.targets,g=this.activeTarget;if(b>=d)return g!=(a=f.last()[0])&&this.activate(a);if(g&&b<=e[0])return g!=(a=f[0])&&this.activate(a);for(a=e.length;a--;)g!=f[a]&&b>=e[a]&&(!e[a+1]||b<=e[a+1])&&this.activate(f[a])},b.prototype.activate=function(b){this.activeTarget=b,a(this.selector).parentsUntil(this.options.target,".active").removeClass("active");var c=this.selector+'[data-target="'+b+'"],'+this.selector+'[href="'+b+'"]',d=a(c).parents("li").addClass("active");d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active")),d.trigger("activate.bs.scrollspy")};var c=a.fn.scrollspy;a.fn.scrollspy=function(c){return this.each(function(){var d=a(this),e=d.data("bs.scrollspy"),f="object"==typeof c&&c;e||d.data("bs.scrollspy",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.scrollspy.Constructor=b,a.fn.scrollspy.noConflict=function(){return a.fn.scrollspy=c,this},a(window).on("load",function(){a('[data-spy="scroll"]').each(function(){var b=a(this);b.scrollspy(b.data())})})}(jQuery),+function(a){"use strict";var b=function(b){this.element=a(b)};b.prototype.show=function(){var b=this.element,c=b.closest("ul:not(.dropdown-menu)"),d=b.data("target");if(d||(d=b.attr("href"),d=d&&d.replace(/.*(?=#[^\s]*$)/,"")),!b.parent("li").hasClass("active")){var e=c.find(".active:last a")[0],f=a.Event("show.bs.tab",{relatedTarget:e});if(b.trigger(f),!f.isDefaultPrevented()){var g=a(d);this.activate(b.parent("li"),c),this.activate(g,g.parent(),function(){b.trigger({type:"shown.bs.tab",relatedTarget:e})})}}},b.prototype.activate=function(b,c,d){function e(){f.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"),b.addClass("active"),g?(b[0].offsetWidth,b.addClass("in")):b.removeClass("fade"),b.parent(".dropdown-menu")&&b.closest("li.dropdown").addClass("active"),d&&d()}var f=c.find("> .active"),g=d&&a.support.transition&&f.hasClass("fade");g?f.one(a.support.transition.end,e).emulateTransitionEnd(150):e(),f.removeClass("in")};var c=a.fn.tab;a.fn.tab=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tab");e||d.data("bs.tab",e=new b(this)),"string"==typeof c&&e[c]()})},a.fn.tab.Constructor=b,a.fn.tab.noConflict=function(){return a.fn.tab=c,this},a(document).on("click.bs.tab.data-api",'[data-toggle="tab"], [data-toggle="pill"]',function(b){b.preventDefault(),a(this).tab("show")})}(jQuery),+function(a){"use strict";var b=function(c,d){this.options=a.extend({},b.DEFAULTS,d),this.$window=a(window).on("scroll.bs.affix.data-api",a.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",a.proxy(this.checkPositionWithEventLoop,this)),this.$element=a(c),this.affixed=this.unpin=this.pinnedOffset=null,this.checkPosition()};b.RESET="affix affix-top affix-bottom",b.DEFAULTS={offset:0},b.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(b.RESET).addClass("affix");var a=this.$window.scrollTop(),c=this.$element.offset();return this.pinnedOffset=c.top-a},b.prototype.checkPositionWithEventLoop=function(){setTimeout(a.proxy(this.checkPosition,this),1)},b.prototype.checkPosition=function(){if(this.$element.is(":visible")){var c=a(document).height(),d=this.$window.scrollTop(),e=this.$element.offset(),f=this.options.offset,g=f.top,h=f.bottom;"top"==this.affixed&&(e.top+=d),"object"!=typeof f&&(h=g=f),"function"==typeof g&&(g=f.top(this.$element)),"function"==typeof h&&(h=f.bottom(this.$element));var i=null!=this.unpin&&d+this.unpin<=e.top?!1:null!=h&&e.top+this.$element.height()>=c-h?"bottom":null!=g&&g>=d?"top":!1;if(this.affixed!==i){this.unpin&&this.$element.css("top","");var j="affix"+(i?"-"+i:""),k=a.Event(j+".bs.affix");this.$element.trigger(k),k.isDefaultPrevented()||(this.affixed=i,this.unpin="bottom"==i?this.getPinnedOffset():null,this.$element.removeClass(b.RESET).addClass(j).trigger(a.Event(j.replace("affix","affixed"))),"bottom"==i&&this.$element.offset({top:c-h-this.$element.height()}))}}};var c=a.fn.affix;a.fn.affix=function(c){return this.each(function(){var d=a(this),e=d.data("bs.affix"),f="object"==typeof c&&c;e||d.data("bs.affix",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.affix.Constructor=b,a.fn.affix.noConflict=function(){return a.fn.affix=c,this},a(window).on("load",function(){a('[data-spy="affix"]').each(function(){var b=a(this),c=b.data();c.offset=c.offset||{},c.offsetBottom&&(c.offset.bottom=c.offsetBottom),c.offsetTop&&(c.offset.top=c.offsetTop),b.affix(c)})})}(jQuery);
+
 // angular.min.js
 /*
  AngularJS v1.3.15
@@ -299,14 +307,30 @@ var KG;
         Domain.prototype.toArray = function () {
             return [this.min, this.max];
         };
-        Domain.prototype.contains = function (x) {
-            var lowEnough = (this.max >= x);
-            var highEnough = (this.min <= x);
+        Domain.prototype.contains = function (x, strict) {
+            strict = strict || false;
+            var lowEnough = strict ? (this.max > x) : (this.max >= x);
+            var highEnough = strict ? (this.min < x) : (this.min <= x);
             return lowEnough && highEnough;
+        };
+        Domain.prototype.samplePoints = function (numSamples) {
+            var min = this.min, max = this.max, sp = [];
+            for (var i = 0; i < numSamples; i++) {
+                sp.push(min + (i / (numSamples - 1)) * (max - min));
+            }
+            return sp;
         };
         return Domain;
     })();
     KG.Domain = Domain;
+    function areTheSamePoint(a, b) {
+        return (a.x === b.x && a.y === b.y);
+    }
+    KG.areTheSamePoint = areTheSamePoint;
+    function areNotTheSamePoint(a, b) {
+        return !areTheSamePoint(a, b);
+    }
+    KG.areNotTheSamePoint = areNotTheSamePoint;
     function translateByPixelCoordinates(coordinates) {
         return 'translate(' + coordinates.x + ',' + coordinates.y + ')';
     }
@@ -321,6 +345,10 @@ var KG;
         return style;
     }
     KG.positionByPixelCoordinates = positionByPixelCoordinates;
+    function distanceBetweenCoordinates(a, b) {
+        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    }
+    KG.distanceBetweenCoordinates = distanceBetweenCoordinates;
     function getCoordinates(def) {
         var defaultCoordinates = { x: 0, y: 0 };
         if (!def || def == undefined) {
@@ -340,6 +368,13 @@ var KG;
         }
     }
     KG.getCoordinates = getCoordinates;
+    function sortObjects(key, descending) {
+        return function (a, b) {
+            var lower = descending ? a[key] : b[key], higher = descending ? b[key] : a[key];
+            return lower > higher ? -1 : lower < higher ? 1 : lower <= higher ? 0 : NaN;
+        };
+    }
+    KG.sortObjects = sortObjects;
     function createInstance(definition) {
         // from http://stackoverflow.com/questions/1366127/
         function typeSpecificConstructor(typeName) {
@@ -372,9 +407,35 @@ var KG;
                     if (value.hasOwnProperty('type') && value.hasOwnProperty('definition')) {
                         model[key] = KG.createInstance(value);
                     }
+                    else {
+                        model[key] = value;
+                    }
                 }
             }
         }
+        Model.prototype.setNumericProperty = function (propertySetter) {
+            var model = this;
+            if (!isNaN(propertySetter.value)) {
+                model[propertySetter.name] = propertySetter.value;
+            }
+            else if (!model.hasOwnProperty(propertySetter.name)) {
+                model[propertySetter.name] = propertySetter.defaultValue || 0;
+            }
+            return model;
+        };
+        Model.prototype.setArrayProperty = function (propertySetter) {
+            var model = this;
+            if (propertySetter.value instanceof Array) {
+                model[propertySetter.name] = propertySetter.value;
+            }
+            else if (propertySetter.value) {
+                model[propertySetter.name] = [propertySetter.value];
+            }
+            else if (!model.hasOwnProperty(propertySetter.name)) {
+                model[propertySetter.name] = propertySetter.defaultValue;
+            }
+            return model;
+        };
         // Update the model
         Model.prototype.update = function (scope, callback) {
             var model = this;
@@ -406,9 +467,14 @@ var KG;
                     // If the object's property is an object, parses the object.
                     return parseObject(value);
                 }
-                else if (value.toString() !== undefined) {
-                    var e = scope.$eval(value.toString());
-                    return (e == undefined) ? value : e;
+                else if (scope && value.toString() !== undefined) {
+                    try {
+                        var e = scope.$eval(value.toString());
+                        return (e == undefined) ? value : e;
+                    }
+                    catch (error) {
+                        return value;
+                    }
                 }
                 else {
                     return value;
@@ -417,13 +483,16 @@ var KG;
             // Parse the model object
             model = parseObject(model.definition, model);
             // Do any model-specific updating
-            model = model._update(scope);
+            model = model._update(scope)._calculateValues();
             if (callback) {
                 callback();
             }
             return model;
         };
         Model.prototype._update = function (scope) {
+            return this; // overridden by child classes
+        };
+        Model.prototype._calculateValues = function () {
             return this; // overridden by child classes
         };
         return Model;
@@ -523,6 +592,483 @@ var KG;
     })(KG.Model);
     KG.Restriction = Restriction;
 })(KG || (KG = {}));
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Base = (function (_super) {
+            __extends(Base, _super);
+            function Base(definition) {
+                definition.level = definition.level || 0;
+                _super.call(this, definition);
+            }
+            // Returns the slope between (a,f(a)) and (b,f(b)).
+            // If inverse = true, returns the slope between (f(a),a) and (f(b),b).
+            // Assumes that a and b are both scalars (for now).
+            Base.prototype.slopeBetweenPoints = function (a, b, inverse) {
+                var f = this;
+                b = b || 0;
+                inverse = inverse || false;
+                var s = (f.yValue(a) - f.yValue(b)) / (a - b);
+                return inverse ? 1 / s : s;
+            };
+            Base.prototype.setBase = function (index, base) {
+                var fn = this;
+                if (fn.hasOwnProperty('bases')) {
+                    fn.bases[index - 1] = base;
+                }
+                else {
+                    fn.bases = [];
+                    for (var i = 0; i < index; i++) {
+                        fn.bases.push((i == index - 1) ? base : 1);
+                    }
+                }
+                return fn;
+            };
+            // set bases for evaluating a polynomial or monomial
+            Base.prototype.setBases = function (bases) {
+                return this.setArrayProperty({
+                    name: 'bases',
+                    value: bases,
+                    defaultValue: []
+                });
+            };
+            // set level of function (for generating level sets)
+            Base.prototype.setLevel = function (level) {
+                return this.setNumericProperty({
+                    name: 'level',
+                    value: level,
+                    defaultValue: 0
+                });
+            };
+            Base.prototype.value = function (bases) {
+                return 0; // overridden by subclass
+            };
+            // Returns y value for given x, for a two-dimensional function
+            Base.prototype.yValue = function (x) {
+                return 0;
+            };
+            // Returns x value for given y, for a two-dimensional function
+            Base.prototype.xValue = function (y) {
+                return 0;
+            };
+            Base.prototype.points = function (view, yIsIndependent, numSamplePoints) {
+                var fn = this, points = [];
+                numSamplePoints = numSamplePoints || 51;
+                var xSamplePoints = view.xAxis.domain.samplePoints(numSamplePoints), ySamplePoints = view.yAxis.domain.samplePoints(numSamplePoints);
+                for (var i = 0; i < numSamplePoints; i++) {
+                    var x = xSamplePoints[i];
+                    var yOfX = fn.yValue(x);
+                    if (view.yAxis.domain.contains(yOfX)) {
+                        points.push({ x: x, y: yOfX });
+                    }
+                    var y = ySamplePoints[i];
+                    var xOfY = fn.xValue(y);
+                    if (view.yAxis.domain.contains(yOfX)) {
+                        points.push({ x: xOfY, y: y });
+                    }
+                }
+                if (yIsIndependent) {
+                    return points.sort(KG.sortObjects('y'));
+                }
+                else {
+                    return points.sort(KG.sortObjects('x'));
+                }
+            };
+            return Base;
+        })(KG.Model);
+        Functions.Base = Base;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/*
+ A monomial function is a term of the form c(b1^p1)(b2^p2)...(bn^pn)
+ where 'c' is the coefficient, 'bi' is the i'th base, and 'pi' is the i'th power.
+
+ The initializing object, params, should be of the form
+
+ params = {coefficient: (number), bases: (number or array), powers: (number or array)}
+
+ Any of these parameters may be null initially and set later with the setters.
+ */
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Monomial = (function (_super) {
+            __extends(Monomial, _super);
+            function Monomial(definition) {
+                _super.call(this, definition);
+            }
+            // Establish setters
+            Monomial.prototype.setCoefficient = function (coefficient) {
+                return this.setNumericProperty({
+                    name: 'coefficient',
+                    value: coefficient,
+                    defaultValue: 1
+                });
+            };
+            Monomial.prototype.setPowers = function (powers) {
+                return this.setArrayProperty({
+                    name: 'powers',
+                    value: powers,
+                    defaultValue: []
+                });
+            };
+            // Evaluate monomial for a given set of bases. If none are set, use m.bases.
+            Monomial.prototype.value = function (bases) {
+                var m = this;
+                m.setBases(bases);
+                var basePowerPairs = Math.min(m.bases.length, m.powers.length);
+                var result = m.coefficient;
+                for (var t = 0; t < basePowerPairs; t++) {
+                    result *= Math.pow(m.bases[t], m.powers[t]);
+                }
+                return result;
+            };
+            // Return the monomial that is the derivative of this monomial
+            // with respect to the n'th variable
+            Monomial.prototype.derivative = function (n) {
+                var m = this;
+                // n is the index of the term; first term by default
+                n = n - 1 || 0;
+                return new Monomial({
+                    // the new coefficient is the old coefficient times
+                    //the power of the variable whose derivative we're taking
+                    coefficient: m.coefficient * m.powers[n],
+                    powers: m.powers.map(function (p, index) {
+                        if (index == n) {
+                            return p - 1;
+                        }
+                        else {
+                            return p;
+                        }
+                    }),
+                    bases: m.bases
+                });
+            };
+            // Return the monomial that solves the function c(b1^p1)(b2^p2) = level for bn
+            // For example, to find the level curve where 3(x^2)(y^3) = 6 and express it as y(x), this would return
+            // y = [6/(3x^-2)]^(1/3) = [(6/2)^1/3][(x^-2)^1/3] = [(6/2)^1/3][x^-2/3]
+            // Note that the indices of the bases in the returned monomial are the same as the original.
+            Monomial.prototype.levelCurve = function (n, level) {
+                var m = this;
+                // note: level can be a numerical value or an array of bases at which to evaluate the monomial
+                if (level) {
+                    m.setLevel(level);
+                }
+                // n is the index of the term; first term by default
+                n = n - 1 || 0;
+                // pn is the power to which the base variable we're solving for is raised
+                var pn = m.powers[n];
+                if (pn == 0) {
+                    return null;
+                }
+                return new Monomial({
+                    // the coefficient of the new monomial is (level/c)^1/p
+                    coefficient: Math.pow(m.level / m.coefficient, 1 / pn),
+                    // each of the powers for the remaining bases is divided by -p
+                    powers: m.powers.map(function (p, index) {
+                        if (index == n) {
+                            return 0;
+                        }
+                        else {
+                            return -p / pn;
+                        }
+                    }),
+                    bases: m.bases
+                });
+            };
+            // returns the y value corresponding to the given x value for m(x,y) = m.level
+            Monomial.prototype.yValue = function (x) {
+                this.setBase(1, x);
+                return this.levelCurve(2).value();
+            };
+            // returns the x value corresponding to the given y value for m(x,y) = m.level
+            Monomial.prototype.xValue = function (y) {
+                this.setBase(2, y);
+                return this.levelCurve(1).value();
+            };
+            return Monomial;
+        })(Functions.Base);
+        Functions.Monomial = Monomial;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/*
+ A polynomial function is an array of monomial functions.
+ Its value is the sum of its component functions.
+ Its derivative is the array of the derivatives of its component functions.
+ */
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Polynomial = (function (_super) {
+            __extends(Polynomial, _super);
+            function Polynomial(definition) {
+                _super.call(this, definition);
+                // Each element of the params array should be a monomial or a monomial definition.
+                function createTerm(termDef) {
+                    if (termDef instanceof Functions.Monomial) {
+                        return termDef;
+                    }
+                    else {
+                        return new Functions.Monomial(termDef);
+                    }
+                }
+                this.terms = definition.terms.map(createTerm);
+            }
+            // The coefficients and powers of each term may be get and set via the term's index
+            Polynomial.prototype.setCoefficient = function (n, coefficient) {
+                var p = this;
+                p.terms[n - 1].setCoefficient(coefficient);
+                return p;
+            };
+            Polynomial.prototype.setPowers = function (n, powers) {
+                var p = this;
+                p.terms[n - 1].setPowers(powers);
+                return p;
+            };
+            // The value of a polynomial is the sum of the values of its monomial terms
+            Polynomial.prototype.value = function (bases) {
+                var p = this;
+                p.setBases(bases);
+                var result = 0;
+                for (var i = 0; i < p.terms.length; i++) {
+                    result += p.terms[i].value(p.bases);
+                }
+                return result;
+            };
+            // The derivative of a polynomial is a new polynomial, each of whose terms is the derivative of the original polynomial's terms
+            Polynomial.prototype.derivative = function (n) {
+                var p = this;
+                return new Polynomial({ terms: p.terms.map(function (term) {
+                    return term.derivative(n);
+                }) });
+            };
+            // Assume all bases except the first have been set; replace the base of the first variable ('x') with the x value
+            Polynomial.prototype.yValue = function (x) {
+                var p = this;
+                var inputs = p.bases.map(function (val, index) {
+                    return (index == 0) ? x : val;
+                });
+                return p.value(inputs);
+            };
+            // Not generally a valid concept for a polynomial
+            Polynomial.prototype.xValue = function (y) {
+                return null;
+            };
+            return Polynomial;
+        })(Functions.Base);
+        Functions.Polynomial = Polynomial;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/*
+ A linear function is a special polynomial defined either with two points or a point and a slope.
+ This function takes either of those and returns a polynomial of the form ax + by + c.
+ The params object is of the form: { definitionType: '', param1: foo, param2: bar }
+ */
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Linear = (function (_super) {
+            __extends(Linear, _super);
+            function Linear(definition) {
+                _super.call(this, definition);
+                this.linearIntersection = function (otherLine, delta) {
+                    var thisLine = this;
+                    delta = delta || 0;
+                    var a = thisLine.coefficients.a, b = thisLine.coefficients.b, c = thisLine.coefficients.c, oa = otherLine.coefficients.a, ob = otherLine.coefficients.b, oc = otherLine.coefficients.c;
+                    var diffLine = new Linear({
+                        coefficients: {
+                            a: a * ob - b * oa,
+                            b: b * ob,
+                            c: ob * c - oc * b - delta
+                        }
+                    }), x = diffLine.xIntercept, y = thisLine.yValue(x);
+                    return { x: x, y: y };
+                };
+                this._calculateValues();
+            }
+            Linear.prototype._update = function (scope) {
+                return this.updateLine();
+            };
+            Linear.prototype.updateLine = function () {
+                var l = this;
+                var a = l.coefficients.a, b = l.coefficients.b, c = l.coefficients.c;
+                l.isVertical = (b === 0);
+                l.isHorizontal = (a === 0);
+                l.slope = l.isVertical ? Infinity : -a / b;
+                l.inverseSlope = l.isHorizontal ? Infinity : -b / a;
+                l.xIntercept = l.isHorizontal ? null : -c / a;
+                l.yIntercept = l.isVertical ? null : -c / b;
+                return l;
+            };
+            Linear.prototype.yValue = function (x) {
+                var l = this.updateLine();
+                var y = l.isVertical ? undefined : l.yIntercept + l.slope * x;
+                return y;
+            };
+            Linear.prototype.xValue = function (y) {
+                var l = this.updateLine();
+                var x = l.isHorizontal ? undefined : l.xIntercept + l.inverseSlope * y;
+                return x;
+            };
+            Linear.prototype.points = function (view) {
+                var l = this;
+                var xDomain = view.xAxis.domain, yDomain = view.yAxis.domain;
+                var points = [];
+                if (l.isVertical) {
+                    points = [{ x: l.xIntercept, y: yDomain.min }, { x: l.xIntercept, y: yDomain.max }];
+                }
+                else if (l.isHorizontal) {
+                    points = [{ x: xDomain.min, y: l.yIntercept }, { x: xDomain.max, y: l.yIntercept }];
+                }
+                else {
+                    var xTop = l.xValue(yDomain.max), xBottom = l.xValue(yDomain.min), yLeft = l.yValue(xDomain.min), yRight = l.yValue(xDomain.max);
+                    // add endpoints on the left or right sides, including the corners
+                    if (yDomain.contains(yLeft)) {
+                        points.push({ x: xDomain.min, y: yLeft });
+                    }
+                    if (yDomain.contains(yRight)) {
+                        points.push({ x: xDomain.max, y: yRight });
+                    }
+                    // add endpoints on the top or bottom, not including the corners
+                    if (xDomain.contains(xBottom, true)) {
+                        points.push({ x: xBottom, y: yDomain.min });
+                    }
+                    if (xDomain.contains(xTop, true)) {
+                        points.push({ x: xTop, y: yDomain.max });
+                    }
+                    // A maximimum of two points should have been added. If not, something is wrong.
+                    if (points.length > 2) {
+                        console.log('Oh noes! More than two points! Investigate!');
+                    }
+                }
+                return points;
+            };
+            return Linear;
+        })(Functions.Base);
+        Functions.Linear = Linear;
+        var StandardLine = (function (_super) {
+            __extends(StandardLine, _super);
+            function StandardLine(definition) {
+                _super.call(this, definition);
+            }
+            return StandardLine;
+        })(Linear);
+        Functions.StandardLine = StandardLine;
+        var SlopeInterceptLine = (function (_super) {
+            __extends(SlopeInterceptLine, _super);
+            function SlopeInterceptLine(definition) {
+                _super.call(this, definition);
+            }
+            // Given y = m*x + b => m*x + (-1)y + b = 0
+            SlopeInterceptLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: l.m,
+                    b: -1,
+                    c: l.b
+                };
+                return l.updateLine();
+            };
+            return SlopeInterceptLine;
+        })(Linear);
+        Functions.SlopeInterceptLine = SlopeInterceptLine;
+        var PointSlopeLine = (function (_super) {
+            __extends(PointSlopeLine, _super);
+            function PointSlopeLine(definition) {
+                definition.p = KG.getCoordinates(definition.p);
+                _super.call(this, definition);
+            }
+            // Given Y - y = slope(X - x) => slope*X - Y + (y - slope*x)
+            PointSlopeLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: l.m,
+                    b: -1,
+                    c: l.p.y - l.m * l.p.x
+                };
+                return l.updateLine();
+            };
+            return PointSlopeLine;
+        })(Linear);
+        Functions.PointSlopeLine = PointSlopeLine;
+        var TwoPointLine = (function (_super) {
+            __extends(TwoPointLine, _super);
+            function TwoPointLine(definition) {
+                definition.p1 = KG.getCoordinates(definition.p1);
+                definition.p2 = KG.getCoordinates(definition.p2);
+                _super.call(this, definition);
+            }
+            TwoPointLine.prototype._calculateValues = function () {
+                var l = this;
+                var x1 = l.p1.x, x2 = l.p2.x, y1 = l.p1.y, y2 = l.p2.y, rise = y2 - y1, run = x2 - x1;
+                // If x2 = x1, then it's a vertical line
+                if (run == 0) {
+                    l.coefficients = {
+                        a: 1,
+                        b: 0,
+                        c: -x1
+                    };
+                }
+                else {
+                    var slope = rise / run;
+                    l.coefficients = {
+                        a: slope,
+                        b: -1,
+                        c: y1 - slope * x1
+                    };
+                }
+                return l.updateLine();
+            };
+            return TwoPointLine;
+        })(Linear);
+        Functions.TwoPointLine = TwoPointLine;
+        var HorizontalLine = (function (_super) {
+            __extends(HorizontalLine, _super);
+            function HorizontalLine(definition) {
+                _super.call(this, definition);
+            }
+            // A horizontal line at y = Y may be written 0x - y + Y = 0
+            HorizontalLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: 0,
+                    b: -1,
+                    c: l.y
+                };
+                return l.updateLine();
+            };
+            return HorizontalLine;
+        })(Linear);
+        Functions.HorizontalLine = HorizontalLine;
+        var VerticalLine = (function (_super) {
+            __extends(VerticalLine, _super);
+            function VerticalLine(definition) {
+                _super.call(this, definition);
+            }
+            // A vertical line at x = X may be written -x + 0y + X = 0
+            VerticalLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: -1,
+                    b: 0,
+                    c: l.x
+                };
+                return l.updateLine();
+            };
+            return VerticalLine;
+        })(Linear);
+        Functions.VerticalLine = VerticalLine;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/// <reference path="../kg.ts"/>
+/// <reference path="functions/base.ts"/>
+/// <reference path="functions/monomial.ts"/>
+/// <reference path="functions/polynomial.ts"/>
+/// <reference path="functions/linear.ts"/>
 /// <reference path="../kg.ts"/>
 'use strict';
 var KG;
@@ -532,10 +1078,27 @@ var KG;
         function ViewObject(definition) {
             definition = _.defaults(definition, { className: '', show: true, xDrag: false, yDrag: false });
             _super.call(this, definition);
-            this.xDragDelta = 0;
-            this.yDragDelta = 0;
-            this.xDragParam = definition.xDrag ? definition.coordinates.x.replace('params.', '') : null;
-            this.yDragParam = definition.yDrag ? definition.coordinates.y.replace('params.', '') : null;
+            var viewObj = this;
+            viewObj.xDragDelta = 0;
+            viewObj.yDragDelta = 0;
+            if (definition.xDrag) {
+                if (typeof definition.xDrag == 'string') {
+                    viewObj.xDragParam = definition.xDrag;
+                    viewObj.xDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
+                    this.xDragParam = definition.coordinates.x.replace('params.', '');
+                }
+            }
+            if (definition.yDrag) {
+                if (typeof definition.yDrag == 'string') {
+                    viewObj.yDragParam = definition.yDrag;
+                    viewObj.yDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
+                    this.yDragParam = definition.coordinates.y.replace('params.', '');
+                }
+            }
         }
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
@@ -549,6 +1112,12 @@ var KG;
                 classString += ' invisible';
             }
             return classString;
+        };
+        ViewObject.prototype.addArrow = function (group, startOrEnd) {
+            group.attr("marker-" + startOrEnd, "url(#arrow-" + startOrEnd + "-" + this.color + ")");
+        };
+        ViewObject.prototype.removeArrow = function (group, startOrEnd) {
+            group.attr("marker-" + startOrEnd, null);
         };
         ViewObject.prototype.render = function (view) {
             return view; // overridden by child class
@@ -583,19 +1152,50 @@ var KG;
             definition = _.defaults(definition, { coordinates: { x: 0, y: 0 }, size: 100, symbol: 'circle' });
             _super.call(this, definition);
             if (definition.label) {
-                this.labelDiv = new KG.GraphDiv(definition);
+                var labelDef = _.defaults(definition.label, {
+                    name: definition.name + '_label',
+                    coordinates: definition.coordinates,
+                    color: 'white',
+                    xDrag: definition.xDrag,
+                    yDrag: definition.yDrag
+                });
+                this.labelDiv = new KG.GraphDiv(labelDef);
+            }
+            if (definition.droplines) {
+                if (definition.droplines.hasOwnProperty('horizontal')) {
+                    this.horizontalDropline = new KG.HorizontalDropline({
+                        name: definition.name,
+                        coordinates: definition.coordinates,
+                        draggable: definition.yDrag,
+                        axisLabel: definition.droplines.horizontal
+                    });
+                }
+                if (definition.droplines.hasOwnProperty('vertical')) {
+                    this.verticalDropline = new KG.VerticalDropline({
+                        name: definition.name,
+                        coordinates: definition.coordinates,
+                        draggable: definition.xDrag,
+                        axisLabel: definition.droplines.vertical
+                    });
+                }
             }
             this.viewObjectSVGtype = 'path';
             this.viewObjectClass = 'pointSymbol';
         }
         Point.prototype.createSubObjects = function (view) {
-            var labelDiv = this.labelDiv;
-            if (labelDiv) {
-                return view.addObject(labelDiv);
+            var p = this;
+            if (p.labelDiv) {
+                view.addObject(p.labelDiv);
             }
-            else {
-                return view;
+            if (p.verticalDropline) {
+                view.addObject(p.verticalDropline);
+                p.verticalDropline.createSubObjects(view); // TODO should probably make this more recursive by default
             }
+            if (p.horizontalDropline) {
+                view.addObject(p.horizontalDropline);
+                p.horizontalDropline.createSubObjects(view); // TODO should probably make this more recursive by default
+            }
+            return view;
         };
         Point.prototype.render = function (view) {
             var point = this, draggable = (point.xDrag || point.yDrag);
@@ -608,6 +1208,7 @@ var KG;
             var pointSymbol = group.select('.' + point.viewObjectClass);
             pointSymbol.attr({
                 'class': point.classAndVisibility(),
+                'fill': point.color,
                 'd': d3.svg.symbol().type(point.symbol).size(point.size),
                 'transform': view.translateByCoordinates(point.coordinates)
             });
@@ -627,26 +1228,146 @@ var KG;
 'use strict';
 var KG;
 (function (KG) {
+    var Dropline = (function (_super) {
+        __extends(Dropline, _super);
+        function Dropline(definition) {
+            definition.coordinates = KG.getCoordinates(definition.coordinates);
+            definition = _.defaults(definition, {
+                horizontal: false,
+                draggable: false,
+                axisLabel: ''
+            });
+            _super.call(this, definition);
+            var labelDef = {
+                name: definition.name + '_label',
+                color: 'black',
+                text: definition.axisLabel,
+                dimensions: { width: 30, height: 20 },
+                backgroundColor: 'white'
+            };
+            if (definition.horizontal) {
+                labelDef.coordinates = {
+                    x: KG.GraphDiv.AXIS_COORDINATE_INDICATOR,
+                    y: definition.coordinates.y
+                };
+                labelDef.yDrag = definition.draggable;
+            }
+            else {
+                labelDef.coordinates = {
+                    x: definition.coordinates.x,
+                    y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
+                };
+                labelDef.xDrag = definition.draggable;
+            }
+            this.labelDiv = new KG.GraphDiv(labelDef);
+            this.viewObjectSVGtype = 'line';
+            this.viewObjectClass = 'dropline';
+        }
+        Dropline.prototype.createSubObjects = function (view) {
+            var p = this;
+            if (p.labelDiv) {
+                view.addObject(p.labelDiv);
+            }
+            return view;
+        };
+        Dropline.prototype.render = function (view) {
+            var dropline = this;
+            var pointX = view.xAxis.scale(dropline.coordinates.x), pointY = view.yAxis.scale(dropline.coordinates.y), anchorX = dropline.horizontal ? view.xAxis.scale(view.xAxis.min) : pointX, anchorY = dropline.horizontal ? pointY : view.yAxis.scale(view.yAxis.min);
+            var group = view.objectGroup(dropline.name, dropline.initGroupFn(), false);
+            var droplineSelection = group.select('.' + dropline.viewObjectClass);
+            droplineSelection.attr({
+                'x1': anchorX,
+                'y1': anchorY,
+                'x2': pointX,
+                'y2': pointY
+            });
+            return view;
+        };
+        return Dropline;
+    })(KG.ViewObject);
+    KG.Dropline = Dropline;
+    var VerticalDropline = (function (_super) {
+        __extends(VerticalDropline, _super);
+        function VerticalDropline(definition) {
+            definition.name += '_vDropline';
+            definition.horizontal = false;
+            _super.call(this, definition);
+        }
+        return VerticalDropline;
+    })(Dropline);
+    KG.VerticalDropline = VerticalDropline;
+    var HorizontalDropline = (function (_super) {
+        __extends(HorizontalDropline, _super);
+        function HorizontalDropline(definition) {
+            definition.name += '_hDropline';
+            definition.horizontal = true;
+            _super.call(this, definition);
+        }
+        return HorizontalDropline;
+    })(Dropline);
+    KG.HorizontalDropline = HorizontalDropline;
+})(KG || (KG = {}));
+/// <reference path="../kg.ts"/>
+'use strict';
+var KG;
+(function (KG) {
     var Segment = (function (_super) {
         __extends(Segment, _super);
         function Segment(definition) {
             definition.a = KG.getCoordinates(definition.a);
             definition.b = KG.getCoordinates(definition.b);
+            definition.color = definition.color || 'gray';
             _super.call(this, definition);
             if (definition.label) {
-                var labelDefinition = _.clone(definition);
-                labelDefinition.coordinates = {
-                    x: 0.5 * (definition.a.x + definition.b.x),
-                    y: 0.5 * (definition.a.y + definition.b.y)
-                };
-                this.labelDiv = new KG.GraphDiv(labelDefinition);
+                var labelDef = _.defaults(definition.label, {
+                    name: definition.name + '_label',
+                    xDrag: definition.xDrag,
+                    yDrag: definition.yDrag,
+                    color: definition.color
+                });
+                this.labelDiv = new KG.GraphDiv(labelDef);
             }
+            this.startArrow = (definition.arrows == Segment.START_ARROW_STRING || definition.arrows == Segment.BOTH_ARROW_STRING);
+            this.endArrow = (definition.arrows == Segment.END_ARROW_STRING || definition.arrows == Segment.BOTH_ARROW_STRING);
             this.viewObjectSVGtype = 'path';
             this.viewObjectClass = 'segment';
         }
+        Segment.prototype._update = function (scope) {
+            var segment = this;
+            segment.midpoint = {
+                x: 0.5 * (segment.a.x + segment.b.x),
+                y: 0.5 * (segment.a.y + segment.b.y)
+            };
+            if (segment.hasOwnProperty('labelDiv')) {
+                segment.labelDiv.coordinates = segment.midpoint;
+            }
+            segment.length = KG.distanceBetweenCoordinates(segment.a, segment.b);
+            return segment;
+        };
+        Segment.prototype.createSubObjects = function (view) {
+            var labelDiv = this.labelDiv;
+            if (labelDiv) {
+                return view.addObject(labelDiv);
+            }
+            else {
+                return view;
+            }
+        };
         Segment.prototype.render = function (view) {
             var segment = this;
             var group = view.objectGroup(segment.name, segment.initGroupFn(), false);
+            if (segment.endArrow && segment.length > 0) {
+                segment.addArrow(group, 'end');
+            }
+            else {
+                segment.removeArrow(group, 'end');
+            }
+            if (segment.startArrow && segment.length > 0) {
+                segment.addArrow(group, 'start');
+            }
+            else {
+                segment.removeArrow(group, 'start');
+            }
             var dataLine = d3.svg.line().x(function (d) {
                 return view.xAxis.scale(d.x);
             }).y(function (d) {
@@ -655,13 +1376,90 @@ var KG;
             var segmentSelection = group.select('.' + segment.viewObjectClass);
             segmentSelection.attr({
                 'class': segment.classAndVisibility(),
-                'd': dataLine([segment.a, segment.b])
+                'd': dataLine([segment.startPoint(view), segment.endPoint(view)]),
+                'stroke': segment.color
             });
             return view;
         };
+        Segment.prototype.startPoint = function (view) {
+            return this.a;
+        };
+        Segment.prototype.endPoint = function (view) {
+            return this.b;
+        };
+        Segment.START_ARROW_STRING = 'START';
+        Segment.END_ARROW_STRING = 'END';
+        Segment.BOTH_ARROW_STRING = 'BOTH';
         return Segment;
     })(KG.ViewObject);
     KG.Segment = Segment;
+})(KG || (KG = {}));
+/// <reference path="../kg.ts"/>
+'use strict';
+var KG;
+(function (KG) {
+    var Line = (function (_super) {
+        __extends(Line, _super);
+        function Line(definition) {
+            definition.color = definition.color || 'gray';
+            _super.call(this, definition);
+            this.linear = new KGMath.Functions[definition.type](definition.def);
+            this.viewObjectSVGtype = 'path';
+            this.viewObjectClass = 'line';
+        }
+        Line.prototype._update = function (scope) {
+            this.linear.update(scope);
+            return this;
+        };
+        Line.prototype.render = function (view) {
+            var NO_ARROW_STRING = 'NONE', BOTH_ARROW_STRING = 'BOTH', OPEN_ARROW_STRING = 'OPEN';
+            var line = this, linear = this.linear, draggable = (line.xDrag || line.yDrag);
+            var group = view.objectGroup(line.name, line.initGroupFn(), false);
+            var startPoint = linear.points(view)[0], endPoint = linear.points(view)[1];
+            if (line.arrows == BOTH_ARROW_STRING) {
+                line.addArrow(group, 'start');
+                line.addArrow(group, 'end');
+            }
+            else if (line.arrows == OPEN_ARROW_STRING) {
+                if (startPoint.x == view.xAxis.max || startPoint.y == view.yAxis.max) {
+                    line.addArrow(group, 'start');
+                }
+                else {
+                    line.removeArrow(group, 'start');
+                }
+                if (endPoint.x == view.xAxis.max || endPoint.y == view.yAxis.max) {
+                    line.addArrow(group, 'end');
+                }
+                else {
+                    line.removeArrow(group, 'end');
+                }
+            }
+            else if (line.arrows == NO_ARROW_STRING) {
+                line.removeArrow(group, 'start');
+                line.removeArrow(group, 'end');
+            }
+            var dataLine = d3.svg.line().x(function (d) {
+                return view.xAxis.scale(d.x);
+            }).y(function (d) {
+                return view.yAxis.scale(d.y);
+            });
+            var lineSelection = group.select('.' + line.viewObjectClass);
+            lineSelection.attr({
+                'class': line.classAndVisibility(),
+                'd': dataLine([startPoint, endPoint]),
+                'stroke': line.color
+            });
+            if (draggable) {
+                return line.setDragBehavior(view, lineSelection);
+            }
+            else {
+                return view;
+            }
+            return view;
+        };
+        return Line;
+    })(KG.ViewObject);
+    KG.Line = Line;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
 'use strict';
@@ -671,27 +1469,46 @@ var KG;
         __extends(GraphDiv, _super);
         function GraphDiv(definition) {
             definition = _.defaults(definition, {
-                coordinates: { x: 0, y: 0 },
                 dimensions: { width: 100, height: 20 },
                 math: false,
                 align: 'center',
-                label: ''
+                valign: 'middle',
+                text: ''
             });
             _super.call(this, definition);
         }
         GraphDiv.prototype.render = function (view) {
             var divObj = this;
-            var x = view.margins.left + view.xAxis.scale(divObj.coordinates.x), y = view.margins.top + view.yAxis.scale(divObj.coordinates.y), width = divObj.dimensions.width, height = divObj.dimensions.height, label = divObj.label, draggable = (divObj.xDrag || divObj.yDrag);
+            var x, y;
+            if (divObj.coordinates.x == GraphDiv.AXIS_COORDINATE_INDICATOR) {
+                x = view.margins.left - view.yAxis.textMargin;
+                divObj.align = 'right';
+                divObj.valign = 'middle';
+            }
+            else {
+                x = view.margins.left + view.xAxis.scale(divObj.coordinates.x);
+            }
+            if (divObj.coordinates.y == GraphDiv.AXIS_COORDINATE_INDICATOR) {
+                y = view.dimensions.height - view.margins.bottom + view.xAxis.textMargin;
+                divObj.align = 'center';
+                divObj.valign = 'top';
+            }
+            else {
+                y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
+            }
+            var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
             var div = view.getDiv(this.name);
-            div.style('cursor', 'default').style('text-align', 'center').style('color', 'white').style('position', 'absolute').style('width', width + 'px').style('height', height + 'px').style('line-height', height + 'px');
+            div.style('cursor', 'default').style('text-align', 'center').style('color', divObj.color).style('position', 'absolute').style('width', width + 'px').style('height', height + 'px').style('line-height', height + 'px').style('background-color', divObj.backgroundColor);
             // Set left pixel margin; default to centered on x coordinate
             var alignDelta = width * 0.5;
             if (divObj.align == 'left') {
                 alignDelta = 0;
+                div.style('text-align', 'left');
             }
             else if (this.align == 'right') {
                 // move left by half the width of the div if right aligned
                 alignDelta = width;
+                div.style('text-align', 'right');
             }
             div.style('left', (x - alignDelta) + 'px');
             // Set top pixel margin; default to centered on y coordinate
@@ -700,20 +1517,19 @@ var KG;
             if (this.valign == 'top') {
                 vAlignDelta = 0;
             }
-            else if (this.align == 'bottom') {
+            else if (this.valign == 'bottom') {
                 vAlignDelta = height;
             }
             div.style('top', (y - vAlignDelta) + 'px');
-            katex.render(label.toString(), div[0][0]);
+            katex.render(text.toString(), div[0][0]);
             if (draggable) {
-                divObj.xDragDelta = -view.margins.left;
-                divObj.yDragDelta = view.dimensions.height - vAlignDelta;
                 return divObj.setDragBehavior(view, div);
             }
             else {
                 return view;
             }
         };
+        GraphDiv.AXIS_COORDINATE_INDICATOR = 'AXIS';
         return GraphDiv;
     })(KG.ViewObject);
     KG.GraphDiv = GraphDiv;
@@ -727,27 +1543,24 @@ var KG;
         function LinePlot(definition) {
             definition = _.defaults(definition, { data: [], interpolation: 'linear' });
             _super.call(this, definition);
+            this.viewObjectSVGtype = 'path';
+            this.viewObjectClass = 'dataPath';
         }
-        LinePlot.prototype.render = function (graph) {
-            // constants TODO should these be defined somewhere else?
-            var DATA_PATH_CLASS = 'dataPath';
-            var dataCoordinates = graph.dataCoordinates(this.data);
-            function init(newGroup) {
-                newGroup.append('path').attr('class', DATA_PATH_CLASS);
-                return newGroup;
-            }
-            var group = graph.objectGroup(this.name, init);
+        LinePlot.prototype.render = function (view) {
+            var linePlot = this;
+            var dataCoordinates = view.dataCoordinates(this.data);
+            var group = view.objectGroup(linePlot.name, linePlot.initGroupFn(), false);
             var dataLine = d3.svg.line().interpolate(this.interpolation).x(function (d) {
                 return d.x;
             }).y(function (d) {
                 return d.y;
             });
-            var dataPath = group.select('.' + DATA_PATH_CLASS);
+            var dataPath = group.select('.' + linePlot.viewObjectClass);
             dataPath.attr({
-                'class': this.classAndVisibility() + ' ' + DATA_PATH_CLASS,
+                'class': this.classAndVisibility() + ' ' + linePlot.viewObjectClass,
                 'd': dataLine(dataCoordinates)
             });
-            return graph;
+            return view;
         };
         return LinePlot;
     })(KG.ViewObject);
@@ -825,8 +1638,10 @@ var KG;
             var view = this;
             // Establish dimensions of the view
             var element = $('#' + view.element_id)[0];
-            view.dimensions.width = Math.min(view.dimensions.width, element.clientWidth);
-            view.dimensions.height = Math.min(view.dimensions.height, window.innerHeight - element.offsetTop);
+            view.dimensions = {
+                width: Math.min(view.maxDimensions.width, element.clientWidth),
+                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
+            };
             var frameTranslation = KG.positionByPixelCoordinates({ x: (element.clientWidth - view.dimensions.width) / 2, y: 0 });
             var visTranslation = KG.translateByPixelCoordinates({ x: view.margins.left, y: view.margins.top });
             d3.select(element).select('div').remove();
@@ -834,6 +1649,18 @@ var KG;
             var frame = d3.select(element).append('div').attr({ style: frameTranslation });
             // Create new SVG element for the view visualization
             var svg = frame.append('svg').attr('width', view.dimensions.width).attr('height', view.dimensions.height);
+            // Establish marker style for arrow
+            svg.append("svg:defs").selectAll("marker").data(["red", "gray", "blue", "purple"]).enter().append("marker").attr("id", function (d) {
+                return "arrow-end-" + d;
+            }).attr("refX", 11).attr("refY", 6).attr("markerWidth", 13).attr("markerHeight", 13).attr("orient", "auto").attr("markerUnits", "userSpaceOnUse").append("svg:path").attr("d", "M2,2 L2,11 L10,6 L2,2").attr("fill", function (d) {
+                return d;
+            });
+            // Establish marker style for arrow
+            svg.append("svg:defs").selectAll("marker").data(["red", "gray", "blue", "purple"]).enter().append("svg:marker").attr("id", function (d) {
+                return "arrow-start-" + d;
+            }).attr("refX", 2).attr("refY", 6).attr("markerWidth", 13).attr("markerHeight", 13).attr("orient", "auto").attr("markerUnits", "userSpaceOnUse").append("svg:path").attr("d", "M11,2 L11,11 L2,6 L11,2").attr("fill", function (d) {
+                return d;
+            });
             // Add a div above the SVG for labels and controls
             view.divs = frame.append('div').attr({ style: visTranslation });
             if (view.mask) {
@@ -856,10 +1683,10 @@ var KG;
                 };
                 // draw axes
                 if (view.xAxis) {
-                    view.xAxis.draw(axes, axisDimensions);
+                    view.xAxis.draw(axes, view.divs, axisDimensions, view.margins);
                 }
                 if (view.yAxis) {
-                    view.yAxis.draw(axes, axisDimensions);
+                    view.yAxis.draw(axes, view.divs, axisDimensions, view.margins);
                 }
             }
             // Establish SVG group for objects that lie above the axes (e.g., points and labels)
@@ -911,8 +1738,9 @@ var KG;
             return d3.behavior.drag().on('drag', function () {
                 d3.event.sourceEvent.preventDefault();
                 var dragUpdate = {}, newX, newY;
-                if (xParam !== null) {
-                    newX = xAxis.scale.invert(d3.event.x + xDelta);
+                var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
+                if (xAxis && xParam !== null) {
+                    newX = xAxis.scale.invert(mouseX + xDelta);
                     if (newX < xAxis.domain.min) {
                         dragUpdate[xParam] = xAxis.domain.min;
                     }
@@ -923,8 +1751,8 @@ var KG;
                         dragUpdate[xParam] = newX;
                     }
                 }
-                if (yParam !== null) {
-                    newY = yAxis.scale.invert(d3.event.y + yDelta);
+                if (yAxis && yParam !== null) {
+                    newY = yAxis.scale.invert(mouseY + yDelta);
                     if (newY < yAxis.domain.min) {
                         dragUpdate[yParam] = yAxis.domain.min;
                     }
@@ -953,12 +1781,17 @@ var KG;
                 min: 0,
                 max: 10,
                 title: '',
-                ticks: 5
+                ticks: 5,
+                textMargin: 8,
+                axisBuffer: 30
             });
             _super.call(this, definition);
+            if (this.ticks == 0) {
+                this.textMargin = 7;
+            }
             this.domain = new KG.Domain(definition.min, definition.max);
         }
-        Axis.prototype.draw = function (vis, graph_definition) {
+        Axis.prototype.draw = function (vis, divs, graph_definition, margins) {
             // overridden by child class
         };
         Axis.prototype.scaleFunction = function (pixelLength, domain) {
@@ -975,11 +1808,12 @@ var KG;
         XAxis.prototype.scaleFunction = function (pixelLength, domain) {
             return d3.scale.linear().range([0, pixelLength]).domain(domain.toArray());
         };
-        XAxis.prototype.draw = function (vis, graph_dimensions) {
+        XAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.width, this.domain);
             var axis_vis = vis.append('g').attr('class', 'x axis').attr("transform", "translate(0," + graph_dimensions.height + ")");
-            axis_vis.append("text").attr("x", graph_dimensions.width / 2).attr("y", "4em").style("text-anchor", "middle").text(this.title);
             axis_vis.call(d3.svg.axis().scale(this.scale).orient("bottom").ticks(this.ticks).tickValues(this.tickValues));
+            var title = divs.append("div").style('text-align', 'center').style('position', 'absolute').style('width', graph_dimensions.width + 'px').style('height', (margins.bottom - this.axisBuffer) + 'px').style('left', margins.left + 'px').style('top', (margins.top + graph_dimensions.height + this.axisBuffer) + 'px').attr('class', 'big');
+            katex.render(this.title.toString(), title[0][0]);
         };
         return XAxis;
     })(Axis);
@@ -992,11 +1826,12 @@ var KG;
         YAxis.prototype.scaleFunction = function (pixelLength, domain) {
             return d3.scale.linear().range([pixelLength, 0]).domain(domain.toArray());
         };
-        YAxis.prototype.draw = function (vis, graph_dimensions) {
+        YAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.height, this.domain);
             var axis_vis = vis.append('g').attr('class', 'y axis');
-            axis_vis.append("text").attr("transform", "rotate(-90)").attr("x", -graph_dimensions.height / 2).attr("y", "-4em").style("text-anchor", "middle").text(this.title);
             axis_vis.call(d3.svg.axis().scale(this.scale).orient("left").ticks(this.ticks).tickValues(this.tickValues));
+            var title = divs.append("div").style('text-align', 'center').style('position', 'absolute').style('width', graph_dimensions.height + 'px').style('height', (margins.left - this.axisBuffer) + 'px').style('left', 0.5 * (margins.left - graph_dimensions.height - this.axisBuffer) + 'px').style('top', margins.top + 0.5 * (graph_dimensions.height - margins.left + this.axisBuffer) + 'px').style('-webkit-transform', 'rotate(-90deg)').style('transform', 'rotate(-90deg)').attr('class', 'big');
+            katex.render(this.title.toString(), title[0][0]);
         };
         return YAxis;
     })(Axis);
@@ -1010,8 +1845,8 @@ var KG;
         __extends(Graph, _super);
         function Graph(definition) {
             // ensure dimensions and margins are set; set any missing elements to defaults
-            definition.dimensions = _.defaults(definition.dimensions || {}, { width: 500, height: 500 });
-            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 100, bottom: 100, right: 20 });
+            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 800, height: 800 });
+            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 80, bottom: 70, right: 20 });
             _super.call(this, definition);
             this.xAxis = new KG.XAxis(definition.xAxis);
             this.yAxis = new KG.YAxis(definition.yAxis);
@@ -1049,7 +1884,7 @@ var KG;
     var Slider = (function (_super) {
         __extends(Slider, _super);
         function Slider(definition) {
-            definition.dimensions = _.defaults(definition.dimensions || {}, { width: 300, height: 50 });
+            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 300, height: 50 });
             definition.margins = _.defaults(definition.margins || {}, { top: 25, left: 25, bottom: 25, right: 25 });
             definition.mask = false;
             _super.call(this, definition);
@@ -1096,8 +1931,10 @@ var KG;
 var KG;
 (function (KG) {
     var Controller = (function () {
-        function Controller($scope, $window) {
+        function Controller($scope, $interpolate, $window) {
             this.$scope = $scope;
+            this.$interpolate = $interpolate;
+            $scope.interpolate = $interpolate;
             $scope.init = function (definition) {
                 $scope.params = definition.params;
                 $scope.restrictions = definition.restrictions.map(function (restrictionDefinition) {
@@ -1117,7 +1954,9 @@ var KG;
                     if (!element.hasAttribute('raw')) {
                         element.setAttribute('raw', element.textContent);
                     }
-                    katex.render(element.getAttribute('raw'), element);
+                    var textToRender = $scope.interpolate(element.getAttribute('raw'))($scope);
+                    var displayMode = element.classList.contains('displayMath');
+                    katex.render(textToRender, element, { displayMode: displayMode });
                 }
             };
             // Updates and redraws interactive objects (graphs and sliders) when a parameter changes
@@ -1163,169 +2002,8 @@ var KG;
                     $scope.$apply();
                 }
             };
-            $scope.init({
-                params: {
-                    mean1: 0.2,
-                    stDev1: 0.3,
-                    mean2: 0.3,
-                    stDev2: 0.4,
-                    mean3: 0.4,
-                    stDev3: 0.5,
-                    rho12: 0,
-                    rho23: 0,
-                    rho13: 0,
-                    maxLeverage: 0,
-                    riskFreeReturn: 0.05
-                },
-                restrictions: [
-                    {
-                        expression: 'params.maxLeverage',
-                        restrictionType: 'range',
-                        max: 100,
-                        min: 0,
-                        precision: 10
-                    },
-                    {
-                        expression: 'params.rho12',
-                        restrictionType: 'range',
-                        max: 1,
-                        min: -1,
-                        precision: 0.1
-                    },
-                    {
-                        expression: 'params.rho23',
-                        restrictionType: 'range',
-                        max: 1,
-                        min: -1,
-                        precision: 0.1
-                    },
-                    {
-                        expression: 'params.rho13',
-                        restrictionType: 'range',
-                        max: 1,
-                        min: -1,
-                        precision: 0.1
-                    },
-                    {
-                        expression: 'params.riskFreeReturn',
-                        restrictionType: 'range',
-                        max: 0.2,
-                        min: 0,
-                        error: "'risk free return should be between 0 and 0.2'"
-                    },
-                    {
-                        expression: 'model.positiveDefinite',
-                        restrictionType: 'boolean',
-                        error: "'would make matrix not positive definite'"
-                    }
-                ],
-                model: {
-                    type: 'FinanceGraphs.Portfolio',
-                    definition: {}
-                },
-                views: [
-                    {
-                        type: 'KG.Graph',
-                        definition: {
-                            element_id: 'graph',
-                            dimensions: { width: 700, height: 700 },
-                            xAxis: { min: 0, max: 1, title: '"Standard Deviation"' },
-                            yAxis: { min: 0, max: 0.5, title: '"Mean"' },
-                            objects: ['model.optimalPortfolio', 'model.asset1.point', 'model.asset2.point', 'model.asset3.point', 'model.riskFreeAsset', 'model.riskReturnLine', 'model.threeAssetPortfolios', 'model.twoAssetPortfolios']
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'leverageSlider',
-                            param: 'maxLeverage',
-                            axis: { min: 0, max: 100, tickValues: [0, 50, 100] }
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'slider12',
-                            param: 'rho12',
-                            precision: '0.1',
-                            axis: { min: -1, max: 1, tickValues: [-1, 0, 1] }
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'slider23',
-                            param: 'rho23',
-                            axis: { min: -1, max: 1, tickValues: [-1, 0, 1] }
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'slider13',
-                            param: 'rho13',
-                            axis: { min: -1, max: 1, tickValues: [-1, 0, 1] }
-                        }
-                    }
-                ]
-            });
+            $scope.init(scopeDefinition);
             render(true);
-            /*var graphDef = "{element_id:'graph', dimensions: {width: 700, height: 700}, xAxis: {min: 0, max: 1, title: 'Standard Deviation'},yAxis: {min: 0, max: 0.5, title: 'Mean'}, graphObjects:[";
-             var point1 = ",{type:'ControlDiv', definition: {name:'asset1', show:true, className: 'asset', text:'a_1', coordinates: functions.asset1.coordinates()}}";
-             var point2 = ",{type:'ControlDiv', definition: {name:'asset2', show:true, className: 'asset', text:'a_2', coordinates: functions.asset2.coordinates()}}";
-             var point3 = ",{type:'ControlDiv', definition: {name:'asset3', show:true, className: 'asset', text:'a_3', coordinates: functions.asset3.coordinates()}}";
-             var linePlot3 = ",{type:'LinePlot', definition: {name: 'myLinePlot3', show: true, className: 'draw', data:functions.portfolio.twoAssetPortfolio(0,1,[0,0,0],params.maxLeverage)}}";
-             var linePlot2 = ",{type:'LinePlot', definition: {name: 'myLinePlot2', show: true, className: 'draw', data:functions.portfolio.twoAssetPortfolio(1,2,[0,0,0],params.maxLeverage)}}";
-             var linePlot1 = "{type:'LinePlot', definition: {name: 'myLinePlot1', show: true, className: 'draw', data:functions.portfolio.twoAssetPortfolio(0,2,[0,0,0],params.maxLeverage)}}";
-             var portfolioPaths = ",{type:'PathFamily', definition: {name: 'myDataPaths', show: true, className: 'draw', data:functions.portfolio.data(params.maxLeverage)}}";
-             var graphDefEnd = "]}";
-             $scope.interactiveDefinitions = {
-             graphs: [graphDef + linePlot1 + linePlot2 + linePlot3 + portfolioPaths + point1 + point2 + point3 + graphDefEnd],
-             sliders: [
-             "{element_id: 'slider12', param: 'rho01', precision: '0.1', axis: {min: -1, max: 1, tickValues: [-1,0,1]}}",
-             "{element_id: 'slider23', param: 'rho12', precision: '0.1', axis: {min: -0.5, max: 0.5, tickValues: [-0.5,0,0.5]}}",
-             "{element_id: 'slider13', param: 'rho02', precision: '0.1', axis: {min: -0.5, max: 0.5, tickValues: [-0.5,0,0.5]}}",
-             "{element_id: 'leverageSlider', param: 'maxLeverage', precision: '1', axis: {min: 0, max: 400, tickValues: [0,200,400]}}"
-             ]
-             };
-             $scope.params = ;
-             $scope.functionDefinitions = {finance: [
-             {name: 'asset1', model: 'PortfolioAnalysis', type: 'Asset', definition: "{mean: 'mean1', stdev: 'stdev1'}"},
-             {name: 'asset2', model: 'PortfolioAnalysis', type: 'Asset', definition: "{mean: 'mean2', stdev: 'stdev2'}"},
-             {name: 'asset3', model: 'PortfolioAnalysis', type: 'Asset', definition: "{mean: 'mean3', stdev: 'stdev3'}"},
-             {name: 'portfolio', model: 'PortfolioAnalysis', type: 'Portfolio', definition: "{assets:[functions.asset1, functions.asset2, functions.asset3], correlationCoefficients: {rho12: params.rho12, rho23: params.rho23, rho13: params.rho13}}"}
-             ]};
-
-             // Creates graph objects from (string) graph definitions
-             function createViews() {
-             var interactives:IView[] = [];
-             if($scope.hasOwnProperty('interactiveDefinitions')){
-             if($scope.interactiveDefinitions.hasOwnProperty('graphs')) {
-             $scope.interactiveDefinitions.graphs.forEach(function(graphDefinition) {
-             interactives.push(new Graph(graphDefinition))
-             })
-             }
-             if($scope.interactiveDefinitions.hasOwnProperty('sliders')) {
-             $scope.interactiveDefinitions.sliders.forEach(function(sliderDefinition) {
-             interactives.push(new Slider(sliderDefinition))
-             })
-             }
-             }
-             return interactives;
-             }
-
-             // Creates functions
-             function createFunctions() {
-             var functions = {};
-             if($scope.hasOwnProperty('functionDefinitions')){
-             if($scope.functionDefinitions.hasOwnProperty('finance')) {
-             $scope.functionDefinitions.finance.forEach(function(functionDefinition) {
-             functions[functionDefinition.name] = new FinanceGraphs[functionDefinition.model][functionDefinition.type](functionDefinition.definition);
-             })
-             }
-             }
-             return functions;
-             }*/
         }
         return Controller;
     })();
@@ -1382,7 +2060,9 @@ var FinanceGraphs;
                 size: 500,
                 xDrag: true,
                 yDrag: true,
-                label: definition.name
+                label: {
+                    text: definition.name
+                }
             });
         }
         return Asset;
@@ -1396,33 +2076,6 @@ var FinanceGraphs;
     var Portfolio = (function (_super) {
         __extends(Portfolio, _super);
         function Portfolio(definition) {
-            ['rho12', 'rho13', 'rho23', 'maxLeverage', 'riskFreeReturn'].forEach(function (name) {
-                definition[name] = 'params.' + name;
-            });
-            definition.asset1 = {
-                type: 'FinanceGraphs.Asset',
-                definition: {
-                    name: 'A_1',
-                    mean: 'params.mean1',
-                    stDev: 'params.stDev1'
-                }
-            };
-            definition.asset2 = {
-                type: 'FinanceGraphs.Asset',
-                definition: {
-                    name: 'A_2',
-                    mean: 'params.mean2',
-                    stDev: 'params.stDev2'
-                }
-            };
-            definition.asset3 = {
-                type: 'FinanceGraphs.Asset',
-                definition: {
-                    name: 'A_3',
-                    mean: 'params.mean3',
-                    stDev: 'params.stDev3'
-                }
-            };
             _super.call(this, definition);
             var p = this;
             p.assets = [p.asset1, p.asset2, p.asset3];
@@ -1443,20 +2096,34 @@ var FinanceGraphs;
                 size: 500,
                 xDrag: false,
                 yDrag: true,
-                label: 'RF'
+                label: {
+                    text: 'RF'
+                }
             });
             p.optimalPortfolio = new KG.Point({
                 name: 'optimalPortfolio',
                 coordinates: { x: 'params.optimalPortfolioStDev', y: 'params.optimalPortfolioMean' },
-                size: 500,
+                symbol: 'cross',
+                size: 100,
                 xDrag: false,
                 yDrag: false,
-                label: 'P'
+                label: {
+                    text: 'P',
+                    color: 'blue',
+                    align: 'right',
+                    valign: 'bottom'
+                },
+                color: 'blue'
             });
-            p.riskReturnLine = new KG.Segment({
+            p.riskReturnLine = new KG.Line({
                 name: 'twoPointSegment',
-                a: p.riskFreeAsset,
-                b: p.optimalPortfolio
+                color: 'blue',
+                arrows: 'OPEN',
+                type: 'TwoPointLine',
+                def: {
+                    p1: p.riskFreeAsset,
+                    p2: p.optimalPortfolio
+                }
             });
             p.optimalPortfolioMean = 0;
             p.optimalPortfolioStDev = 0.5;
@@ -1599,6 +2266,365 @@ var FinanceGraphs;
 /// <reference path="../kg.ts"/>
 /// <reference path="capm/asset.ts"/>
 /// <reference path="capm/portfolio.ts"/>
+/// <reference path="../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var Elasticity = (function (_super) {
+        __extends(Elasticity, _super);
+        function Elasticity(definition) {
+            definition.inverse = _.defaults(false, definition.inverse);
+            definition.terms = _.defaults({
+                perfectlyElastic: "perfectly elastic",
+                perfectlyInelastic: "perfectly inelastic",
+                elastic: "elastic",
+                inelastic: "inelastic",
+                unitElastic: "unit elastic"
+            }, definition.terms);
+            _super.call(this, definition);
+        }
+        Elasticity.prototype.calculateElasticity = function (inputs) {
+            var e = this;
+            e = e._calculateElasticity(inputs);
+            e.absoluteElasticity = Math.abs(e.elasticity);
+            if (isNaN(e.absoluteElasticity)) {
+                e.absoluteElasticity == '\\emptyset';
+            }
+            e.elasticityComparator = e.elasticityNumber(true);
+            if (e.absoluteElasticity == 0) {
+                e.elasticityWord = e.terms.perfectlyInelastic;
+            }
+            else if (e.absoluteElasticity < 1) {
+                e.elasticityWord = e.terms.inelastic;
+                e.elasticityComparator += "< 1";
+            }
+            else if (e.absoluteElasticity == 1) {
+                e.elasticityWord = e.terms.unitElastic;
+            }
+            else if (e.absoluteElasticity == Infinity) {
+                e.elasticityWord = e.terms.perfectlyElastic;
+            }
+            else if (e.absoluteElasticity > 1) {
+                e.elasticityWord = e.terms.elastic;
+                e.elasticityComparator += "> 1";
+            }
+            else {
+                e.elasticityWord = 'undefined';
+            }
+            return e;
+        };
+        Elasticity.prototype._calculateElasticity = function (inputs) {
+            return this; // overridden by subclass
+        };
+        Elasticity.prototype.elasticityNumber = function (absoluteValue) {
+            var e = this;
+            absoluteValue = absoluteValue || false;
+            if (isNaN(e.absoluteElasticity)) {
+                return "\\emptyset";
+            }
+            var returnString = (!absoluteValue && e.elasticity < 0) ? '-' : '';
+            returnString += (e.absoluteElasticity == Infinity) ? "\\infty" : (e.absoluteElasticity == 0) ? "0" : (e.absoluteElasticity == 1) ? "1" : e.absoluteElasticity.toFixed(2);
+            return returnString;
+        };
+        Elasticity.prototype._update = function (scope) {
+            return this.calculateElasticity();
+        };
+        return Elasticity;
+    })(KG.Model);
+    EconGraphs.Elasticity = Elasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var MidpointElasticity = (function (_super) {
+        __extends(MidpointElasticity, _super);
+        function MidpointElasticity(definition) {
+            _super.call(this, definition);
+            this.point1view = new KG.Point({
+                name: 'point1',
+                coordinates: definition.point1,
+                size: 500,
+                xDrag: true,
+                yDrag: true,
+                label: {
+                    text: 'B'
+                },
+                droplines: {
+                    horizontal: 'P_B',
+                    vertical: 'Q_B'
+                }
+            });
+            this.point2view = new KG.Point({
+                name: 'point2',
+                coordinates: definition.point2,
+                size: 500,
+                xDrag: true,
+                yDrag: true,
+                label: {
+                    text: 'A'
+                },
+                droplines: {
+                    horizontal: 'P_A',
+                    vertical: 'Q_A'
+                }
+            });
+            this.midpoint = new KG.Point({
+                name: 'midpoint',
+                coordinates: {
+                    x: 'model.xAvg',
+                    y: 'model.yAvg'
+                },
+                symbol: 'cross',
+                color: 'grey',
+                size: 100,
+                xDrag: false,
+                yDrag: false,
+                label: {
+                    text: 'M',
+                    align: 'right',
+                    valign: 'top',
+                    color: 'grey'
+                }
+            });
+            this.line = new KG.Line({
+                name: 'demand',
+                color: 'purple',
+                arrows: 'NONE',
+                type: 'TwoPointLine',
+                def: {
+                    p1: {
+                        x: 'params.x1',
+                        y: 'params.y1'
+                    },
+                    p2: {
+                        x: 'params.x2',
+                        y: 'params.y2'
+                    }
+                }
+            });
+            this.xDiffSegment = new KG.Segment({
+                name: 'xDiffSegment',
+                color: 'blue',
+                arrows: 'END',
+                a: {
+                    x: definition.point2.x,
+                    y: 5
+                },
+                b: {
+                    x: definition.point1.x,
+                    y: 5
+                },
+                label: {
+                    text: 'model.xPercentDiff | percentage:0',
+                    valign: 'top'
+                }
+            });
+            this.yDiffSegment = new KG.Segment({
+                name: 'yDiffSegment',
+                color: 'red',
+                arrows: 'END',
+                a: {
+                    x: 15,
+                    y: definition.point2.y
+                },
+                b: {
+                    x: 15,
+                    y: definition.point1.y
+                },
+                label: {
+                    text: 'model.yPercentDiff | percentage:0',
+                    align: 'right'
+                }
+            });
+        }
+        MidpointElasticity.prototype._calculateElasticity = function (inputs) {
+            var e = this;
+            if (inputs) {
+                if (inputs.hasOwnProperty('point1') && inputs.hasOwnProperty('point2')) {
+                    e.point1 = inputs.point1;
+                    e.point2 = inputs.point2;
+                }
+            }
+            e.xDiff = e.point1.x - e.point2.x;
+            e.yDiff = e.point1.y - e.point2.y;
+            e.xAvg = 0.5 * (e.point1.x + e.point2.x);
+            e.yAvg = 0.5 * (e.point1.y + e.point2.y);
+            e.xPercentDiff = e.xDiff / e.xAvg;
+            e.yPercentDiff = e.yDiff / e.yAvg;
+            e.elasticity = e.xPercentDiff / e.yPercentDiff;
+            return e;
+        };
+        return MidpointElasticity;
+    })(EconGraphs.Elasticity);
+    EconGraphs.MidpointElasticity = MidpointElasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var PointElasticity = (function (_super) {
+        __extends(PointElasticity, _super);
+        function PointElasticity(definition) {
+            _super.call(this, definition);
+            this.pointView = new KG.Point({
+                name: 'point',
+                coordinates: definition.point,
+                size: 500,
+                xDrag: true,
+                yDrag: true,
+                droplines: {
+                    horizontal: 'P',
+                    vertical: 'Q'
+                }
+            });
+            this.line = new KGMath.Functions.PointSlopeLine({
+                p: definition.point,
+                m: definition.slope
+            });
+        }
+        PointElasticity.prototype._calculateElasticity = function (inputs) {
+            var e = this;
+            if (inputs) {
+                if (inputs.hasOwnProperty('point')) {
+                    e.point = inputs.point;
+                }
+                if (inputs.hasOwnProperty('slope')) {
+                    e.slope = inputs.slope;
+                }
+            }
+            e.elasticity = (e.point.y / e.point.x) / e.slope;
+            return e;
+        };
+        return PointElasticity;
+    })(EconGraphs.Elasticity);
+    EconGraphs.PointElasticity = PointElasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var Demand = (function (_super) {
+        __extends(Demand, _super);
+        function Demand(definition) {
+            _super.call(this, definition);
+            this.demandFunction = new KGMath.Functions[definition.type](definition.def);
+            this.elasticity = (definition.elasticityMethod == 'point') ? new EconGraphs.PointElasticity({}) : new EconGraphs.MidpointElasticity({});
+        }
+        Demand.prototype.quantityAtPrice = function (price) {
+            price = (price > 0) ? price : 0;
+            var qd = this.demandFunction.xValue(price);
+            return Math.max(0, qd);
+        };
+        Demand.prototype.priceAtQuantity = function (quantity) {
+            quantity = (quantity > 0) ? quantity : 0;
+            var pd = this.demandFunction.yValue(quantity);
+            return Math.max(0, pd);
+        };
+        Demand.prototype.priceElasticity = function (price) {
+            var d = this;
+            if (d.elasticity instanceof EconGraphs.MidpointElasticity) {
+                d.elasticity = d.elasticity.calculateElasticity({
+                    point1: {
+                        x: d.quantityAtPrice(price * 0.99),
+                        y: price * 0.99
+                    },
+                    point2: {
+                        x: d.quantityAtPrice(price * 1.01),
+                        y: price * 1.01
+                    }
+                });
+            }
+            else {
+                var point = {
+                    x: d.quantityAtPrice(price),
+                    y: price
+                }, slope = d.demandFunction.hasOwnProperty('slope') ? d.demandFunction.slope : d.demandFunction.slopeBetweenPoints({
+                    x: d.quantityAtPrice(price * 0.99),
+                    y: price * 0.99
+                }, {
+                    x: d.quantityAtPrice(price * 1.01),
+                    y: price * 1.01
+                }, true);
+                d.elasticity = d.elasticity.calculateElasticity({ point: point, slope: slope });
+            }
+            return d.elasticity;
+        };
+        return Demand;
+    })(KG.Model);
+    EconGraphs.Demand = Demand;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var LinearDemand = (function (_super) {
+        __extends(LinearDemand, _super);
+        function LinearDemand(definition) {
+            _super.call(this, definition);
+            this.marginalRevenue = new KGMath.Functions.TwoPointLine({ p1: { x: 0, y: 0 }, p2: { x: 0, y: 0 } });
+            this.priceInterceptPoint = new KG.Point({
+                name: 'demandPriceIntercept',
+                coordinates: { x: 0, y: 'params.demandPriceIntercept' },
+                size: 200,
+                color: 'blue',
+                yDrag: true
+            });
+            this.quantityInterceptPoint = new KG.Point({
+                name: 'demandQuantityIntercept',
+                coordinates: { x: 'params.demandQuantityIntercept', y: 0 },
+                size: 200,
+                color: 'blue',
+                xDrag: true
+            });
+            this.curve = new KG.Line({
+                name: 'demand',
+                color: 'blue',
+                arrows: 'NONE',
+                type: definition.type,
+                def: definition.def
+            });
+            this.priceLine = new KG.Line({
+                name: 'priceLine',
+                color: 'grey',
+                arrows: 'NONE',
+                type: 'HorizontalLine',
+                yDrag: 'price',
+                def: {
+                    y: 'params.price'
+                }
+            });
+            this.quantityDemandedAtPrice = new KG.Point({
+                name: 'quantityDemandedAtPrice',
+                coordinates: { x: 'model.quantityAtPrice(params.price)', y: 'params.price' },
+                size: 500,
+                color: 'black',
+                yDrag: true,
+                label: {
+                    text: 'A'
+                },
+                droplines: {
+                    vertical: 'Q^D_A',
+                    horizontal: 'P_A'
+                }
+            });
+        }
+        LinearDemand.prototype._update = function (scope) {
+            var d = this;
+            d.demandFunction.update(scope);
+            d.priceIntercept = d.demandFunction.yValue(0);
+            d.quantityIntercept = d.demandFunction.xValue(0);
+            d.marginalRevenue.p1 = { x: 0, y: d.priceIntercept };
+            d.marginalRevenue.p2 = { x: d.quantityIntercept / 2, y: 0 };
+            return d;
+        };
+        return LinearDemand;
+    })(EconGraphs.Demand);
+    EconGraphs.LinearDemand = LinearDemand;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../kg.ts"/>
+/// <reference path="elasticity/elasticity.ts"/>
+/// <reference path="elasticity/midpoint.ts"/>
+/// <reference path="elasticity/point.ts"/>
+/// <reference path="market/demand.ts"/>
+/// <reference path="market/linearDemand.ts"/> 
 /// <reference path="../bower_components/DefinitelyTyped/jquery/jquery.d.ts" />
 /// <reference path="../bower_components/DefinitelyTyped/jquery.color/jquery.color.d.ts" />
 /// <reference path="../bower_components/DefinitelyTyped/angularjs/angular.d.ts"/>
@@ -1607,10 +2633,13 @@ var FinanceGraphs;
 /// <reference path="helpers.ts" />
 /// <reference path="model.ts" />
 /// <reference path="restriction.ts" />
+/// <reference path="math/math.ts" />
 /// <reference path="viewObjects/viewObject.ts"/>
 /// <reference path="viewObjects/point.ts"/>
+/// <reference path="viewObjects/dropline.ts"/>
 /// <reference path="viewObjects/segment.ts"/>
-/// <reference path="viewObjects/label.ts"/>
+/// <reference path="viewObjects/line.ts"/>
+/// <reference path="viewObjects/graphDiv.ts"/>
 /// <reference path="viewObjects/linePlot.ts"/>
 /// <reference path="viewObjects/pathFamily.ts"/>
 /// <reference path="view.ts" />
@@ -1620,7 +2649,12 @@ var FinanceGraphs;
 /// <reference path="controller.ts" />
 /// <reference path="sample/sample.ts" />
 /// <reference path="finance/fg.ts" />
+/// <reference path="econ/eg.ts" />
 'use strict';
-angular.module('KineticGraphs', []).controller('KineticGraphCtrl', KG.Controller);
+angular.module('KineticGraphs', []).controller('KineticGraphCtrl', ['$scope', '$interpolate', '$window', KG.Controller]).filter('percentage', ['$filter', function ($filter) {
+    return function (input, decimals) {
+        return $filter('number')(input * 100, decimals) + '\\%';
+    };
+}]);
 //# sourceMappingURL=kinetic-graphs.js.map
 
