@@ -1,6 +1,6 @@
 function addAxesAndLegend (svg, xAxis, yAxis, margin, chartWidth, chartHeight) {
     var legendWidth  = 200,
-        legendHeight = 100;
+        legendHeight = 180;
 
     // clipping to make sure nothing appears behind legend
     /*svg.append('clipPath')
@@ -38,7 +38,7 @@ function addAxesAndLegend (svg, xAxis, yAxis, margin, chartWidth, chartHeight) {
 
 
 
-    var legend = svg.append('g')
+    var legend = d3.select('#legend').append('svg')
         .attr('class', 'legend')
         .attr('transform', 'translate(50, 10)');
 
@@ -79,6 +79,24 @@ function addAxesAndLegend (svg, xAxis, yAxis, margin, chartWidth, chartHeight) {
         .attr('x', 115)
         .attr('y', 85)
         .text('Median');
+
+    legend.append('path')
+        .attr('class', 'mean-line')
+        .attr('d', 'M10,110L85,110');
+
+    legend.append('text')
+        .attr('x', 115)
+        .attr('y', 115)
+        .text('Mean');
+
+    legend.append('path')
+        .attr('class', 'risk-free-line')
+        .attr('d', 'M10,140L85,140');
+
+    legend.append('text')
+        .attr('x', 115)
+        .attr('y', 145)
+        .text('Risk-Free');
 }
 
 function drawPaths (svg, data, x, y) {
@@ -169,17 +187,22 @@ function startTransitions (svg, chartWidth, chartHeight, rectClip, x) {
         .attr('width', chartWidth);
 }
 
-function makeChart (data) {
-    var svgWidth  = 960,
-        svgHeight = 500,
-        margin = { top: 20, right: 20, bottom: 40, left: 40 },
+function makeChart (data, max) {
+
+    var el = d3.select('#graph');
+
+    var svgWidth  = el[0][0].clientWidth,
+        svgHeight = window.innerHeight,
+        margin = { top: 50, right: 50, bottom: 70, left: 70 },
         chartWidth  = svgWidth  - margin.left - margin.right,
         chartHeight = svgHeight - margin.top  - margin.bottom;
+
+    //var max = Math.round(1.25*d3.max(data,function(d) {return d.pct75;}));
 
     var x = d3.scale.linear().range([0, chartWidth])
             .domain([0, d3.max(data, function (d) { return d.date; })]),
         y = d3.scale.linear().range([chartHeight, 0])
-            .domain([0, d3.max(data, function (d) { return d.pct75; })]);
+            .domain([0, max]);
 
     var xAxis = d3.svg.axis().scale(x).orient('bottom')
             .innerTickSize(-chartHeight).outerTickSize(0).tickPadding(10),
@@ -192,6 +215,8 @@ function makeChart (data) {
         .attr('height', svgHeight)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    d3.select('#legend').select('svg').remove();
 
     addAxesAndLegend(svg, xAxis, yAxis, margin, chartWidth, chartHeight);
     drawPaths(svg, data, x, y);

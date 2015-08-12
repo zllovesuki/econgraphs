@@ -12,14 +12,30 @@ var KG;
         Domain.prototype.toArray = function () {
             return [this.min, this.max];
         };
-        Domain.prototype.contains = function (x) {
-            var lowEnough = (this.max >= x);
-            var highEnough = (this.min <= x);
+        Domain.prototype.contains = function (x, strict) {
+            strict = strict || false;
+            var lowEnough = strict ? (this.max > x) : (this.max >= x);
+            var highEnough = strict ? (this.min < x) : (this.min <= x);
             return lowEnough && highEnough;
+        };
+        Domain.prototype.samplePoints = function (numSamples) {
+            var min = this.min, max = this.max, sp = [];
+            for (var i = 0; i < numSamples; i++) {
+                sp.push(min + (i / (numSamples - 1)) * (max - min));
+            }
+            return sp;
         };
         return Domain;
     })();
     KG.Domain = Domain;
+    function areTheSamePoint(a, b) {
+        return (a.x === b.x && a.y === b.y);
+    }
+    KG.areTheSamePoint = areTheSamePoint;
+    function areNotTheSamePoint(a, b) {
+        return !areTheSamePoint(a, b);
+    }
+    KG.areNotTheSamePoint = areNotTheSamePoint;
     function translateByPixelCoordinates(coordinates) {
         return 'translate(' + coordinates.x + ',' + coordinates.y + ')';
     }
@@ -34,6 +50,10 @@ var KG;
         return style;
     }
     KG.positionByPixelCoordinates = positionByPixelCoordinates;
+    function distanceBetweenCoordinates(a, b) {
+        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    }
+    KG.distanceBetweenCoordinates = distanceBetweenCoordinates;
     function getCoordinates(def) {
         var defaultCoordinates = { x: 0, y: 0 };
         if (!def || def == undefined) {
@@ -53,6 +73,13 @@ var KG;
         }
     }
     KG.getCoordinates = getCoordinates;
+    function sortObjects(key, descending) {
+        return function (a, b) {
+            var lower = descending ? a[key] : b[key], higher = descending ? b[key] : a[key];
+            return lower > higher ? -1 : lower < higher ? 1 : lower <= higher ? 0 : NaN;
+        };
+    }
+    KG.sortObjects = sortObjects;
     function createInstance(definition) {
         // from http://stackoverflow.com/questions/1366127/
         function typeSpecificConstructor(typeName) {
@@ -85,9 +112,35 @@ var KG;
                     if (value.hasOwnProperty('type') && value.hasOwnProperty('definition')) {
                         model[key] = KG.createInstance(value);
                     }
+                    else {
+                        model[key] = value;
+                    }
                 }
             }
         }
+        Model.prototype.setNumericProperty = function (propertySetter) {
+            var model = this;
+            if (!isNaN(propertySetter.value)) {
+                model[propertySetter.name] = propertySetter.value;
+            }
+            else if (!model.hasOwnProperty(propertySetter.name)) {
+                model[propertySetter.name] = propertySetter.defaultValue || 0;
+            }
+            return model;
+        };
+        Model.prototype.setArrayProperty = function (propertySetter) {
+            var model = this;
+            if (propertySetter.value instanceof Array) {
+                model[propertySetter.name] = propertySetter.value;
+            }
+            else if (propertySetter.value) {
+                model[propertySetter.name] = [propertySetter.value];
+            }
+            else if (!model.hasOwnProperty(propertySetter.name)) {
+                model[propertySetter.name] = propertySetter.defaultValue;
+            }
+            return model;
+        };
         // Update the model
         Model.prototype.update = function (scope, callback) {
             var model = this;
@@ -119,9 +172,14 @@ var KG;
                     // If the object's property is an object, parses the object.
                     return parseObject(value);
                 }
-                else if (value.toString() !== undefined) {
-                    var e = scope.$eval(value.toString());
-                    return (e == undefined) ? value : e;
+                else if (scope && value.toString() !== undefined) {
+                    try {
+                        var e = scope.$eval(value.toString());
+                        return (e == undefined) ? value : e;
+                    }
+                    catch (error) {
+                        return value;
+                    }
                 }
                 else {
                     return value;
@@ -130,13 +188,16 @@ var KG;
             // Parse the model object
             model = parseObject(model.definition, model);
             // Do any model-specific updating
-            model = model._update(scope);
+            model = model._update(scope)._calculateValues();
             if (callback) {
                 callback();
             }
             return model;
         };
         Model.prototype._update = function (scope) {
+            return this; // overridden by child classes
+        };
+        Model.prototype._calculateValues = function () {
             return this; // overridden by child classes
         };
         return Model;
@@ -236,6 +297,483 @@ var KG;
     })(KG.Model);
     KG.Restriction = Restriction;
 })(KG || (KG = {}));
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Base = (function (_super) {
+            __extends(Base, _super);
+            function Base(definition) {
+                definition.level = definition.level || 0;
+                _super.call(this, definition);
+            }
+            // Returns the slope between (a,f(a)) and (b,f(b)).
+            // If inverse = true, returns the slope between (f(a),a) and (f(b),b).
+            // Assumes that a and b are both scalars (for now).
+            Base.prototype.slopeBetweenPoints = function (a, b, inverse) {
+                var f = this;
+                b = b || 0;
+                inverse = inverse || false;
+                var s = (f.yValue(a) - f.yValue(b)) / (a - b);
+                return inverse ? 1 / s : s;
+            };
+            Base.prototype.setBase = function (index, base) {
+                var fn = this;
+                if (fn.hasOwnProperty('bases')) {
+                    fn.bases[index - 1] = base;
+                }
+                else {
+                    fn.bases = [];
+                    for (var i = 0; i < index; i++) {
+                        fn.bases.push((i == index - 1) ? base : 1);
+                    }
+                }
+                return fn;
+            };
+            // set bases for evaluating a polynomial or monomial
+            Base.prototype.setBases = function (bases) {
+                return this.setArrayProperty({
+                    name: 'bases',
+                    value: bases,
+                    defaultValue: []
+                });
+            };
+            // set level of function (for generating level sets)
+            Base.prototype.setLevel = function (level) {
+                return this.setNumericProperty({
+                    name: 'level',
+                    value: level,
+                    defaultValue: 0
+                });
+            };
+            Base.prototype.value = function (bases) {
+                return 0; // overridden by subclass
+            };
+            // Returns y value for given x, for a two-dimensional function
+            Base.prototype.yValue = function (x) {
+                return 0;
+            };
+            // Returns x value for given y, for a two-dimensional function
+            Base.prototype.xValue = function (y) {
+                return 0;
+            };
+            Base.prototype.points = function (view, yIsIndependent, numSamplePoints) {
+                var fn = this, points = [];
+                numSamplePoints = numSamplePoints || 51;
+                var xSamplePoints = view.xAxis.domain.samplePoints(numSamplePoints), ySamplePoints = view.yAxis.domain.samplePoints(numSamplePoints);
+                for (var i = 0; i < numSamplePoints; i++) {
+                    var x = xSamplePoints[i];
+                    var yOfX = fn.yValue(x);
+                    if (view.yAxis.domain.contains(yOfX)) {
+                        points.push({ x: x, y: yOfX });
+                    }
+                    var y = ySamplePoints[i];
+                    var xOfY = fn.xValue(y);
+                    if (view.yAxis.domain.contains(yOfX)) {
+                        points.push({ x: xOfY, y: y });
+                    }
+                }
+                if (yIsIndependent) {
+                    return points.sort(KG.sortObjects('y'));
+                }
+                else {
+                    return points.sort(KG.sortObjects('x'));
+                }
+            };
+            return Base;
+        })(KG.Model);
+        Functions.Base = Base;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/*
+ A monomial function is a term of the form c(b1^p1)(b2^p2)...(bn^pn)
+ where 'c' is the coefficient, 'bi' is the i'th base, and 'pi' is the i'th power.
+
+ The initializing object, params, should be of the form
+
+ params = {coefficient: (number), bases: (number or array), powers: (number or array)}
+
+ Any of these parameters may be null initially and set later with the setters.
+ */
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Monomial = (function (_super) {
+            __extends(Monomial, _super);
+            function Monomial(definition) {
+                _super.call(this, definition);
+            }
+            // Establish setters
+            Monomial.prototype.setCoefficient = function (coefficient) {
+                return this.setNumericProperty({
+                    name: 'coefficient',
+                    value: coefficient,
+                    defaultValue: 1
+                });
+            };
+            Monomial.prototype.setPowers = function (powers) {
+                return this.setArrayProperty({
+                    name: 'powers',
+                    value: powers,
+                    defaultValue: []
+                });
+            };
+            // Evaluate monomial for a given set of bases. If none are set, use m.bases.
+            Monomial.prototype.value = function (bases) {
+                var m = this;
+                m.setBases(bases);
+                var basePowerPairs = Math.min(m.bases.length, m.powers.length);
+                var result = m.coefficient;
+                for (var t = 0; t < basePowerPairs; t++) {
+                    result *= Math.pow(m.bases[t], m.powers[t]);
+                }
+                return result;
+            };
+            // Return the monomial that is the derivative of this monomial
+            // with respect to the n'th variable
+            Monomial.prototype.derivative = function (n) {
+                var m = this;
+                // n is the index of the term; first term by default
+                n = n - 1 || 0;
+                return new Monomial({
+                    // the new coefficient is the old coefficient times
+                    //the power of the variable whose derivative we're taking
+                    coefficient: m.coefficient * m.powers[n],
+                    powers: m.powers.map(function (p, index) {
+                        if (index == n) {
+                            return p - 1;
+                        }
+                        else {
+                            return p;
+                        }
+                    }),
+                    bases: m.bases
+                });
+            };
+            // Return the monomial that solves the function c(b1^p1)(b2^p2) = level for bn
+            // For example, to find the level curve where 3(x^2)(y^3) = 6 and express it as y(x), this would return
+            // y = [6/(3x^-2)]^(1/3) = [(6/2)^1/3][(x^-2)^1/3] = [(6/2)^1/3][x^-2/3]
+            // Note that the indices of the bases in the returned monomial are the same as the original.
+            Monomial.prototype.levelCurve = function (n, level) {
+                var m = this;
+                // note: level can be a numerical value or an array of bases at which to evaluate the monomial
+                if (level) {
+                    m.setLevel(level);
+                }
+                // n is the index of the term; first term by default
+                n = n - 1 || 0;
+                // pn is the power to which the base variable we're solving for is raised
+                var pn = m.powers[n];
+                if (pn == 0) {
+                    return null;
+                }
+                return new Monomial({
+                    // the coefficient of the new monomial is (level/c)^1/p
+                    coefficient: Math.pow(m.level / m.coefficient, 1 / pn),
+                    // each of the powers for the remaining bases is divided by -p
+                    powers: m.powers.map(function (p, index) {
+                        if (index == n) {
+                            return 0;
+                        }
+                        else {
+                            return -p / pn;
+                        }
+                    }),
+                    bases: m.bases
+                });
+            };
+            // returns the y value corresponding to the given x value for m(x,y) = m.level
+            Monomial.prototype.yValue = function (x) {
+                this.setBase(1, x);
+                return this.levelCurve(2).value();
+            };
+            // returns the x value corresponding to the given y value for m(x,y) = m.level
+            Monomial.prototype.xValue = function (y) {
+                this.setBase(2, y);
+                return this.levelCurve(1).value();
+            };
+            return Monomial;
+        })(Functions.Base);
+        Functions.Monomial = Monomial;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/*
+ A polynomial function is an array of monomial functions.
+ Its value is the sum of its component functions.
+ Its derivative is the array of the derivatives of its component functions.
+ */
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Polynomial = (function (_super) {
+            __extends(Polynomial, _super);
+            function Polynomial(definition) {
+                _super.call(this, definition);
+                // Each element of the params array should be a monomial or a monomial definition.
+                function createTerm(termDef) {
+                    if (termDef instanceof Functions.Monomial) {
+                        return termDef;
+                    }
+                    else {
+                        return new Functions.Monomial(termDef);
+                    }
+                }
+                this.terms = definition.terms.map(createTerm);
+            }
+            // The coefficients and powers of each term may be get and set via the term's index
+            Polynomial.prototype.setCoefficient = function (n, coefficient) {
+                var p = this;
+                p.terms[n - 1].setCoefficient(coefficient);
+                return p;
+            };
+            Polynomial.prototype.setPowers = function (n, powers) {
+                var p = this;
+                p.terms[n - 1].setPowers(powers);
+                return p;
+            };
+            // The value of a polynomial is the sum of the values of its monomial terms
+            Polynomial.prototype.value = function (bases) {
+                var p = this;
+                p.setBases(bases);
+                var result = 0;
+                for (var i = 0; i < p.terms.length; i++) {
+                    result += p.terms[i].value(p.bases);
+                }
+                return result;
+            };
+            // The derivative of a polynomial is a new polynomial, each of whose terms is the derivative of the original polynomial's terms
+            Polynomial.prototype.derivative = function (n) {
+                var p = this;
+                return new Polynomial({ terms: p.terms.map(function (term) {
+                    return term.derivative(n);
+                }) });
+            };
+            // Assume all bases except the first have been set; replace the base of the first variable ('x') with the x value
+            Polynomial.prototype.yValue = function (x) {
+                var p = this;
+                var inputs = p.bases.map(function (val, index) {
+                    return (index == 0) ? x : val;
+                });
+                return p.value(inputs);
+            };
+            // Not generally a valid concept for a polynomial
+            Polynomial.prototype.xValue = function (y) {
+                return null;
+            };
+            return Polynomial;
+        })(Functions.Base);
+        Functions.Polynomial = Polynomial;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/*
+ A linear function is a special polynomial defined either with two points or a point and a slope.
+ This function takes either of those and returns a polynomial of the form ax + by + c.
+ The params object is of the form: { definitionType: '', param1: foo, param2: bar }
+ */
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Linear = (function (_super) {
+            __extends(Linear, _super);
+            function Linear(definition) {
+                _super.call(this, definition);
+                this.linearIntersection = function (otherLine, delta) {
+                    var thisLine = this;
+                    delta = delta || 0;
+                    var a = thisLine.coefficients.a, b = thisLine.coefficients.b, c = thisLine.coefficients.c, oa = otherLine.coefficients.a, ob = otherLine.coefficients.b, oc = otherLine.coefficients.c;
+                    var diffLine = new Linear({
+                        coefficients: {
+                            a: a * ob - b * oa,
+                            b: b * ob,
+                            c: ob * c - oc * b - delta
+                        }
+                    }), x = diffLine.xIntercept, y = thisLine.yValue(x);
+                    return { x: x, y: y };
+                };
+                this._calculateValues();
+            }
+            Linear.prototype._update = function (scope) {
+                return this.updateLine();
+            };
+            Linear.prototype.updateLine = function () {
+                var l = this;
+                var a = l.coefficients.a, b = l.coefficients.b, c = l.coefficients.c;
+                l.isVertical = (b === 0);
+                l.isHorizontal = (a === 0);
+                l.slope = l.isVertical ? Infinity : -a / b;
+                l.inverseSlope = l.isHorizontal ? Infinity : -b / a;
+                l.xIntercept = l.isHorizontal ? null : -c / a;
+                l.yIntercept = l.isVertical ? null : -c / b;
+                return l;
+            };
+            Linear.prototype.yValue = function (x) {
+                var l = this.updateLine();
+                var y = l.isVertical ? undefined : l.yIntercept + l.slope * x;
+                return y;
+            };
+            Linear.prototype.xValue = function (y) {
+                var l = this.updateLine();
+                var x = l.isHorizontal ? undefined : l.xIntercept + l.inverseSlope * y;
+                return x;
+            };
+            Linear.prototype.points = function (view) {
+                var l = this;
+                var xDomain = view.xAxis.domain, yDomain = view.yAxis.domain;
+                var points = [];
+                if (l.isVertical) {
+                    points = [{ x: l.xIntercept, y: yDomain.min }, { x: l.xIntercept, y: yDomain.max }];
+                }
+                else if (l.isHorizontal) {
+                    points = [{ x: xDomain.min, y: l.yIntercept }, { x: xDomain.max, y: l.yIntercept }];
+                }
+                else {
+                    var xTop = l.xValue(yDomain.max), xBottom = l.xValue(yDomain.min), yLeft = l.yValue(xDomain.min), yRight = l.yValue(xDomain.max);
+                    // add endpoints on the left or right sides, including the corners
+                    if (yDomain.contains(yLeft)) {
+                        points.push({ x: xDomain.min, y: yLeft });
+                    }
+                    if (yDomain.contains(yRight)) {
+                        points.push({ x: xDomain.max, y: yRight });
+                    }
+                    // add endpoints on the top or bottom, not including the corners
+                    if (xDomain.contains(xBottom, true)) {
+                        points.push({ x: xBottom, y: yDomain.min });
+                    }
+                    if (xDomain.contains(xTop, true)) {
+                        points.push({ x: xTop, y: yDomain.max });
+                    }
+                    // A maximimum of two points should have been added. If not, something is wrong.
+                    if (points.length > 2) {
+                        console.log('Oh noes! More than two points! Investigate!');
+                    }
+                }
+                return points;
+            };
+            return Linear;
+        })(Functions.Base);
+        Functions.Linear = Linear;
+        var StandardLine = (function (_super) {
+            __extends(StandardLine, _super);
+            function StandardLine(definition) {
+                _super.call(this, definition);
+            }
+            return StandardLine;
+        })(Linear);
+        Functions.StandardLine = StandardLine;
+        var SlopeInterceptLine = (function (_super) {
+            __extends(SlopeInterceptLine, _super);
+            function SlopeInterceptLine(definition) {
+                _super.call(this, definition);
+            }
+            // Given y = m*x + b => m*x + (-1)y + b = 0
+            SlopeInterceptLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: l.m,
+                    b: -1,
+                    c: l.b
+                };
+                return l.updateLine();
+            };
+            return SlopeInterceptLine;
+        })(Linear);
+        Functions.SlopeInterceptLine = SlopeInterceptLine;
+        var PointSlopeLine = (function (_super) {
+            __extends(PointSlopeLine, _super);
+            function PointSlopeLine(definition) {
+                definition.p = KG.getCoordinates(definition.p);
+                _super.call(this, definition);
+            }
+            // Given Y - y = slope(X - x) => slope*X - Y + (y - slope*x)
+            PointSlopeLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: l.m,
+                    b: -1,
+                    c: l.p.y - l.m * l.p.x
+                };
+                return l.updateLine();
+            };
+            return PointSlopeLine;
+        })(Linear);
+        Functions.PointSlopeLine = PointSlopeLine;
+        var TwoPointLine = (function (_super) {
+            __extends(TwoPointLine, _super);
+            function TwoPointLine(definition) {
+                definition.p1 = KG.getCoordinates(definition.p1);
+                definition.p2 = KG.getCoordinates(definition.p2);
+                _super.call(this, definition);
+            }
+            TwoPointLine.prototype._calculateValues = function () {
+                var l = this;
+                var x1 = l.p1.x, x2 = l.p2.x, y1 = l.p1.y, y2 = l.p2.y, rise = y2 - y1, run = x2 - x1;
+                // If x2 = x1, then it's a vertical line
+                if (run == 0) {
+                    l.coefficients = {
+                        a: 1,
+                        b: 0,
+                        c: -x1
+                    };
+                }
+                else {
+                    var slope = rise / run;
+                    l.coefficients = {
+                        a: slope,
+                        b: -1,
+                        c: y1 - slope * x1
+                    };
+                }
+                return l.updateLine();
+            };
+            return TwoPointLine;
+        })(Linear);
+        Functions.TwoPointLine = TwoPointLine;
+        var HorizontalLine = (function (_super) {
+            __extends(HorizontalLine, _super);
+            function HorizontalLine(definition) {
+                _super.call(this, definition);
+            }
+            // A horizontal line at y = Y may be written 0x - y + Y = 0
+            HorizontalLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: 0,
+                    b: -1,
+                    c: l.y
+                };
+                return l.updateLine();
+            };
+            return HorizontalLine;
+        })(Linear);
+        Functions.HorizontalLine = HorizontalLine;
+        var VerticalLine = (function (_super) {
+            __extends(VerticalLine, _super);
+            function VerticalLine(definition) {
+                _super.call(this, definition);
+            }
+            // A vertical line at x = X may be written -x + 0y + X = 0
+            VerticalLine.prototype._calculateValues = function () {
+                var l = this;
+                l.coefficients = {
+                    a: -1,
+                    b: 0,
+                    c: l.x
+                };
+                return l.updateLine();
+            };
+            return VerticalLine;
+        })(Linear);
+        Functions.VerticalLine = VerticalLine;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/// <reference path="../kg.ts"/>
+/// <reference path="functions/base.ts"/>
+/// <reference path="functions/monomial.ts"/>
+/// <reference path="functions/polynomial.ts"/>
+/// <reference path="functions/linear.ts"/>
 /// <reference path="../kg.ts"/>
 'use strict';
 var KG;
@@ -245,10 +783,27 @@ var KG;
         function ViewObject(definition) {
             definition = _.defaults(definition, { className: '', show: true, xDrag: false, yDrag: false });
             _super.call(this, definition);
-            this.xDragDelta = 0;
-            this.yDragDelta = 0;
-            this.xDragParam = definition.xDrag ? definition.coordinates.x.replace('params.', '') : null;
-            this.yDragParam = definition.yDrag ? definition.coordinates.y.replace('params.', '') : null;
+            var viewObj = this;
+            viewObj.xDragDelta = 0;
+            viewObj.yDragDelta = 0;
+            if (definition.xDrag) {
+                if (typeof definition.xDrag == 'string') {
+                    viewObj.xDragParam = definition.xDrag;
+                    viewObj.xDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
+                    this.xDragParam = definition.coordinates.x.replace('params.', '');
+                }
+            }
+            if (definition.yDrag) {
+                if (typeof definition.yDrag == 'string') {
+                    viewObj.yDragParam = definition.yDrag;
+                    viewObj.yDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
+                    this.yDragParam = definition.coordinates.y.replace('params.', '');
+                }
+            }
         }
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
@@ -262,6 +817,12 @@ var KG;
                 classString += ' invisible';
             }
             return classString;
+        };
+        ViewObject.prototype.addArrow = function (group, startOrEnd) {
+            group.attr("marker-" + startOrEnd, "url(#arrow-" + startOrEnd + "-" + this.color + ")");
+        };
+        ViewObject.prototype.removeArrow = function (group, startOrEnd) {
+            group.attr("marker-" + startOrEnd, null);
         };
         ViewObject.prototype.render = function (view) {
             return view; // overridden by child class
@@ -296,19 +857,50 @@ var KG;
             definition = _.defaults(definition, { coordinates: { x: 0, y: 0 }, size: 100, symbol: 'circle' });
             _super.call(this, definition);
             if (definition.label) {
-                this.labelDiv = new KG.GraphDiv(definition);
+                var labelDef = _.defaults(definition.label, {
+                    name: definition.name + '_label',
+                    coordinates: definition.coordinates,
+                    color: 'white',
+                    xDrag: definition.xDrag,
+                    yDrag: definition.yDrag
+                });
+                this.labelDiv = new KG.GraphDiv(labelDef);
+            }
+            if (definition.droplines) {
+                if (definition.droplines.hasOwnProperty('horizontal')) {
+                    this.horizontalDropline = new KG.HorizontalDropline({
+                        name: definition.name,
+                        coordinates: definition.coordinates,
+                        draggable: definition.yDrag,
+                        axisLabel: definition.droplines.horizontal
+                    });
+                }
+                if (definition.droplines.hasOwnProperty('vertical')) {
+                    this.verticalDropline = new KG.VerticalDropline({
+                        name: definition.name,
+                        coordinates: definition.coordinates,
+                        draggable: definition.xDrag,
+                        axisLabel: definition.droplines.vertical
+                    });
+                }
             }
             this.viewObjectSVGtype = 'path';
             this.viewObjectClass = 'pointSymbol';
         }
         Point.prototype.createSubObjects = function (view) {
-            var labelDiv = this.labelDiv;
-            if (labelDiv) {
-                return view.addObject(labelDiv);
+            var p = this;
+            if (p.labelDiv) {
+                view.addObject(p.labelDiv);
             }
-            else {
-                return view;
+            if (p.verticalDropline) {
+                view.addObject(p.verticalDropline);
+                p.verticalDropline.createSubObjects(view); // TODO should probably make this more recursive by default
             }
+            if (p.horizontalDropline) {
+                view.addObject(p.horizontalDropline);
+                p.horizontalDropline.createSubObjects(view); // TODO should probably make this more recursive by default
+            }
+            return view;
         };
         Point.prototype.render = function (view) {
             var point = this, draggable = (point.xDrag || point.yDrag);
@@ -321,6 +913,7 @@ var KG;
             var pointSymbol = group.select('.' + point.viewObjectClass);
             pointSymbol.attr({
                 'class': point.classAndVisibility(),
+                'fill': point.color,
                 'd': d3.svg.symbol().type(point.symbol).size(point.size),
                 'transform': view.translateByCoordinates(point.coordinates)
             });
@@ -340,26 +933,146 @@ var KG;
 'use strict';
 var KG;
 (function (KG) {
+    var Dropline = (function (_super) {
+        __extends(Dropline, _super);
+        function Dropline(definition) {
+            definition.coordinates = KG.getCoordinates(definition.coordinates);
+            definition = _.defaults(definition, {
+                horizontal: false,
+                draggable: false,
+                axisLabel: ''
+            });
+            _super.call(this, definition);
+            var labelDef = {
+                name: definition.name + '_label',
+                color: 'black',
+                text: definition.axisLabel,
+                dimensions: { width: 30, height: 20 },
+                backgroundColor: 'white'
+            };
+            if (definition.horizontal) {
+                labelDef.coordinates = {
+                    x: KG.GraphDiv.AXIS_COORDINATE_INDICATOR,
+                    y: definition.coordinates.y
+                };
+                labelDef.yDrag = definition.draggable;
+            }
+            else {
+                labelDef.coordinates = {
+                    x: definition.coordinates.x,
+                    y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
+                };
+                labelDef.xDrag = definition.draggable;
+            }
+            this.labelDiv = new KG.GraphDiv(labelDef);
+            this.viewObjectSVGtype = 'line';
+            this.viewObjectClass = 'dropline';
+        }
+        Dropline.prototype.createSubObjects = function (view) {
+            var p = this;
+            if (p.labelDiv) {
+                view.addObject(p.labelDiv);
+            }
+            return view;
+        };
+        Dropline.prototype.render = function (view) {
+            var dropline = this;
+            var pointX = view.xAxis.scale(dropline.coordinates.x), pointY = view.yAxis.scale(dropline.coordinates.y), anchorX = dropline.horizontal ? view.xAxis.scale(view.xAxis.min) : pointX, anchorY = dropline.horizontal ? pointY : view.yAxis.scale(view.yAxis.min);
+            var group = view.objectGroup(dropline.name, dropline.initGroupFn(), false);
+            var droplineSelection = group.select('.' + dropline.viewObjectClass);
+            droplineSelection.attr({
+                'x1': anchorX,
+                'y1': anchorY,
+                'x2': pointX,
+                'y2': pointY
+            });
+            return view;
+        };
+        return Dropline;
+    })(KG.ViewObject);
+    KG.Dropline = Dropline;
+    var VerticalDropline = (function (_super) {
+        __extends(VerticalDropline, _super);
+        function VerticalDropline(definition) {
+            definition.name += '_vDropline';
+            definition.horizontal = false;
+            _super.call(this, definition);
+        }
+        return VerticalDropline;
+    })(Dropline);
+    KG.VerticalDropline = VerticalDropline;
+    var HorizontalDropline = (function (_super) {
+        __extends(HorizontalDropline, _super);
+        function HorizontalDropline(definition) {
+            definition.name += '_hDropline';
+            definition.horizontal = true;
+            _super.call(this, definition);
+        }
+        return HorizontalDropline;
+    })(Dropline);
+    KG.HorizontalDropline = HorizontalDropline;
+})(KG || (KG = {}));
+/// <reference path="../kg.ts"/>
+'use strict';
+var KG;
+(function (KG) {
     var Segment = (function (_super) {
         __extends(Segment, _super);
         function Segment(definition) {
             definition.a = KG.getCoordinates(definition.a);
             definition.b = KG.getCoordinates(definition.b);
+            definition.color = definition.color || 'gray';
             _super.call(this, definition);
             if (definition.label) {
-                var labelDefinition = _.clone(definition);
-                labelDefinition.coordinates = {
-                    x: 0.5 * (definition.a.x + definition.b.x),
-                    y: 0.5 * (definition.a.y + definition.b.y)
-                };
-                this.labelDiv = new KG.GraphDiv(labelDefinition);
+                var labelDef = _.defaults(definition.label, {
+                    name: definition.name + '_label',
+                    xDrag: definition.xDrag,
+                    yDrag: definition.yDrag,
+                    color: definition.color
+                });
+                this.labelDiv = new KG.GraphDiv(labelDef);
             }
+            this.startArrow = (definition.arrows == Segment.START_ARROW_STRING || definition.arrows == Segment.BOTH_ARROW_STRING);
+            this.endArrow = (definition.arrows == Segment.END_ARROW_STRING || definition.arrows == Segment.BOTH_ARROW_STRING);
             this.viewObjectSVGtype = 'path';
             this.viewObjectClass = 'segment';
         }
+        Segment.prototype._update = function (scope) {
+            var segment = this;
+            segment.midpoint = {
+                x: 0.5 * (segment.a.x + segment.b.x),
+                y: 0.5 * (segment.a.y + segment.b.y)
+            };
+            if (segment.hasOwnProperty('labelDiv')) {
+                segment.labelDiv.coordinates = segment.midpoint;
+            }
+            segment.length = KG.distanceBetweenCoordinates(segment.a, segment.b);
+            return segment;
+        };
+        Segment.prototype.createSubObjects = function (view) {
+            var labelDiv = this.labelDiv;
+            if (labelDiv) {
+                return view.addObject(labelDiv);
+            }
+            else {
+                return view;
+            }
+        };
         Segment.prototype.render = function (view) {
             var segment = this;
             var group = view.objectGroup(segment.name, segment.initGroupFn(), false);
+            if (segment.endArrow && segment.length > 0) {
+                segment.addArrow(group, 'end');
+            }
+            else {
+                segment.removeArrow(group, 'end');
+            }
+            if (segment.startArrow && segment.length > 0) {
+                segment.addArrow(group, 'start');
+            }
+            else {
+                segment.removeArrow(group, 'start');
+            }
             var dataLine = d3.svg.line().x(function (d) {
                 return view.xAxis.scale(d.x);
             }).y(function (d) {
@@ -368,13 +1081,90 @@ var KG;
             var segmentSelection = group.select('.' + segment.viewObjectClass);
             segmentSelection.attr({
                 'class': segment.classAndVisibility(),
-                'd': dataLine([segment.a, segment.b])
+                'd': dataLine([segment.startPoint(view), segment.endPoint(view)]),
+                'stroke': segment.color
             });
             return view;
         };
+        Segment.prototype.startPoint = function (view) {
+            return this.a;
+        };
+        Segment.prototype.endPoint = function (view) {
+            return this.b;
+        };
+        Segment.START_ARROW_STRING = 'START';
+        Segment.END_ARROW_STRING = 'END';
+        Segment.BOTH_ARROW_STRING = 'BOTH';
         return Segment;
     })(KG.ViewObject);
     KG.Segment = Segment;
+})(KG || (KG = {}));
+/// <reference path="../kg.ts"/>
+'use strict';
+var KG;
+(function (KG) {
+    var Line = (function (_super) {
+        __extends(Line, _super);
+        function Line(definition) {
+            definition.color = definition.color || 'gray';
+            _super.call(this, definition);
+            this.linear = new KGMath.Functions[definition.type](definition.def);
+            this.viewObjectSVGtype = 'path';
+            this.viewObjectClass = 'line';
+        }
+        Line.prototype._update = function (scope) {
+            this.linear.update(scope);
+            return this;
+        };
+        Line.prototype.render = function (view) {
+            var NO_ARROW_STRING = 'NONE', BOTH_ARROW_STRING = 'BOTH', OPEN_ARROW_STRING = 'OPEN';
+            var line = this, linear = this.linear, draggable = (line.xDrag || line.yDrag);
+            var group = view.objectGroup(line.name, line.initGroupFn(), false);
+            var startPoint = linear.points(view)[0], endPoint = linear.points(view)[1];
+            if (line.arrows == BOTH_ARROW_STRING) {
+                line.addArrow(group, 'start');
+                line.addArrow(group, 'end');
+            }
+            else if (line.arrows == OPEN_ARROW_STRING) {
+                if (startPoint.x == view.xAxis.max || startPoint.y == view.yAxis.max) {
+                    line.addArrow(group, 'start');
+                }
+                else {
+                    line.removeArrow(group, 'start');
+                }
+                if (endPoint.x == view.xAxis.max || endPoint.y == view.yAxis.max) {
+                    line.addArrow(group, 'end');
+                }
+                else {
+                    line.removeArrow(group, 'end');
+                }
+            }
+            else if (line.arrows == NO_ARROW_STRING) {
+                line.removeArrow(group, 'start');
+                line.removeArrow(group, 'end');
+            }
+            var dataLine = d3.svg.line().x(function (d) {
+                return view.xAxis.scale(d.x);
+            }).y(function (d) {
+                return view.yAxis.scale(d.y);
+            });
+            var lineSelection = group.select('.' + line.viewObjectClass);
+            lineSelection.attr({
+                'class': line.classAndVisibility(),
+                'd': dataLine([startPoint, endPoint]),
+                'stroke': line.color
+            });
+            if (draggable) {
+                return line.setDragBehavior(view, lineSelection);
+            }
+            else {
+                return view;
+            }
+            return view;
+        };
+        return Line;
+    })(KG.ViewObject);
+    KG.Line = Line;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
 'use strict';
@@ -384,27 +1174,46 @@ var KG;
         __extends(GraphDiv, _super);
         function GraphDiv(definition) {
             definition = _.defaults(definition, {
-                coordinates: { x: 0, y: 0 },
                 dimensions: { width: 100, height: 20 },
                 math: false,
                 align: 'center',
-                label: ''
+                valign: 'middle',
+                text: ''
             });
             _super.call(this, definition);
         }
         GraphDiv.prototype.render = function (view) {
             var divObj = this;
-            var x = view.margins.left + view.xAxis.scale(divObj.coordinates.x), y = view.margins.top + view.yAxis.scale(divObj.coordinates.y), width = divObj.dimensions.width, height = divObj.dimensions.height, label = divObj.label, draggable = (divObj.xDrag || divObj.yDrag);
+            var x, y;
+            if (divObj.coordinates.x == GraphDiv.AXIS_COORDINATE_INDICATOR) {
+                x = view.margins.left - view.yAxis.textMargin;
+                divObj.align = 'right';
+                divObj.valign = 'middle';
+            }
+            else {
+                x = view.margins.left + view.xAxis.scale(divObj.coordinates.x);
+            }
+            if (divObj.coordinates.y == GraphDiv.AXIS_COORDINATE_INDICATOR) {
+                y = view.dimensions.height - view.margins.bottom + view.xAxis.textMargin;
+                divObj.align = 'center';
+                divObj.valign = 'top';
+            }
+            else {
+                y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
+            }
+            var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
             var div = view.getDiv(this.name);
-            div.style('cursor', 'default').style('text-align', 'center').style('color', 'white').style('position', 'absolute').style('width', width + 'px').style('height', height + 'px').style('line-height', height + 'px');
+            div.style('cursor', 'default').style('text-align', 'center').style('color', divObj.color).style('position', 'absolute').style('width', width + 'px').style('height', height + 'px').style('line-height', height + 'px').style('background-color', divObj.backgroundColor);
             // Set left pixel margin; default to centered on x coordinate
             var alignDelta = width * 0.5;
             if (divObj.align == 'left') {
                 alignDelta = 0;
+                div.style('text-align', 'left');
             }
             else if (this.align == 'right') {
                 // move left by half the width of the div if right aligned
                 alignDelta = width;
+                div.style('text-align', 'right');
             }
             div.style('left', (x - alignDelta) + 'px');
             // Set top pixel margin; default to centered on y coordinate
@@ -413,20 +1222,19 @@ var KG;
             if (this.valign == 'top') {
                 vAlignDelta = 0;
             }
-            else if (this.align == 'bottom') {
+            else if (this.valign == 'bottom') {
                 vAlignDelta = height;
             }
             div.style('top', (y - vAlignDelta) + 'px');
-            katex.render(label.toString(), div[0][0]);
+            katex.render(text.toString(), div[0][0]);
             if (draggable) {
-                divObj.xDragDelta = -view.margins.left;
-                divObj.yDragDelta = view.dimensions.height - vAlignDelta;
                 return divObj.setDragBehavior(view, div);
             }
             else {
                 return view;
             }
         };
+        GraphDiv.AXIS_COORDINATE_INDICATOR = 'AXIS';
         return GraphDiv;
     })(KG.ViewObject);
     KG.GraphDiv = GraphDiv;
@@ -440,27 +1248,24 @@ var KG;
         function LinePlot(definition) {
             definition = _.defaults(definition, { data: [], interpolation: 'linear' });
             _super.call(this, definition);
+            this.viewObjectSVGtype = 'path';
+            this.viewObjectClass = 'dataPath';
         }
-        LinePlot.prototype.render = function (graph) {
-            // constants TODO should these be defined somewhere else?
-            var DATA_PATH_CLASS = 'dataPath';
-            var dataCoordinates = graph.dataCoordinates(this.data);
-            function init(newGroup) {
-                newGroup.append('path').attr('class', DATA_PATH_CLASS);
-                return newGroup;
-            }
-            var group = graph.objectGroup(this.name, init);
+        LinePlot.prototype.render = function (view) {
+            var linePlot = this;
+            var dataCoordinates = view.dataCoordinates(this.data);
+            var group = view.objectGroup(linePlot.name, linePlot.initGroupFn(), false);
             var dataLine = d3.svg.line().interpolate(this.interpolation).x(function (d) {
                 return d.x;
             }).y(function (d) {
                 return d.y;
             });
-            var dataPath = group.select('.' + DATA_PATH_CLASS);
+            var dataPath = group.select('.' + linePlot.viewObjectClass);
             dataPath.attr({
-                'class': this.classAndVisibility() + ' ' + DATA_PATH_CLASS,
+                'class': this.classAndVisibility() + ' ' + linePlot.viewObjectClass,
                 'd': dataLine(dataCoordinates)
             });
-            return graph;
+            return view;
         };
         return LinePlot;
     })(KG.ViewObject);
@@ -538,8 +1343,10 @@ var KG;
             var view = this;
             // Establish dimensions of the view
             var element = $('#' + view.element_id)[0];
-            view.dimensions.width = Math.min(view.dimensions.width, element.clientWidth);
-            view.dimensions.height = Math.min(view.dimensions.height, window.innerHeight - element.offsetTop);
+            view.dimensions = {
+                width: Math.min(view.maxDimensions.width, element.clientWidth),
+                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
+            };
             var frameTranslation = KG.positionByPixelCoordinates({ x: (element.clientWidth - view.dimensions.width) / 2, y: 0 });
             var visTranslation = KG.translateByPixelCoordinates({ x: view.margins.left, y: view.margins.top });
             d3.select(element).select('div').remove();
@@ -547,6 +1354,18 @@ var KG;
             var frame = d3.select(element).append('div').attr({ style: frameTranslation });
             // Create new SVG element for the view visualization
             var svg = frame.append('svg').attr('width', view.dimensions.width).attr('height', view.dimensions.height);
+            // Establish marker style for arrow
+            svg.append("svg:defs").selectAll("marker").data(["red", "gray", "blue", "purple"]).enter().append("marker").attr("id", function (d) {
+                return "arrow-end-" + d;
+            }).attr("refX", 11).attr("refY", 6).attr("markerWidth", 13).attr("markerHeight", 13).attr("orient", "auto").attr("markerUnits", "userSpaceOnUse").append("svg:path").attr("d", "M2,2 L2,11 L10,6 L2,2").attr("fill", function (d) {
+                return d;
+            });
+            // Establish marker style for arrow
+            svg.append("svg:defs").selectAll("marker").data(["red", "gray", "blue", "purple"]).enter().append("svg:marker").attr("id", function (d) {
+                return "arrow-start-" + d;
+            }).attr("refX", 2).attr("refY", 6).attr("markerWidth", 13).attr("markerHeight", 13).attr("orient", "auto").attr("markerUnits", "userSpaceOnUse").append("svg:path").attr("d", "M11,2 L11,11 L2,6 L11,2").attr("fill", function (d) {
+                return d;
+            });
             // Add a div above the SVG for labels and controls
             view.divs = frame.append('div').attr({ style: visTranslation });
             if (view.mask) {
@@ -569,10 +1388,10 @@ var KG;
                 };
                 // draw axes
                 if (view.xAxis) {
-                    view.xAxis.draw(axes, axisDimensions);
+                    view.xAxis.draw(axes, view.divs, axisDimensions, view.margins);
                 }
                 if (view.yAxis) {
-                    view.yAxis.draw(axes, axisDimensions);
+                    view.yAxis.draw(axes, view.divs, axisDimensions, view.margins);
                 }
             }
             // Establish SVG group for objects that lie above the axes (e.g., points and labels)
@@ -624,8 +1443,9 @@ var KG;
             return d3.behavior.drag().on('drag', function () {
                 d3.event.sourceEvent.preventDefault();
                 var dragUpdate = {}, newX, newY;
-                if (xParam !== null) {
-                    newX = xAxis.scale.invert(d3.event.x + xDelta);
+                var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
+                if (xAxis && xParam !== null) {
+                    newX = xAxis.scale.invert(mouseX + xDelta);
                     if (newX < xAxis.domain.min) {
                         dragUpdate[xParam] = xAxis.domain.min;
                     }
@@ -636,8 +1456,8 @@ var KG;
                         dragUpdate[xParam] = newX;
                     }
                 }
-                if (yParam !== null) {
-                    newY = yAxis.scale.invert(d3.event.y + yDelta);
+                if (yAxis && yParam !== null) {
+                    newY = yAxis.scale.invert(mouseY + yDelta);
                     if (newY < yAxis.domain.min) {
                         dragUpdate[yParam] = yAxis.domain.min;
                     }
@@ -666,12 +1486,17 @@ var KG;
                 min: 0,
                 max: 10,
                 title: '',
-                ticks: 5
+                ticks: 5,
+                textMargin: 8,
+                axisBuffer: 30
             });
             _super.call(this, definition);
+            if (this.ticks == 0) {
+                this.textMargin = 7;
+            }
             this.domain = new KG.Domain(definition.min, definition.max);
         }
-        Axis.prototype.draw = function (vis, graph_definition) {
+        Axis.prototype.draw = function (vis, divs, graph_definition, margins) {
             // overridden by child class
         };
         Axis.prototype.scaleFunction = function (pixelLength, domain) {
@@ -688,11 +1513,12 @@ var KG;
         XAxis.prototype.scaleFunction = function (pixelLength, domain) {
             return d3.scale.linear().range([0, pixelLength]).domain(domain.toArray());
         };
-        XAxis.prototype.draw = function (vis, graph_dimensions) {
+        XAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.width, this.domain);
             var axis_vis = vis.append('g').attr('class', 'x axis').attr("transform", "translate(0," + graph_dimensions.height + ")");
-            axis_vis.append("text").attr("x", graph_dimensions.width / 2).attr("y", "4em").style("text-anchor", "middle").text(this.title);
             axis_vis.call(d3.svg.axis().scale(this.scale).orient("bottom").ticks(this.ticks).tickValues(this.tickValues));
+            var title = divs.append("div").style('text-align', 'center').style('position', 'absolute').style('width', graph_dimensions.width + 'px').style('height', (margins.bottom - this.axisBuffer) + 'px').style('left', margins.left + 'px').style('top', (margins.top + graph_dimensions.height + this.axisBuffer) + 'px').attr('class', 'big');
+            katex.render(this.title.toString(), title[0][0]);
         };
         return XAxis;
     })(Axis);
@@ -705,11 +1531,12 @@ var KG;
         YAxis.prototype.scaleFunction = function (pixelLength, domain) {
             return d3.scale.linear().range([pixelLength, 0]).domain(domain.toArray());
         };
-        YAxis.prototype.draw = function (vis, graph_dimensions) {
+        YAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.height, this.domain);
             var axis_vis = vis.append('g').attr('class', 'y axis');
-            axis_vis.append("text").attr("transform", "rotate(-90)").attr("x", -graph_dimensions.height / 2).attr("y", "-4em").style("text-anchor", "middle").text(this.title);
             axis_vis.call(d3.svg.axis().scale(this.scale).orient("left").ticks(this.ticks).tickValues(this.tickValues));
+            var title = divs.append("div").style('text-align', 'center').style('position', 'absolute').style('width', graph_dimensions.height + 'px').style('height', (margins.left - this.axisBuffer) + 'px').style('left', 0.5 * (margins.left - graph_dimensions.height - this.axisBuffer) + 'px').style('top', margins.top + 0.5 * (graph_dimensions.height - margins.left + this.axisBuffer) + 'px').style('-webkit-transform', 'rotate(-90deg)').style('transform', 'rotate(-90deg)').attr('class', 'big');
+            katex.render(this.title.toString(), title[0][0]);
         };
         return YAxis;
     })(Axis);
@@ -723,8 +1550,8 @@ var KG;
         __extends(Graph, _super);
         function Graph(definition) {
             // ensure dimensions and margins are set; set any missing elements to defaults
-            definition.dimensions = _.defaults(definition.dimensions || {}, { width: 500, height: 500 });
-            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 100, bottom: 100, right: 20 });
+            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 800, height: 800 });
+            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 80, bottom: 70, right: 20 });
             _super.call(this, definition);
             this.xAxis = new KG.XAxis(definition.xAxis);
             this.yAxis = new KG.YAxis(definition.yAxis);
@@ -762,7 +1589,7 @@ var KG;
     var Slider = (function (_super) {
         __extends(Slider, _super);
         function Slider(definition) {
-            definition.dimensions = _.defaults(definition.dimensions || {}, { width: 300, height: 50 });
+            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 300, height: 50 });
             definition.margins = _.defaults(definition.margins || {}, { top: 25, left: 25, bottom: 25, right: 25 });
             definition.mask = false;
             _super.call(this, definition);
@@ -809,8 +1636,10 @@ var KG;
 var KG;
 (function (KG) {
     var Controller = (function () {
-        function Controller($scope, $window) {
+        function Controller($scope, $interpolate, $window) {
             this.$scope = $scope;
+            this.$interpolate = $interpolate;
+            $scope.interpolate = $interpolate;
             $scope.init = function (definition) {
                 $scope.params = definition.params;
                 $scope.restrictions = definition.restrictions.map(function (restrictionDefinition) {
@@ -830,7 +1659,9 @@ var KG;
                     if (!element.hasAttribute('raw')) {
                         element.setAttribute('raw', element.textContent);
                     }
-                    katex.render(element.getAttribute('raw'), element);
+                    var textToRender = $scope.interpolate(element.getAttribute('raw'))($scope);
+                    var displayMode = element.classList.contains('displayMath');
+                    katex.render(textToRender, element, { displayMode: displayMode });
                 }
             };
             // Updates and redraws interactive objects (graphs and sliders) when a parameter changes
@@ -876,169 +1707,8 @@ var KG;
                     $scope.$apply();
                 }
             };
-            $scope.init({
-                params: {
-                    mean1: 0.2,
-                    stDev1: 0.3,
-                    mean2: 0.3,
-                    stDev2: 0.4,
-                    mean3: 0.4,
-                    stDev3: 0.5,
-                    rho12: 0,
-                    rho23: 0,
-                    rho13: 0,
-                    maxLeverage: 0,
-                    riskFreeReturn: 0.05
-                },
-                restrictions: [
-                    {
-                        expression: 'params.maxLeverage',
-                        restrictionType: 'range',
-                        max: 100,
-                        min: 0,
-                        precision: 10
-                    },
-                    {
-                        expression: 'params.rho12',
-                        restrictionType: 'range',
-                        max: 1,
-                        min: -1,
-                        precision: 0.1
-                    },
-                    {
-                        expression: 'params.rho23',
-                        restrictionType: 'range',
-                        max: 1,
-                        min: -1,
-                        precision: 0.1
-                    },
-                    {
-                        expression: 'params.rho13',
-                        restrictionType: 'range',
-                        max: 1,
-                        min: -1,
-                        precision: 0.1
-                    },
-                    {
-                        expression: 'params.riskFreeReturn',
-                        restrictionType: 'range',
-                        max: 0.2,
-                        min: 0,
-                        error: "'risk free return should be between 0 and 0.2'"
-                    },
-                    {
-                        expression: 'model.positiveDefinite',
-                        restrictionType: 'boolean',
-                        error: "'would make matrix not positive definite'"
-                    }
-                ],
-                model: {
-                    type: 'FinanceGraphs.Portfolio',
-                    definition: {}
-                },
-                views: [
-                    {
-                        type: 'KG.Graph',
-                        definition: {
-                            element_id: 'graph',
-                            dimensions: { width: 700, height: 700 },
-                            xAxis: { min: 0, max: 1, title: '"Standard Deviation"' },
-                            yAxis: { min: 0, max: 0.5, title: '"Mean"' },
-                            objects: ['model.optimalPortfolio', 'model.asset1.point', 'model.asset2.point', 'model.asset3.point', 'model.riskFreeAsset', 'model.riskReturnLine', 'model.threeAssetPortfolios', 'model.twoAssetPortfolios']
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'leverageSlider',
-                            param: 'maxLeverage',
-                            axis: { min: 0, max: 100, tickValues: [0, 50, 100] }
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'slider12',
-                            param: 'rho12',
-                            precision: '0.1',
-                            axis: { min: -1, max: 1, tickValues: [-1, 0, 1] }
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'slider23',
-                            param: 'rho23',
-                            axis: { min: -1, max: 1, tickValues: [-1, 0, 1] }
-                        }
-                    },
-                    {
-                        type: 'KG.Slider',
-                        definition: {
-                            element_id: 'slider13',
-                            param: 'rho13',
-                            axis: { min: -1, max: 1, tickValues: [-1, 0, 1] }
-                        }
-                    }
-                ]
-            });
+            $scope.init(scopeDefinition);
             render(true);
-            /*var graphDef = "{element_id:'graph', dimensions: {width: 700, height: 700}, xAxis: {min: 0, max: 1, title: 'Standard Deviation'},yAxis: {min: 0, max: 0.5, title: 'Mean'}, graphObjects:[";
-             var point1 = ",{type:'ControlDiv', definition: {name:'asset1', show:true, className: 'asset', text:'a_1', coordinates: functions.asset1.coordinates()}}";
-             var point2 = ",{type:'ControlDiv', definition: {name:'asset2', show:true, className: 'asset', text:'a_2', coordinates: functions.asset2.coordinates()}}";
-             var point3 = ",{type:'ControlDiv', definition: {name:'asset3', show:true, className: 'asset', text:'a_3', coordinates: functions.asset3.coordinates()}}";
-             var linePlot3 = ",{type:'LinePlot', definition: {name: 'myLinePlot3', show: true, className: 'draw', data:functions.portfolio.twoAssetPortfolio(0,1,[0,0,0],params.maxLeverage)}}";
-             var linePlot2 = ",{type:'LinePlot', definition: {name: 'myLinePlot2', show: true, className: 'draw', data:functions.portfolio.twoAssetPortfolio(1,2,[0,0,0],params.maxLeverage)}}";
-             var linePlot1 = "{type:'LinePlot', definition: {name: 'myLinePlot1', show: true, className: 'draw', data:functions.portfolio.twoAssetPortfolio(0,2,[0,0,0],params.maxLeverage)}}";
-             var portfolioPaths = ",{type:'PathFamily', definition: {name: 'myDataPaths', show: true, className: 'draw', data:functions.portfolio.data(params.maxLeverage)}}";
-             var graphDefEnd = "]}";
-             $scope.interactiveDefinitions = {
-             graphs: [graphDef + linePlot1 + linePlot2 + linePlot3 + portfolioPaths + point1 + point2 + point3 + graphDefEnd],
-             sliders: [
-             "{element_id: 'slider12', param: 'rho01', precision: '0.1', axis: {min: -1, max: 1, tickValues: [-1,0,1]}}",
-             "{element_id: 'slider23', param: 'rho12', precision: '0.1', axis: {min: -0.5, max: 0.5, tickValues: [-0.5,0,0.5]}}",
-             "{element_id: 'slider13', param: 'rho02', precision: '0.1', axis: {min: -0.5, max: 0.5, tickValues: [-0.5,0,0.5]}}",
-             "{element_id: 'leverageSlider', param: 'maxLeverage', precision: '1', axis: {min: 0, max: 400, tickValues: [0,200,400]}}"
-             ]
-             };
-             $scope.params = ;
-             $scope.functionDefinitions = {finance: [
-             {name: 'asset1', model: 'PortfolioAnalysis', type: 'Asset', definition: "{mean: 'mean1', stdev: 'stdev1'}"},
-             {name: 'asset2', model: 'PortfolioAnalysis', type: 'Asset', definition: "{mean: 'mean2', stdev: 'stdev2'}"},
-             {name: 'asset3', model: 'PortfolioAnalysis', type: 'Asset', definition: "{mean: 'mean3', stdev: 'stdev3'}"},
-             {name: 'portfolio', model: 'PortfolioAnalysis', type: 'Portfolio', definition: "{assets:[functions.asset1, functions.asset2, functions.asset3], correlationCoefficients: {rho12: params.rho12, rho23: params.rho23, rho13: params.rho13}}"}
-             ]};
-
-             // Creates graph objects from (string) graph definitions
-             function createViews() {
-             var interactives:IView[] = [];
-             if($scope.hasOwnProperty('interactiveDefinitions')){
-             if($scope.interactiveDefinitions.hasOwnProperty('graphs')) {
-             $scope.interactiveDefinitions.graphs.forEach(function(graphDefinition) {
-             interactives.push(new Graph(graphDefinition))
-             })
-             }
-             if($scope.interactiveDefinitions.hasOwnProperty('sliders')) {
-             $scope.interactiveDefinitions.sliders.forEach(function(sliderDefinition) {
-             interactives.push(new Slider(sliderDefinition))
-             })
-             }
-             }
-             return interactives;
-             }
-
-             // Creates functions
-             function createFunctions() {
-             var functions = {};
-             if($scope.hasOwnProperty('functionDefinitions')){
-             if($scope.functionDefinitions.hasOwnProperty('finance')) {
-             $scope.functionDefinitions.finance.forEach(function(functionDefinition) {
-             functions[functionDefinition.name] = new FinanceGraphs[functionDefinition.model][functionDefinition.type](functionDefinition.definition);
-             })
-             }
-             }
-             return functions;
-             }*/
         }
         return Controller;
     })();
@@ -1095,7 +1765,9 @@ var FinanceGraphs;
                 size: 500,
                 xDrag: true,
                 yDrag: true,
-                label: definition.name
+                label: {
+                    text: definition.name
+                }
             });
         }
         return Asset;
@@ -1109,33 +1781,6 @@ var FinanceGraphs;
     var Portfolio = (function (_super) {
         __extends(Portfolio, _super);
         function Portfolio(definition) {
-            ['rho12', 'rho13', 'rho23', 'maxLeverage', 'riskFreeReturn'].forEach(function (name) {
-                definition[name] = 'params.' + name;
-            });
-            definition.asset1 = {
-                type: 'FinanceGraphs.Asset',
-                definition: {
-                    name: 'A_1',
-                    mean: 'params.mean1',
-                    stDev: 'params.stDev1'
-                }
-            };
-            definition.asset2 = {
-                type: 'FinanceGraphs.Asset',
-                definition: {
-                    name: 'A_2',
-                    mean: 'params.mean2',
-                    stDev: 'params.stDev2'
-                }
-            };
-            definition.asset3 = {
-                type: 'FinanceGraphs.Asset',
-                definition: {
-                    name: 'A_3',
-                    mean: 'params.mean3',
-                    stDev: 'params.stDev3'
-                }
-            };
             _super.call(this, definition);
             var p = this;
             p.assets = [p.asset1, p.asset2, p.asset3];
@@ -1156,20 +1801,34 @@ var FinanceGraphs;
                 size: 500,
                 xDrag: false,
                 yDrag: true,
-                label: 'RF'
+                label: {
+                    text: 'RF'
+                }
             });
             p.optimalPortfolio = new KG.Point({
                 name: 'optimalPortfolio',
                 coordinates: { x: 'params.optimalPortfolioStDev', y: 'params.optimalPortfolioMean' },
-                size: 500,
+                symbol: 'cross',
+                size: 100,
                 xDrag: false,
                 yDrag: false,
-                label: 'P'
+                label: {
+                    text: 'P',
+                    color: 'blue',
+                    align: 'right',
+                    valign: 'bottom'
+                },
+                color: 'blue'
             });
-            p.riskReturnLine = new KG.Segment({
+            p.riskReturnLine = new KG.Line({
                 name: 'twoPointSegment',
-                a: p.riskFreeAsset,
-                b: p.optimalPortfolio
+                color: 'blue',
+                arrows: 'OPEN',
+                type: 'TwoPointLine',
+                def: {
+                    p1: p.riskFreeAsset,
+                    p2: p.optimalPortfolio
+                }
             });
             p.optimalPortfolioMean = 0;
             p.optimalPortfolioStDev = 0.5;
@@ -1312,6 +1971,365 @@ var FinanceGraphs;
 /// <reference path="../kg.ts"/>
 /// <reference path="capm/asset.ts"/>
 /// <reference path="capm/portfolio.ts"/>
+/// <reference path="../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var Elasticity = (function (_super) {
+        __extends(Elasticity, _super);
+        function Elasticity(definition) {
+            definition.inverse = _.defaults(false, definition.inverse);
+            definition.terms = _.defaults({
+                perfectlyElastic: "perfectly elastic",
+                perfectlyInelastic: "perfectly inelastic",
+                elastic: "elastic",
+                inelastic: "inelastic",
+                unitElastic: "unit elastic"
+            }, definition.terms);
+            _super.call(this, definition);
+        }
+        Elasticity.prototype.calculateElasticity = function (inputs) {
+            var e = this;
+            e = e._calculateElasticity(inputs);
+            e.absoluteElasticity = Math.abs(e.elasticity);
+            if (isNaN(e.absoluteElasticity)) {
+                e.absoluteElasticity == '\\emptyset';
+            }
+            e.elasticityComparator = e.elasticityNumber(true);
+            if (e.absoluteElasticity == 0) {
+                e.elasticityWord = e.terms.perfectlyInelastic;
+            }
+            else if (e.absoluteElasticity < 1) {
+                e.elasticityWord = e.terms.inelastic;
+                e.elasticityComparator += "< 1";
+            }
+            else if (e.absoluteElasticity == 1) {
+                e.elasticityWord = e.terms.unitElastic;
+            }
+            else if (e.absoluteElasticity == Infinity) {
+                e.elasticityWord = e.terms.perfectlyElastic;
+            }
+            else if (e.absoluteElasticity > 1) {
+                e.elasticityWord = e.terms.elastic;
+                e.elasticityComparator += "> 1";
+            }
+            else {
+                e.elasticityWord = 'undefined';
+            }
+            return e;
+        };
+        Elasticity.prototype._calculateElasticity = function (inputs) {
+            return this; // overridden by subclass
+        };
+        Elasticity.prototype.elasticityNumber = function (absoluteValue) {
+            var e = this;
+            absoluteValue = absoluteValue || false;
+            if (isNaN(e.absoluteElasticity)) {
+                return "\\emptyset";
+            }
+            var returnString = (!absoluteValue && e.elasticity < 0) ? '-' : '';
+            returnString += (e.absoluteElasticity == Infinity) ? "\\infty" : (e.absoluteElasticity == 0) ? "0" : (e.absoluteElasticity == 1) ? "1" : e.absoluteElasticity.toFixed(2);
+            return returnString;
+        };
+        Elasticity.prototype._update = function (scope) {
+            return this.calculateElasticity();
+        };
+        return Elasticity;
+    })(KG.Model);
+    EconGraphs.Elasticity = Elasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var MidpointElasticity = (function (_super) {
+        __extends(MidpointElasticity, _super);
+        function MidpointElasticity(definition) {
+            _super.call(this, definition);
+            this.point1view = new KG.Point({
+                name: 'point1',
+                coordinates: definition.point1,
+                size: 500,
+                xDrag: true,
+                yDrag: true,
+                label: {
+                    text: 'B'
+                },
+                droplines: {
+                    horizontal: 'P_B',
+                    vertical: 'Q_B'
+                }
+            });
+            this.point2view = new KG.Point({
+                name: 'point2',
+                coordinates: definition.point2,
+                size: 500,
+                xDrag: true,
+                yDrag: true,
+                label: {
+                    text: 'A'
+                },
+                droplines: {
+                    horizontal: 'P_A',
+                    vertical: 'Q_A'
+                }
+            });
+            this.midpoint = new KG.Point({
+                name: 'midpoint',
+                coordinates: {
+                    x: 'model.xAvg',
+                    y: 'model.yAvg'
+                },
+                symbol: 'cross',
+                color: 'grey',
+                size: 100,
+                xDrag: false,
+                yDrag: false,
+                label: {
+                    text: 'M',
+                    align: 'right',
+                    valign: 'top',
+                    color: 'grey'
+                }
+            });
+            this.line = new KG.Line({
+                name: 'demand',
+                color: 'purple',
+                arrows: 'NONE',
+                type: 'TwoPointLine',
+                def: {
+                    p1: {
+                        x: 'params.x1',
+                        y: 'params.y1'
+                    },
+                    p2: {
+                        x: 'params.x2',
+                        y: 'params.y2'
+                    }
+                }
+            });
+            this.xDiffSegment = new KG.Segment({
+                name: 'xDiffSegment',
+                color: 'blue',
+                arrows: 'END',
+                a: {
+                    x: definition.point2.x,
+                    y: 5
+                },
+                b: {
+                    x: definition.point1.x,
+                    y: 5
+                },
+                label: {
+                    text: 'model.xPercentDiff | percentage:0',
+                    valign: 'top'
+                }
+            });
+            this.yDiffSegment = new KG.Segment({
+                name: 'yDiffSegment',
+                color: 'red',
+                arrows: 'END',
+                a: {
+                    x: 15,
+                    y: definition.point2.y
+                },
+                b: {
+                    x: 15,
+                    y: definition.point1.y
+                },
+                label: {
+                    text: 'model.yPercentDiff | percentage:0',
+                    align: 'right'
+                }
+            });
+        }
+        MidpointElasticity.prototype._calculateElasticity = function (inputs) {
+            var e = this;
+            if (inputs) {
+                if (inputs.hasOwnProperty('point1') && inputs.hasOwnProperty('point2')) {
+                    e.point1 = inputs.point1;
+                    e.point2 = inputs.point2;
+                }
+            }
+            e.xDiff = e.point1.x - e.point2.x;
+            e.yDiff = e.point1.y - e.point2.y;
+            e.xAvg = 0.5 * (e.point1.x + e.point2.x);
+            e.yAvg = 0.5 * (e.point1.y + e.point2.y);
+            e.xPercentDiff = e.xDiff / e.xAvg;
+            e.yPercentDiff = e.yDiff / e.yAvg;
+            e.elasticity = e.xPercentDiff / e.yPercentDiff;
+            return e;
+        };
+        return MidpointElasticity;
+    })(EconGraphs.Elasticity);
+    EconGraphs.MidpointElasticity = MidpointElasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var PointElasticity = (function (_super) {
+        __extends(PointElasticity, _super);
+        function PointElasticity(definition) {
+            _super.call(this, definition);
+            this.pointView = new KG.Point({
+                name: 'point',
+                coordinates: definition.point,
+                size: 500,
+                xDrag: true,
+                yDrag: true,
+                droplines: {
+                    horizontal: 'P',
+                    vertical: 'Q'
+                }
+            });
+            this.line = new KGMath.Functions.PointSlopeLine({
+                p: definition.point,
+                m: definition.slope
+            });
+        }
+        PointElasticity.prototype._calculateElasticity = function (inputs) {
+            var e = this;
+            if (inputs) {
+                if (inputs.hasOwnProperty('point')) {
+                    e.point = inputs.point;
+                }
+                if (inputs.hasOwnProperty('slope')) {
+                    e.slope = inputs.slope;
+                }
+            }
+            e.elasticity = (e.point.y / e.point.x) / e.slope;
+            return e;
+        };
+        return PointElasticity;
+    })(EconGraphs.Elasticity);
+    EconGraphs.PointElasticity = PointElasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var Demand = (function (_super) {
+        __extends(Demand, _super);
+        function Demand(definition) {
+            _super.call(this, definition);
+            this.demandFunction = new KGMath.Functions[definition.type](definition.def);
+            this.elasticity = (definition.elasticityMethod == 'point') ? new EconGraphs.PointElasticity({}) : new EconGraphs.MidpointElasticity({});
+        }
+        Demand.prototype.quantityAtPrice = function (price) {
+            price = (price > 0) ? price : 0;
+            var qd = this.demandFunction.xValue(price);
+            return Math.max(0, qd);
+        };
+        Demand.prototype.priceAtQuantity = function (quantity) {
+            quantity = (quantity > 0) ? quantity : 0;
+            var pd = this.demandFunction.yValue(quantity);
+            return Math.max(0, pd);
+        };
+        Demand.prototype.priceElasticity = function (price) {
+            var d = this;
+            if (d.elasticity instanceof EconGraphs.MidpointElasticity) {
+                d.elasticity = d.elasticity.calculateElasticity({
+                    point1: {
+                        x: d.quantityAtPrice(price * 0.99),
+                        y: price * 0.99
+                    },
+                    point2: {
+                        x: d.quantityAtPrice(price * 1.01),
+                        y: price * 1.01
+                    }
+                });
+            }
+            else {
+                var point = {
+                    x: d.quantityAtPrice(price),
+                    y: price
+                }, slope = d.demandFunction.hasOwnProperty('slope') ? d.demandFunction.slope : d.demandFunction.slopeBetweenPoints({
+                    x: d.quantityAtPrice(price * 0.99),
+                    y: price * 0.99
+                }, {
+                    x: d.quantityAtPrice(price * 1.01),
+                    y: price * 1.01
+                }, true);
+                d.elasticity = d.elasticity.calculateElasticity({ point: point, slope: slope });
+            }
+            return d.elasticity;
+        };
+        return Demand;
+    })(KG.Model);
+    EconGraphs.Demand = Demand;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var LinearDemand = (function (_super) {
+        __extends(LinearDemand, _super);
+        function LinearDemand(definition) {
+            _super.call(this, definition);
+            this.marginalRevenue = new KGMath.Functions.TwoPointLine({ p1: { x: 0, y: 0 }, p2: { x: 0, y: 0 } });
+            this.priceInterceptPoint = new KG.Point({
+                name: 'demandPriceIntercept',
+                coordinates: { x: 0, y: 'params.demandPriceIntercept' },
+                size: 200,
+                color: 'blue',
+                yDrag: true
+            });
+            this.quantityInterceptPoint = new KG.Point({
+                name: 'demandQuantityIntercept',
+                coordinates: { x: 'params.demandQuantityIntercept', y: 0 },
+                size: 200,
+                color: 'blue',
+                xDrag: true
+            });
+            this.curve = new KG.Line({
+                name: 'demand',
+                color: 'blue',
+                arrows: 'NONE',
+                type: definition.type,
+                def: definition.def
+            });
+            this.priceLine = new KG.Line({
+                name: 'priceLine',
+                color: 'grey',
+                arrows: 'NONE',
+                type: 'HorizontalLine',
+                yDrag: 'price',
+                def: {
+                    y: 'params.price'
+                }
+            });
+            this.quantityDemandedAtPrice = new KG.Point({
+                name: 'quantityDemandedAtPrice',
+                coordinates: { x: 'model.quantityAtPrice(params.price)', y: 'params.price' },
+                size: 500,
+                color: 'black',
+                yDrag: true,
+                label: {
+                    text: 'A'
+                },
+                droplines: {
+                    vertical: 'Q^D_A',
+                    horizontal: 'P_A'
+                }
+            });
+        }
+        LinearDemand.prototype._update = function (scope) {
+            var d = this;
+            d.demandFunction.update(scope);
+            d.priceIntercept = d.demandFunction.yValue(0);
+            d.quantityIntercept = d.demandFunction.xValue(0);
+            d.marginalRevenue.p1 = { x: 0, y: d.priceIntercept };
+            d.marginalRevenue.p2 = { x: d.quantityIntercept / 2, y: 0 };
+            return d;
+        };
+        return LinearDemand;
+    })(EconGraphs.Demand);
+    EconGraphs.LinearDemand = LinearDemand;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../kg.ts"/>
+/// <reference path="elasticity/elasticity.ts"/>
+/// <reference path="elasticity/midpoint.ts"/>
+/// <reference path="elasticity/point.ts"/>
+/// <reference path="market/demand.ts"/>
+/// <reference path="market/linearDemand.ts"/> 
 /// <reference path="../bower_components/DefinitelyTyped/jquery/jquery.d.ts" />
 /// <reference path="../bower_components/DefinitelyTyped/jquery.color/jquery.color.d.ts" />
 /// <reference path="../bower_components/DefinitelyTyped/angularjs/angular.d.ts"/>
@@ -1320,10 +2338,13 @@ var FinanceGraphs;
 /// <reference path="helpers.ts" />
 /// <reference path="model.ts" />
 /// <reference path="restriction.ts" />
+/// <reference path="math/math.ts" />
 /// <reference path="viewObjects/viewObject.ts"/>
 /// <reference path="viewObjects/point.ts"/>
+/// <reference path="viewObjects/dropline.ts"/>
 /// <reference path="viewObjects/segment.ts"/>
-/// <reference path="viewObjects/label.ts"/>
+/// <reference path="viewObjects/line.ts"/>
+/// <reference path="viewObjects/graphDiv.ts"/>
 /// <reference path="viewObjects/linePlot.ts"/>
 /// <reference path="viewObjects/pathFamily.ts"/>
 /// <reference path="view.ts" />
@@ -1333,6 +2354,11 @@ var FinanceGraphs;
 /// <reference path="controller.ts" />
 /// <reference path="sample/sample.ts" />
 /// <reference path="finance/fg.ts" />
+/// <reference path="econ/eg.ts" />
 'use strict';
-angular.module('KineticGraphs', []).controller('KineticGraphCtrl', KG.Controller);
+angular.module('KineticGraphs', []).controller('KineticGraphCtrl', ['$scope', '$interpolate', '$window', KG.Controller]).filter('percentage', ['$filter', function ($filter) {
+    return function (input, decimals) {
+        return $filter('number')(input * 100, decimals) + '\\%';
+    };
+}]);
 //# sourceMappingURL=kinetic-graphs.js.map

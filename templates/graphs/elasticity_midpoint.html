@@ -1,0 +1,98 @@
+{% extends 'layouts/kg-layout.html' %}
+
+{% block body %}
+{% raw %}
+    <div ng-controller="KineticGraphCtrl">
+        <h1>Price Elasticity (Midpoint Method)</h1>
+
+        <p>Drag points A and B to see how the elasticity changes. (Point M is the midpoint between A and B.)</p>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="graph"></div>
+            </div>
+            <div class="col-md-6 big">
+                <p class="math displayMath">\color{blue}{\% \Delta Q = \frac{ Q_B - Q_A }{ Q_M } = \frac{ {{params.x1 |
+                    number:0}} - {{params.x2 | number:0 }} }{ {{model.xAvg | number:0 }} } = {{model.xPercentDiff |
+                    percentage:0 }}}</p>
+                <hr/>
+                <p class="math displayMath">\color{red}{\% \Delta P = \frac{ P_B - P_A }{ P_M } = \frac{ {{params.y1 |
+                    number:0 }} - {{params.y2 | number:0 }} }{ {{model.yAvg | number:0 }} } = {{model.yPercentDiff |
+                    percentage:0 }}}</p>
+                <hr/>
+                <p class="math displayMath">\epsilon_{Q,P} = \frac{\% \Delta Q}{\% \Delta P} = \frac{ \color{blue}{
+                    {{model.xPercentDiff | percentage:0 }} }} { \color{red}{ {{model.yPercentDiff | percentage:0 }} } }
+                    = {{ model.elasticityNumber() }}</p>
+                <hr/>
+                <p class="math displayMath">\left| \epsilon_{Q,P} \right| = {{ model.elasticityComparator}} \Rightarrow
+                    \text{ {{ model.elasticityWord }}}</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        var scopeDefinition = {
+            params: {
+                x1: 36,
+                y1: 70,
+                x2: 24,
+                y2: 90
+            },
+            restrictions: [
+                {
+                    expression: 'params.x1',
+                    restrictionType: 'range',
+                    max: 100,
+                    min: 20,
+                    precision: 2
+                },
+                {
+                    expression: 'params.y1',
+                    restrictionType: 'range',
+                    max: 100,
+                    min: 10,
+                    precision: 2
+                },
+                {
+                    expression: 'params.x2',
+                    restrictionType: 'range',
+                    max: 100,
+                    min: 20,
+                    precision: 2
+                },
+                {
+                    expression: 'params.y2',
+                    restrictionType: 'range',
+                    max: 100,
+                    min: 10,
+                    precision: 2
+                }
+            ],
+            model: {
+                type: 'EconGraphs.MidpointElasticity',
+                definition: {
+                    point1: {
+                        x: 'params.x1',
+                        y: 'params.y1'
+                    },
+                    point2: {
+                        x: 'params.x2',
+                        y: 'params.y2'
+                    }
+                }
+
+            },
+            views: [
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'graph',
+                        xAxis: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
+                        yAxis: {min: 0, max: 100, title: '\\text{Price }(P)'},
+                        objects: ['model.line', 'model.point1view', 'model.point2view', 'model.midpoint', 'model.xDiffSegment', 'model.yDiffSegment']
+                    }
+                }
+            ]
+        }
+    </script>
+{% endraw %}
+{% endblock %}

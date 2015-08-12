@@ -108,6 +108,7 @@
         "name": "kg-head",
         "order": [
             "jquery.min.js",
+            "bootstrap.min.js",
             "angular.min.js",
             "d3.min.js",
             "underscore-min.js",
