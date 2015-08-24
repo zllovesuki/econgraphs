@@ -1,4 +1,4 @@
-{% extends 'layouts/kg-layout.html' %}
+{% extends 'layouts/eg-layout.html' %}
 
 {% block body %}
 {% raw %}
@@ -12,17 +12,17 @@
                 <div id="graph"></div>
             </div>
             <div class="col-md-6 big">
-                <p class="math displayMath">\color{blue}{\% \Delta Q = \frac{ Q_B - Q_A }{ Q_M } = \frac{ {{params.x1 |
-                    number:0}} - {{params.x2 | number:0 }} }{ {{model.xAvg | number:0 }} } = {{model.xPercentDiff |
-                    percentage:0 }}}</p>
+                <p class="math displayMath">\color{ {{ color('diff2') }} }{\% \Delta Q = \frac{ Q_B - Q_A }{ Q_M } =
+                    \frac{ {{params.x1 | number:0}} - {{params.x2 | number:0 }} }{ {{model.xAvg | number:0 }} } =
+                    {{model.xPercentDiff | percentage:0 }}}</p>
                 <hr/>
-                <p class="math displayMath">\color{red}{\% \Delta P = \frac{ P_B - P_A }{ P_M } = \frac{ {{params.y1 |
-                    number:0 }} - {{params.y2 | number:0 }} }{ {{model.yAvg | number:0 }} } = {{model.yPercentDiff |
-                    percentage:0 }}}</p>
+                <p class="math displayMath">\color{ {{ color('diff1') }} }{\% \Delta P = \frac{ P_B - P_A }{ P_M } =
+                    \frac{ {{params.y1 | number:0 }} - {{params.y2 | number:0 }} }{ {{model.yAvg | number:0 }} } =
+                    {{model.yPercentDiff | percentage:0 }}}</p>
                 <hr/>
-                <p class="math displayMath">\epsilon_{Q,P} = \frac{\% \Delta Q}{\% \Delta P} = \frac{ \color{blue}{
-                    {{model.xPercentDiff | percentage:0 }} }} { \color{red}{ {{model.yPercentDiff | percentage:0 }} } }
-                    = {{ model.elasticityNumber() }}</p>
+                <p class="math displayMath">\epsilon_{Q,P} = \frac{\% \Delta Q}{\% \Delta P} = \frac{ \color{ {{
+                    color('diff2') }} }{ {{model.xPercentDiff | percentage:0 }} }} { \color{ {{ color('diff1') }} }{
+                    {{model.yPercentDiff | percentage:0 }} } } = {{ model.elasticityNumber() }}</p>
                 <hr/>
                 <p class="math displayMath">\left| \epsilon_{Q,P} \right| = {{ model.elasticityComparator}} \Rightarrow
                     \text{ {{ model.elasticityWord }}}</p>
