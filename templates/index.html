@@ -33,13 +33,6 @@
                         along a constant elasticity demand curve</a></li>
                 </ul>
             </div>
-            <div class="col-md-4">
-                <h3>Efficiency and Equity</h3>
-                <hr/>
-                <p class="subtitle">Productive Efficiency</p>
-                <p class="subtitle">Allocative Efficiency</p>
-                <p class="subtitle">Consumer Surplus and Producer Surplus</p>
-            </div>
         </div>
         <hr/>
         <h1>Microeconomics</h1>
@@ -48,11 +41,6 @@
             <div class="col-md-4">
                 <h3>Demand</h3>
                 <hr/>
-                <p class="subtitle">Demand Curves</p>
-                <ul>
-                    <li>Demand schedules and demand curves</li>
-                    <li>Demand for complements and substitutes</li>
-                </ul>
                 <p class="subtitle">Market Demand</p>
                 <ul>
                     <li><a href="{{ url_for('graphs', subject='micro', topic='demand', graphname='individual_and_market_demand') }}">Individual and
@@ -65,7 +53,7 @@
                 <hr/>
                 <p class="subtitle">Supply Curves</p>
                 <ul>
-                    <li>Supply schedules and supply curves</li>
+                    <li>[coming soon]</li>
                 </ul>
 
             </div>
@@ -82,14 +70,12 @@
             <div class="col-md-4">
                 <h3>Consumer Theory</h3>
                 <hr/>
-                <p class="subtitle">Utility and marginal utility with one good</p>
-                <p class="subtitle">Choice</p>
-                <p class="subtitle">Budget constraints</p>
+                <p class="subtitle">Risk Aversion</p>
                 <ul>
-                    <li>Budget constraint with a fixed income</li>
-                    <li>Budget constraint with a fixed endowment</li>
-                    <li>Special case: The consumption/leisure tradeoff</li>
-                    <li>Special case: Intertemporal consumption</li>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='crra_utility') }}">Constant relative risk aversion utility function</a></li>
+                </ul>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='risk_aversion') }}">Risk aversion and certainty equivalence</a></li>
                 </ul>
             </div>
             <div class="col-md-4">
@@ -99,34 +85,24 @@
                 <ul>
                     <li><a href="{{ url_for('graphs', subject='micro', topic='producer_theory', graphname='cost_curves') }}">Total, marginal, and average cost</a></li>
                 </ul>
-                <p class="subtitle">Perfectly Competitive Markets</p>
-                <ul>
-                    <li>Cost curves for a competitive firm</li>
-                </ul>
-                <p class="subtitle">Monopoly Profit Maximization</p>
-                <ul>
-                    <li>Monopoly cost curves</li>
-                </ul>
-                <p class="subtitle">Oligopoly</p>
-                <ul>
-                    <li>Cournot duopoly</li>
-                    <li>Stackelberg duopoly</li>
-                    <li>Bertrand duopoly</li>
-                </ul>
+
             </div>
             <div class="col-md-4">
-                <h3>Imperfect Competition</h3>
-                <hr/>
-                <p class="subtitle">Imperfect information</p>
+                <h3>Market Structures</h3>
+                <p class="subtitle">Perfect Competition</p>
                 <ul>
-                    <li><a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='risk_aversion') }}">Risk aversion and insurance</a></li>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='market_structures', graphname='competitive_profit_max') }}">Cost curves for a competitive firm</a></li>
                 </ul>
-                <p class="subtitle">Oligopoly</p>
+                <p class="subtitle">Monopoly</p>
                 <ul>
-                    <li><a href="{{ url_for('graphs', subject='micro', topic='market_structures', graphname='cournot_duopoly') }}">Cournot duopoly</a>
-                    </li>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='market_structures', graphname='monopoly_profit_max') }}">Monopoly cost curves and profit maximization</a></li>
                 </ul>
+                <!--<p class="subtitle">Oligopoly</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='market_structures', graphname='cournot_duopoly') }}">Cournot duopoly</a></li>
+                </ul>-->
             </div>
+
         </div>
         <hr/>
         <h1>Macroeconomics</h1>

@@ -3,77 +3,104 @@
 {% block body %}
     {% raw %}
     <div ng-controller="KineticGraphCtrl">
-        <div class="row">
-            <div class="col-md-4">
-                <h1>Cost Curves</h1>
-                <hr/>
-                <p>Drag point <span class="math">q</span> left and right to see how total, marginal, and average costs
-                    change. You can also drag the fixed cost up and down.</p>
-                <hr/>
-            </div>
-            <div class="col-md-8">
-                <div id="costs"></div>
-            </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Cost Curves</h1>
+            <hr/>
+            <p>Drag point <span class="math">q</span> left and right to see how total, marginal, and average costs change.</p>
+            <p>Change the fixed cost of the production function by dragging the y-intercept of the total cost function up and down.</p>
+            <p>Change the marginal cost of the production function by dragging the two orange control points in the lower graph.</p>
+            <hr/>
+            <label>
+                <input type="checkbox" ng-model="params.showVC"> Show VC and AVC
+            </label><br/>
+            <label>
+                <input type="checkbox" ng-model="params.showSlopes"> Show slopes in top graph
+            </label>
         </div>
-
-
+        <div class="col-md-8">
+            <div id="costs"></div>
+        </div>
     </div>
-    <script>
-        var scopeDefinition = {
-            params: {
-                fc: 100,
-                q: 50
-            },
-            restrictions: [
-                {
-                    expression: 'model.tc(params.q)',
-                    restrictionType: 'range',
-                    min: 0,
-                    max: 1000
+
+
+</div>
+<script>
+    var scopeDefinition = {
+        params: {
+            fc: 100,
+            q: 70,
+            mcVertexX: 20,
+            mcVertexY: 5,
+            mcControlPointX: 90,
+            mcControlPointY: 18,
+            showVC: false,
+            showSlopes: false
+        },
+        restrictions: [
+            {
+                expression: 'model.tc(params.q)',
+                restrictionType: 'range',
+                min: 0,
+                max: 1000
+            }
+        ],
+        model: {
+            type: 'EconGraphs.QuadraticMarginalCost',
+            definition: {
+                marginalCostVertexCoordinates: {x: 'params.mcVertexX', y: 'params.mcVertexY'},
+                marginalCostControlPointCoordinates: {x: 'params.mcControlPointX', y: 'params.mcControlPointY'},
+                fixedCost: 'params.fc',
+                fixedCostDragParam: 'fc',
+                show: {
+                    vc: 'params.showVC',
+                    avc: 'params.showVC',
+                    avcslope: '(params.showVC && params.showSlopes)',
+                    mcslope: 'params.showSlopes',
+                    atcslope: 'params.showSlopes'
                 }
-            ],
-            model: {
-                type: 'EconGraphs.ProductionCost',
+            }
+        },
+        views: [
+            {
+                type: 'KG.TwoVerticalGraphs',
                 definition: {
-                    costFunctionType: 'Polynomial',
-                    costFunctionDef: {termDefs: [
-                        {
-                            coefficient: 0.1,
-                            powers: [2]
-                        },
-                        {
-                            coefficient: 1,
-                            powers: [1]
-                        },
-                        {
-                            coefficient: 'params.fc',
-                            powers: [0]
-                        }
-                    ]},
-                    fixedCostDragParam: 'fc'
+                    element_id: 'costs',
+                    xAxisDef: {min: 0, max: 100, title: '\\text{Quantity (Units)}', ticks:0},
+                    topGraph: {
+                        margins: {right: 100},
+                        yAxisDef: {min: 0, max: 1000, title: '\\text{Total Costs (Dollars)}', ticks:0},
+                        objects: [
+                            'model.variableCostCurve',
+                            'model.totalCostCurve',
+                            'model.fixedCostPoint',
+                            'model.variableCostAtQuantityPoint(params.q, "","params.q")',
+                            'model.marginalCostAtQuantitySlope(params.q, "")',
+                            'model.marginalCostAtVariableCostQuantitySlope(params.q, "")',
+                            'model.averageCostAtQuantitySlope(params.q, "")',
+                            'model.averageVariableCostAtQuantitySlope(params.q, "")',
+                            'model.fixedCostLine'
+                        ]
+                    },
+                    bottomGraph: {
+                        margins: {right: 100},
+                        yAxisDef: {min: 0, max: 20, title: '\\text{Unit Costs (Dollars per Unit)}', ticks:0},
+                        objects: [
+                            'model.marginalCostCurve',
+                            'model.averageCostCurve',
+                            'model.averageVariableCostCurve',
+                            //'model.marginalCostAtQuantityPoint(params.q, "","params.q")',
+                            //'model.averageCostAtQuantityPoint(params.q, "","params.q")',
+                            //'model.averageVariableCostAtQuantityPoint(params.q, "","params.q")',
+                                'model.marginalCostVertex',
+                                'model.marginalCostControlPoint'
+                        ]
+                    },
+                    objects: ['model.totalCostAtQuantityPoint(params.q, "","params.q")']
                 }
-            },
-            views: [
-                {
-                    type: 'KG.TwoVerticalGraphs',
-                    definition: {
-                        element_id: 'costs',
-                        xAxisDef: {min: 0, max: 100, title: '\\text{Quantity (q)}'},
-                        topGraph: {
-                            margins: {right: 100},
-                            yAxisDef: {min: 0, max: 1000, title: '\\text{Total Costs (Dollars)}'},
-                            objects: ['model.totalCostCurve', 'model.fixedCostPoint', 'model.marginalCostAtQuantitySlope(params.q, "")', 'model.averageCostAtQuantitySlope(params.q, "")']
-                        },
-                        bottomGraph: {
-                            margins: {right: 100},
-                            yAxisDef: {min: 0, max: 20, title: '\\text{Unit Costs (Dollars per Unit)}'},
-                            objects: ['model.marginalCostCurve', 'model.averageCostCurve', 'model.marginalCostAtQuantityPoint(params.q, "","params.q")', 'model.averageCostAtQuantityPoint(params.q, "","params.q")']
-                        },
-                        objects: ['model.totalCostAtQuantityPoint(params.q, "","params.q")']
-                    }
-                }
-            ]
-        }
-    </script>
+            }
+        ]
+    }
+</script>
     {% endraw %}
 {% endblock %}
