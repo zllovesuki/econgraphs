@@ -1,0 +1,78 @@
+{% extends 'layouts/eg-layout.html' %}
+
+{% block body %}
+{% raw %}
+    <div ng-controller="KineticGraphCtrl">
+        <h1>Cournot Duopoly</h1>
+
+        <p>Change the amounts each firm produces (<span class="math">q_1</span> and <span class="math">q_2</span>).</p>
+        <hr/>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="firm1"></div>
+            </div>
+            <div class="col-md-4">
+                <div id="firm2"></div>
+            </div>
+            <div class="col-md-4">
+                <div id="market"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var scopeDefinition = {
+            params: {
+                q1: 10,
+                q2: 10,
+                mc1: 10,
+                mc2: 10,
+                marketDemandIntercept: 30,
+                marketDemandSlope: -1
+            },
+            restrictions: [
+
+            ],
+            model: {
+                type: 'EconGraphs.CournotDuopoly',
+                definition: {
+                    marketDemandIntercept: 40,
+                    marketDemandSlope: -1,
+                    q1: 'params.q1',
+                    q2: 'params.q2',
+                    c1: 'params.c1',
+                    c2: 'params.c2'
+                }
+            },
+            views: [
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'firm1',
+                        xAxisDef: {min: 0, max: 100, title: '\\text{Firm 1 Quantity }(q_1)'},
+                        yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
+                        objects: ['model.residualDemand1.curve', 'model.residualDemand1.priceLine', 'model.residualDemand1.quantityDemandedPoint']
+                    }
+                },
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'firm2',
+                        xAxisDef: {min: 0, max: 100, title: '\\text{Firm 2 Quantity }(q_2)'},
+                        yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
+                        objects: ['model.residualDemand2.curve', 'model.residualDemand2.priceLine', 'model.residualDemand2.quantityDemandedPoint']
+                    }
+                },
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'market',
+                        xAxisDef: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
+                        yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
+                        objects: ['model.marketDemand.curve', 'model.marketDemand.priceLine', 'model.marketDemand.quantityDemandedPoint']
+                    }
+                }
+            ]
+        }
+    </script>
+{% endraw %}
+{% endblock %}

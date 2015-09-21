@@ -3,10 +3,153 @@
 {% block content %}
 
     <div class="container-fluid mainPage">
-	<h1>EconGraphs</h1>
-	<p>Welcome to econgraphs.org.</p>
-    <p>Click <a href="{{ url_for('graphs',graph_name=None) }}">here</a> for dynamic graphs that can be used in any econ classroom.</p>
-    <p>Click <a href="{{ url_for('slides',prof_name='makler',course_name='econ50',slide_name=None) }}">here</a> for the slides for Econ 50 at Stanford.</p>
-</div>
+        <h1>Basic Concepts</h1>
+        <hr/>
+        <div class="row" style="padding-top: 25px">
+            <div class="col-md-4">
+                <h3>Comparative Advantage</h3>
+                <hr/>
+                <p class="subtitle">Production Possibilities</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='concepts', topic='comparative_advantage', graphname='resource_allocation_and_production_possibilities') }}">The Production
+                        Possibilities
+                        Frontier</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Elasticity</h3>
+                <hr/>
+                <p class="subtitle">Calculating Elasticity</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='concepts', topic='elasticity', graphname='elasticity_midpoint') }}">Price Elasticity Calculator
+                        (Midpoint
+                        method)</a></li>
+                </ul>
+                <p class="subtitle">Demand Elasticity</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='concepts', topic='elasticity', graphname='linear_demand_point_elasticity') }}">Point elasticity
+                        along a linear demand curve</a></li>
+                    <li><a href="{{ url_for('graphs', subject='concepts', topic='elasticity', graphname='constant_elasticity_demand') }}">Point elasticity
+                        along a constant elasticity demand curve</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Efficiency and Equity</h3>
+                <hr/>
+                <p class="subtitle">Productive Efficiency</p>
+                <p class="subtitle">Allocative Efficiency</p>
+                <p class="subtitle">Consumer Surplus and Producer Surplus</p>
+            </div>
+        </div>
+        <hr/>
+        <h1>Microeconomics</h1>
+        <hr/>
+        <div class="row" style="padding-top: 25px">
+            <div class="col-md-4">
+                <h3>Demand</h3>
+                <hr/>
+                <p class="subtitle">Demand Curves</p>
+                <ul>
+                    <li>Demand schedules and demand curves</li>
+                    <li>Demand for complements and substitutes</li>
+                </ul>
+                <p class="subtitle">Market Demand</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='demand', graphname='individual_and_market_demand') }}">Individual and
+                        Market
+                        Demand</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Supply</h3>
+                <hr/>
+                <p class="subtitle">Supply Curves</p>
+                <ul>
+                    <li>Supply schedules and supply curves</li>
+                </ul>
+
+            </div>
+            <div class="col-md-4">
+                <h3>Market Equilibrium</h3>
+                <hr/>
+                <p class="subtitle">Supply, Demand, and Taxes</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='supply_and_demand', graphname='supply_and_demand') }}">Supply and Demand</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 25px">
+            <div class="col-md-4">
+                <h3>Consumer Theory</h3>
+                <hr/>
+                <p class="subtitle">Utility and marginal utility with one good</p>
+                <p class="subtitle">Choice</p>
+                <p class="subtitle">Budget constraints</p>
+                <ul>
+                    <li>Budget constraint with a fixed income</li>
+                    <li>Budget constraint with a fixed endowment</li>
+                    <li>Special case: The consumption/leisure tradeoff</li>
+                    <li>Special case: Intertemporal consumption</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Producer Theory</h3>
+                <hr/>
+                <p class="subtitle">Production and Cost</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='producer_theory', graphname='cost_curves') }}">Total, marginal, and average cost</a></li>
+                </ul>
+                <p class="subtitle">Perfectly Competitive Markets</p>
+                <ul>
+                    <li>Cost curves for a competitive firm</li>
+                </ul>
+                <p class="subtitle">Monopoly Profit Maximization</p>
+                <ul>
+                    <li>Monopoly cost curves</li>
+                </ul>
+                <p class="subtitle">Oligopoly</p>
+                <ul>
+                    <li>Cournot duopoly</li>
+                    <li>Stackelberg duopoly</li>
+                    <li>Bertrand duopoly</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Imperfect Competition</h3>
+                <hr/>
+                <p class="subtitle">Imperfect information</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='risk_aversion') }}">Risk aversion and insurance</a></li>
+                </ul>
+                <p class="subtitle">Oligopoly</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='micro', topic='market_structures', graphname='cournot_duopoly') }}">Cournot duopoly</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <hr/>
+        <h1>Macroeconomics</h1>
+        <hr/>
+        <div class="row" style="padding-top: 25px">
+            <div class="col-md-4">
+                <h3>The AS-AD Model</h3>
+                <hr/>
+                <p class="subtitle">Behind the AS-AD Model</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='macro', topic='as_ad', graphname='as_ad_phillips') }}">The AS-AD Model and the Phillips Curve</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Economic Growth</h3>
+                <hr/>
+                <p class="subtitle">The Neoclassical Growth Model</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='macro', topic='growth', graphname='ramsey_cass_koopmans') }}">The Ramsey-Cass-Koopmans Model</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
 
 {% endblock %}

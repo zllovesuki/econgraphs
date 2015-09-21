@@ -1,0 +1,79 @@
+{% extends 'layouts/eg-layout.html' %}
+
+{% block body %}
+    {% raw %}
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Cost Curves</h1>
+                <hr/>
+                <p>Drag point <span class="math">q</span> left and right to see how total, marginal, and average costs
+                    change. You can also drag the fixed cost up and down.</p>
+                <hr/>
+            </div>
+            <div class="col-md-8">
+                <div id="costs"></div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        var scopeDefinition = {
+            params: {
+                fc: 100,
+                q: 50
+            },
+            restrictions: [
+                {
+                    expression: 'model.tc(params.q)',
+                    restrictionType: 'range',
+                    min: 0,
+                    max: 1000
+                }
+            ],
+            model: {
+                type: 'EconGraphs.ProductionCost',
+                definition: {
+                    costFunctionType: 'Polynomial',
+                    costFunctionDef: {termDefs: [
+                        {
+                            coefficient: 0.1,
+                            powers: [2]
+                        },
+                        {
+                            coefficient: 1,
+                            powers: [1]
+                        },
+                        {
+                            coefficient: 'params.fc',
+                            powers: [0]
+                        }
+                    ]},
+                    fixedCostDragParam: 'fc'
+                }
+            },
+            views: [
+                {
+                    type: 'KG.TwoVerticalGraphs',
+                    definition: {
+                        element_id: 'costs',
+                        xAxisDef: {min: 0, max: 100, title: '\\text{Quantity (q)}'},
+                        topGraph: {
+                            margins: {right: 100},
+                            yAxisDef: {min: 0, max: 1000, title: '\\text{Total Costs (Dollars)}'},
+                            objects: ['model.totalCostCurve', 'model.fixedCostPoint', 'model.marginalCostAtQuantitySlope(params.q, "")', 'model.averageCostAtQuantitySlope(params.q, "")']
+                        },
+                        bottomGraph: {
+                            margins: {right: 100},
+                            yAxisDef: {min: 0, max: 20, title: '\\text{Unit Costs (Dollars per Unit)}'},
+                            objects: ['model.marginalCostCurve', 'model.averageCostCurve', 'model.marginalCostAtQuantityPoint(params.q, "","params.q")', 'model.averageCostAtQuantityPoint(params.q, "","params.q")']
+                        },
+                        objects: ['model.totalCostAtQuantityPoint(params.q, "","params.q")']
+                    }
+                }
+            ]
+        }
+    </script>
+    {% endraw %}
+{% endblock %}

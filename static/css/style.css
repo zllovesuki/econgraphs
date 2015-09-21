@@ -130,6 +130,15 @@ a {
     text-align: center;
 }
 
+.subtitle {
+    padding-top: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 .big {
     font-size: 20pt;
 }
