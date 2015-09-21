@@ -1,0 +1,63 @@
+{
+    "market_model": {
+        "subject": "finance",
+        "topic": "capm"
+    },
+    "finance_mean_variance": {
+        "subject": "finance",
+        "topic": "diversification",
+        "new_name": "mean_variance_model"
+    },
+    "production_possibilities": {
+        "subject": "concepts",
+        "topic": "comparative_advantage",
+        "new_name": "resource_allocation_and_production_possibilities"
+    },
+    "elasticity_midpoint": {
+        "subject": "concepts",
+        "topic": "elasticity"
+    },
+    "constant_elasticity_demand": {
+        "subject": "concepts",
+        "topic": "elasticity"
+    },
+    "linear_demand_point_elasticity": {
+        "subject": "concepts",
+        "topic": "elasticity"
+    },
+    "as_ad_phillips": {
+        "subject": "macro",
+        "topic": "as_ad"
+    },
+    "ramsey_cass_koopmans": {
+        "subject": "macro",
+        "topic": "growth"
+    },
+    "individual_and_market_demand": {
+        "subject": "micro",
+        "topic": "demand"
+    },
+    "supply_and_demand": {
+        "subject": "micro",
+        "topic": "supply_and_demand"
+    },
+    "indifference": {
+        "subject": "micro",
+        "topic": "consumer_theory",
+        "new_name": "indifference_old"
+    },
+    "utility_and_marginal_utility": {
+        "subject": "micro",
+        "topic": "consumer_theory",
+        "new_name": "crra_utility"
+    },
+    "risk_aversion": {
+        "subject": "micro",
+        "topic": "consumer_theory"
+    },
+    "cost_curves": {
+        "subject": "micro",
+        "topic": "producer_theory",
+        "new_name": "competitive_profit_maximization"
+    }
+}

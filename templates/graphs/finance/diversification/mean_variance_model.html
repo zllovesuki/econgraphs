@@ -42,7 +42,10 @@
             <h4> Correlation Matrix</h4>
 
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-1">
+                    <br/><br/>
+                </div>
+                <div class="col-xs-5">
                     <table align="right" class="matrix">
                         <tr style="height:40px">
                             <td style="width:50px; text-align:center" class="math">1</td>
@@ -79,7 +82,10 @@
             <h4> Covariance Matrix</h4>
 
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-1">
+                    <br/><br/>
+                </div>
+                <div class="col-xs-5">
                     <table align="right" class="matrix">
                         <tr style="height:40px">
                             <td style="width:50px; text-align:center" class="math">\sigma_1^2</td>
@@ -247,8 +253,8 @@
                 definition: {
                     element_id: 'graph',
                     dimensions: {width: 700, height: 700},
-                    xAxis: {min: 0, max: 1, title: "\\text{Standard Deviation }(\\sigma)"},
-                    yAxis: {min: 0, max: 0.5, title: "\\text{Mean }(\\mu)"},
+                    xAxisDef: {min: 0, max: 1, title: "\\text{Standard Deviation }(\\sigma)"},
+                    yAxisDef: {min: 0, max: 0.5, title: "\\text{Mean }(\\mu)"},
                     objects: ['model.optimalPortfolio', 'model.asset1.point', 'model.asset2.point', 'model.asset3.point', 'model.riskFreeAsset', 'model.riskReturnLine', 'model.threeAssetPortfolios', 'model.twoAssetPortfolios']
                 }
             },
@@ -257,7 +263,7 @@
                 definition: {
                     element_id: 'leverageSlider',
                     param: 'maxLeverage',
-                    axis: {min: 0, max: 100, tickValues: [0, 50, 100]}
+                    axisDef: {min: 0, max: 100, tickValues: [0, 50, 100]}
                 }
             },
             {
@@ -266,7 +272,7 @@
                     element_id: 'slider12',
                     param: 'rho12',
                     precision: '0.1',
-                    axis: {min: -1, max: 1, tickValues: [-1, 0, 1]}
+                    axisDef: {min: -1, max: 1, tickValues: [-1, 0, 1]}
                 }
             },
             {
@@ -274,7 +280,7 @@
                 definition: {
                     element_id: 'slider23',
                     param: 'rho23',
-                    axis: {min: -1, max: 1, tickValues: [-1, 0, 1]}
+                    axisDef: {min: -1, max: 1, tickValues: [-1, 0, 1]}
                 }
             },
             {
@@ -282,7 +288,7 @@
                 definition: {
                     element_id: 'slider13',
                     param: 'rho13',
-                    axis: {min: -1, max: 1, tickValues: [-1, 0, 1]}
+                    axisDef: {min: -1, max: 1, tickValues: [-1, 0, 1]}
                 }
             }
         ]

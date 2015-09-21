@@ -1,8 +1,14 @@
-import json
+import json, os
 from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+graph_list_file = os.path.join(APP_ROOT, 'graph_list.json')
 
+
+def open_json_file(open_file=graph_list_file):
+    with open(os.path.join(open_file), 'r') as datafile:
+        return json.load(datafile)
 
 @app.route('/')
 def index():
@@ -14,19 +20,37 @@ def about():
     return render_template('about.html', title='About EconGraphs')
 
 
-@app.route('/<page_name>')
-def page(page_name):
-    return redirect(url_for('graphs', graph_name=page_name))
+@app.route('/graphs/<graphname>')
+def old_graphs(graphname=None):
+    old_graph_list = open_json_file('graph_redirects_list.json')
+    if graphname in old_graph_list:
+        name_data = old_graph_list[graphname]
+        if 'new_name' in name_data:
+            current_name = name_data['new_name']
+        else:
+            current_name = graphname
+        return redirect(url_for('graphs',
+                                graphname=current_name,
+                                subject=name_data['subject'],
+                                topic=name_data['topic']))
+    else:
+        try:
+            return render_template('graphs/' + graphname + '/' + 'index.html')
+        except:
+            return redirect(url_for('index'))
 
-@app.route('/graphs/')
-@app.route('/graphs/<graph_name>')
-def graphs(graph_name=None):
-    if graph_name is None:
-        return render_template('graphs/index.html')
+
+@app.route('/graphs/<subject>/<topic>/<graphname>')
+def graphs(graphname=None, subject=None, topic=None):
+    graphlist = open_json_file()
+    if graphname is None or subject is None:
+        return render_template('graphs/index.html', graphlist=graphlist)
+
     try:
-        return render_template('graphs/' + graph_name + '.html', title=graph_name)
+        return render_template('graphs/' + subject + '/' + topic + '/' + graphname + '.html', title=graphname)
     except:
-        return redirect(url_for('graphs', graph_name=None))
+        return redirect(url_for('graphs', graphname=None, subject=None, topic=None, graphlist=graphlist))
+
 
 @app.route('/slides/')
 @app.route('/slides/<prof_name>/')

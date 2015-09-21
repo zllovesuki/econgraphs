@@ -1,0 +1,55 @@
+[
+    {
+        "path": "concepts",
+        "name": "Concepts",
+        "topics": [
+            {
+                "path": "comparative_advantage",
+                "name": "Comparative Advantage",
+                "subtopics": [
+                    {
+                        "path": "production_possibilities",
+                        "name": "Production Possibilities",
+                        "graphs": [
+                            {
+                                "path": "resource_allocation_and_production_possibilities",
+                                "name": "Resource Allocation and Production Possibilities",
+                                "description": "Explore how the choice of how to allocate resources translates into the choice of what toe produce"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "path": "elasticity",
+                "name": "Elasticity",
+                "subtopics": [
+                    {
+                        "path": "calculating_elasticity",
+                        "name": "Calculating Elasticity",
+                        "graphs": [
+                            {
+                                "path": "elasticity_midpoint",
+                                "name": "Price elasticity calculator (midpoint method)"
+                            }
+                        ]
+                    },
+                    {
+                        "path": "demand_elasticity",
+                        "name": "Demand Elasticity",
+                        "graphs": [
+                            {
+                                "path": "elasticity_midpoint",
+                                "name": "Price elasticity calculator (midpoint method)"
+                            },
+                            {
+                                "path": "constant_elasticity_demand",
+                                "name": "Point elasticity along a constant elasticity demand curve"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

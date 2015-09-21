@@ -3,7 +3,7 @@
 {% block body %}
 {% raw %}
     <div ng-controller="KineticGraphCtrl">
-        <h1>Price Elasticity along a Linear Demand Curve (Point Method)</h1>
+        <h1>Demand Elasticity along a Linear Demand Curve (Point Method)</h1>
 
         <p>Drag the endpoints of the demand curve to change its slope. Drag the price up and down to see how the price
             elasticity at point A changes.</p>
@@ -21,7 +21,7 @@
                     }} }{ \frac{dQ^D}{dP} } = \frac{ {{ params.price | number:0 }} }{ {{
                     model.quantityAtPrice(params.price) | number:1 }} } \times \color{ {{ color('demand') }} }{ {{
                     model.demandFunction.inverseSlope | number:2 }} } = {{
-                    model.priceElasticity(params.price).elasticityNumber() }}</p>
+                    model.priceElasticity(params.price).elasticityNumber() | number:2 }}</p>
                 <hr/>
                 <p class="math displayMath">\left| \epsilon_{Q^D_A,P_A} \right| = {{
                     model.priceElasticity(params.price).elasticityComparator}} \Rightarrow \text{ {{
@@ -63,17 +63,21 @@
                 type: 'EconGraphs.LinearDemand',
                 definition: {
                     elasticityMethod: 'point',
-                    type: 'TwoPointLine',
+                    price: 'params.price',
+                    type: 'Linear',
                     def: {
-                        p1: {
+                        point1: {
                             x: 0,
                             y: 'params.demandPriceIntercept'
                         },
-                        p2: {
+                        point2: {
                             x: 'params.demandQuantityIntercept',
                             y: 0
                         }
-                    }
+                    },
+                    priceInterceptDrag: 'params.demandPriceIntercept',
+                    quantityInterceptDrag: 'params.demandQuantityIntercept',
+                    priceDrag: 'params.price'
                 }
             },
             views: [
@@ -81,9 +85,9 @@
                     type: 'KG.Graph',
                     definition: {
                         element_id: 'graph',
-                        xAxis: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
-                        yAxis: {min: 0, max: 100, title: '\\text{Price }(P)'},
-                        objects: ['model.curve', 'model.priceInterceptPoint', 'model.quantityInterceptPoint', 'model.priceLine', 'model.quantityDemandedAtPrice']
+                        xAxisDef: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
+                        yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
+                        objects: ['model.curve', 'model.priceInterceptPoint', 'model.quantityInterceptPoint', 'model.priceLine', 'model.quantityDemandedPoint']
                     }
                 }
             ]
