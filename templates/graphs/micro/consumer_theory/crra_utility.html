@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <hr>
-                <equation class="big" style="color: {{ color('growth') }}">\sigma = {{ (1/(params.rra)).toFixed(2) }}</equation>
+                <equation class="big" style="color: {{ color('growth') }}">\sigma = {{ (1/(params.rra)) | extendedReal:2 }}</equation>
                 <hr/>
                 <equation class="big">u(c) = \frac{c^{1 - 1/\color{
                     {{color('growth')}} }{\sigma}} - 1}{1 - 1/\color{
@@ -33,56 +33,63 @@
         </div>
     </div>
     <script>
-        var scopeDefinition = {
-            params: {
-                rra: 0.5,
-                c: 5
-            },
-            graphParams: ['rra'],
-            restrictions: [
-                {
-                    expression: 'params.c',
-                    restrictionType: 'range',
-                    min: 1,
-                    max: 10
-                }
-            ],
-            model: {
-                type: 'EconGraphs.ConstantRRA',
+    var scopeDefinition = {
+        params: {
+            rra: 0.5,
+            c: 5
+        },
+        graphParams: ['rra'],
+        restrictions: [
+            {
+                expression: 'params.c',
+                restrictionType: 'range',
+                min: 1,
+                max: 10
+            }
+        ],
+        model: {
+            type: 'EconGraphs.ConstantRRA',
+            definition: {
+                rra: 'params.rra'
+            }
+
+        },
+        views: [
+            {
+                type: 'KG.TwoVerticalGraphs',
                 definition: {
-                    rra: 'params.rra'
+                    element_id: 'utility',
+                    xAxisDef: {min: 0, max: 10, title: '\\text{Consumption (units)}'},
+                    topGraph: {
+                        yAxisDef: {min: 0, max: 'model.utilityAtQuantity(10)', title: '\\text{Total Utility (utils)}'},
+                        objects: [
+                            'model.utilityFunctionView',
+                            'model.marginalUtilityAtQuantitySlope(params.c, {label: "slope = u\'(c_A)"})'
+                        ]
+                    },
+                    bottomGraph: {
+                        yAxisDef: {min: 0, max: 1, title: '\\text{Marginal Utility (utils/unit)}'},
+                        objects: [
+                            'model.marginalUtilityFunctionView',
+                            'model.marginalUtilityAtQuantityPoint(params.c,{yAxisLabel: "u\'(c_A)", xDrag:"params.c"})']
+                    },
+                    objects: [
+                        'model.utilityAtQuantityPoint(params.c, {xAxisLabel: "c_A", yAxisLabel: "u(c_A)", xDrag:"params.c"})'
+                    ]
                 }
-
             },
-            views: [
-                {
-                    type: 'KG.TwoVerticalGraphs',
-                    definition: {
-                        element_id: 'utility',
-                        xAxisDef: {min: 0, max: 10, title: '\\text{Consumption (units)}'},
-                        topGraph: {
-                            yAxisDef: {min: 0, max: 'model.utilityAtQuantity(10)', title: '\\text{Total Utility (utils)}'},
-                            objects: ['model.utilityFunctionView', 'model.marginalUtilityAtQuantitySlope(params.c, "A")']
-                        },
-                        bottomGraph: {
-                            yAxisDef: {min: 0, max: 1, title: '\\text{Marginal Utility (utils/unit)}'},
-                            objects: ['model.marginalUtilityFunctionView', 'model.marginalUtilityAtQuantityPoint(params.c, "A","params.c")']
-                        },
-                        objects: ['model.utilityAtQuantityPoint(params.c, "A","params.c")']
-                    }
-                },
-                {
-                    type: 'KG.Slider',
-                    definition: {
-                        element_id: 'rraSlider',
-                        param: 'rra',
-                        precision: '0.01',
-                        axisDef: {min: 0, max: 2, ticks:0}
-                    }
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'rraSlider',
+                    param: 'rra',
+                    precision: '0.01',
+                    axisDef: {min: 0, max: 2, tickValues: [0, 1, 2]}
                 }
+            }
 
-            ]
-        }
-    </script>
+        ]
+    }
+</script>
 {% endraw %}
 {% endblock %}
