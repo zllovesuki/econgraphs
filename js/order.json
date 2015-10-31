@@ -105,15 +105,14 @@
         ]
     },
     {
-        "name": "kg-head",
+        "name": "libraries",
         "order": [
             "jquery.min.js",
             "bootstrap.min.js",
             "angular.min.js",
             "d3.min.js",
             "underscore-min.js",
-            "katex.min.js",
-            "kinetic-graphs.js"
+            "katex.min.js"
         ]
     },
     {

@@ -1,5 +1,5 @@
 import json, os
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -42,14 +42,12 @@ def old_graphs(graphname=None):
 
 @app.route('/graphs/<subject>/<topic>/<graphname>')
 def graphs(graphname=None, subject=None, topic=None):
-    graphlist = open_json_file()
     if graphname is None or subject is None:
-        return render_template('graphs/index.html', graphlist=graphlist)
-
+        return render_template('graphs/index.html')
     try:
-        return render_template('graphs/' + subject + '/' + topic + '/' + graphname + '.html', title=graphname)
+        return render_template('graphs/' + subject + '/' + topic + '/' + graphname + '.html', title=graphname, args=request.args)
     except:
-        return redirect(url_for('graphs', graphname=None, subject=None, topic=None, graphlist=graphlist))
+        return redirect(url_for('graphs', graphname=None, subject=None, topic=None))
 
 
 @app.route('/slides/')
@@ -68,8 +66,21 @@ def slides(prof_name=None, course_name=None, slide_name=None):
     except:
         return redirect(url_for('slides', slide_name=None, prof_name=None, course_name=None))
 
-app.debug = True
 
+@app.route('/courses')
+@app.route('/courses/<path:path>')
+def courses(path=None):
+    if path is None:
+        return render_template('courses/index.html')
+    try:
+        return render_template('courses/'+path+'.html')
+    except:
+        try:
+            return render_template('courses/'+path+'/index.html')
+        except:
+            return redirect(url_for('courses', path=None))
+
+app.debug = True
 
 @app.errorhandler(404)
 def page_not_found(e):

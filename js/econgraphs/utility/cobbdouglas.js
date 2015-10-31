@@ -51,9 +51,7 @@ econgraphs.functions.utility.CobbDouglas = function () {
 
         // Find the lowest possible cost for a given level of utility, given px and py
         u._lowestPossibleCost = function (utility, px, py) {
-
             return returnsToScale*Math.pow(utility,1/returnsToScale)*Math.pow(px/ u.alpha,xProportion)*Math.pow(py/ u.beta,yProportion);
-
         };
 
         u.preferred = {area: function(xDomain,yDomain) {

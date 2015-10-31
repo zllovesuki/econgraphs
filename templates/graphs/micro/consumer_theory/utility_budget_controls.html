@@ -1,0 +1,207 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+
+<div ng-controller="KineticGraphCtrl">
+    <div class="row">
+        <div class="col-md-8">
+            {% block graphs %}
+            {% endblock %}
+        </div>
+
+        <div class="col-md-4">
+        {% raw %}
+            <div class="well">
+                <div class="row">
+                    <div class="subtitle col-xs-6">utility parameters</div>
+                    <div class="col-xs-6">
+                        <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
+                            <option value="CobbDouglas">Cobb-Douglas</option>
+                            <option value="Complements">Complements</option>
+                            <option value="Substitutes">Substitutes</option>
+                        </select>
+                    </div>
+                </div>
+                <hr/>
+                <div class="math displayMath">u(x,y) = {{ model.utility.formula(false) }} = {{ model.utility.formula(true)}}</div>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                    </div>
+                    <div class="col-xs-9" id="alphaSlider"></div>
+                </div>
+            </div>
+            <div class="well">
+                <div class="subtitle">budget parameters</div>
+                <hr/>
+                <div class="math displayMath">{{ model.budget.formula(false) }} \Rightarrow {{ model.budget.formula(true)}}</div>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
+                    </div>
+                    <div class="col-xs-9" id="incomeSlider"></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
+                    </div>
+                    <div class="col-xs-9" id="pxSlider"></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
+                    </div>
+                    <div class="col-xs-9" id="pySlider"></div>
+                </div>
+            </div>
+            {% endraw %}
+            {% block belowControls %}
+                {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block model %}
+
+<script>
+
+    var cobbDouglasDefinition = {
+            type: 'EconGraphs.CobbDouglasUtility',
+            definition: {
+                xPower: 'params.alpha'
+            }
+        },
+        complementsDefinition = {
+            type: 'EconGraphs.ComplementsUtility',
+            definition: {
+                bundle: {x: 'params.alpha', y: '1-params.alpha'}
+            }
+        },
+        substitutesDefinition = {
+            type: 'EconGraphs.SubstitutesUtility',
+            definition: {
+                xCoefficient: 'params.alpha'
+            }
+        },
+        selectorDefinition = {
+            type: 'KG.Selector',
+            definition: {
+                selected: 'params.selectedUtility',
+                options: [
+                    {
+                        name: 'CobbDouglas',
+                        label: 'Cobb-Douglas',
+                        selection: cobbDouglasDefinition
+                    },
+                    {
+                        name: 'Complements',
+                        label: 'Perfect Complements',
+                        selection: complementsDefinition
+                    },
+                    {
+                        name: 'Substitutes',
+                        label: 'Perfect Substitutes',
+                        selection: substitutesDefinition
+                    }
+                ]
+            }
+        };
+
+
+    var scopeDefinition = {
+        params: {
+            alpha: 0.5,
+            income: 120,
+            xE: 20,
+            yE: 20,
+            px: 4,
+            py: 3,
+            pxSell: 2,
+            pySell: 1,
+            showMap: false,
+            selectedUtility: 'CobbDouglas'
+        },
+        graphParams: ['selectedBudget'],
+        restrictions: [],
+        model: {
+            type: 'EconGraphs.MarshallianDemand',
+            definition: {
+                budget:{
+                    type: 'EconGraphs.SimpleBudgetConstraint',
+                    definition: {
+                        income: 'params.income',
+                        px: 'params.px',
+                        py: 'params.py',
+                        budgetConstraintLabel: 'BL',
+                        xInterceptLabel: "\\frac{I}{P_x}",
+                        yInterceptLabel: "\\frac{I}{P_y}"
+                    }
+                },
+                utility: selectorDefinition
+            }
+        },
+        views: [
+            {% block graphDefs %}
+            {% endblock %},
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'alphaSlider',
+                    param: 'alpha',
+                    precision: '0.01',
+                    axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'incomeSlider',
+                    param: 'income',
+                    precision: '1',
+                    axisDef: {min: 0, max: 200}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'pxSlider',
+                    param: 'px',
+                    precision: '0.25',
+                    axisDef: {min: 0, max: 10}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'pySlider',
+                    param: 'py',
+                    precision: '0.25',
+                    axisDef: {min: 0, max: 10}
+                }
+            }
+        ]
+    }
+</script>
+{% endblock %}
+
+
+
+{% block js %}
+    <script>
+
+        var selectedUtility = '{{ args.utilityFunction }}';
+
+        if(selectedUtility == 'CobbDouglas') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = cobbDouglasDefinition;
+        }
+
+        if(selectedUtility == 'Leontief' || selectedUtility == 'PerfectComplements' || selectedUtility == 'Complements') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = complementsDefinition;
+        }
+
+    </script>
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.01.js') }}"></script>
+
+{% endblock %}

@@ -17,7 +17,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">econgraphs.org</a>
+            <a class="navbar-brand" href="{{ url_for('course', school='stanford', course='W16-ECON-50') }}">Stanford University | Econ 50 | Winter 2016</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -48,28 +48,7 @@
 {% block body %}
 {% endblock %}
 
-{% block model %}
-    <script>
-        var scopeDefinition = scopeDefinition || { params: {}};
-    </script>
-{% endblock %}
-
-<script src="{{ url_for('static', filename='js/libraries.js') }}"></script>
-<script>
-
-        var scopeDefinition = scopeDefinition || { params: {}};
-
-        {% for key in args %}
-
-            if(scopeDefinition.params.hasOwnProperty('{{ key }}')) {
-                scopeDefinition.params['{{ key }}'] = '{{ args[key] }}';
-            }
-
-        {% endfor %}
-
-    </script>
-
-<script src="{{ url_for('static', filename='js/kg-head-v3.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kg-head-v2.js') }}"></script>
 
 
 {% block js %}

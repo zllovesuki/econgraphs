@@ -43,14 +43,14 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-<div style="height:30px"></div>
-
+<div style="height:30px"> </div>
+<div class="ng-cloak">
 {% block body %}
 {% endblock %}
-
+</div>
 {% block model %}
     <script>
-        var scopeDefinition = scopeDefinition || { params: {}};
+        var scopeDefinition = { params: {}};
     </script>
 {% endblock %}
 
@@ -62,16 +62,14 @@
         {% for key in args %}
 
             if(scopeDefinition.params.hasOwnProperty('{{ key }}')) {
-                scopeDefinition.params['{{ key }}'] = '{{ args[key] }}';
+                var val = '{{ args[key] }}';
+                var typedVal = isNaN(+val) ? val : +val;
+                scopeDefinition.params['{{ key }}'] = typedVal;
             }
 
         {% endfor %}
 
     </script>
-
-<script src="{{ url_for('static', filename='js/kg-head-v3.js') }}"></script>
-
-
 {% block js %}
 {% endblock %}
 
