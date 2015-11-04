@@ -52,6 +52,7 @@
                     <div class="col-xs-9" id="pySlider"></div>
                 </div>
             </div>
+            <div ng-show="model.utility.type == 'Linear'">Note: assumes income split evenly if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
             {% endraw %}
             {% block belowControls %}
                 {% endblock %}
@@ -198,6 +199,11 @@
         if(selectedUtility == 'Leontief' || selectedUtility == 'PerfectComplements' || selectedUtility == 'Complements') {
             delete scopeDefinition.params.selectedUtility;
             scopeDefinition.model.definition.utility = complementsDefinition;
+        }
+
+        if(selectedUtility == 'Substitutes' || selectedUtility == 'PerfectSubstitutes') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = substitutesDefinition;
         }
 
     </script>

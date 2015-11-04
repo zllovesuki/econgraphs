@@ -5361,6 +5361,7 @@ var EconGraphs;
         function SubstitutesUtility(definition, modelPath) {
             definition.xCoefficient = definition.xCoefficient || 0.5;
             definition.yCoefficient = definition.yCoefficient || KG.subtractDefs(1, definition.xCoefficient);
+            definition.criticalPriceRatio = KG.divideDefs(definition.xCoefficient, definition.yCoefficient);
             definition.type = 'Linear';
             definition.def = {
                 coefficients: {
@@ -5436,6 +5437,9 @@ var EconGraphs;
         function UtilityDemand(definition, modelPath) {
             _super.call(this, definition, modelPath);
         }
+        UtilityDemand.prototype.price = function (good) {
+            return 0; // overridden by subclass
+        };
         UtilityDemand.prototype.quantityAtPrice = function (price, good) {
             return 0; // overridden by subclass
         };
@@ -5486,7 +5490,15 @@ var EconGraphs;
                 max: 50,
                 numSamplePoints: 51
             });
-            var d = this, samplePoints = KG.samplePointsForDomain(demandParams).reverse(), curveData = [];
+            var d = this, curveData = [], relevantDemandParams = _.clone(demandParams);
+            if (d.utility instanceof EconGraphs.SubstitutesUtility) {
+                curveData.push({ x: 0, y: demandParams.max });
+                // get other price from specific demand function
+                // set new maximum to critical price ratio
+                relevantDemandParams.max = (demandParams.good == 'x') ? d.utility.criticalPriceRatio * d.price('y') : d.price('x') / d.utility.criticalPriceRatio;
+                curveData.push({ x: 0, y: relevantDemandParams.max });
+            }
+            var samplePoints = KG.samplePointsForDomain(relevantDemandParams).reverse();
             samplePoints.forEach(function (price) {
                 curveData.push({ x: d.quantityAtPrice(price, demandParams.good), y: price });
             });
@@ -5518,6 +5530,10 @@ var EconGraphs;
                 bs.update(scope);
             });
             return d;
+        };
+        MarshallianDemand.prototype.price = function (good) {
+            good = good || 'x';
+            return this.budget['p' + good];
         };
         MarshallianDemand.prototype.quantityAtPrice = function (price, good) {
             var d = this;
@@ -5632,6 +5648,9 @@ var EconGraphs;
         function HicksianDemand(definition, modelPath) {
             _super.call(this, definition, modelPath);
         }
+        HicksianDemand.prototype.price = function (good) {
+            return this['p' + good];
+        };
         HicksianDemand.prototype.quantityAtPrice = function (price, good) {
             var d = this;
             good = good || 'x';
