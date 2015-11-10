@@ -10,6 +10,8 @@
 
 {% block belowControls %}
     <hr/>
+            <toggle param="snapToOptimal" class="utility"><span ng-if="params.snapToOptimal">Make bundle draggable</span><span ng-if="!params.snapToOptimal">Snap to optimal bundle</span></toggle>
+            <toggle param="showMRS" class="utility"><span ng-if="params.showMRS">Hide</span><span ng-if="!params.showMRS">Show</span> MRS line</toggle>
             <toggle param="showMap" class="utility"><span ng-if="params.showMap">Hide</span><span ng-if="!params.showMap">Show</span> indifference curve map</toggle>
 {% endblock %}
 
@@ -21,12 +23,21 @@
             xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
             yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
             objects: [
-                "model.utility.indifferenceCurveFamily([5,10,15,20,25,30,35,40,45],{show: params.showMap})",
-                "model.budget.budgetLine",
-                "model.utility.optimalBundlePoint(model.budget,{xAxisLabel:'x^*', yAxisLabel: 'y^*'})",
-                "model.utility.optimalIndifferenceCurve(model.budget,{label: 'U^*'})",
-                "model.budget.endowmentPoint"
-            ]
+                        "model.utility.indifferenceCurveFamily([5,10,15,20,25,30,35,40,45],{show: params.showMap})",
+                        "model.utility.optimalIndifferenceCurve(model.budget,{className: 'utility-old', label:'U^*', name:'optimal'})",
+                        "model.utility.indifferenceCurveThroughBundle(model.bundle,{label: 'U'})",
+                        "model.utility.mrsLine(model.bundle,{show: (params.showMRS && !params.snapToOptimal), label: 'MRS_{x,y}'})",
+                        "model.budget.budgetLine",
+                        "model.utility.bundlePoint(model.bundle,{className: 'utility', xDrag: 'x', xAxisLabel: 'x', yAxisLabel: 'y', show: !params.snapToOptimal})",
+                        "model.utility.optimalBundlePoint(model.budget,{className: 'utility', xAxisLabel: 'x^*', yAxisLabel: 'y^*', show: params.snapToOptimal})"
+
+                    ]
         }
     }
 {% endblock %}
+
+    {% block jsadjustments %}
+        <script>
+        scopeDefinition.params.snapToOptimal = false;
+        </script>
+    {% endblock %}

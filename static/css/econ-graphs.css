@@ -39,17 +39,17 @@ a {
 .invisible {
   display: none;
 }
-.dataPathFamily {
-  stroke: lightgrey;
-  stroke-width: 1;
-  fill: none;
-}
 .draw,
 .segment,
 .dataPath,
 .line,
 .curve {
   stroke-width: 4;
+  fill: none;
+}
+.dataPathFamily {
+  stroke: lightgrey;
+  stroke-width: 1;
   fill: none;
 }
 .scatter {
@@ -198,9 +198,6 @@ a {
   stroke: #bcbd22;
   fill: #bcbd22;
 }
-.curve {
-  fill: none;
-}
 .budget {
   color: #014421;
   stroke: #014421;
@@ -210,4 +207,10 @@ a {
   color: #ff7f0e;
   stroke: #ff7f0e;
   fill: #ff7f0e;
+}
+.curve {
+  fill: none;
+}
+.engel.curve {
+  fill: none;
 }

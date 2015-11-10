@@ -13,28 +13,26 @@
         {% raw %}
             <div class="well">
                 <div class="row">
-                    <div class="subtitle col-xs-6">utility parameters</div>
-                    <div class="col-xs-6">
-                        <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
-                            <option value="CobbDouglas">Cobb-Douglas</option>
-                            <option value="Complements">Complements</option>
-                            <option value="Substitutes">Substitutes</option>
-                        </select>
-                    </div>
+                    <div class="subtitle col-xs-3">utility</div>
+                    <div class="col-xs-9 math displayMath">u(x,y) = {{ model.utility.formula(false) }}<!-- = {{ model.utility.formula(true)}}--></div>
                 </div>
-                <hr/>
-                <div class="math displayMath">u(x,y) = {{ model.utility.formula(false) }} = {{ model.utility.formula(true)}}</div>
                 <hr/>
                 <div class="row">
                     <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
                     </div>
                     <div class="col-xs-9" id="alphaSlider"></div>
                 </div>
+                <div class="row" ng-show="params.selectedUtility == 'CES'">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
+                    </div>
+                    <div class="col-xs-9" id="subSlider"></div>
+                </div>
             </div>
             <div class="well">
-                <div class="subtitle">budget parameters</div>
-                <hr/>
-                <div class="math displayMath">{{ model.budget.formula(false) }} \Rightarrow {{ model.budget.formula(true)}}</div>
+                <div class="row">
+                    <div class="subtitle col-xs-3">budget</div>
+                    <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
+                </div>
                 <hr/>
                 <div class="row">
                     <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
@@ -54,6 +52,14 @@
             </div>
             <div ng-show="model.utility.type == 'Linear'">Note: assumes income split evenly if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
             {% endraw %}
+            <hr/>
+            <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
+                <option value="CobbDouglas">Cobb-Douglas</option>
+                <option value="Complements">Complements</option>
+                <option value="Substitutes">Substitutes</option>
+                <option value="CES">CES</option>
+                <option value="Quasilinear">Quasilinear</option>
+            </select>
             {% block belowControls %}
                 {% endblock %}
         </div>
@@ -83,6 +89,19 @@
                 xCoefficient: 'params.alpha'
             }
         },
+        cesDefinition = {
+            type: 'EconGraphs.CESUtility',
+            definition: {
+                alpha: 'params.alpha',
+                sub: 'params.sub'
+            }
+        },
+        quasilinearDefinition = {
+            type: 'EconGraphs.QuasilinearUtility',
+            definition: {
+                alpha: 'params.alpha'
+            }
+        },
         selectorDefinition = {
             type: 'KG.Selector',
             definition: {
@@ -102,6 +121,16 @@
                         name: 'Substitutes',
                         label: 'Perfect Substitutes',
                         selection: substitutesDefinition
+                    },
+                    {
+                        name: 'CES',
+                        label: 'CES',
+                        selection: cesDefinition
+                    },
+                    {
+                        name: 'Quasilinear',
+                        label: 'Quasilinear',
+                        selection: quasilinearDefinition
                     }
                 ]
             }
@@ -110,22 +139,23 @@
 
     var scopeDefinition = {
         params: {
+            x: 5,
             alpha: 0.5,
             income: 120,
-            xE: 20,
-            yE: 20,
             px: 4,
             py: 3,
-            pxSell: 2,
-            pySell: 1,
+            sub: 0.5,
             showMap: false,
+            snapToOptimal: true,
             selectedUtility: 'CobbDouglas'
         },
-        graphParams: ['selectedBudget'],
+        graphParams: ['selectedUtility'],
         restrictions: [],
         model: {
             type: 'EconGraphs.MarshallianDemand',
             definition: {
+                x: 'params.x',
+                snapToOptimalBundle: 'params.snapToOptimal',
                 budget:{
                     type: 'EconGraphs.SimpleBudgetConstraint',
                     definition: {
@@ -150,6 +180,14 @@
                     param: 'alpha',
                     precision: '0.01',
                     axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'subSlider',
+                    param: 'sub',
+                    axisDef: {min: -1, max: 1, ticks: 0}
                 }
             },
             {
@@ -207,6 +245,9 @@
         }
 
     </script>
+
+    {% block jsadjustments %}
+    {% endblock %}
 
     <script src="{{ url_for('static', filename='js/kg/kg-v0.01.js') }}"></script>
 

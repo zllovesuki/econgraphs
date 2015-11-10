@@ -409,6 +409,9 @@ var KG;
             }
             // Returns the value of an object's property, evaluated against the current scope.
             function deepParse(value) {
+                if (value == undefined) {
+                    return undefined;
+                }
                 if (Object.prototype.toString.call(value) == '[object Array]') {
                     // If the object's property is an array, return the array mapped to its parsed values
                     // see http://stackoverflow.com/questions/4775722/check-if-object-is-array
@@ -1079,25 +1082,51 @@ var KGMath;
                 this.bases = [0];
             }
             Polynomial.prototype._update = function (scope) {
-                this.terms.forEach(function (monomial) {
+                var p = this;
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
+                p.terms.forEach(function (monomial) {
                     monomial.update(scope);
                 });
                 return this;
             };
+            // Sometimes in the update process, the monomial become objects
+            Polynomial.prototype.reestablishMonomials = function () {
+                var p = this;
+                if (p.terms[0] instanceof Functions.Monomial) {
+                    return false;
+                }
+                else {
+                    p.terms = p.terms.map(function (def) {
+                        return new Functions.Monomial(def);
+                    });
+                    return true;
+                }
+            };
             // The coefficients and powers of each term may be get and set via the term's index
             Polynomial.prototype.setCoefficient = function (n, coefficient) {
                 var p = this;
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
                 p.terms[n - 1].setCoefficient(coefficient);
                 return p;
             };
             Polynomial.prototype.setPowers = function (n, powers) {
                 var p = this;
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
                 p.terms[n - 1].setPowers(powers);
                 return p;
             };
             // The value of a polynomial is the sum of the values of its monomial terms
             Polynomial.prototype.value = function (bases) {
                 var p = this;
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
                 p.setBases(bases);
                 var result = 0;
                 for (var i = 0; i < p.terms.length; i++) {
@@ -1109,6 +1138,9 @@ var KGMath;
             // each of whose terms is the derivative of the original polynomial's terms
             Polynomial.prototype.derivative = function (n) {
                 var p = this;
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
                 return new Polynomial({
                     termDefs: p.terms.map(function (term) {
                         return term.derivative(n);
@@ -1123,6 +1155,9 @@ var KGMath;
                 if (!c) {
                     c = 0;
                 }
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
                 var termDefs = p.terms.map(function (term) {
                     return term.integral(n);
                 });
@@ -1135,6 +1170,9 @@ var KGMath;
             // each of whose terms is the average of the original polynomial's terms
             Polynomial.prototype.average = function (n) {
                 var p = this;
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
                 return new Polynomial({
                     termDefs: p.terms.map(function (term) {
                         return term.average(n);
@@ -1144,6 +1182,9 @@ var KGMath;
             // Multiplying a polynomial by a constant means multiplying each monomial by that constant
             Polynomial.prototype.multiply = function (x) {
                 var p = this;
+                if (p.reestablishMonomials()) {
+                    console.log('monomial became an object');
+                }
                 return new Polynomial({
                     termDefs: p.terms.map(function (term) {
                         return term.multiply(x);
@@ -1216,8 +1257,17 @@ var KGMath;
                         l.interceptDef = definition.intercept;
                     }
                     else if (definition.hasOwnProperty('point') && definition.point != undefined) {
-                        var mx = KG.multiplyDefs(definition.slope, definition.point.x);
-                        definition.coefficients.c = KG.subtractDefs(definition.point.y, mx);
+                        if (definition.slope === Infinity || definition.slope === -Infinity) {
+                            definition.coefficients = {
+                                a: -1,
+                                b: 0,
+                                c: definition.point.x
+                            };
+                        }
+                        else {
+                            var mx = KG.multiplyDefs(definition.slope, definition.point.x);
+                            definition.coefficients.c = KG.subtractDefs(definition.point.y, mx);
+                        }
                     }
                 }
                 else {
@@ -1234,15 +1284,28 @@ var KGMath;
                 l.level = l.level || 0;
                 var a = l.coefficients.a, b = l.coefficients.b, c = l.coefficients.c - l.level;
                 l.isVertical = (b === 0) || (a === Infinity) || (a === -Infinity);
-                l.isHorizontal = (a === 0);
+                l.isHorizontal = (a === 0) || (b === Infinity) || (b === -Infinity);
                 l.slope = l.isVertical ? Infinity : -a / b;
                 l.inverseSlope = l.isHorizontal ? Infinity : -b / a;
                 l.xIntercept = l.isHorizontal ? null : (l.isVertical && l.hasOwnProperty('point')) ? l.point.x : -c / a;
                 l.yIntercept = l.isVertical ? null : -c / b;
                 return l;
             };
-            // The derivative of ax^2 + bx + c is 2ax + b
+            // If we think of a linear function as a univariate function, the derivative is the slope
+            // If we think of it as a multivariate function f(x,y) = ax + by + c, then df/dx = a and df/dy = b
             Linear.prototype.derivative = function (n) {
+                var a = this.definition.coefficients.a;
+                if (n == 1) {
+                    return new HorizontalLine({
+                        y: a
+                    });
+                }
+                var b = this.definition.coefficients.b;
+                if (n == 2) {
+                    return new HorizontalLine({
+                        y: b
+                    });
+                }
                 var m = this.slopeDef || this.slope || 0;
                 return new HorizontalLine({
                     y: m
@@ -1364,6 +1427,9 @@ var KGMath;
                 };
                 _super.call(this, definition, modelPath);
             }
+            HorizontalLine.prototype.value = function (bases) {
+                return this.y;
+            };
             return HorizontalLine;
         })(Linear);
         Functions.HorizontalLine = HorizontalLine;
@@ -1377,6 +1443,9 @@ var KGMath;
                 };
                 _super.call(this, definition, modelPath);
             }
+            VerticalLine.prototype.value = function (bases) {
+                return this.x;
+            };
             return VerticalLine;
         })(Linear);
         Functions.VerticalLine = VerticalLine;
@@ -1687,6 +1756,32 @@ var KGMath;
                     return Math.min(xMinimand, yMinimand);
                 }
             };
+            MinAxBy.prototype.derivative = function (n) {
+                var m = this;
+                var d = new KGMath.Functions.Linear({
+                    coefficients: {
+                        a: m.definition.xCoefficient,
+                        b: m.definition.yCoefficient,
+                        c: 0
+                    }
+                });
+                d.value = function (bases) {
+                    if (bases) {
+                        d.setBases(bases);
+                    }
+                    var xMinimand = d.coefficients.a * d.bases[0], yMinimand = d.coefficients.b * d.bases[1];
+                    if (n == 1 && xMinimand < yMinimand) {
+                        return d.coefficients.a;
+                    }
+                    else if (n == 2 && yMinimand < xMinimand) {
+                        return d.coefficients.b;
+                    }
+                    else {
+                        return 0;
+                    }
+                };
+                return d;
+            };
             MinAxBy.prototype.points = function (view) {
                 var m = this;
                 var criticalX = m.level / m.xCoefficient, criticalY = m.level / m.yCoefficient;
@@ -1759,6 +1854,222 @@ var KGMath;
         Functions.CRRA = CRRA;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var CES = (function (_super) {
+            __extends(CES, _super);
+            function CES(definition, modelPath) {
+                definition = _.defaults(definition, {
+                    coefficient: 1
+                });
+                _super.call(this, definition, modelPath);
+                var u = this;
+                u.internalPolynomial = new Functions.Polynomial({
+                    termDefs: [
+                        {
+                            coefficient: definition.alpha,
+                            powers: [definition.r, 0]
+                        },
+                        {
+                            coefficient: KG.subtractDefs(1, definition.alpha),
+                            powers: [0, definition.r]
+                        }
+                    ]
+                }, u.modelProperty('internalPolynomial'));
+            }
+            CES.prototype.value = function (bases) {
+                var u = this;
+                if (u.r == 0) {
+                    // improvised Cobb-Douglas
+                    if (bases) {
+                        u.setBases(bases);
+                    }
+                    return Math.pow(u.bases[0], u.alpha) * Math.pow(u.bases[1], 1 - u.alpha);
+                }
+                return u.coefficient * Math.pow(u.alpha * Math.pow(bases[0], u.r) + (1 - u.alpha) * Math.pow(bases[1], u.r), 1 / u.r);
+            };
+            /* Generic level curve is given by
+                (a*x^r + (1-a)y^r)^(1/r) = U
+                 ax^r + (1-a)y^r = U^r */
+            // y(x) = [(U^r - ax^r)/(1-a)]^(1/r)
+            // y'(x) = (1/r)[(U^r - ax^r)/(1-a)]^(1/r - 1)(-arx^(x-1)
+            CES.prototype.yValue = function (x) {
+                var u = this;
+                if (u.r == 0) {
+                    // improvised Cobb-Douglas
+                    return Math.pow(u.level / Math.pow(x, u.alpha), 1 / (1 - u.alpha));
+                }
+                var num = Math.pow(u.level, u.r) - u.alpha * Math.pow(x, u.r), dem = 1 - u.alpha;
+                if (num > 0) {
+                    return Math.pow(num / dem, 1 / u.r);
+                }
+                else {
+                    return null;
+                }
+            };
+            // Returns x value for given y, for a two-dimensional function
+            CES.prototype.xValue = function (y) {
+                var u = this;
+                if (u.r == 0) {
+                    // improvised Cobb-Douglas
+                    return Math.pow(u.level / Math.pow(y, 1 - u.alpha), 1 / u.alpha);
+                }
+                var num = Math.pow(u.level, u.r) - (1 - u.alpha) * Math.pow(y, u.r), dem = u.alpha;
+                if (num > 0) {
+                    return Math.pow(num / dem, 1 / u.r);
+                }
+                else {
+                    return null;
+                }
+            };
+            CES.prototype.derivative = function (n) {
+                var u = this;
+                var d = new Functions.Base({});
+                d.value = function (bases) {
+                    if (bases) {
+                        d.setBases(bases);
+                    }
+                    var common = (u.coefficient / u.r) * Math.pow(u.alpha * Math.pow(bases[0], u.r) + (1 - u.alpha) * Math.pow(bases[1], u.r), (1 / u.r) - 1);
+                    if (n == 1) {
+                        return common * u.alpha * u.r * Math.pow(bases[0], u.r - 1);
+                    }
+                    else {
+                        return common * (1 - u.alpha) * u.r * Math.pow(bases[1], u.r - 1);
+                    }
+                };
+                return d;
+            };
+            return CES;
+        })(Functions.Base);
+        Functions.CES = CES;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
+/*
+ A Quasilinear function is a term of the form ax^b + cy^d + ...
+
+ The initializing object, params, should be of the form
+
+ { coefficients: [a,c,...], powers: [b,c,...] }
+
+ */
+var KGMath;
+(function (KGMath) {
+    var Functions;
+    (function (Functions) {
+        var Quasilinear = (function (_super) {
+            __extends(Quasilinear, _super);
+            function Quasilinear(definition, modelPath) {
+                this.quasilinearDefs = {
+                    coefficients: definition.coefficients.map(function (c) {
+                        return c.toString();
+                    }),
+                    powers: definition.powers.map(function (p) {
+                        return p.toString();
+                    })
+                };
+                _super.call(this, definition, modelPath);
+            }
+            // Establish setters
+            Quasilinear.prototype.setCoefficients = function (coefficients) {
+                return this.setArrayProperty({
+                    name: 'coefficients',
+                    value: coefficients,
+                    defaultValue: []
+                });
+            };
+            Quasilinear.prototype.setPowers = function (powers) {
+                return this.setArrayProperty({
+                    name: 'powers',
+                    value: powers,
+                    defaultValue: []
+                });
+            };
+            // Evaluate Quasilinear for a given set of bases. If none are set, use q.bases.
+            Quasilinear.prototype.value = function (bases) {
+                var q = this;
+                q.setBases(bases);
+                var basePowerPairs = Math.min(q.bases.length, q.powers.length, q.coefficients.length);
+                var result = 0;
+                for (var t = 0; t < basePowerPairs; t++) {
+                    result += q.coefficients[t] * Math.pow(q.bases[t], q.powers[t]);
+                }
+                return result;
+            };
+            // Return the Quasilinear that is the derivative of this Quasilinear
+            // with respect to the n'th variable
+            Quasilinear.prototype.derivative = function (n) {
+                var q = this;
+                // n is the index of the term; first term by default
+                n = n - 1 || 0;
+                return new Functions.Monomial({
+                    // the new coefficient is the old coefficient times
+                    //the power of the variable whose derivative we're taking
+                    coefficient: KG.multiplyDefs(q.quasilinearDefs.coefficients[n], q.quasilinearDefs.powers[n]),
+                    powers: [KG.subtractDefs(q.quasilinearDefs.powers[n], 1)],
+                    bases: q.bases ? [q.bases[n]] : []
+                });
+            };
+            // Return the Polynomial that is the integral of this Quasilinear
+            // with respect to the n'th variable, with no constant of integration
+            Quasilinear.prototype.integral = function (n) {
+                var q = this;
+                // n is the index of the term; first term by default
+                n = n - 1 || 0;
+                return new Functions.Polynomial({
+                    termDefs: [] //TODO add this in
+                });
+            };
+            // Return the Quasilinear that reduces the power of the n'th variable by 1
+            Quasilinear.prototype.average = function (n) {
+                var q = this;
+                // n is the index of the term; first term by default
+                n = n - 1 || 0;
+                return new Functions.Polynomial({
+                    termDefs: [] // TODO add this in
+                });
+            };
+            // Return the Quasilinear that multiplies the coefficient by x
+            Quasilinear.prototype.multiply = function (x) {
+                var q = this;
+                x = x || 1;
+                return new Quasilinear({
+                    // multiply each coefficient by x
+                    coefficients: q.quasilinearDefs.coefficients.map(function (c) {
+                        return KG.multiplyDefs(c, x);
+                    }),
+                    powers: q.quasilinearDefs.powers,
+                    bases: q.bases
+                });
+            };
+            // returns the y value corresponding to the given x value for m(x,y) = m.level
+            Quasilinear.prototype.yValue = function (x) {
+                var q = this;
+                var cyToTheD = q.level - q.coefficients[0] * Math.pow(x, q.powers[0]);
+                if (cyToTheD > 0) {
+                    return Math.pow(cyToTheD / q.coefficients[1], 1 / q.powers[1]);
+                }
+                else {
+                    return null;
+                }
+            };
+            // returns the x value corresponding to the given y value for m(x,y) = m.level
+            Quasilinear.prototype.xValue = function (y) {
+                var q = this;
+                var axToTheB = q.level - q.coefficients[1] * Math.pow(y, q.powers[1]);
+                if (axToTheB > 0) {
+                    return Math.pow(axToTheB / q.coefficients[0], 1 / q.powers[0]);
+                }
+                else {
+                    return null;
+                }
+            };
+            return Quasilinear;
+        })(Functions.Base);
+        Functions.Quasilinear = Quasilinear;
+    })(Functions = KGMath.Functions || (KGMath.Functions = {}));
+})(KGMath || (KGMath = {}));
 /// <reference path="../kg.ts"/>
 /// <reference path="functions/base.ts"/>
 /// <reference path="functions/implicit.ts"/>
@@ -1771,6 +2082,8 @@ var KGMath;
 /// <reference path="functions/min.ts"/>
 /// <reference path="functions/minAxBy.ts"/>
 /// <reference path="functions/crra.ts"/>
+/// <reference path="functions/ces.ts"/>
+/// <reference path="functions/quasilinear.ts"/>
 /// <reference path="../kg.ts"/>
 'use strict';
 var KG;
@@ -1897,7 +2210,6 @@ var KG;
         __extends(ViewObjectGroup, _super);
         function ViewObjectGroup(definition, modelPath) {
             _super.call(this, definition, modelPath);
-            this.viewObjects = definition.viewObjects;
         }
         ViewObjectGroup.prototype.createSubObjects = function (view, scope) {
             this.viewObjects.forEach(function (viewObject) {
@@ -3271,7 +3583,12 @@ var KG;
             _super.apply(this, arguments);
         }
         XAxis.prototype.scaleFunction = function (pixelLength, domain) {
-            return d3.scale.linear().range([0, pixelLength]).domain(domain.toArray());
+            if (this.log) {
+                return d3.scale.log().range([0, pixelLength]).domain(domain.toArray());
+            }
+            else {
+                return d3.scale.linear().range([0, pixelLength]).domain(domain.toArray());
+            }
         };
         XAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.width, this.domain);
@@ -3289,7 +3606,12 @@ var KG;
             _super.apply(this, arguments);
         }
         YAxis.prototype.scaleFunction = function (pixelLength, domain) {
-            return d3.scale.linear().range([pixelLength, 0]).domain(domain.toArray());
+            if (this.log) {
+                return d3.scale.log().range([pixelLength, 0]).domain(domain.toArray());
+            }
+            else {
+                return d3.scale.linear().range([pixelLength, 0]).domain(domain.toArray());
+            }
         };
         YAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.height, this.domain);
@@ -4661,7 +4983,7 @@ var EconGraphs;
                 return b.px.toFixed(2) + "x + " + b.py.toFixed(2) + "y = " + b.income;
             }
             else {
-                return "Px_x + P_yy = I";
+                return "P_xx + P_yy = I";
             }
         };
         SimpleBudgetConstraint.title = 'Simple Budget Constraint';
@@ -5114,10 +5436,15 @@ var EconGraphs;
                 indifferenceCurveLabel: 'U'
             });
             _super.call(this, definition, modelPath);
+            var u = this;
+            u.muxFunction = u.utilityFunction.derivative(1);
+            u.muyFunction = u.utilityFunction.derivative(2);
         }
         TwoGoodUtility.prototype._update = function (scope) {
             var u = this;
             u.utilityFunction.update(scope);
+            u.muxFunction.update(scope);
+            u.muyFunction.update(scope);
             return u;
         };
         /* Pure preferences */
@@ -5139,10 +5466,10 @@ var EconGraphs;
             return this.utilityFunction.value(KG.getBases(bundle));
         };
         TwoGoodUtility.prototype.mux = function (bundle) {
-            return this.utilityFunction.derivative(1).value(KG.getBases(bundle));
+            return this.muxFunction.value(KG.getBases(bundle));
         };
         TwoGoodUtility.prototype.muy = function (bundle) {
-            return this.utilityFunction.derivative(2).value(KG.getBases(bundle));
+            return this.muyFunction.value(KG.getBases(bundle));
         };
         TwoGoodUtility.prototype.mrs = function (bundle) {
             return this.mux(bundle) / this.muy(bundle);
@@ -5151,8 +5478,11 @@ var EconGraphs;
             var u = this;
             return new KG.Line({
                 name: 'mrsLine',
-                point: bundle,
-                slope: -1 * u.mrs(bundle),
+                className: 'utility dotted',
+                lineDef: {
+                    point: bundle,
+                    slope: -1 * u.mrs(bundle)
+                },
                 params: params
             });
         };
@@ -5189,7 +5519,6 @@ var EconGraphs;
             });
             levels.forEach(function (level) {
                 params.objectName = "U" + level;
-                params.label = "U_{" + level + "}";
                 indifferenceCurves.push(u.modelProperty("indifferenceCurveAtUtility(" + level + "," + JSON.stringify(params) + ",true)"));
             });
             return new KG.ViewObjectGroup({ name: 'indifferenceCurve_' + params.name, viewObjects: indifferenceCurves });
@@ -5220,6 +5549,7 @@ var EconGraphs;
         };
         TwoGoodUtility.prototype.optimalBundlePoint = function (budget, params) {
             var optimalBundle = this.optimalBundle(budget);
+            params.name = params.name || 'optimal';
             return this.bundlePoint(optimalBundle, params);
         };
         TwoGoodUtility.prototype.optimalIndifferenceCurve = function (budget, params) {
@@ -5373,8 +5703,9 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
             this.title = SubstitutesUtility.title;
         }
-        SubstitutesUtility.prototype._unconstrainedOptimalX = function (budgetSegment) {
+        SubstitutesUtility.prototype._unconstrainedOptimalX = function (budgetSegment, maxIfIndifferent) {
             var u = this;
+            maxIfIndifferent = !!maxIfIndifferent;
             if (u.xCoefficient / u.yCoefficient > budgetSegment.px / budgetSegment.py) {
                 return budgetSegment.xDomain.max;
             }
@@ -5384,7 +5715,7 @@ var EconGraphs;
             else {
                 // need a way to handle indifference between all segments of the budget segment
                 // for now, just return midpoint
-                return 0.5 * (budgetSegment.xDomain.min + budgetSegment.xDomain.max);
+                return maxIfIndifferent ? budgetSegment.xDomain.max : budgetSegment.xDomain.min;
             }
         };
         SubstitutesUtility.prototype.lowestCostBundle = function (utilityConstraint) {
@@ -5428,6 +5759,157 @@ var EconGraphs;
         return SubstitutesUtility;
     })(EconGraphs.TwoGoodUtility);
     EconGraphs.SubstitutesUtility = SubstitutesUtility;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var CESUtility = (function (_super) {
+        __extends(CESUtility, _super);
+        function CESUtility(definition, modelPath) {
+            // Can defined with either r or s or (more commonly) 'sub', which ranges from -1 to 1
+            if (definition.hasOwnProperty('r')) {
+                definition.s = KG.divideDefs(1, KG.subtractDefs(1, definition.r)); // s = 1/(1-r)
+            }
+            else if (definition.hasOwnProperty('s')) {
+                definition.r = KG.divideDefs(KG.subtractDefs(definition.s, 1), definition.s); // r = (s-1)/s
+            }
+            else {
+                definition.r = definition.sub + ' > 0 ? ' + definition.sub + ' : ' + KG.divideDefs(definition.sub, KG.addDefs(1.01, definition.sub));
+                definition.s = KG.divideDefs(1, KG.subtractDefs(1, definition.r)); // s = 1/(1-r)
+                console.log('oops, must instantiate a CES utility function with either r or s');
+            }
+            definition.type = 'CES';
+            definition.def = {
+                coefficient: definition.coefficient || 1,
+                r: definition.r,
+                alpha: definition.alpha
+            };
+            _super.call(this, definition, modelPath);
+            this.title = CESUtility.title;
+        }
+        CESUtility.prototype._unconstrainedOptimalX = function (budgetSegment, maxIfIndifferent) {
+            var u = this;
+            maxIfIndifferent = !!maxIfIndifferent;
+            if (u.r == 1) {
+                if (u.alpha / (1 - u.alpha) > budgetSegment.px / budgetSegment.py) {
+                    return budgetSegment.xDomain.max;
+                }
+                else if (u.alpha / (1 - u.alpha) < budgetSegment.px / budgetSegment.py) {
+                    return budgetSegment.xDomain.min;
+                }
+                else {
+                    // need a way to handle indifference between all segments of the budget segment
+                    // for now, just return midpoint
+                    return maxIfIndifferent ? budgetSegment.xDomain.max : budgetSegment.xDomain.min;
+                }
+            }
+            else if (u.r == 0) {
+                return u.alpha * budgetSegment.income / budgetSegment.px;
+            }
+            else {
+                var n = budgetSegment.income * Math.pow(budgetSegment.px / u.alpha, -u.s), dx = Math.pow(u.alpha, u.s) * Math.pow(budgetSegment.px, 1 - u.s), dy = Math.pow(1 - u.alpha, u.s) * Math.pow(budgetSegment.py, 1 - u.s);
+                return n / (dx + dy);
+            }
+        };
+        /*lowestCostBundle(utilityConstraint:UtilityConstraint) {
+            var u = this;
+
+            var denominator = Math.pow(u.alpha, s) * Math.pow(px, 1 - s) + Math.pow(1 - u.alpha, u.s) * Math.pow(py, 1 - u.s),
+                x_coefficient = Math.pow(px / u.alpha, -s) / denominator,
+                y_coefficient = Math.pow(py / (1 - u.alpha), -s) / denominator,
+                scale_factor = u.alpha*Math.pow(x_coefficient, u.r) + (1- u.alpha)*Math.pow(y_coefficient, u.r),
+
+                c = Math.pow(utility/scale_factor, 1/ u.r);
+
+            return c;
+
+            return {
+                x: Math.pow(theta,u.yShare)*utilityConstraint.u,
+                y: Math.pow(1/theta,u.xShare)*utilityConstraint.u
+            };
+        }*/
+        CESUtility.prototype.formula = function (values) {
+            var u = this;
+            if (values) {
+                if (u.r == 0) {
+                    return "x^{" + u.alpha.toFixed(2) + "}y^{" + (1 - u.alpha).toFixed(2) + "}";
+                }
+                return "\\left[" + u.alpha.toFixed(2) + "x^{" + u.r.toFixed(2) + "} + " + (1 - u.alpha).toFixed(2) + "y^{" + u.r.toFixed(2) + "}\\right]^{" + (1 / this.r).toFixed(2) + "}";
+            }
+            else {
+                return "\\left[ \\alpha x^r + (1-\\alpha)x^r\\right]^{1/r}";
+            }
+        };
+        CESUtility.title = 'CES';
+        return CESUtility;
+    })(EconGraphs.TwoGoodUtility);
+    EconGraphs.CESUtility = CESUtility;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var QuasilinearUtility = (function (_super) {
+        __extends(QuasilinearUtility, _super);
+        function QuasilinearUtility(definition, modelPath) {
+            definition.coefficient = definition.coefficient || 1;
+            definition.type = 'Quasilinear';
+            definition.def = {
+                coefficients: [definition.coefficient, 1],
+                powers: [definition.alpha, 1]
+            };
+            _super.call(this, definition, modelPath);
+            this.title = QuasilinearUtility.title;
+        }
+        QuasilinearUtility.prototype._unconstrainedOptimalX = function (budgetSegment) {
+            var u = this;
+            //ax^(a-1) = px/py
+            //x = (px/apy)^(1/(a-1))
+            // MRS = ax^(a-1)
+            if (u.alpha == 1) {
+                if (budgetSegment.px > budgetSegment.py) {
+                    return 0;
+                }
+                else if (budgetSegment.px < budgetSegment.py) {
+                    return budgetSegment.income / budgetSegment.px;
+                }
+                else {
+                    return 0.5 * budgetSegment.income / budgetSegment.px;
+                }
+            }
+            return Math.pow(budgetSegment.px / (u.alpha * budgetSegment.py), 1 / (u.alpha - 1));
+        };
+        /*lowestCostBundle(utilityConstraint:UtilityConstraint) {
+            var u = this;
+
+            var denominator = Math.pow(u.alpha, s) * Math.pow(px, 1 - s) + Math.pow(1 - u.alpha, u.s) * Math.pow(py, 1 - u.s),
+                x_coefficient = Math.pow(px / u.alpha, -s) / denominator,
+                y_coefficient = Math.pow(py / (1 - u.alpha), -s) / denominator,
+                scale_factor = u.alpha*Math.pow(x_coefficient, u.r) + (1- u.alpha)*Math.pow(y_coefficient, u.r),
+
+                c = Math.pow(utility/scale_factor, 1/ u.r);
+
+            return c;
+
+            return {
+                x: Math.pow(theta,u.yShare)*utilityConstraint.u,
+                y: Math.pow(1/theta,u.xShare)*utilityConstraint.u
+            };
+        }*/
+        QuasilinearUtility.prototype.formula = function (values) {
+            var u = this;
+            if (values) {
+                return "x^{" + u.alpha.toFixed(2) + "} + y";
+            }
+            else {
+                return "x^\\alpha + y";
+            }
+        };
+        QuasilinearUtility.title = 'Quasilinear';
+        return QuasilinearUtility;
+    })(EconGraphs.TwoGoodUtility);
+    EconGraphs.QuasilinearUtility = QuasilinearUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 var EconGraphs;
@@ -5488,7 +5970,7 @@ var EconGraphs;
                 good: 'x',
                 min: 1,
                 max: 50,
-                numSamplePoints: 51
+                numSamplePoints: 101
             });
             var d = this, curveData = [], relevantDemandParams = _.clone(demandParams);
             if (d.utility instanceof EconGraphs.SubstitutesUtility) {
@@ -5520,6 +6002,10 @@ var EconGraphs;
     var MarshallianDemand = (function (_super) {
         __extends(MarshallianDemand, _super);
         function MarshallianDemand(definition, modelPath) {
+            definition = _.defaults(definition, {
+                bundle: { x: definition.x, y: definition.y },
+                snapToOptimalBundle: true
+            });
             _super.call(this, definition, modelPath);
         }
         MarshallianDemand.prototype._update = function (scope) {
@@ -5529,6 +6015,15 @@ var EconGraphs;
             d.budget.budgetSegments.forEach(function (bs) {
                 bs.update(scope);
             });
+            if (d.snapToOptimalBundle) {
+                d.bundle = d.utility.optimalBundle(d.budget);
+            }
+            else {
+                d.bundle = {
+                    x: d.x,
+                    y: d.budget.yValue(d.x)
+                };
+            }
             return d;
         };
         MarshallianDemand.prototype.price = function (good) {
@@ -6439,6 +6934,8 @@ var EconGraphs;
 /// <reference path="micro/consumer_theory/two_good_utility/cobbDouglasUtility.ts"/>
 /// <reference path="micro/consumer_theory/two_good_utility/complementsUtility.ts"/>
 /// <reference path="micro/consumer_theory/two_good_utility/substitutesUtility.ts"/>
+/// <reference path="micro/consumer_theory/two_good_utility/cesUtility.ts"/>
+/// <reference path="micro/consumer_theory/two_good_utility/quasilinearUtility.ts"/>
 /// <reference path="micro/consumer_theory/demand/utilityDemand.ts"/>
 /// <reference path="micro/consumer_theory/demand/marshallianDemand.ts"/>
 /// <reference path="micro/consumer_theory/demand/hicksianDemand.ts"/>
