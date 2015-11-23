@@ -1,0 +1,28 @@
+[
+    {
+        "name": "slides",
+        "order": [
+            "reveal.min.js",
+            "papaparse.min.js",
+            "reveal-initialize.js"
+        ]
+    },
+    {
+        "name": "libraries",
+        "order": [
+            "jquery.min.js",
+            "bootstrap.min.js",
+            "angular.min.js",
+            "d3.min.js",
+            "underscore-min.js",
+            "katex.min.js"
+        ]
+    },
+    {
+        "name": "numeric",
+        "order": [
+            "numeric.js"
+        ]
+    }
+]
+
