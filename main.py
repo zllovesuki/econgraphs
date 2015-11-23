@@ -19,6 +19,7 @@ def index():
 def about():
     return render_template('about.html', title='About EconGraphs')
 
+@app.route('/src/ts/<path:path>')
 @app.route('/static/js/kg/src/ts/<path:path>')
 def ts(path):
     try:

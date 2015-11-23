@@ -57,6 +57,7 @@ module EconGraphs {
         }
 
         _unconstrainedOptimalX(budgetSegment:BudgetSegment) {
+            console.log('finding optimum brah');
             return this.xShare * budgetSegment.income/budgetSegment.px;
         }
 

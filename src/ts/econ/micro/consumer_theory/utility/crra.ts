@@ -20,7 +20,6 @@ module EconGraphs {
 
         public rra;
         public show;
-        public hahahaha;
 
         constructor(definition:ConstantRRADefinition, modelPath?:string) {
 

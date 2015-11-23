@@ -5610,6 +5610,7 @@ var EconGraphs;
             this.title = CobbDouglasUtility.title;
         }
         CobbDouglasUtility.prototype._unconstrainedOptimalX = function (budgetSegment) {
+            console.log('finding optimum brah');
             return this.xShare * budgetSegment.income / budgetSegment.px;
         };
         CobbDouglasUtility.prototype.lowestCostBundle = function (utilityConstraint) {
