@@ -57,7 +57,7 @@ module EconGraphs {
         }
 
         _unconstrainedOptimalX(budgetSegment:BudgetSegment) {
-            console.log('finding optimum yo');
+            console.log('passing breakpoint');
             return this.xShare * budgetSegment.income/budgetSegment.px;
         }
 
