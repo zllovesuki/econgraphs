@@ -111,9 +111,11 @@ var KG;
     KG.arrayDoesNotHavePoint = arrayDoesNotHavePoint;
     function arrayAverage(o) {
         var allNumbers = true;
-        o.forEach(function (obj) { if (typeof obj !== 'number') {
-            allNumbers = false;
-        } });
+        o.forEach(function (obj) {
+            if (typeof obj !== 'number') {
+                allNumbers = false;
+            }
+        });
         if (allNumbers) {
             var sum = 0;
             for (var i = 0; i < o.length; i++) {
@@ -125,11 +127,15 @@ var KG;
             var avgObj = {};
             for (var key in o[0]) {
                 var allObjectsHaveKey = true;
-                o.forEach(function (obj) { if (!obj.hasOwnProperty(key)) {
-                    allObjectsHaveKey = false;
-                } });
+                o.forEach(function (obj) {
+                    if (!obj.hasOwnProperty(key)) {
+                        allObjectsHaveKey = false;
+                    }
+                });
                 if (allObjectsHaveKey) {
-                    avgObj[key] = arrayAverage(o.map(function (obj) { return obj[key]; }));
+                    avgObj[key] = arrayAverage(o.map(function (obj) {
+                        return obj[key];
+                    }));
                 }
             }
             return avgObj;
@@ -449,10 +455,11 @@ var KG;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
 'use strict';
-var __extends = (this && this.__extends) || function (d, b) {
+var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 var KG;
 (function (KG) {
@@ -511,8 +518,7 @@ var KG;
     })(KG.Model);
     KG.Domain = Domain;
     function samplePointsForDomain(def) {
-        var domain = new Domain(def.min, def.max), sampleAdjustment = isNaN(def.min) ? 0 : def.min % 10, // roughly adjusts to choose integer sample points
-        numSamplePoints = def.numSamplePoints || 101 - sampleAdjustment;
+        var domain = new Domain(def.min, def.max), sampleAdjustment = isNaN(def.min) ? 0 : def.min % 10, numSamplePoints = def.numSamplePoints || 101 - sampleAdjustment;
         return domain.samplePoints(numSamplePoints);
     }
     KG.samplePointsForDomain = samplePointsForDomain;
@@ -862,7 +868,9 @@ var KGMath;
             function Monomial(definition, modelPath) {
                 this.monomialDefs = {
                     coefficient: definition.coefficient.toString(),
-                    powers: definition.powers.map(function (p) { return p.toString(); })
+                    powers: definition.powers.map(function (p) {
+                        return p.toString();
+                    })
                 };
                 _super.call(this, definition, modelPath);
             }
@@ -1067,7 +1075,9 @@ var KGMath;
             function Polynomial(definition, modelPath) {
                 _super.call(this, definition, modelPath);
                 if (definition.hasOwnProperty('termDefs')) {
-                    this.terms = definition.termDefs.map(function (termDef) { return new Functions.Monomial(termDef); });
+                    this.terms = definition.termDefs.map(function (termDef) {
+                        return new Functions.Monomial(termDef);
+                    });
                 }
                 this.bases = [0];
             }
@@ -1088,7 +1098,9 @@ var KGMath;
                     return false;
                 }
                 else {
-                    p.terms = p.terms.map(function (def) { return new Functions.Monomial(def); });
+                    p.terms = p.terms.map(function (def) {
+                        return new Functions.Monomial(def);
+                    });
                     return true;
                 }
             };
@@ -1191,7 +1203,9 @@ var KGMath;
             // Assume all bases except the first have been set; replace the base of the first variable ('x') with the x value
             Polynomial.prototype.yValue = function (x) {
                 var p = this;
-                var inputs = p.bases.map(function (val, index) { return (index == 0) ? x : val; });
+                var inputs = p.bases.map(function (val, index) {
+                    return (index == 0) ? x : val;
+                });
                 return p.value(inputs);
             };
             // Not generally a valid concept for a polynomial
@@ -1693,7 +1707,6 @@ var KGMath;
                 if (bases) {
                     m.setBases(bases);
                 }
-                // One or more functions have the current minimum value; create an array of those function(s).
                 for (var i = 0; i < m.minimands.length; i++) {
                     if (m.value() == m.minimands[i].value()) {
                         currentMinimumFunctions.push(m.minimands[i].derivative(n));
@@ -1707,7 +1720,6 @@ var KGMath;
                 var lowestDerivativeValue = Math.min.apply(null, currentMinimumFunctions.map(function (minimandDerivative) {
                     return minimandDerivative.value();
                 }));
-                // and return that function
                 for (var j = 0; j < currentMinimumFunctions.length; j++) {
                     if (lowestDerivativeValue == currentMinimumFunctions[j].value()) {
                         return currentMinimumFunctions[j];
@@ -1950,8 +1962,12 @@ var KGMath;
             __extends(Quasilinear, _super);
             function Quasilinear(definition, modelPath) {
                 this.quasilinearDefs = {
-                    coefficients: definition.coefficients.map(function (c) { return c.toString(); }),
-                    powers: definition.powers.map(function (p) { return p.toString(); })
+                    coefficients: definition.coefficients.map(function (c) {
+                        return c.toString();
+                    }),
+                    powers: definition.powers.map(function (p) {
+                        return p.toString();
+                    })
                 };
                 _super.call(this, definition, modelPath);
             }
@@ -2020,7 +2036,9 @@ var KGMath;
                 x = x || 1;
                 return new Quasilinear({
                     // multiply each coefficient by x
-                    coefficients: q.quasilinearDefs.coefficients.map(function (c) { return KG.multiplyDefs(c, x); }),
+                    coefficients: q.quasilinearDefs.coefficients.map(function (c) {
+                        return KG.multiplyDefs(c, x);
+                    }),
                     powers: q.quasilinearDefs.powers,
                     bases: q.bases
                 });
@@ -2110,7 +2128,8 @@ var KG;
                 color: KG.colorForClassName(definition.className),
                 show: true,
                 xDrag: false,
-                yDrag: false });
+                yDrag: false
+            });
             _super.call(this, definition, modelPath);
             var viewObj = this;
             /* Set drag behavior on object */
@@ -2361,8 +2380,7 @@ var KG;
             // draw the symbol at the point
             var pointSymbol = group.select('.' + point.viewObjectClass);
             try {
-                pointSymbol
-                    .attr({
+                pointSymbol.attr({
                     'class': point.classAndVisibility(),
                     'fill': point.color,
                     'd': d3.svg.symbol().type(point.symbol).size(point.size),
@@ -2441,8 +2459,7 @@ var KG;
             }
             var group = view.objectGroup(dropline.name, dropline.initGroupFn(), false);
             var droplineSelection = group.select('.' + dropline.viewObjectClass);
-            droplineSelection
-                .attr({
+            droplineSelection.attr({
                 'x1': anchorX,
                 'y1': anchorY,
                 'x2': pointX,
@@ -2586,14 +2603,14 @@ var KG;
             var group = view.objectGroup(curve.name, curve.initGroupFn(), false);
             curve.addArrows(group);
             curve.positionLabel(view);
-            var dataLine = d3.svg.line()
-                .interpolate(this.interpolation)
-                .x(function (d) { return d.x; })
-                .y(function (d) { return d.y; });
+            var dataLine = d3.svg.line().interpolate(this.interpolation).x(function (d) {
+                return d.x;
+            }).y(function (d) {
+                return d.y;
+            });
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
             var dataPath = group.select(selector);
-            dataPath
-                .attr({
+            dataPath.attr({
                 'class': curve.classAndVisibility(),
                 'd': dataLine(dataCoordinates)
             });
@@ -2914,12 +2931,13 @@ var KG;
                 if (line.yInterceptLabelDiv) {
                     line.yInterceptLabelDiv.coordinates = { x: 'AXIS', y: line.linear.yValue(view.xAxis.min) };
                 }
-                var dataLine = d3.svg.line()
-                    .x(function (d) { return view.xAxis.scale(d.x); })
-                    .y(function (d) { return view.yAxis.scale(d.y); });
+                var dataLine = d3.svg.line().x(function (d) {
+                    return view.xAxis.scale(d.x);
+                }).y(function (d) {
+                    return view.yAxis.scale(d.y);
+                });
                 var lineSelection = group.select('.' + line.viewObjectClass);
-                lineSelection
-                    .attr({
+                lineSelection.attr({
                     'class': line.classAndVisibility(),
                     'd': dataLine([startPoint, endPoint]),
                     'stroke': line.color
@@ -2989,7 +3007,9 @@ var KG;
         }
         PiecewiseLinear.prototype._update = function (scope) {
             var piecewiseLinear = this;
-            piecewiseLinear.sections.forEach(function (section) { section.update(scope); });
+            piecewiseLinear.sections.forEach(function (section) {
+                section.update(scope);
+            });
             return this;
         };
         PiecewiseLinear.prototype.createSubObjects = function (view, scope) {
@@ -3090,15 +3110,7 @@ var KG;
             }
             var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
             var div = view.getDiv(this.objectName || this.name);
-            div
-                .style('cursor', 'default')
-                .style('text-align', 'center')
-                .style('position', 'absolute')
-                .style('width', width + 'px')
-                .style('height', height + 'px')
-                .style('line-height', height + 'px')
-                .style('background-color', divObj.backgroundColor)
-                .attr('class', divObj.classAndVisibility());
+            div.style('cursor', 'default').style('text-align', 'center').style('position', 'absolute').style('width', width + 'px').style('height', height + 'px').style('line-height', height + 'px').style('background-color', divObj.backgroundColor).attr('class', divObj.classAndVisibility());
             // Set left pixel margin; default to centered on x coordinate
             var alignDelta = width * 0.5;
             if (divObj.align == 'left') {
@@ -3168,21 +3180,17 @@ var KG;
             var pathFamily = this;
             pathFamily.updateDataForView(view);
             var group = view.objectGroup(pathFamily.name, pathFamily.initGroupFn(), false);
-            var dataLine = d3.svg.line()
-                .interpolate(this.interpolation)
-                .x(function (d) {
+            var dataLine = d3.svg.line().interpolate(this.interpolation).x(function (d) {
                 return view.xAxis.scale(d.x);
-            })
-                .y(function (d) {
+            }).y(function (d) {
                 return view.yAxis.scale(d.y);
             });
-            var dataPaths = group
-                .select('.' + pathFamily.viewObjectClass)
-                .selectAll('path')
-                .data(pathFamily.data);
+            var dataPaths = group.select('.' + pathFamily.viewObjectClass).selectAll('path').data(pathFamily.data);
             dataPaths.enter().append('path');
             dataPaths.attr({
-                'd': function (d) { return dataLine(d); },
+                'd': function (d) {
+                    return dataLine(d);
+                },
                 'class': this.classAndVisibility()
             });
             dataPaths.exit().remove();
@@ -3230,7 +3238,9 @@ var KG;
         FunctionMap.prototype._update = function (scope) {
             var fmap = this;
             fmap.fn.update(scope);
-            fmap.curves.forEach(function (curve) { curve.update(scope); });
+            fmap.curves.forEach(function (curve) {
+                curve.update(scope);
+            });
             return fmap;
         };
         FunctionMap.prototype.createSubObjects = function (view, scope) {
@@ -3302,18 +3312,16 @@ var KG;
             var dataCoordinates = view.dataCoordinates(area.data);
             var group = view.objectGroup(area.name, area.initGroupFn(), false);
             area.positionLabel(view);
-            var dataLine = d3.svg.line()
-                .interpolate(this.interpolation)
-                .x(function (d) { return d.x; })
-                .y(function (d) { return d.y; });
+            var dataLine = d3.svg.line().interpolate(this.interpolation).x(function (d) {
+                return d.x;
+            }).y(function (d) {
+                return d.y;
+            });
             var dataPath = group.select('.' + area.viewObjectClass);
-            dataPath
-                .attr({
+            dataPath.attr({
                 'class': area.classAndVisibility(),
                 'd': dataLine(dataCoordinates)
-            })
-                .style('fill', KG.colorForClassName(area.className, 'light'))
-                .style('opacity', 0.5);
+            }).style('fill', KG.colorForClassName(area.className, 'light')).style('opacity', 0.5);
             return view;
         };
         return Area;
@@ -3375,7 +3383,8 @@ var KG;
             }
             view.dimensions = {
                 width: Math.min(view.maxDimensions.width, element.clientWidth),
-                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop())) };
+                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
+            };
             var frameTranslation = KG.positionByPixelCoordinates({ x: (element.clientWidth - view.dimensions.width) / 2, y: 0 });
             var visTranslation = KG.translateByPixelCoordinates({ x: view.margins.left, y: view.margins.top });
             d3.select(element).select('div').remove();
@@ -3385,45 +3394,31 @@ var KG;
             // Create new div element to contain SVG
             var frame = d3.select(element).append('div').attr({ style: frameTranslation });
             // Create new SVG element for the view visualization
-            var svg = frame.append('svg')
-                .attr('width', view.dimensions.width)
-                .attr('height', view.dimensions.height);
+            var svg = frame.append('svg').attr('width', view.dimensions.width).attr('height', view.dimensions.height);
             // Establish marker style for arrow
-            var endMarkers = svg.append("svg:defs").selectAll("marker").data(KG.allColors()).enter()
-                .append("marker")
-                .attr("id", function (d) { return "arrow-end-" + d; })
-                .attr("refX", 11)
-                .attr("refY", 6)
-                .attr("markerWidth", 13)
-                .attr("markerHeight", 13)
-                .attr("orient", "auto")
-                .attr("markerUnits", "userSpaceOnUse");
+            var endMarkers = svg.append("svg:defs").selectAll("marker").data(KG.allColors()).enter().append("marker").attr("id", function (d) {
+                return "arrow-end-" + d;
+            }).attr("refX", 11).attr("refY", 6).attr("markerWidth", 13).attr("markerHeight", 13).attr("orient", "auto").attr("markerUnits", "userSpaceOnUse");
             /*endMarkers.append("svg:rect")
                 .attr('x',2)
                 .attr('width', 11)
                 .attr('height', 13)
                 .attr('fill','white');*/
-            endMarkers.append("svg:path")
-                .attr("d", "M2,2 L2,11 L10,6 L2,2")
-                .attr("fill", function (d) { return d; });
+            endMarkers.append("svg:path").attr("d", "M2,2 L2,11 L10,6 L2,2").attr("fill", function (d) {
+                return d;
+            });
             // Establish marker style for arrow
-            var startMarkers = svg.append("svg:defs").selectAll("marker").data(KG.allColors()).enter()
-                .append("svg:marker")
-                .attr("id", function (d) { return "arrow-start-" + d; })
-                .attr("refX", 2)
-                .attr("refY", 6)
-                .attr("markerWidth", 13)
-                .attr("markerHeight", 13)
-                .attr("orient", "auto")
-                .attr("markerUnits", "userSpaceOnUse");
+            var startMarkers = svg.append("svg:defs").selectAll("marker").data(KG.allColors()).enter().append("svg:marker").attr("id", function (d) {
+                return "arrow-start-" + d;
+            }).attr("refX", 2).attr("refY", 6).attr("markerWidth", 13).attr("markerHeight", 13).attr("orient", "auto").attr("markerUnits", "userSpaceOnUse");
             // TODO need a better way to mask the portion of the line that extends under the arrow
             /*startMarkers.append("svg:rect")
                 .attr('x',2)
                 .attr('width', 11)
                 .attr('height', 13)*/
-            startMarkers.append("svg:path")
-                .attr("d", "M11,2 L11,11 L2,6 L11,2")
-                .attr("fill", function (d) { return d; });
+            startMarkers.append("svg:path").attr("d", "M11,2 L11,11 L2,6 L11,2").attr("fill", function (d) {
+                return d;
+            });
             // Add a div above the SVG for labels and controls
             view.divs = frame.append('div').attr({ style: visTranslation });
             if (view.mask) {
@@ -3512,8 +3507,7 @@ var KG;
             var view = this;
             var xAxis = view.xAxis;
             var yAxis = view.yAxis;
-            return d3.behavior.drag()
-                .on('drag', function () {
+            return d3.behavior.drag().on('drag', function () {
                 d3.event.sourceEvent.preventDefault();
                 var dragUpdate = {}, newX, newY;
                 var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
@@ -3590,30 +3584,17 @@ var KG;
         }
         XAxis.prototype.scaleFunction = function (pixelLength, domain) {
             if (this.log) {
-                return d3.scale.log()
-                    .range([0, pixelLength])
-                    .domain(domain.toArray());
+                return d3.scale.log().range([0, pixelLength]).domain(domain.toArray());
             }
             else {
-                return d3.scale.linear()
-                    .range([0, pixelLength])
-                    .domain(domain.toArray());
+                return d3.scale.linear().range([0, pixelLength]).domain(domain.toArray());
             }
         };
         XAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.width, this.domain);
-            var axis_vis = vis.append('g')
-                .attr('class', 'x axis')
-                .attr("transform", "translate(0," + graph_dimensions.height + ")");
+            var axis_vis = vis.append('g').attr('class', 'x axis').attr("transform", "translate(0," + graph_dimensions.height + ")");
             axis_vis.call(d3.svg.axis().scale(this.scale).orient("bottom").ticks(this.ticks).tickValues(this.tickValues));
-            var title = divs.append("div")
-                .style('text-align', 'center')
-                .style('position', 'absolute')
-                .style('width', graph_dimensions.width + 'px')
-                .style('height', (margins.bottom - this.axisBuffer) + 'px')
-                .style('left', margins.left + 'px')
-                .style('top', (margins.top + graph_dimensions.height + this.axisBuffer) + 'px')
-                .attr('class', 'medium');
+            var title = divs.append("div").style('text-align', 'center').style('position', 'absolute').style('width', graph_dimensions.width + 'px').style('height', (margins.bottom - this.axisBuffer) + 'px').style('left', margins.left + 'px').style('top', (margins.top + graph_dimensions.height + this.axisBuffer) + 'px').attr('class', 'medium');
             katex.render(this.title.toString(), title[0][0]);
         };
         return XAxis;
@@ -3626,30 +3607,17 @@ var KG;
         }
         YAxis.prototype.scaleFunction = function (pixelLength, domain) {
             if (this.log) {
-                return d3.scale.log()
-                    .range([pixelLength, 0])
-                    .domain(domain.toArray());
+                return d3.scale.log().range([pixelLength, 0]).domain(domain.toArray());
             }
             else {
-                return d3.scale.linear()
-                    .range([pixelLength, 0])
-                    .domain(domain.toArray());
+                return d3.scale.linear().range([pixelLength, 0]).domain(domain.toArray());
             }
         };
         YAxis.prototype.draw = function (vis, divs, graph_dimensions, margins) {
             this.scale = this.scaleFunction(graph_dimensions.height, this.domain);
             var axis_vis = vis.append('g').attr('class', 'y axis');
             axis_vis.call(d3.svg.axis().scale(this.scale).orient("left").ticks(this.ticks).tickValues(this.tickValues));
-            var title = divs.append("div")
-                .style('text-align', 'center')
-                .style('position', 'absolute')
-                .style('width', graph_dimensions.height + 'px')
-                .style('height', (margins.left - this.axisBuffer) + 'px')
-                .style('left', 0.5 * (margins.left - graph_dimensions.height - this.axisBuffer) + 'px')
-                .style('top', margins.top + 0.5 * (graph_dimensions.height - margins.left + this.axisBuffer) + 'px')
-                .style('-webkit-transform', 'rotate(-90deg)')
-                .style('transform', 'rotate(-90deg)')
-                .attr('class', 'medium');
+            var title = divs.append("div").style('text-align', 'center').style('position', 'absolute').style('width', graph_dimensions.height + 'px').style('height', (margins.left - this.axisBuffer) + 'px').style('left', 0.5 * (margins.left - graph_dimensions.height - this.axisBuffer) + 'px').style('top', margins.top + 0.5 * (graph_dimensions.height - margins.left + this.axisBuffer) + 'px').style('-webkit-transform', 'rotate(-90deg)').style('transform', 'rotate(-90deg)').attr('class', 'medium');
             katex.render(this.title.toString(), title[0][0]);
         };
         return YAxis;
@@ -3761,7 +3729,8 @@ var KG;
             var element = $('#' + view.element_id)[0];
             view.dimensions = {
                 width: Math.min(view.maxDimensions.width, element.clientWidth),
-                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop())) };
+                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
+            };
             var graphHeight = view.dimensions.height / 2;
             var bottomGraphTranslation = KG.translateByPixelCoordinates({ x: 0, y: graphHeight });
             d3.select(element).select('div').remove();
@@ -3782,10 +3751,18 @@ var KG;
             view.topGraph.drawObjects(scope);
             view.bottomGraph.drawObjects(scope);
             if (view.hasOwnProperty('objects')) {
-                view.objects.forEach(function (object) { object.createSubObjects(view); });
-                view.objects.forEach(function (object) { object.update(scope).render(view); });
-                view.topGraph.objects.forEach(function (object) { object.update(scope).render(view.topGraph); });
-                view.bottomGraph.objects.forEach(function (object) { object.update(scope).render(view.bottomGraph); });
+                view.objects.forEach(function (object) {
+                    object.createSubObjects(view);
+                });
+                view.objects.forEach(function (object) {
+                    object.update(scope).render(view);
+                });
+                view.topGraph.objects.forEach(function (object) {
+                    object.update(scope).render(view.topGraph);
+                });
+                view.bottomGraph.objects.forEach(function (object) {
+                    object.update(scope).render(view.bottomGraph);
+                });
             }
             return view;
         };
@@ -3953,16 +3930,22 @@ var KG;
             // Updates and redraws interactive objects (graphs and sliders) when a parameter changes
             function render(redraw) {
                 $scope.model.update($scope, function () {
-                    $scope.views.forEach(function (view) { view.render($scope, redraw); });
+                    $scope.views.forEach(function (view) {
+                        view.render($scope, redraw);
+                    });
                     $scope.renderMath();
                 });
             }
             // Erase and redraw all graphs; do this when graph parameters change, or the window is resized
-            function redrawGraphs() { render(true); }
+            function redrawGraphs() {
+                render(true);
+            }
             $scope.$watchCollection('graphParams', redrawGraphs);
             angular.element($window).on('resize', redrawGraphs);
             // Update objects on graphs (not the axes or graphs themselves); to this when model parameters change
-            function redrawObjects() { render(false); }
+            function redrawObjects() {
+                render(false);
+            }
             $scope.$watchCollection('params', function (newValue, oldValue) {
                 var redraw = false;
                 for (var key in newValue) {
@@ -4167,9 +4150,11 @@ var FinanceGraphs;
             function checkPositiveDefinite() {
                 p.positiveDefinite = true;
                 var eigenvalues = numeric.eig(calculateCovarianceMatrix()).lambda.x;
-                eigenvalues.forEach(function (e) { if (e < 0) {
-                    p.positiveDefinite = false;
-                } });
+                eigenvalues.forEach(function (e) {
+                    if (e < 0) {
+                        p.positiveDefinite = false;
+                    }
+                });
                 return p.positiveDefinite;
             }
             if (checkPositiveDefinite()) {
@@ -4183,10 +4168,14 @@ var FinanceGraphs;
             return p;
         };
         Portfolio.prototype.meanArray = function () {
-            return this.assets.map(function (asset) { return asset.mean; });
+            return this.assets.map(function (asset) {
+                return asset.mean;
+            });
         };
         Portfolio.prototype.stDevArray = function () {
-            return this.assets.map(function (asset) { return asset.stDev; });
+            return this.assets.map(function (asset) {
+                return asset.stDev;
+            });
         };
         Portfolio.prototype.mean = function (weightArray) {
             return numeric.dot(this.meanArray(), weightArray);
@@ -4225,7 +4214,9 @@ var FinanceGraphs;
         // Generate lines representing combinations of two assets
         Portfolio.prototype.twoAssetPortfolio = function (asset1, asset2, weightArray) {
             var portfolio = this, maxLeverage = portfolio.maxLeverage, d = [], otherAssets = 0;
-            weightArray.forEach(function (w) { otherAssets += w; });
+            weightArray.forEach(function (w) {
+                otherAssets += w;
+            });
             var min = -maxLeverage * 0.01, max = 1 + maxLeverage * 0.01, dataPoints = 2 * (10 + maxLeverage * 0.2);
             var colorScale = d3.scale.linear().domain([0, 1]).range(["red", "blue"]);
             for (var i = 0; i < dataPoints + 1; i++) {
@@ -4259,6 +4250,154 @@ var FinanceGraphs;
 /// <reference path="../kg.ts"/>
 /// <reference path="capm/asset.ts"/>
 /// <reference path="capm/portfolio.ts"/>
+/**
+ * Created by cmakler on 9/10/15.
+ */
+var PhysicsGraphs;
+(function (PhysicsGraphs) {
+    var Acceleration = (function (_super) {
+        __extends(Acceleration, _super);
+        function Acceleration(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+            var model = this;
+            /*
+            model.accelerationFunction = new KGMath.Functions.HorizontalLine({y: definition.acceleration});
+            model.velocityFunction = model.accelerationFunction.integral(0,definition.initialVelocity);
+            model.positionFunction = model.velocityFunction.integral(0,definition.initialPosition,'positionFunction');
+            */
+            model.positionFunction = new KGMath.Functions.Quadratic({
+                coefficients: {
+                    a: definition.acceleration,
+                    b: definition.initialVelocity,
+                    c: definition.initialPosition
+                }
+            }, model.modelProperty('positionFunction'));
+            model.velocityFunction = model.positionFunction.derivative();
+            model.accelerationFunction = model.velocityFunction.derivative();
+            model.accelerationView = new KG.HorizontalLine({
+                name: 'accelerationView',
+                className: 'growth',
+                y: definition.acceleration
+            });
+            model.velocityView = new KG.Line({
+                name: 'velocityView',
+                className: 'totalCost',
+                lineDef: model.velocityFunction.definition
+            });
+            model.positionView = new KG.FunctionPlot({
+                name: 'positionView',
+                className: 'growth',
+                fn: model.modelProperty('positionFunction')
+            });
+            model.initialPositionPoint = new KG.Point({
+                name: 'initialPositionPoint',
+                className: 'growth',
+                coordinates: {
+                    x: 0,
+                    y: definition.initialPosition
+                },
+                yDrag: definition.initialPosition,
+                label: {
+                    text: 'x_0'
+                }
+            });
+            model.initialVelocityPoint = new KG.Point({
+                name: 'initialVelocityPoint',
+                className: 'totalCost',
+                coordinates: {
+                    x: 0,
+                    y: definition.initialVelocity
+                },
+                yDrag: definition.initialVelocity,
+                label: {
+                    text: 'v_0'
+                }
+            });
+            model.positionVertexPoint = new KG.Point({
+                name: 'positionVertexPoint',
+                className: 'growth',
+                coordinates: {
+                    x: model.positionFunction.definition.vertex.x,
+                    y: model.positionFunction.definition.vertex.y
+                },
+                droplines: {
+                    vertical: "x"
+                }
+            });
+            model.zeroVelocityLine = new KG.HorizontalLine({ y: 0, name: 'zeroVelocity', className: 'dotted totalCost' });
+        }
+        return Acceleration;
+    })(KG.Model);
+    PhysicsGraphs.Acceleration = Acceleration;
+})(PhysicsGraphs || (PhysicsGraphs = {}));
+/// <reference path="../kg.ts"/>
+/// <reference path="movement/acceleration.ts"/>
+/// <reference path="lib/tsd.d.ts"/>
+/// <reference path="lib/d3/d3.d.ts"/>
+/// <reference path="constants.ts" />
+/// <reference path="helpers/helpers.ts" />
+/// <reference path="helpers/definitions.ts" />
+/// <reference path="model.ts" />
+/// <reference path="helpers/domain.ts" />
+/// <reference path="restriction.ts" />
+/// <reference path="helpers/selector.ts" />
+/// <reference path="math/math.ts" />
+/// <reference path="viewObjects/viewObject.ts"/>
+/// <reference path="viewObjects/viewObjectGroup.ts"/>
+/// <reference path="viewObjects/point.ts"/>
+/// <reference path="viewObjects/dropline.ts"/>
+/// <reference path="viewObjects/curve.ts"/>
+/// <reference path="viewObjects/segment.ts"/>
+/// <reference path="viewObjects/arrow.ts"/>
+/// <reference path="viewObjects/line.ts"/>
+/// <reference path="viewObjects/piecewiseLinear.ts"/>
+/// <reference path="viewObjects/graphDiv.ts"/>
+/// <reference path="viewObjects/linePlot.ts"/>
+/// <reference path="viewObjects/pathFamily.ts"/>
+/// <reference path="viewObjects/functionPlot.ts"/>
+/// <reference path="viewObjects/functionMap.ts"/>
+/// <reference path="viewObjects/area.ts"/>
+/// <reference path="view.ts" />
+/// <reference path="views/axis.ts" />
+/// <reference path="views/graph.ts" />
+/// <reference path="views/twoVerticalGraphs.ts" />
+/// <reference path="views/slider.ts" />
+/// <reference path="controller.ts" />
+/// <reference path="sample/sample.ts" />
+/// <reference path="finance/fg.ts" />
+/// <reference path="econ/eg.ts" />
+/// <reference path="physics/pg.ts"/>
+'use strict';
+angular.module('KineticGraphs', []).controller('KineticGraphCtrl', ['$scope', '$interpolate', '$window', KG.Controller]).filter('percentage', ['$filter', function ($filter) {
+    return function (input, decimals) {
+        return $filter('number')(input * 100, decimals) + '\\%';
+    };
+}]).filter('extendedReal', ['$filter', function ($filter) {
+    return function (input, decimals) {
+        if (input == Infinity) {
+            return '\\infty';
+        }
+        else if (input == -Infinity) {
+            return '-\\infty';
+        }
+        else
+            return $filter('number')(input, decimals);
+    };
+}]).directive('toggle', function () {
+    function link(scope, el, attrs) {
+        scope.toggle = function () {
+            scope.params[attrs.param] = !scope.params[attrs.param];
+        };
+    }
+    return {
+        link: link,
+        restrict: 'E',
+        replace: true,
+        scope: true,
+        transclude: true,
+        template: "<button ng-click='toggle()' style='width: 100%'><span ng-transclude/></button>"
+    };
+});
 /// <reference path="../../eg.ts"/>
 var EconGraphs;
 (function (EconGraphs) {
@@ -4365,7 +4504,8 @@ var EconGraphs;
                 name: 'midpoint',
                 coordinates: {
                     x: 'model.xAvg',
-                    y: 'model.yAvg' },
+                    y: 'model.yAvg'
+                },
                 symbol: 'cross',
                 color: 'grey',
                 size: 100,
@@ -4577,7 +4717,8 @@ var EconGraphs;
                     point2: {
                         x: d.quantityAtPrice(price * 1.01),
                         y: price * 1.01
-                    } });
+                    }
+                });
             }
             else if (d.elasticity instanceof EconGraphs.PointElasticity) {
                 var point = {
@@ -4816,7 +4957,9 @@ var EconGraphs;
         }
         BudgetConstraint.prototype._update = function (scope) {
             var b = this;
-            b.budgetSegments.forEach(function (bs) { bs.update(scope); });
+            b.budgetSegments.forEach(function (bs) {
+                bs.update(scope);
+            });
             return b;
         };
         BudgetConstraint.prototype.isAffordable = function (bundle) {
@@ -5084,8 +5227,7 @@ var EconGraphs;
             var b = this;
             if (b.hasOwnProperty('px') && b.hasOwnProperty('py')) {
                 if (values) {
-                    return b.px.toFixed(2) + "x + " + b.py.toFixed(2) + "y = "
-                        + b.px.toFixed(2) + " \\times " + b.endowment.x + " + " + b.py.toFixed(2) + " \\times " + b.endowment.y;
+                    return b.px.toFixed(2) + "x + " + b.py.toFixed(2) + "y = " + b.px.toFixed(2) + " \\times " + b.endowment.x + " + " + b.py.toFixed(2) + " \\times " + b.endowment.y;
                 }
                 else {
                     return "P_xx + P_yy = P_xx_E + P_yy_E";
@@ -5535,7 +5677,9 @@ var EconGraphs;
         };
         TwoGoodUtility.prototype.optimalBundle = function (budget) {
             var u = this;
-            var candidateBundles = budget.budgetSegments.map(function (segment) { return u.optimalBundleAlongSegment(segment); });
+            var candidateBundles = budget.budgetSegments.map(function (segment) {
+                return u.optimalBundleAlongSegment(segment);
+            });
             var maxUtilityBundle = candidateBundles[0];
             candidateBundles.forEach(function (bundle) {
                 if (u.utility(bundle) > u.utility(maxUtilityBundle)) {
@@ -5610,7 +5754,7 @@ var EconGraphs;
             this.title = CobbDouglasUtility.title;
         }
         CobbDouglasUtility.prototype._unconstrainedOptimalX = function (budgetSegment) {
-            console.log('finding optimum yo');
+            console.log('finding optimum brah');
             return this.xShare * budgetSegment.income / budgetSegment.px;
         };
         CobbDouglasUtility.prototype.lowestCostBundle = function (utilityConstraint) {
@@ -6017,7 +6161,9 @@ var EconGraphs;
             var d = this;
             d.utility = d.utility.update(scope);
             d.budget = d.budget.update(scope);
-            d.budget.budgetSegments.forEach(function (bs) { bs.update(scope); });
+            d.budget.budgetSegments.forEach(function (bs) {
+                bs.update(scope);
+            });
             if (d.snapToOptimalBundle) {
                 d.bundle = d.utility.optimalBundle(d.budget);
             }
@@ -6740,15 +6886,15 @@ var EconGraphs;
         function RamseyCassKoopmans(definition, modelPath) {
             _super.call(this, definition, modelPath);
             this.steadyCapital = new KGMath.Functions.Polynomial({ termDefs: [
-                    {
-                        coefficient: 1,
-                        powers: ['params.alpha']
-                    },
-                    {
-                        coefficient: '-(params.delta + params.n + params.g)',
-                        powers: [1]
-                    }
-                ] });
+                {
+                    coefficient: 1,
+                    powers: ['params.alpha']
+                },
+                {
+                    coefficient: '-(params.delta + params.n + params.g)',
+                    powers: [1]
+                }
+            ] });
             this.steadyCapitalView = new KG.FunctionPlot({
                 name: 'steadyCapital',
                 fn: this.modelProperty('steadyCapital'),
@@ -6846,7 +6992,6 @@ var EconGraphs;
             var model = this;
             function tendsToZeroCapital(testK, testC) {
                 var iterations = 0;
-                // follow the dynamic path as long as it's heading NE or SW
                 while (model.cdot(testK, testC) * model.kdot(testK, testC) > 0 && iterations < 10000) {
                     var next = model.normalizedNextPoint(testK, testC, model.cMax * model.kMax / 100);
                     testK = next.k;
@@ -6953,156 +7098,5 @@ var EconGraphs;
 /// <reference path="micro/market_structures/oligopoly/cournotDuopoly.ts"/>
 /* Macro */
 /// <reference path="macro/growth/ramseyCassKoopmans.ts"/> 
-/**
- * Created by cmakler on 9/10/15.
- */
-var PhysicsGraphs;
-(function (PhysicsGraphs) {
-    var Acceleration = (function (_super) {
-        __extends(Acceleration, _super);
-        function Acceleration(definition, modelPath) {
-            _super.call(this, definition, modelPath);
-            var model = this;
-            /*
-            model.accelerationFunction = new KGMath.Functions.HorizontalLine({y: definition.acceleration});
-            model.velocityFunction = model.accelerationFunction.integral(0,definition.initialVelocity);
-            model.positionFunction = model.velocityFunction.integral(0,definition.initialPosition,'positionFunction');
-            */
-            model.positionFunction = new KGMath.Functions.Quadratic({
-                coefficients: {
-                    a: definition.acceleration,
-                    b: definition.initialVelocity,
-                    c: definition.initialPosition
-                }
-            }, model.modelProperty('positionFunction'));
-            model.velocityFunction = model.positionFunction.derivative();
-            model.accelerationFunction = model.velocityFunction.derivative();
-            model.accelerationView = new KG.HorizontalLine({
-                name: 'accelerationView',
-                className: 'growth',
-                y: definition.acceleration
-            });
-            model.velocityView = new KG.Line({
-                name: 'velocityView',
-                className: 'totalCost',
-                lineDef: model.velocityFunction.definition
-            });
-            model.positionView = new KG.FunctionPlot({
-                name: 'positionView',
-                className: 'growth',
-                fn: model.modelProperty('positionFunction')
-            });
-            model.initialPositionPoint = new KG.Point({
-                name: 'initialPositionPoint',
-                className: 'growth',
-                coordinates: {
-                    x: 0,
-                    y: definition.initialPosition
-                },
-                yDrag: definition.initialPosition,
-                label: {
-                    text: 'x_0'
-                }
-            });
-            model.initialVelocityPoint = new KG.Point({
-                name: 'initialVelocityPoint',
-                className: 'totalCost',
-                coordinates: {
-                    x: 0,
-                    y: definition.initialVelocity
-                },
-                yDrag: definition.initialVelocity,
-                label: {
-                    text: 'v_0'
-                }
-            });
-            model.positionVertexPoint = new KG.Point({
-                name: 'positionVertexPoint',
-                className: 'growth',
-                coordinates: {
-                    x: model.positionFunction.definition.vertex.x,
-                    y: model.positionFunction.definition.vertex.y
-                },
-                droplines: {
-                    vertical: "x"
-                }
-            });
-            model.zeroVelocityLine = new KG.HorizontalLine({ y: 0, name: 'zeroVelocity', className: 'dotted totalCost' });
-        }
-        return Acceleration;
-    })(KG.Model);
-    PhysicsGraphs.Acceleration = Acceleration;
-})(PhysicsGraphs || (PhysicsGraphs = {}));
-/// <reference path="../kg.ts"/>
-/// <reference path="movement/acceleration.ts"/>
-/// <reference path="lib/tsd.d.ts"/>
-/// <reference path="lib/d3/d3.d.ts"/>
-/// <reference path="constants.ts" />
-/// <reference path="helpers/helpers.ts" />
-/// <reference path="helpers/definitions.ts" />
-/// <reference path="model.ts" />
-/// <reference path="helpers/domain.ts" />
-/// <reference path="restriction.ts" />
-/// <reference path="helpers/selector.ts" />
-/// <reference path="math/math.ts" />
-/// <reference path="viewObjects/viewObject.ts"/>
-/// <reference path="viewObjects/viewObjectGroup.ts"/>
-/// <reference path="viewObjects/point.ts"/>
-/// <reference path="viewObjects/dropline.ts"/>
-/// <reference path="viewObjects/curve.ts"/>
-/// <reference path="viewObjects/segment.ts"/>
-/// <reference path="viewObjects/arrow.ts"/>
-/// <reference path="viewObjects/line.ts"/>
-/// <reference path="viewObjects/piecewiseLinear.ts"/>
-/// <reference path="viewObjects/graphDiv.ts"/>
-/// <reference path="viewObjects/linePlot.ts"/>
-/// <reference path="viewObjects/pathFamily.ts"/>
-/// <reference path="viewObjects/functionPlot.ts"/>
-/// <reference path="viewObjects/functionMap.ts"/>
-/// <reference path="viewObjects/area.ts"/>
-/// <reference path="view.ts" />
-/// <reference path="views/axis.ts" />
-/// <reference path="views/graph.ts" />
-/// <reference path="views/twoVerticalGraphs.ts" />
-/// <reference path="views/slider.ts" />
-/// <reference path="controller.ts" />
-/// <reference path="sample/sample.ts" />
-/// <reference path="finance/fg.ts" />
-/// <reference path="econ/eg.ts" />
-/// <reference path="physics/pg.ts"/>
-'use strict';
-angular.module('KineticGraphs', [])
-    .controller('KineticGraphCtrl', ['$scope', '$interpolate', '$window', KG.Controller])
-    .filter('percentage', ['$filter', function ($filter) {
-        return function (input, decimals) {
-            return $filter('number')(input * 100, decimals) + '\\%';
-        };
-    }])
-    .filter('extendedReal', ['$filter', function ($filter) {
-        return function (input, decimals) {
-            if (input == Infinity) {
-                return '\\infty';
-            }
-            else if (input == -Infinity) {
-                return '-\\infty';
-            }
-            else
-                return $filter('number')(input, decimals);
-        };
-    }])
-    .directive('toggle', function () {
-    function link(scope, el, attrs) {
-        scope.toggle = function () {
-            scope.params[attrs.param] = !scope.params[attrs.param];
-        };
-    }
-    return {
-        link: link,
-        restrict: 'E',
-        replace: true,
-        scope: true,
-        transclude: true,
-        template: "<button ng-click='toggle()' style='width: 100%'><span ng-transclude/></button>"
-    };
-});
+/// <reference path="../../../eg.ts"/> 
 //# sourceMappingURL=kg-v0.02.js.map
