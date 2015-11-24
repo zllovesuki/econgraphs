@@ -19,7 +19,16 @@ def index():
 def about():
     return render_template('about.html', title='About EconGraphs')
 
+@app.route('/src/ts/<path:path>')
+@app.route('/static/js/kg/src/ts/<path:path>')
+def ts(path):
+    try:
+        src = os.path.join(APP_ROOT, 'src/ts/' + path)
+        return open(src).read()
+    except IOError as exc:
+        return str(exc)
 
+# Re-route old URL scheme
 @app.route('/graphs/<graphname>')
 def old_graphs(graphname=None):
     old_graph_list = open_json_file('graph_redirects_list.json')
@@ -39,7 +48,7 @@ def old_graphs(graphname=None):
         except:
             return redirect(url_for('index'))
 
-
+# Generic addressing of graphs
 @app.route('/graphs/<subject>/<topic>/<graphname>')
 def graphs(graphname=None, subject=None, topic=None):
     if graphname is None or subject is None:
@@ -49,22 +58,26 @@ def graphs(graphname=None, subject=None, topic=None):
     except:
         return redirect(url_for('graphs', graphname=None, subject=None, topic=None))
 
-
+# Generic routing of slides
 @app.route('/slides/')
 @app.route('/slides/<prof_name>/')
 @app.route('/slides/<prof_name>/<course_name>/')
 @app.route('/slides/<prof_name>/<course_name>/<slide_name>')
 def slides(prof_name=None, course_name=None, slide_name=None):
-    if prof_name is None:
-        return render_template('slides/index.html')
-    if course_name is None:
-        return render_template('slides/' + prof_name + '/index.html', prof_name=prof_name)
-    if slide_name is None:
-        return render_template('slides/' + prof_name + '/' + course_name + '/index.html', prof_name=prof_name, course_name=course_name)
+    path = 'slides/'
+    if prof_name is not None:
+        path += prof_name + '/'
+        if course_name is not None:
+            path += course_name + '/'
+            if slide_name is not None:
+                path += slide_name
     try:
-        return render_template('slides/' + prof_name + '/' + course_name + '/' + slide_name + '.html', prof_name=prof_name, course_name = course_name, slide_name=slide_name)
+        return render_template(path + '.html', prof_name=prof_name, course_name = course_name, slide_name=slide_name)
     except:
-        return redirect(url_for('slides', slide_name=None, prof_name=None, course_name=None))
+        try:
+            return render_template(path + 'index.html', prof_name=prof_name, course_name = course_name, slide_name=slide_name)
+        except:
+            return redirect(url_for('slides', slide_name=None, prof_name=None, course_name=None))
 
 
 @app.route('/courses')

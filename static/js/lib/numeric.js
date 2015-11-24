@@ -1,3 +1,6 @@
+//Built using concatenate_dependencies.py script - do not hand edit
+
+// numeric.js
 "use strict";
 
 var numeric = (typeof exports === "undefined")?(function numeric() {}):(exports);
@@ -3261,3 +3264,5 @@ numeric.MPStoLP = function MPStoLP(MPS) {
     }
     err('Reached end of file without ENDATA');
 }
+
+

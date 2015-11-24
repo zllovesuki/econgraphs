@@ -2,7 +2,7 @@
 <html ng-app="econGraphsApp">
 <head>
     <title>EconGraphs</title>
-    <script src="{{ url_for('static', filename='js/head.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/archives/head.js') }}"></script>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
@@ -73,7 +73,7 @@
 {% block body %}
 {% endblock %}
 
-<script src="{{ url_for('static', filename='js/econgraphs-v1.js') }}"></script>
+<script src="{{ url_for('static', filename='js/archives/econgraphs-v1.js') }}"></script>
 
 {% block js %}
 {% endblock %}

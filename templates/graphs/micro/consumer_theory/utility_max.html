@@ -11,7 +11,7 @@
 {% block belowControls %}
     <hr/>
             <toggle param="snapToOptimal" class="utility"><span ng-if="params.snapToOptimal">Make bundle draggable</span><span ng-if="!params.snapToOptimal">Snap to optimal bundle</span></toggle>
-            <toggle param="showMRS" class="utility"><span ng-if="params.showMRS">Hide</span><span ng-if="!params.showMRS">Show</span> MRS line</toggle>
+            <toggle param="showMRS" class="utility" ng-if="!params.snapToOptimal"><span ng-if="params.showMRS">Hide</span><span ng-if="!params.showMRS">Show</span> MRS line</toggle>
             <toggle param="showMap" class="utility"><span ng-if="params.showMap">Hide</span><span ng-if="!params.showMap">Show</span> indifference curve map</toggle>
 {% endblock %}
 
@@ -39,5 +39,6 @@
     {% block jsadjustments %}
         <script>
         scopeDefinition.params.snapToOptimal = false;
+        scopeDefinition.params.showMRS = false;
         </script>
     {% endblock %}

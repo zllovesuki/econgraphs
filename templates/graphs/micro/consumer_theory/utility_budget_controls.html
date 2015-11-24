@@ -16,7 +16,6 @@
                     <div class="subtitle col-xs-3">utility</div>
                     <div class="col-xs-9 math displayMath">u(x,y) = {{ model.utility.formula(false) }}<!-- = {{ model.utility.formula(true)}}--></div>
                 </div>
-                <hr/>
                 <div class="row">
                     <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
                     </div>
@@ -33,7 +32,6 @@
                     <div class="subtitle col-xs-3">budget</div>
                     <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
                 </div>
-                <hr/>
                 <div class="row">
                     <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
                     </div>
@@ -249,6 +247,6 @@
     {% block jsadjustments %}
     {% endblock %}
 
-    <script src="{{ url_for('static', filename='js/kg/kg-v0.01.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.min.js') }}"></script>
 
 {% endblock %}
