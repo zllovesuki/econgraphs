@@ -61,6 +61,15 @@ angular.module('KineticGraphs', [])
                 return $filter('number')(input, decimals);
         };
     }])
+    .filter('camelToSpace', ['$filter', function ($filter) {
+        return function (input) {
+            return input
+                // insert a space before all caps
+                .replace(/([A-Z])/g, ' $1')
+                // uppercase the first character
+                .replace(/^./, function(str){ return str.toUpperCase(); });
+        };
+    }])
     .directive('toggle', function () {
 
         function link(scope, el, attrs) {

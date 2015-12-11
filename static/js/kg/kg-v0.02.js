@@ -1305,7 +1305,7 @@ var KGMath;
                 }
                 if (m instanceof HorizontalLine) {
                     return new Linear({
-                        slope: m.y,
+                        slope: m.definition.y,
                         intercept: c
                     }, name);
                 }
@@ -1949,10 +1949,7 @@ var KGMath;
         var Quasilinear = (function (_super) {
             __extends(Quasilinear, _super);
             function Quasilinear(definition, modelPath) {
-                this.quasilinearDefs = {
-                    coefficients: definition.coefficients.map(function (c) { return c.toString(); }),
-                    powers: definition.powers.map(function (p) { return p.toString(); })
-                };
+                this.coefficientDefs = definition.coefficients.map(function (c) { return c.toString(); });
                 _super.call(this, definition, modelPath);
             }
             // Establish setters
@@ -1960,40 +1957,33 @@ var KGMath;
                 return this.setArrayProperty({
                     name: 'coefficients',
                     value: coefficients,
-                    defaultValue: []
-                });
-            };
-            Quasilinear.prototype.setPowers = function (powers) {
-                return this.setArrayProperty({
-                    name: 'powers',
-                    value: powers,
-                    defaultValue: []
+                    defaultValue: [1, 1]
                 });
             };
             // Evaluate Quasilinear for a given set of bases. If none are set, use q.bases.
             Quasilinear.prototype.value = function (bases) {
                 var q = this;
                 q.setBases(bases);
-                var basePowerPairs = Math.min(q.bases.length, q.powers.length, q.coefficients.length);
-                var result = 0;
-                for (var t = 0; t < basePowerPairs; t++) {
-                    result += q.coefficients[t] * Math.pow(q.bases[t], q.powers[t]);
-                }
-                return result;
+                return q.coefficients[0] * Math.log(bases[0]) + q.coefficients[1] * bases[1];
             };
             // Return the Quasilinear that is the derivative of this Quasilinear
             // with respect to the n'th variable
             Quasilinear.prototype.derivative = function (n) {
                 var q = this;
-                // n is the index of the term; first term by default
-                n = n - 1 || 0;
-                return new Functions.Monomial({
-                    // the new coefficient is the old coefficient times
-                    //the power of the variable whose derivative we're taking
-                    coefficient: KG.multiplyDefs(q.quasilinearDefs.coefficients[n], q.quasilinearDefs.powers[n]),
-                    powers: [KG.subtractDefs(q.quasilinearDefs.powers[n], 1)],
-                    bases: q.bases ? [q.bases[n]] : []
-                });
+                if (n == 2) {
+                    return new Functions.Monomial({
+                        coefficient: q.coefficientDefs[1],
+                        powers: [0],
+                        bases: []
+                    });
+                }
+                else {
+                    return new Functions.Monomial({
+                        coefficient: q.coefficientDefs[0],
+                        powers: [-1],
+                        bases: q.bases ? q.bases[0] : []
+                    });
+                }
             };
             // Return the Polynomial that is the integral of this Quasilinear
             // with respect to the n'th variable, with no constant of integration
@@ -2020,32 +2010,28 @@ var KGMath;
                 x = x || 1;
                 return new Quasilinear({
                     // multiply each coefficient by x
-                    coefficients: q.quasilinearDefs.coefficients.map(function (c) { return KG.multiplyDefs(c, x); }),
-                    powers: q.quasilinearDefs.powers,
+                    coefficients: q.coefficientDefs.map(function (c) { return KG.multiplyDefs(c, x); }),
                     bases: q.bases
                 });
             };
-            // returns the y value corresponding to the given x value for m(x,y) = m.level
+            // returns the y value corresponding to the given x value for q(x,y) = q.level
+            // a*logx + by = L => y = (L - a*logx)/b
             Quasilinear.prototype.yValue = function (x) {
                 var q = this;
-                var cyToTheD = q.level - q.coefficients[0] * Math.pow(x, q.powers[0]);
-                if (cyToTheD > 0) {
-                    return Math.pow(cyToTheD / q.coefficients[1], 1 / q.powers[1]);
+                var by = q.level - q.coefficients[0] * Math.log(x);
+                if (by > 0) {
+                    return by / q.coefficients[1];
                 }
                 else {
                     return null;
                 }
             };
             // returns the x value corresponding to the given y value for m(x,y) = m.level
+            // a*logx + by = L => x = exp[(L - by)/a]
             Quasilinear.prototype.xValue = function (y) {
                 var q = this;
-                var axToTheB = q.level - q.coefficients[1] * Math.pow(y, q.powers[1]);
-                if (axToTheB > 0) {
-                    return Math.pow(axToTheB / q.coefficients[0], 1 / q.powers[0]);
-                }
-                else {
-                    return null;
-                }
+                var alogx = q.level - q.coefficients[1] * y;
+                return Math.exp(alogx / q.coefficients[0]);
             };
             return Quasilinear;
         })(Functions.Base);
@@ -3877,15 +3863,20 @@ var KG;
                 return KG.colorForClassName(className);
             };
             $scope.init = function (definition) {
+                definition = _.defaults(definition, {
+                    params: {},
+                    graphParams: [],
+                    restrictions: [],
+                    model: { type: 'KG.Model', definition: {} },
+                    views: []
+                });
                 $scope.params = definition.params;
                 $scope.graphParams = {};
-                if (definition.graphParams) {
-                    definition.graphParams.forEach(function (key) {
-                        if ($scope.params.hasOwnProperty(key)) {
-                            $scope.graphParams[key] = $scope.params[key];
-                        }
-                    });
-                }
+                definition.graphParams.forEach(function (key) {
+                    if ($scope.params.hasOwnProperty(key)) {
+                        $scope.graphParams[key] = $scope.params[key];
+                    }
+                });
                 $scope.restrictions = definition.restrictions.map(function (restrictionDefinition) {
                     return new KG.Restriction(restrictionDefinition);
                 });
@@ -5610,7 +5601,6 @@ var EconGraphs;
             this.title = CobbDouglasUtility.title;
         }
         CobbDouglasUtility.prototype._unconstrainedOptimalX = function (budgetSegment) {
-            console.log('passing breakpoint');
             return this.xShare * budgetSegment.income / budgetSegment.px;
         };
         CobbDouglasUtility.prototype.lowestCostBundle = function (utilityConstraint) {
@@ -5858,32 +5848,23 @@ var EconGraphs;
     var QuasilinearUtility = (function (_super) {
         __extends(QuasilinearUtility, _super);
         function QuasilinearUtility(definition, modelPath) {
-            definition.coefficient = definition.coefficient || 1;
             definition.type = 'Quasilinear';
             definition.def = {
-                coefficients: [definition.coefficient, 1],
-                powers: [definition.alpha, 1]
+                coefficients: [definition.alpha, KG.subtractDefs(1, definition.alpha)]
             };
             _super.call(this, definition, modelPath);
             this.title = QuasilinearUtility.title;
         }
         QuasilinearUtility.prototype._unconstrainedOptimalX = function (budgetSegment) {
             var u = this;
-            //ax^(a-1) = px/py
-            //x = (px/apy)^(1/(a-1))
-            // MRS = ax^(a-1)
+            //MUx = a/x
+            //MUy = 1-a
+            //a/[(1-a)x] = px/py
+            //x = [a/(1-a)](py/px)
             if (u.alpha == 1) {
-                if (budgetSegment.px > budgetSegment.py) {
-                    return 0;
-                }
-                else if (budgetSegment.px < budgetSegment.py) {
-                    return budgetSegment.income / budgetSegment.px;
-                }
-                else {
-                    return 0.5 * budgetSegment.income / budgetSegment.px;
-                }
+                return budgetSegment.income / budgetSegment.px;
             }
-            return Math.pow(budgetSegment.px / (u.alpha * budgetSegment.py), 1 / (u.alpha - 1));
+            return (u.alpha / (1 - u.alpha)) * (budgetSegment.py / budgetSegment.px);
         };
         /*lowestCostBundle(utilityConstraint:UtilityConstraint) {
             var u = this;
@@ -5908,7 +5889,7 @@ var EconGraphs;
                 return "x^{" + u.alpha.toFixed(2) + "} + y";
             }
             else {
-                return "x^\\alpha + y";
+                return "\\alpha \\ln x + (1 - \\alpha) y";
             }
         };
         QuasilinearUtility.title = 'Quasilinear';
@@ -7088,6 +7069,13 @@ angular.module('KineticGraphs', [])
             }
             else
                 return $filter('number')(input, decimals);
+        };
+    }])
+    .filter('camelToSpace', ['$filter', function ($filter) {
+        return function (input) {
+            return input
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, function (str) { return str.toUpperCase(); });
         };
     }])
     .directive('toggle', function () {

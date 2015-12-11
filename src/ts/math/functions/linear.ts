@@ -154,7 +154,7 @@ module KGMath.Functions {
             }
             if(m instanceof HorizontalLine) {
                 return new Linear({
-                    slope: m.y,
+                    slope: m.definition.y,
                     intercept: c
                 },name)
             } else {

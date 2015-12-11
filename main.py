@@ -1,5 +1,5 @@
 import json, os
-from flask import Flask, render_template, redirect, url_for, request, jsonify
+from flask import Flask, render_template, redirect, url_for, request, jsonify, send_from_directory
 
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -79,17 +79,41 @@ def slides(prof_name=None, course_name=None, slide_name=None):
         except:
             return redirect(url_for('slides', slide_name=None, prof_name=None, course_name=None))
 
-
+# Generic routing of course materials
 @app.route('/courses')
 @app.route('/courses/<path:path>')
 def courses(path=None):
     if path is None:
         return render_template('courses/index.html')
+
+    # first try to send a file
     try:
-        return render_template('courses/'+path+'.html')
+
+        # if the requested path includes a period, examine the extension
+        if path.split('.').__len__() == 2:
+
+            extension = path.split('.')[1]
+
+            # if it's an HTML file, use render_template
+            if extension is 'html':
+                return render_template('courses/'+path)
+
+            # otherwise just send the raw file
+            else:
+                directory = os.path.join(APP_ROOT, 'templates/courses/')
+                return send_from_directory(directory,path)
+
+        # if the requested path doesn't include a period, see if an HTML template by that name exists
+        else:
+            return render_template('courses/'+path+'.html')
+
+    # next try to send the index file from a directory
     except:
+
         try:
             return render_template('courses/'+path+'/index.html')
+
+        # and if that fails, fall back to the generic courses page
         except:
             return redirect(url_for('courses', path=None))
 

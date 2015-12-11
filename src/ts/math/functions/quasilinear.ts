@@ -11,15 +11,12 @@ module KGMath.Functions {
 
     export interface QuasilinearDefinition extends BaseDefinition {
         coefficients: any[];
-        powers: any[];
         bases?: any[];
     }
 
     export interface IQuasilinear extends IBase {
         coefficients: number[];
         setCoefficients: (coefficients:number[]) => any;
-        powers: number[];
-        setPowers: (powers: number[]) => any;
         bases: number[];
         value: (bases?: number[]) => number;
         derivative: (n:number) => Monomial;
@@ -27,18 +24,15 @@ module KGMath.Functions {
         multiply: (x: number) => Quasilinear;
     }
 
+
     export class Quasilinear extends Base implements IQuasilinear {
 
         public coefficients;
-        public powers;
         public bases;
-        public quasilinearDefs: any;
+        public coefficientDefs: any;
 
         constructor(definition:QuasilinearDefinition, modelPath?: string) {
-            this.quasilinearDefs = {
-                coefficients: definition.coefficients.map(function(c) {return c.toString()}),
-                powers: definition.powers.map(function(p) {return p.toString()})
-            };
+            this.coefficientDefs = definition.coefficients.map(function(c) {return c.toString()});
             super(definition, modelPath);
         }
 
@@ -47,15 +41,7 @@ module KGMath.Functions {
             return this.setArrayProperty({
                 name: 'coefficients',
                 value: coefficients,
-                defaultValue: []
-            });
-        }
-
-        setPowers(powers) {
-            return this.setArrayProperty({
-                name: 'powers',
-                value: powers,
-                defaultValue: []
+                defaultValue: [1,1]
             });
         }
 
@@ -66,13 +52,7 @@ module KGMath.Functions {
 
             q.setBases(bases);
 
-            var basePowerPairs = Math.min(q.bases.length, q.powers.length, q.coefficients.length);
-
-            var result = 0;
-            for (var t = 0; t < basePowerPairs; t++) {
-                result += q.coefficients[t]*Math.pow(q.bases[t], q.powers[t]);
-            }
-            return result;
+            return q.coefficients[0]*Math.log(bases[0]) + q.coefficients[1]*bases[1];
         }
 
         // Return the Quasilinear that is the derivative of this Quasilinear
@@ -81,20 +61,20 @@ module KGMath.Functions {
 
             var q = this;
 
-            // n is the index of the term; first term by default
-            n = n - 1 || 0;
+            if(n==2) {
+                return new Monomial({
+                    coefficient: q.coefficientDefs[1],
+                    powers: [0],
+                    bases: []
+                })
+            } else {
+                return new Monomial({
+                    coefficient: q.coefficientDefs[0],
+                    powers: [-1],
+                    bases: q.bases ? q.bases[0] : []
+                })
+            }
 
-            return new Monomial({
-
-                // the new coefficient is the old coefficient times
-                //the power of the variable whose derivative we're taking
-                coefficient: KG.multiplyDefs(q.quasilinearDefs.coefficients[n], q.quasilinearDefs.powers[n]),
-
-                powers: [KG.subtractDefs(q.quasilinearDefs.powers[n],1)],
-
-                bases: q.bases ? [q.bases[n]] : []
-
-            })
         }
 
         // Return the Polynomial that is the integral of this Quasilinear
@@ -138,19 +118,19 @@ module KGMath.Functions {
             return new Quasilinear({
 
                 // multiply each coefficient by x
-                coefficients: q.quasilinearDefs.coefficients.map(function(c) { return KG.multiplyDefs(c,x)}),
-                powers: q.quasilinearDefs.powers,
+                coefficients: q.coefficientDefs.map(function(c) { return KG.multiplyDefs(c,x)}),
                 bases: q.bases
 
             })
         }
 
-        // returns the y value corresponding to the given x value for m(x,y) = m.level
+        // returns the y value corresponding to the given x value for q(x,y) = q.level
+        // a*logx + by = L => y = (L - a*logx)/b
         yValue(x) {
             var q = this;
-            var cyToTheD = q.level - q.coefficients[0]*Math.pow(x,q.powers[0]);
-            if(cyToTheD > 0) {
-                return Math.pow(cyToTheD/q.coefficients[1],1/q.powers[1])
+            var by = q.level - q.coefficients[0]*Math.log(x);
+            if(by > 0) {
+                return by/q.coefficients[1]
             } else {
                 return null;
             }
@@ -158,14 +138,11 @@ module KGMath.Functions {
         }
 
         // returns the x value corresponding to the given y value for m(x,y) = m.level
+        // a*logx + by = L => x = exp[(L - by)/a]
         xValue(y) {
             var q = this;
-            var axToTheB = q.level - q.coefficients[1]*Math.pow(y,q.powers[1]);
-            if(axToTheB > 0) {
-                return Math.pow(axToTheB/q.coefficients[0],1/q.powers[0])
-            } else {
-                return null;
-            }
+            var alogx = q.level - q.coefficients[1]*y;
+            return Math.exp(alogx/q.coefficients[0]);
         }
 
     }

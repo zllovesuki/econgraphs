@@ -242,6 +242,11 @@
             scopeDefinition.model.definition.utility = substitutesDefinition;
         }
 
+        if(selectedUtility == 'Quasilinear') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = quasilinearDefinition;
+        }
+
     </script>
 
     {% block jsadjustments %}

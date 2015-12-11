@@ -17,6 +17,7 @@ module KG
     export interface IModel
     {
         definition;
+        params: any;
         modelPath: string;
         modelProperty: (name:string) => string;
         selector?: Selector;
@@ -33,6 +34,7 @@ module KG
     {
 
         public selector: Selector;
+        public params;
 
         constructor(public definition:ModelDefinition, public modelPath?: string) {
 

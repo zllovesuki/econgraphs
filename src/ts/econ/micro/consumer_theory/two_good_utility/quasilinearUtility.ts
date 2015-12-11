@@ -5,13 +5,11 @@
 module EconGraphs {
 
     export interface QuasilinearUtilityDefinition extends TwoGoodUtilityDefinition {
-        coefficient?: any;
         alpha: any;
         def?: KGMath.Functions.QuasilinearDefinition;
     }
 
     export interface IQuasilinearUtility extends ITwoGoodUtility {
-        coefficient: number;
         alpha: number;
     }
 
@@ -24,11 +22,9 @@ module EconGraphs {
 
         constructor(definition:QuasilinearUtilityDefinition, modelPath?:string) {
 
-            definition.coefficient = definition.coefficient || 1;
             definition.type = 'Quasilinear';
             definition.def = {
-                coefficients: [definition.coefficient, 1],
-                powers: [definition.alpha, 1]
+                coefficients: [definition.alpha, KG.subtractDefs(1,definition.alpha)]
             };
 
             super(definition, modelPath);
@@ -40,21 +36,16 @@ module EconGraphs {
         _unconstrainedOptimalX(budgetSegment:BudgetSegment) {
             var u = this;
 
-            //ax^(a-1) = px/py
-            //x = (px/apy)^(1/(a-1))
+            //MUx = a/x
+            //MUy = 1-a
+            //a/[(1-a)x] = px/py
+            //x = [a/(1-a)](py/px)
 
-            // MRS = ax^(a-1)
             if(u.alpha == 1) {
-                if(budgetSegment.px > budgetSegment.py) {
-                    return 0
-                } else if(budgetSegment.px < budgetSegment.py) {
-                    return budgetSegment.income / budgetSegment.px
-                } else {
-                    return 0.5*budgetSegment.income / budgetSegment.px
-                }
+                return budgetSegment.income / budgetSegment.px
             }
 
-            return Math.pow(budgetSegment.px/(u.alpha*budgetSegment.py), 1/(u.alpha-1));
+            return (u.alpha/(1-u.alpha))*(budgetSegment.py/budgetSegment.px);
 
         }
 
@@ -81,7 +72,7 @@ module EconGraphs {
             if(values) {
                 return "x^{" + u.alpha.toFixed(2) +"} + y";
             } else {
-                return "x^\\alpha + y";
+                return "\\alpha \\ln x + (1 - \\alpha) y";
             }
         }
 

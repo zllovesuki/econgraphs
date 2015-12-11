@@ -2,6 +2,7 @@
 <html ng-app="KineticGraphs">
 <head>
     <title>EconGraphs</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/econ-graphs.css') }}" rel="stylesheet"/>
@@ -17,7 +18,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('course', school='stanford', course='W16-ECON-50') }}">Stanford University | Econ 50 | Winter 2016</a>
+            <a class="navbar-brand" href="{{ url_for('courses',path='stanford/W16-ECON-50')}}">Econ 50</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -43,14 +44,33 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-<div style="height:30px"></div>
-
+<div style="height:50px"> </div>
+<div class="ng-cloak">
 {% block body %}
 {% endblock %}
+</div>
+{% block model %}
+    <script>
+        var scopeDefinition = { params: {}};
+    </script>
+{% endblock %}
 
-<script src="{{ url_for('static', filename='js/kg-head-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lib/libraries.js') }}"></script>
+<script>
 
+        var scopeDefinition = scopeDefinition || { params: {}};
 
+        {% for key in args %}
+
+            if(scopeDefinition.params.hasOwnProperty('{{ key }}')) {
+                var val = '{{ args[key] }}';
+                var typedVal = isNaN(+val) ? val : +val;
+                scopeDefinition.params['{{ key }}'] = typedVal;
+            }
+
+        {% endfor %}
+
+    </script>
 {% block js %}
 {% endblock %}
 

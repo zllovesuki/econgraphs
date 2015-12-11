@@ -1,11 +1,12 @@
 /* Note: these colors are chosen to match the ordinal scales in D3 */
 @import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
 body {
-  font-size: 12pt;
+  font-size: 14pt;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding: 20px;
-  height: 100%;
-  overflow: hidden;
+}
+.ng-cloak {
+  display: none!important;
 }
 a {
   color: #00b7ff;
@@ -36,17 +37,17 @@ a {
 .invisible {
   display: none;
 }
-.dataPathFamily {
-  stroke: lightgrey;
-  stroke-width: 1;
-  fill: none;
-}
 .draw,
 .segment,
 .dataPath,
 .line,
 .curve {
   stroke-width: 4;
+  fill: none;
+}
+.dataPathFamily {
+  stroke: lightgrey;
+  stroke-width: 1;
   fill: none;
 }
 .scatter {
@@ -108,6 +109,14 @@ a {
 .pointLabel {
   color: white;
   font-size: 10pt;
+}
+.subtitle {
+  padding-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #959595;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .asset {
   color: #1f77b4;

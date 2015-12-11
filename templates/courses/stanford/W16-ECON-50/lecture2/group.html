@@ -1,0 +1,52 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+<div ng-controller="KineticGraphCtrl" class="container">
+    {% raw %}
+    <div class="subtitle">January 7</div>
+    <h2>Group Work: Supply and Demand</h2>
+    <hr/>
+    <ol>
+        <li style="padding-top:20px">
+            <p><b>Solving for equilibrium</b></p>
+            <p>Suppose there are <span class="math">N_C</span> identical consumers, each of whom spends <span class="math">\frac{1}{4}</span> of their income on a good:</p>
+            <div class="math displayMath">q^D(P) = \frac{\frac{1}{4}I}{P}</div>
+            <p>There are <span class="math">N_F</span> identical firms, each of which has an individual supply curve given by</p>
+            <div class="math displayMath">q^S(P) = \frac{P}{w}</div>
+            <p>where <span class="math">w</span> is the wage rate.</p>
+            <hr/>
+            <ol style="list-style: lower-alpha">
+                <li>Write down the equations for the market supply <span class="math">Q^S(P,w,N_F)</span> and market demand <span class="math">Q^D(P,I,N_C)</span>.</li>
+                <li>Sketch the supply and demand curves for this market if <span class="math">N_C = 100</span>, <span class="math">N_F = 36</span>, <span class="math">I = 64</span>, and <span class="math">w = 9</span>.<br/>Indicate the equilibrium price and quantity in your sketch.</li>
+                <li>Suppose the number of firms quadrupled, to 144. Find the new equilibrium price, and calculate the change in consumer surplus.</li>
+                <li>Write <span class="math">P^E</span> and <span class="math">Q^E</span> as general functions of <span class="math">I</span>, <span class="math">N_C</span>, <span class="math">w</span>, and <span class="math">N_F</span>.</li>
+                <li>In which of the exogenous variables is <span class="math">P^E</span> increasing? What about <span class="math">Q^E</span>?</li>
+            </ol>
+        </li>
+        <li style="padding-top:20px"><p><b>Describing demand</b></p>
+            <p>Each of the following expressions gives an individual's demand for good <span class="math">X</span> in terms of income, the price of that good <span class="math">(P_X)</span>, the price of another good <span class="math">(P_Y)</span>, and income <span class="math">(I)</span>.</p>
+            <p>For each expression, identify whether two goods are complements, substitutes, or neither.</p>
+            <p>Try to give a verbal description of the kind of consumer behavior each expression represents. (This isn't really possible for one of the four...but it is for the other three!)</p>
+
+            <ol style="list-style: lower-alpha">
+                <li class="math" style="padding-top:10px">q^D_X(P_X,P_Y,I) = \frac{I}{P_X + P_Y}</li>
+                <li class="math" style="padding-top:10px">q^D_X(P_X,P_Y,I) = \frac{I}{2P_X}</li>
+                <li class="math" style="padding-top:10px">q^D_X(P_X,P_Y,I) = \frac{I}{P_X} \text{ if } P_X < P_Y \text{, otherwise 0}</li>
+                <li class="math" style="padding-top:10px">q^D_X(P_X,P_Y,I) = \left(\frac{P_Y}{P_X + P_Y}\right)\frac{I}{P_X}</li>
+            </ol>
+        </li>
+    </ol>
+
+    {% endraw %}
+</div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.min.js') }}"></script>
+
+{% endblock %}

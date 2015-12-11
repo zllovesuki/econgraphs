@@ -3,8 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Econ 50</title>
+    <script src="{{ url_for('static', filename='js/lib/libraries.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
 </head>
 <body>
-Coming soon...
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Econ 50: Economic Analysis I</h1>
+        </div>
+        <div class="col-md-6">
+            <p align="right" style="margin-top:20px">Stanford University, Winter 2016<br/>Prof. <a href="mailto:cmakler@stanford.edu">Chris Makler</a></p>
+        </div>
+    </div>
+    <hr/>
+    <p>This website is for <b>course materials</b> (slides, interactive graphs, and readings).</p>
+    <p>We will use <a href="https://coursework.stanford.edu/portal/site/W16-ECON-50-01">this Coursework site</a> for all <b>class logistics</b> (homework, sections, etc.)</p>
+    <p>We will use <a href="https://piazza.com/stanford/winter2016/econ50">this piazza site</a> for <b>class communication</b> (announcements, class discussions, prof/TA communication, etc).</p>
+    <hr/>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Date</td>
+                <td>Title</td>
+                <td>Readings</td>
+                <td>Slides</td>
+                <td>Group Work</td>
+                <td>Interactive Graphs</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Jan 5</td>
+                <td>Introduction to Constrained Optimization</td>
+                <td>"Three Key Analytical Tools" (B&B, 1.2)</td>
+                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture1/lecture1.pdf') }}">Lecture1.pdf</a></td>
+                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture1/group') }}">Group work</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Jan 7</td>
+                <td>Supply and Demand, with More Math than Econ 1</td>
+                <td>"Supply, Demand, and Market Equilibrium" (B&B 2.1)<br/>"Market Demand" (B&B 5.4)<br/>"How the Market Price is Determined:<br/>Short-Run Equilibrium" (B&B 9.3)</td>
+                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture2/lecture1.pdf') }}">Lecture2.pdf</a></td>
+                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture2/group') }}">Group work</a></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
 </body>
 </html>
