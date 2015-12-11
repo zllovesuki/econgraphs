@@ -2,6 +2,7 @@
 <html ng-app="KineticGraphs">
 <head>
     <title>EconGraphs</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/econ-graphs.css') }}" rel="stylesheet"/>
@@ -54,7 +55,7 @@
     </script>
 {% endblock %}
 
-<script src="{{ url_for('static', filename='js/libraries.js') }}"></script>
+<script src="{{ url_for('static', filename='js/archives/libraries.js') }}"></script>
 <script>
 
         var scopeDefinition = scopeDefinition || { params: {}};
@@ -69,7 +70,7 @@
 
     </script>
 
-<script src="{{ url_for('static', filename='js/kg-head-v3.js') }}"></script>
+<script src="{{ url_for('static', filename='js/archives/kg-head-v3.js') }}"></script>
 
 
 {% block js %}

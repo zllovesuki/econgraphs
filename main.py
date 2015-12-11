@@ -79,7 +79,7 @@ def slides(prof_name=None, course_name=None, slide_name=None):
         except:
             return redirect(url_for('slides', slide_name=None, prof_name=None, course_name=None))
 
-
+# Generic routing of course materials
 @app.route('/courses')
 @app.route('/courses/<path:path>')
 def courses(path=None):

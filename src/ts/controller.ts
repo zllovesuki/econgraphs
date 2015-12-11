@@ -42,15 +42,22 @@ module KG
             };
 
             $scope.init = function(definition:ScopeDefinition) {
+
+                definition = _.defaults(definition,{
+                    params: {},
+                    graphParams: [],
+                    restrictions: [],
+                    model: {type: 'KG.Model', definition: {}},
+                    views: []
+                });
+
                 $scope.params = definition.params;
                 $scope.graphParams = {};
-                if(definition.graphParams) {
-                    definition.graphParams.forEach(function(key) {
+                definition.graphParams.forEach(function(key) {
                         if($scope.params.hasOwnProperty(key)) {
                             $scope.graphParams[key] = $scope.params[key];
                         }
-                    })
-                }
+                    });
 
                 $scope.restrictions = definition.restrictions.map(function(restrictionDefinition) {
                     return new Restriction(restrictionDefinition);

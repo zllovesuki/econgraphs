@@ -1,0 +1,40 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+<div ng-controller="KineticGraphCtrl" class="container">
+    {% raw %}
+    <div class="subtitle">January 5</div>
+    <h2>Group Work: Constrained Optimization</h2>
+    <hr/>
+    <ol>
+        <li style="padding-top:20px"><b>Constrained optimization with one variable</b><p>Find the value of <span class="math">x</span> that maximizes each function's value in the domain <span class="math">0 \le x \le 10</span>:</p>
+
+    <ol style="list-style: lower-alpha">
+        <li class="math">f(x) = 5 + 4x - x^2</li>
+        <li class="math">f(x) = 10 - |2 - x|</li>
+        <li class="math">f(x) = 9 - (x - 11)^2</li>
+        <li class="math">f(x) = 1 + \frac{1}{5}(x - 5)^2</li>
+        <li class="math">f(x) = 10 - x</li>
+        <li class="math">f(x) = 3</li>
+    </ol></li>
+        <li style="padding-top:20px"><b>Constrained optimization with two variables</b>
+        <ol style="list-style: lower-alpha">
+        <li>You are given 40 linear feet of fence and need to make a rectangular enclosure. What is the length and width that maximize the area of the enclosure? In other words, find the maximum of the objective function <span class="math">A(L,W) = LW</span> subject to the constraint <span class="math">2L + 2W \le 40</span>.</li>
+        <li>Suppose that instead of 40 feet of fence material, you have material of an unknown length <span class="math">F</span>. Express the optimal length <span class="math">L^*</span> and width <span class="math">W^*</span>, as well as the optimized area <span class="math">A^*</span>, as functions of <span class="math">F</span>: that is, find <span class="math">L^*(F)</span>, <span class="math">W^*(F)</span>, and <span class="math">A^*(F)</span>.</li>
+        <li>If you haven't already, solve the problem using the Lagrange multiplier method. What is the value of the multiplier <span class="math">\lambda</span> as a function of <span class="math">F</span>? What does it measure?</li>
+        </ol></li>
+    </ol>
+
+    {% endraw %}
+</div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.min.js') }}"></script>
+
+{% endblock %}
