@@ -19,40 +19,306 @@
         </div>
     </div>
     <hr/>
+    <h3>Web Resources</h3>
     <p>This website is for <b>course materials</b> (slides, interactive graphs, and readings).</p>
     <p>We will use <a href="https://coursework.stanford.edu/portal/site/W16-ECON-50-01">this Coursework site</a> for all <b>class logistics</b> (homework, sections, etc.)</p>
     <p>We will use <a href="https://piazza.com/stanford/winter2016/econ50">this piazza site</a> for <b>class communication</b> (announcements, class discussions, prof/TA communication, etc).</p>
     <hr/>
-    <table class="table">
+    <h3>Textbooks</h3>
+    <p>The required readings will be drawn from <b>Besanko and Braeutigam, <i>Microeconomics</i>, 5e</b> (abbreviated B&B). Available at the bookstore, on <a href="http://www.amazon.com/Microeconomics-David-Besanko/dp/1118572270">Amazon</a>, and on <a href="http://www.scribd.com/doc/214097045/Microeconomics-5th-Edition-Besanko-Et-Al-2014">scribd</a>. Note that this book is at a more basic level than the level of the course; it is necessary but not sufficient to understand the material at the level of this book.</p>
+    <p>If you're serious about econ, it may be helpful to pick up a copy of <b>Varian, <i>Intermediate Microeconomics: A Modern Approach</i>, 8e.</b> Available on reserve at the library or at <a href="http://www.amazon.com/Intermediate-Microeconomics-Modern-Approach-Edition/dp/0393934241">Amazon</a>. Note that this book is at a slightly more advanced level than the level of the course, and the terminology may not match up exactly with what we're doing in class.</p>
+    <hr/>
+    <h3>Schedule</h3>
+    <h4 style="padding-top:15px; padding-bottom:5px">Part I: Modeling Tools</h4>
+    <table class="table table-striped table-hover">
         <thead>
-            <tr>
-                <td>Date</td>
-                <td>Title</td>
-                <td>Readings</td>
-                <td>Slides</td>
-                <td>Group Work</td>
-                <td>Interactive Graphs</td>
+            <tr class="info">
+                <td width="10%">Date</td>
+                <td width="50%">Title</td>
+                <td width="20%" align="center">B&B</td>
+                <td width="20%" align="center">Varian</td>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>Jan 5</td>
-                <td>Introduction to Constrained Optimization</td>
-                <td>"Three Key Analytical Tools" (B&B, 1.2)</td>
-                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture1/lecture1.pdf') }}">Lecture1.pdf</a></td>
-                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture1/group') }}">Group work</a></td>
-                <td></td>
+                <td>Introduction to Constrained Optimization<br/>
+                <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture1/lecture1.pdf') }}">Slides</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture1/group') }}">Group work</a></td>
+                <td align="center">1.2</td>
+                <td align="center">-</td>
             </tr>
             <tr>
                 <td>Jan 7</td>
-                <td>Supply and Demand, with More Math than Econ 1</td>
-                <td>"Supply, Demand, and Market Equilibrium" (B&B 2.1)<br/>"Market Demand" (B&B 5.4)<br/>"How the Market Price is Determined:<br/>Short-Run Equilibrium" (B&B 9.3)</td>
-                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture2/lecture1.pdf') }}">Lecture2.pdf</a></td>
-                <td><a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture2/group') }}">Group work</a></td>
-                <td></td>
+                <td>Supply and Demand, with More Math than Econ 1<br/>
+                    <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture2/group') }}">Group work</a>
+                </td>
+                <td align="center">2.1 (also bits of 5.4, 9.5)</td>
+                <td align="center">-</td>
+            </tr>
+            <tr>
+                <td>Jan 12</td>
+                <td>Elasticity</td>
+                <td align="center">2.2</td>
+                <td align="center">15.6-15.11, Ch. 15 Appendix</td>
             </tr>
         </tbody>
     </table>
+    <h4 style="padding-top:15px; padding-bottom:5px">Part II: Consumer Choice</h4>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr class="info">
+                <td width="10%">Date</td>
+                <td width="50%">Title</td>
+                <td width="20%" align="center">B&B</td>
+                <td width="20%" align="center">Varian</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Jan 14</td>
+                <td>Preferences and Indifference Curves</td>
+                <td align="center">3.1</td>
+                <td align="center">Ch. 3</td>
+            </tr>
+            <tr>
+                <td>Jan 15</td>
+                <td><i>Section 1; Homework 1 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+            <tr>
+                <td>Jan 19</td>
+                <td>Utility Functions</td>
+                <td align="center">3.2, 3.3</td>
+                <td align="center">Ch. 4</td>
+            </tr>
+            <tr>
+                <td>Jan 21</td>
+                <td>Budget Constraints and Optimal Choice</td>
+                <td align="center">4.1, 4.2</td>
+                <td align="center">Ch. 2, Ch. 5</td>
+            </tr>
+            <tr>
+                <td>Jan 22</td>
+                <td><i>Section 2; Homework 2 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+        <tr>
+                <td>Jan 26</td>
+                <td>Optimal Choice Applications; Revealed Preference</td>
+                <td align="center">4.3, 4.4, 5.5, Ch. 4 Appendix</td>
+                <td align="center">9.1-9.4, 9.8, 10.1-10.3, Ch. 7</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 style="padding-top:15px; padding-bottom:5px">Part III: Demand</h4>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr class="info">
+                <td width="10%">Date</td>
+                <td width="50%">Title</td>
+                <td width="20%" align="center">B&B</td>
+                <td width="20%" align="center">Varian</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Jan 28</td>
+                <td>Deriving the Demand Curve</td>
+                <td align="center">5.1</td>
+                <td align="center">Ch. 6</td>
+            </tr>
+            <tr>
+                <td>Jan 29</td>
+                <td><i>Section 3; Homework 3 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+            <tr>
+                <td>Feb 2</td>
+                <td>Income and Substitution Effects</td>
+                <td align="center">5.2</td>
+                <td align="center">Ch. 8</td>
+            </tr>
+            <tr>
+                <td>Feb 4</td>
+                <td>Welfare Analysis</td>
+                <td align="center">5.3</td>
+                <td align="center">Ch. 14</td>
+            </tr>
+            <tr>
+                <td>Feb 5</td>
+                <td><i>Section 4; Homework 4 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+        <tr>
+                <td>Feb 9</td>
+                <td>Review of Consumer Theory</td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 style="padding-top:15px; padding-bottom:5px">Midterm</h4>
+    <table class="table table-striped table-hover">
+        <tbody>
+            <tr>
+                <td width="10%">Feb 9-10</td>
+                <td width="90%">Review Sessions - Details TBA</td>
+            </tr>
+            <tr>
+                <td>Feb 11</td>
+                <td>Midterm (in class)</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 style="padding-top:15px; padding-bottom:5px">Part IV: Producer Choice</h4>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr class="info">
+                <td width="10%">Date</td>
+                <td width="50%">Title</td>
+                <td width="20%" align="center">B&B</td>
+                <td width="20%" align="center">Varian</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Feb 16</td>
+                <td>Inputs and productions functions; returns to scale</td>
+                <td align="center">Ch. 6</td>
+                <td align="center">Ch. 18</td>
+            </tr>
+            <tr>
+                <td>Feb 18</td>
+                <td>Costs and cost minimization</td>
+                <td align="center">Ch. 7</td>
+                <td align="center">Ch. 20</td>
+            </tr>
+            <tr>
+                <td>Feb 19</td>
+                <td><i>Section 5; Homework 5 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+            <tr>
+                <td>Feb 23</td>
+                <td>Cost curves</td>
+                <td align="center">Ch. 8</td>
+                <td align="center">Ch. 21</td>
+            </tr>
+            <tr>
+                <td>Feb 25</td>
+                <td>Profit maximization for the competitive firm</td>
+                <td align="center">9.1, 9.2</td>
+                <td align="center">Ch. 14</td>
+            </tr>
+            <tr>
+                <td>Feb 26</td>
+                <td><i>Section 6; Homework 6 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+        <tr>
+                <td>Feb 9</td>
+                <td>Review of Consumer Theory</td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 style="padding-top:15px; padding-bottom:5px">Part V: Deriving Supply</h4>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr class="info">
+                <td width="10%">Date</td>
+                <td width="50%">Title</td>
+                <td width="20%" align="center">B&B</td>
+                <td width="20%" align="center">Varian</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Feb 25</td>
+                <td>Profit maximization for the competitive firm</td>
+                <td align="center">9.1, 9.2</td>
+                <td align="center">Ch. 14</td>
+            </tr>
+            <tr>
+                <td>Feb 26</td>
+                <td><i>Section 6; Homework 6 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+            <tr>
+                <td>Mar 1</td>
+                <td>Supply curves; short-run and long-run equilibrium</td>
+                <td align="center">9.3, 9.4, 9.5</td>
+                <td align="center">Ch. 22, Ch. 23</td>
+            </tr>
+            <tr>
+                <td>Mar 3</td>
+                <td>Competitive markets; applications and extensions</td>
+                <td align="center">Ch. 10</td>
+                <td align="center">Ch. 16</td>
+            </tr>
+        <tr>
+                <td>Mar 4</td>
+                <td><i>Section 7; Homework 7 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <h4 style="padding-top:15px; padding-bottom:5px">Part VI: Market Power</h4>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr class="info">
+                <td width="10%">Date</td>
+                <td width="50%">Title</td>
+                <td width="20%" align="center">B&B</td>
+                <td width="20%" align="center">Varian</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Mar 8</td>
+                <td>Monopoly (and monopsony)</td>
+                <td align="center">Ch. 11</td>
+                <td align="center">Ch. 24</td>
+            </tr>
+            <tr>
+                <td>Mar 10</td>
+                <td>Summary, extensions, review</td>
+                <td align="center">Chapters 6-11</td>
+                <td align="center">-</td>
+            </tr>
+            <tr>
+                <td>Mar 11</td>
+                <td><i>Section 8; Homework 8 due</i></td>
+                <td align="center">-</td>
+                <td align="center">-</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <h4 style="padding-top:15px; padding-bottom:5px">Final Exam</h4>
+    <table class="table table-striped table-hover">
+        <tbody>
+            <tr>
+                <td width="10%">Mar 11-15</td>
+                <td width="90%">Review Sessions - Details TBA</td>
+            </tr>
+            <tr>
+                <td>Mar 16</td>
+                <td>Final Exam (12:15-3:15pm)</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
 
 
