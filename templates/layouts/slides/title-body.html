@@ -1,0 +1,13 @@
+{% extends 'layouts/slides/base.html' %}
+
+{% block body %}
+    <div id="title">
+        <h1>{% block title %}[title block]{% endblock %}</h1>
+        <hr/>
+    </div>
+    <div id="main">
+    {% block main %}
+        <div id="graph"></div>
+    {% endblock %}
+    </div>
+{% endblock %}

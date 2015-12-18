@@ -21,11 +21,11 @@ var KG;
         },
         orange: {
             dark: "#ff7f0e",
-            light: "#98df8a"
+            light: "#ffbb78"
         },
         green: {
             dark: "#2ca02c",
-            light: "#74c476"
+            light: "#98df8a"
         },
         red: {
             dark: "d62728",
@@ -62,10 +62,13 @@ var KG;
 var KG;
 (function (KG) {
     function colorForClassName(className, shade) {
+        shade = shade || 'dark';
+        if (KG.COLORS.hasOwnProperty(className)) {
+            return KG.COLORS[className][shade];
+        }
         if (className) {
             className = className.split(' ')[0];
         }
-        shade = shade || 'dark';
         var classColor = KG.CLASS_COLORS[className] || 'gray';
         return KG.COLORS[classColor][shade];
     }
@@ -384,6 +387,9 @@ var KG;
             // Iterates over an object's definition, getting the current value of each property
             function parseObject(def, obj) {
                 obj = obj || {};
+                if (def.hasOwnProperty('type') && def.hasOwnProperty('definition')) {
+                    return KG.createInstance(def).update(scope);
+                }
                 for (var key in def) {
                     if (def.hasOwnProperty(key)) {
                         if (obj[key] instanceof KG.Selector) {
@@ -3325,6 +3331,13 @@ var KG;
             if (definition.hasOwnProperty('yAxisDef')) {
                 this.yAxis = new KG.YAxis(definition.yAxisDef);
             }
+            /*this.objects = definition.objects.map(function(objectDefinition){
+                if(objectDefinition.hasOwnProperty('type') && objectDefinition.hasOwnProperty('definition')) {
+                    return createInstance(objectDefinition);
+                } else {
+                    return objectDefinition;
+                }
+            })*/
         }
         View.prototype._update = function (scope) {
             var view = this;
@@ -7083,6 +7096,14 @@ angular.module('KineticGraphs', [])
         scope.toggle = function () {
             scope.params[attrs.param] = !scope.params[attrs.param];
         };
+        scope.showHide = function () {
+            if (attrs.showHide == 'true') {
+                return scope.params[attrs.param] ? 'Hide ' : 'Show ';
+            }
+            else {
+                return '';
+            }
+        };
     }
     return {
         link: link,
@@ -7090,7 +7111,7 @@ angular.module('KineticGraphs', [])
         replace: true,
         scope: true,
         transclude: true,
-        template: "<button ng-click='toggle()' style='width: 100%'><span ng-transclude/></button>"
+        template: "<button ng-click='toggle()' style='width: 100%'>{{ showHide() }} <span ng-transclude/></button>"
     };
 });
 //# sourceMappingURL=kg-v0.02.js.map

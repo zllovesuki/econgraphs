@@ -1,0 +1,159 @@
+{% extends 'layouts/slides/title-body-right.html' %}
+
+{% block title %}Fence Problem{% endblock %}
+
+{% block main %}
+    {% raw %}
+    <p>You have <span class="math">F = {{ params.perimeter }}</span> feet of fence and want to enclose the largest possible area.</p>
+    <p>Drag the dot in the graph to make an enclosure that maximizes the rectangular area.</p>
+    <hr/>
+    <div id="graph"></div>
+    {% endraw %}
+{% endblock %}
+
+{% block right %}
+    {% raw %}
+    <div>
+        <div class="well">
+            <div class="row">
+                <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">F = {{params.perimeter}}:</div>
+                <div class="col-xs-9" id="slider"></div>
+            </div>
+        </div>
+        <equation>L = {{ params.length }} || W = {{ params.width }}</equation>
+        <hr/>
+        <equation>A = L \times W = {{ params.length*params.width }}</equation>
+        <toggle param="showArea" show-hide="true">all combinations of L and W with an area of {{ params.length*params.width }}</toggle>
+        <hr/>
+        <equation>P = 2L + 2W = {{ 2*(params.length + params.width) }}</equation>
+        <toggle param="showPerimeter" show-hide="true">all combinations of L and W that use {{ params.perimeter }} feet of fence</toggle>
+        <hr/>
+        <h3 align="center" ng-if="(2*params.length + 2*params.width < params.perimeter)" class="orange"><b>Inefficient</b><br/>Doesn't use all the fence</h3>
+        <h3 align="center" ng-if="(2*params.length + 2*params.width == params.perimeter)" class="green"><b>Efficient: </b><br/>Uses all the fence</h3>
+        <h3 align="center" ng-if="(2*params.length + 2*params.width > params.perimeter)" class="red"><b>Not feasible: </b><br/>Uses more than the available fence</h3>
+    </div>
+
+    {% endraw %}
+{% endblock %}
+
+{% block model %}
+    <script>
+        var scopeDefinition = {
+            params: {
+                length: 5,
+                width: 15,
+                showArea: false,
+                showPerimeter: true,
+                perimeter: 40
+            },
+            restrictions: [{
+                expression: 'params.length',
+                restrictionType: 'range',
+                min: 1,
+                max: 25,
+                precision: 1
+            },
+            {
+                expression: 'params.width',
+                restrictionType: 'range',
+                min: 1,
+                max: 25,
+                precision: 1
+            }],
+            views:[
+                {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'graph',
+                    maxDimensions: {width: 550, height:550},
+                    xAxisDef: {min: 0, max: 25, title: '\\text{Length }(L)'},
+                    yAxisDef: {min: 0, max: 25, title: '\\text{Width }(W)'},
+                    objects: [
+                        {
+                            type: 'KG.Area',
+                            definition: {
+                                name: 'area',
+                                data: [
+                                    {x: 0, y: 0},
+                                    {x: 0, y: 'params.width'},
+                                    {x: 'params.length', y: 'params.width'},
+                                    {x: 'params.length', y: 0}
+                                ],
+                                className: '(2*params.length + 2*params.width > params.perimeter) ? "red" : (2*params.length + 2*params.width == params.perimeter) ? "green" : "orange"',
+                                params: {
+                                    label: ['A = ','params.length*params.width']
+                                }
+                            }
+
+
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'point',
+                                className: '(2*params.length + 2*params.width > params.perimeter) ? "red" : (2*params.length + 2*params.width == params.perimeter) ? "green" : "orange"',
+                                coordinates: {
+                                    x: 'params.length',
+                                    y: 'params.width'
+                                },
+                                xDrag: 'params.length',
+                                yDrag: 'params.width',
+                                params: {
+                                    xAxisLabel: 'params.length',
+                                    yAxisLabel: 'params.width'
+                                }
+
+                            }
+                        },
+                        {
+                            type: 'KG.Line',
+                            definition: {
+                                name: 'boundary',
+                                show: 'params.showPerimeter',
+                                className: 'dashed',
+                                lineDef: {
+                                    intercept: '0.5*params.perimeter',
+                                    slope: -1
+                                },
+                                params: {
+                                    label: ['2L + 2W = ','params.perimeter']
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.FunctionPlot',
+                            definition: {
+                                name: 'curve',
+                                show: 'params.showArea',
+                                fn: {
+                                    type: 'KGMath.Functions.Monomial',
+                                    definition: {
+                                        coefficient: 1,
+                                        powers: [1,1],
+                                        level: 'params.length*params.width'
+                                    }
+                                },
+                                className: '(2*params.length + 2*params.width > params.perimeter) ? "red" : (2*params.length + 2*params.width == params.perimeter) ? "green" : "orange"',
+                                params: {
+                                    label: ["LW = ",'params.length*params.width']
+                                }
+                            }
+
+
+                        }
+                    ]
+                }
+            },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'slider',
+                        param: 'perimeter',
+                        precision: '2',
+                        axisDef: {min: 0, max: 50}
+                    }
+                }
+            ]
+        };
+    </script>
+{% endblock %}

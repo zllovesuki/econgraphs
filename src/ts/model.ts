@@ -92,6 +92,9 @@ module KG
             // Iterates over an object's definition, getting the current value of each property
             function parseObject(def, obj?) {
                 obj = obj || {};
+                if(def.hasOwnProperty('type') && def.hasOwnProperty('definition')) {
+                    return KG.createInstance(def).update(scope);
+                }
                 for(var key in def) {
                     if(def.hasOwnProperty(key)) {
                         if(obj[key] instanceof KG.Selector) {

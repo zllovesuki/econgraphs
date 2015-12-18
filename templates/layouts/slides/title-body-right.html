@@ -1,0 +1,23 @@
+{% extends 'layouts/slides/base.html' %}
+
+{% block body %}
+    <div class="row-fluid">
+        <div class="col-md-8">
+            <div>
+                <h1>{% block title %}[title block]{% endblock %}</h1>
+                <hr/>
+            </div>
+            <div>
+                {% block main %}
+                    <div id="graph"></div>
+                {% endblock %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            {% block right %}
+                [right block]
+            {% endblock %}
+        </div>
+        </div>
+    </div>
+{% endblock %}

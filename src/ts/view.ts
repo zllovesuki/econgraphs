@@ -79,6 +79,13 @@ module KG
             if(definition.hasOwnProperty('yAxisDef')){
                 this.yAxis = new YAxis(definition.yAxisDef);
             }
+            /*this.objects = definition.objects.map(function(objectDefinition){
+                if(objectDefinition.hasOwnProperty('type') && objectDefinition.hasOwnProperty('definition')) {
+                    return createInstance(objectDefinition);
+                } else {
+                    return objectDefinition;
+                }
+            })*/
         }
 
         _update(scope) {

@@ -6,10 +6,13 @@ module KG
 {
 
     export function colorForClassName(className:string, shade?:string) {
+        shade = shade || 'dark';
+        if(KG.COLORS.hasOwnProperty(className)) {
+            return KG.COLORS[className][shade];
+        }
         if(className) {
             className = className.split(' ')[0];
         }
-        shade = shade || 'dark';
         var classColor = KG.CLASS_COLORS[className] || 'gray';
         return KG.COLORS[classColor][shade];
     }
