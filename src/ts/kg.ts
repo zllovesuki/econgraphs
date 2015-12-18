@@ -78,6 +78,14 @@ angular.module('KineticGraphs', [])
                 scope.params[attrs.param] = !scope.params[attrs.param];
             };
 
+            scope.showHide = function() {
+                if (attrs.showHide == 'true') {
+                    return scope.params[attrs.param] ? 'Hide ' : 'Show '
+                } else {
+                    return ''
+                }
+            }
+
         }
 
         return {
@@ -86,6 +94,6 @@ angular.module('KineticGraphs', [])
             replace: true,
             scope: true,
             transclude: true,
-            template: "<button ng-click='toggle()' style='width: 100%'><span ng-transclude/></button>"
+            template: "<button ng-click='toggle()' style='width: 100%'>{{ showHide() }} <span ng-transclude/></button>"
         };
     });

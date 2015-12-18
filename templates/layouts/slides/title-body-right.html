@@ -1,0 +1,13 @@
+{% extends 'layouts/slides/base.html' %}
+
+{% block body %}
+    <div id="title" style="position:absolute;left:0px;top:0px;width:890px; height:90px"><h1>{% block title %}[title block]{% endblock %}</h1><hr/></div>
+        <div id="right" style="position:absolute;left:900px;top:0px;width:440px;height:740px">
+            {% block right %}[right block]{% endblock %}
+        </div>
+        <div id="main" style="position:absolute;left:0px;top:90px;width:890px;height:650px;">
+        {% block main %}
+            <div id="graph"></div>
+        {% endblock %}
+        </div>
+{% endblock %}

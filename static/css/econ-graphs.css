@@ -325,6 +325,31 @@ a {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+.blue {
+  stroke: #1f77b4;
+  fill: #1f77b4;
+  color: #1f77b4;
+}
+.orange {
+  stroke: #ff7f0e;
+  fill: #ff7f0e;
+  color: #ff7f0e;
+}
+.green {
+  stroke: #2ca02c;
+  fill: #2ca02c;
+  color: #2ca02c;
+}
+.red {
+  stroke: #d62728;
+  fill: #d62728;
+  color: #d62728;
+}
+.purple {
+  stroke: #9467bd;
+  fill: #9467bd;
+  color: #d62728;
+}
 .demand {
   color: #1f77b4;
   stroke: #1f77b4;

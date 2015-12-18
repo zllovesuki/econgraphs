@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="KineticGraphs">
+<head>
+    <title>{% block pageTitle %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/econ-graphs.css') }}" rel="stylesheet"/>
+</head>
+<body style="background-color:#EEEEEE; font-family:'Open Sans'; padding:5px">
+
+    <div class="ng-cloak" id="container" style="position:fixed;width:1340px;height:740px;background-color:white;" ng-controller="KineticGraphCtrl">
+        {% block body %}
+        {% endblock %}
+    </div>
+
+    <div class="ng-cloak">
+
+    </div>
+{% block model %}
+    <script>
+        var scopeDefinition = { params: {}};
+    </script>
+{% endblock %}
+
+<script src="{{ url_for('static', filename='js/lib/libraries.js') }}"></script>
+<script>
+
+        var scopeDefinition = scopeDefinition || { params: {}};
+
+        {% for key in args %}
+
+            if(scopeDefinition.params.hasOwnProperty('{{ key }}')) {
+                var val = '{{ args[key] }}';
+                var typedVal = isNaN(+val) ? val : +val;
+                scopeDefinition.params['{{ key }}'] = typedVal;
+            }
+
+        {% endfor %}
+
+    </script>
+{% block js %}
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+{% endblock %}
+
+
+</body>
+</html>

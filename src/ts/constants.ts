@@ -24,11 +24,11 @@ module KG
         },
         orange: {
             dark: "#ff7f0e",
-            light: "#98df8a"
+            light: "#ffbb78"
         },
         green: {
             dark: "#2ca02c",
-            light: "#74c476"
+            light: "#98df8a"
         },
         red: {
             dark: "d62728",
