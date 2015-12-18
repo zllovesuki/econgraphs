@@ -7,16 +7,32 @@
     <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/econ-graphs.css') }}" rel="stylesheet"/>
 </head>
-<body style="background-color:#EEEEEE; font-family:'Open Sans'; padding:5px">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('courses',path='stanford/W16-ECON-50')}}">Econ 50 | Stanford | W16</a>
+        </div>
 
-    <div class="ng-cloak" id="container" style="position:fixed;width:1340px;height:740px;background-color:white;" ng-controller="KineticGraphCtrl">
-        {% block body %}
-        {% endblock %}
-    </div>
-
-    <div class="ng-cloak">
-
-    </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="https://coursework.stanford.edu/portal/site/W16-ECON-50-01">Coursework</a></li>
+                <li><a href="https://piazza.com/stanford/winter2016/econ50">Piazza</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="ng-cloak" style="margin-top:50px" ng-controller="KineticGraphCtrl">
+{% block body %}
+{% endblock %}
+</div>
 {% block model %}
     <script>
         var scopeDefinition = { params: {}};
