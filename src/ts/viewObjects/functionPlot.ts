@@ -35,7 +35,7 @@ module KG {
 
         updateDataForView(view) {
             var p = this;
-            p.data = p.fn.points(view,p.yIsIndependent,p.numSamplePoints);
+            p.data = p.fn.points(view,p.yIsIndependent,p.numSamplePoints, p.xDomain, p.yDomain);
             return p;
         }
 

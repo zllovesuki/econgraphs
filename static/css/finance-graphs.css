@@ -5,6 +5,11 @@
     padding: 20px;
   }
 }
+@media screen and (min-width: 500px) {
+  .big {
+    font-size: 18pt;
+  }
+}
 @media print {
   a[href]:after {
     content: none;
@@ -289,9 +294,6 @@ a {
 .matrix td {
   padding: 5px;
   text-align: center;
-}
-.big {
-  font-size: 20pt;
 }
 .arrow {
   stroke-width: 1.5pt;

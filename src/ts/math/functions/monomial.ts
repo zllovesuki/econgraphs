@@ -43,6 +43,7 @@ module KGMath.Functions {
                 powers: definition.powers.map(function(p) {return p.toString()})
             };
             super(definition, modelPath);
+            this.univariate = (definition.powers.length == 1);
         }
 
         // Establish setters

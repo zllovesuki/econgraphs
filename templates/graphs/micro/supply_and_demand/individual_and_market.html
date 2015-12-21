@@ -1,0 +1,374 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+
+<div ng-controller="KineticGraphCtrl">
+    <div class="row">
+        <div class="col-md-10"><h1>Individual and Market Supply and Demand</h1></div>
+        <div class="col-md-2">
+            <toggle param="snapToEquilibrium">
+                <span ng-if="params.snapToEquilibrium">Make price draggable</span>
+                <span ng-if="!params.snapToEquilibrium">Snap to equilibrium</span>
+            </toggle>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-4">
+            <div id="individualDemandGraph"></div>
+        </div>
+        <div class="col-md-4">
+            <div id="marketGraph"></div>
+        </div>
+        <div class="col-md-4">
+            <div id="individualSupplyGraph"></div>
+        </div>
+    </div>
+
+
+        {% raw %}
+    <div class="row">
+        <div class="col-md-4 well">
+            <div class="subtitle">demand shifters</div>
+            <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income}}:
+                    </div>
+                    <div class="col-xs-9" id="incomeSlider"></div>
+                </div>
+            <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">N_C = {{params.nc}}:
+                    </div>
+                    <div class="col-xs-9" id="ncSlider"></div>
+                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="demand math displayMath">q^D(P) = \frac{\frac{1}{4}I}{P} = \frac{ \frac{1}{4}{{ params.income }} }{ {{ model.price | number:2}} } = {{ model.individualQuantityDemanded | number:2 }}</div>
+            <div class="demand math displayMath">Q^D(P) = N_C \times q^D(P) = {{ params.nc }} \times {{ model.individualQuantityDemanded | number:2 }} = {{ model.marketQuantityDemanded | number:0 }}</div>
+            <div class="supply math displayMath">q^S(P) = \frac{P}{w} = \frac{ {{ model.price | number:2 }} }{ {{ params.wage }} } = {{ model.individualQuantitySupplied | number:2 }}</div>
+            <div class="supply math displayMath">Q^S(P) = N_F \times q^S(P) = {{ params.nf }} \times {{ model.individualQuantitySupplied | number:2 }} = {{ model.marketQuantitySupplied | number:0 }}</div>
+        </div>
+        <div class="col-md-4 well">
+            <div class="subtitle">supply shifters</div>
+
+
+
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">w = {{params.wage}}:
+                    </div>
+                    <div class="col-xs-9" id="wageSlider"></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">N_F = {{params.nf}}:
+                    </div>
+                    <div class="col-xs-9" id="nfSlider"></div>
+                </div>
+
+        </div>
+
+        {% endraw %}
+    </div>
+</div>
+{% endblock %}
+
+{% block model %}
+
+<script>
+
+    var scopeDefinition = {
+        params: {
+                alpha: 0.25,
+                income: 64,
+                nc: 100,
+                nf: 36,
+                wage: 9,
+                price: 4,
+                snapToEquilibrium: false
+            },
+        graphParams: [],
+        restrictions: [
+            {
+                restrictionType: 'range',
+                expression: 'params.price',
+                min: 4,
+                max: 36,
+                precision: 1
+            }
+        ],
+        model: {
+            type: 'EconGraphs.IndividualAndMarketSandD',
+            definition: {
+                alpha: 'params.alpha',
+                income: 'params.income',
+                nc: 'params.nc',
+                nf: 'params.nf',
+                wage: 'params.wage',
+                price: 'params.price',
+                snapToEquilibrium: 'params.snapToEquilibrium'
+            }
+        },
+        views: [
+            {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'individualDemandGraph',
+                    xAxisDef: {min: 0, max: 10, title: '\\text{Individual Quantity Demanded}'},
+                    yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
+                    square: true,
+                    objects: [
+                        {
+                            type: 'KG.HorizontalLine',
+                            definition: {
+                                name: 'priceLine',
+                                className: 'gray',
+                                y: 'model.price',
+                                yDrag: 'params.price'
+                            }
+                        },
+                        {
+                            type: 'KG.FunctionPlot',
+                            definition: {
+                                name: 'individualDemand',
+                                className: 'demand',
+                                fn: 'model.individualDemandFunction',
+                                yIsIndependent: true,
+                                yDomainDef: {min: 2, max: 38},
+                                label: {
+                                    text: "d",
+                                    valign: 'bottom'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'individualQuantityDemanded',
+                                className: 'demand',
+                                coordinates: {
+                                    x: 'model.individualQuantityDemanded',
+                                    y: 'model.price'
+                                },
+                                params: {
+                                    xAxisLabel: 'q^D'
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'marketGraph',
+                    xAxisDef: {min: 0, max: 500, title: '\\text{Market Quantity Supplied and Demanded}'},
+                    yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
+                    square: true,
+                    objects: [
+                        {
+                            type: 'KG.HorizontalLine',
+                            definition: {
+                                name: 'priceLine',
+                                className: 'gray',
+                                y: 'model.price',
+                                yDrag: 'params.price'
+                            }
+                        },
+                        {
+                            type: 'KG.FunctionPlot',
+                            definition: {
+                                name: 'marketDemand',
+                                className: 'demand',
+                                fn: 'model.marketDemandFunction',
+                                yIsIndependent: true,
+                                yDomainDef: {min: 2, max: 38},
+                                label: {
+                                    text: "D",
+                                    valign: 'bottom'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.FunctionPlot',
+                            definition: {
+                                name: 'marketSupply',
+                                className: 'supply',
+                                fn: 'model.marketSupplyFunction',
+                                yIsIndependent: true,
+                                yDomainDef: {min: 2, max: 38},
+                                label: {
+                                    text: "S",
+                                    valign: 'bottom'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'marketQuantityDemanded',
+                                className: 'demand',
+                                show: '!model.inEquilibrium',
+                                coordinates: {
+                                    x: 'model.marketQuantityDemanded',
+                                    y: 'model.price'
+                                },
+                                params: {
+                                    xAxisLabel: 'Q^D'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'marketQuantitySupplied',
+                                className: 'supply',
+                                show: '!model.inEquilibrium',
+                                coordinates: {
+                                    x: 'model.marketQuantitySupplied',
+                                    y: 'model.price'
+                                },
+                                params: {
+                                    xAxisLabel: 'Q^S'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'equilibriumQuantity',
+                                className: 'green',
+                                show: 'model.inEquilibrium',
+                                coordinates: {
+                                    x: 'model.marketQuantitySupplied',
+                                    y: 'model.price'
+                                },
+                                params: {
+                                    xAxisLabel: 'Q^E'
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'individualSupplyGraph',
+                    xAxisDef: {min: 0, max: 10, title: '\\text{Individual Quantity Supplied}'},
+                    yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
+                    square: true,
+                    objects: [
+                        {
+                            type: 'KG.HorizontalLine',
+                            definition: {
+                                name: 'priceLine',
+                                className: 'gray',
+                                y: 'model.price',
+                                yDrag: 'params.price'
+                            }
+                        },
+                        {
+                            type: 'KG.FunctionPlot',
+                            definition: {
+                                name: 'individualDemand',
+                                className: 'supply',
+                                fn: 'model.individualSupplyFunction',
+                                yIsIndependent: true,
+                                yDomainDef: {min: 2, max: 38},
+                                label: {
+                                    text: "s",
+                                    valign: 'bottom'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'individualQuantitySupplied',
+                                className: 'supply',
+                                coordinates: {
+                                    x: 'model.individualQuantitySupplied',
+                                    y: 'model.price'
+                                },
+                                params: {
+                                    xAxisLabel: 'q^S'
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'incomeSlider',
+                    param: 'income',
+                    precision: '1',
+                    axisDef: {min: 49, max: 144, tickValues: [49, 64, 81, 100, 144]}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'wageSlider',
+                    param: 'wage',
+                    precision: '1',
+                    axisDef: {min: 4, max: 36, tickValues: [4, 9, 16, 25, 36]}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'ncSlider',
+                    param: 'nc',
+                    precision: '1',
+                    axisDef: {min: 36, max: 144, tickValues: [36, 64, 81, 100, 144]}
+                }
+            },
+                {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'nfSlider',
+                    param: 'nf',
+                    precision: '1',
+                    axisDef: {min: 36, max: 144, tickValues: [36, 64, 81, 100, 144]}
+                }
+            }
+        ]
+    }
+</script>
+{% endblock %}
+
+
+
+{% block js %}
+    <script>
+
+        var selectedUtility = '{{ args.utilityFunction }}';
+
+        if(selectedUtility == 'CobbDouglas') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = cobbDouglasDefinition;
+        }
+
+        if(selectedUtility == 'Leontief' || selectedUtility == 'PerfectComplements' || selectedUtility == 'Complements') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = complementsDefinition;
+        }
+
+        if(selectedUtility == 'Substitutes' || selectedUtility == 'PerfectSubstitutes') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = substitutesDefinition;
+        }
+
+        if(selectedUtility == 'Quasilinear') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = quasilinearDefinition;
+        }
+
+    </script>
+
+    {% block jsadjustments %}
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

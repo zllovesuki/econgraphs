@@ -5,6 +5,11 @@
     padding: 20px;
   }
 }
+@media screen and (min-width: 500px) {
+  .big {
+    font-size: 18pt;
+  }
+}
 @media print {
   a[href]:after {
     content: none;
@@ -290,9 +295,6 @@ a {
   padding: 5px;
   text-align: center;
 }
-.big {
-  font-size: 20pt;
-}
 .arrow {
   stroke-width: 1.5pt;
 }
@@ -353,6 +355,10 @@ a {
 .demand {
   color: #1f77b4;
   stroke: #1f77b4;
+}
+.supply {
+  color: #ff7f0e;
+  stroke: #ff7f0e;
 }
 .growth {
   color: #2ca02c;

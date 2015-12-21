@@ -720,27 +720,39 @@ var KGMath;
             Base.prototype.xValue = function (y) {
                 return null;
             };
-            Base.prototype.points = function (view, yIsIndependent, numSamplePoints) {
+            Base.prototype.points = function (view, yIsIndependent, numSamplePoints, xDomain, yDomain) {
                 var fn = this, points = [];
                 numSamplePoints = numSamplePoints || 51;
-                var xSamplePoints = view.xAxis.domain.samplePoints(numSamplePoints), ySamplePoints = view.yAxis.domain.samplePoints(numSamplePoints);
-                for (var i = 0; i < numSamplePoints; i++) {
-                    var x = xSamplePoints[i];
-                    var yOfX = fn.yValue(x);
-                    if (yOfX && !isNaN(yOfX) && yOfX != Infinity) {
-                        points.push({ x: x, y: yOfX });
+                var xSamplePoints = view.xAxis.domain.intersection(xDomain).samplePoints(numSamplePoints), ySamplePoints = view.yAxis.domain.intersection(yDomain).samplePoints(numSamplePoints);
+                if (fn.univariate && yIsIndependent) {
+                    for (var i = 0; i < numSamplePoints; i++) {
+                        var y = ySamplePoints[i];
+                        var xOfY = fn.value(y);
+                        if (xOfY && !isNaN(xOfY) && xOfY != Infinity) {
+                            points.push({ x: xOfY, y: y });
+                        }
                     }
-                    var y = ySamplePoints[i];
-                    var xOfY = fn.xValue(y);
-                    if (xOfY && !isNaN(xOfY) && xOfY != Infinity) {
-                        points.push({ x: xOfY, y: y });
-                    }
-                }
-                if (yIsIndependent) {
-                    return points.sort(KG.sortObjects('y'));
+                    return points;
                 }
                 else {
-                    return points.sort(KG.sortObjects('x'));
+                    for (var i = 0; i < numSamplePoints; i++) {
+                        var x = xSamplePoints[i];
+                        var yOfX = fn.yValue(x);
+                        if (yOfX && !isNaN(yOfX) && yOfX != Infinity) {
+                            points.push({ x: x, y: yOfX });
+                        }
+                        var y = ySamplePoints[i];
+                        var xOfY = fn.xValue(y);
+                        if (xOfY && !isNaN(xOfY) && xOfY != Infinity) {
+                            points.push({ x: xOfY, y: y });
+                        }
+                    }
+                    if (yIsIndependent) {
+                        return points.sort(KG.sortObjects('y'));
+                    }
+                    else {
+                        return points.sort(KG.sortObjects('x'));
+                    }
                 }
             };
             return Base;
@@ -871,6 +883,7 @@ var KGMath;
                     powers: definition.powers.map(function (p) { return p.toString(); })
                 };
                 _super.call(this, definition, modelPath);
+                this.univariate = (definition.powers.length == 1);
             }
             // Establish setters
             Monomial.prototype.setCoefficient = function (coefficient) {
@@ -2126,6 +2139,12 @@ var KG;
                     this.yDragParam = definition.coordinates.y.replace('params.', '');
                 }
             }
+            if (definition.hasOwnProperty('xDomainDef')) {
+                viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
+            }
+            if (definition.hasOwnProperty('yDomainDef')) {
+                viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
+            }
         }
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
@@ -2497,8 +2516,7 @@ var KG;
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     color: definition.color,
-                    show: definition.show,
-                    backgroundColor: 'white'
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 this.labelDiv = new KG.GraphDiv(labelDef);
@@ -3201,7 +3219,7 @@ var KG;
         };
         FunctionPlot.prototype.updateDataForView = function (view) {
             var p = this;
-            p.data = p.fn.points(view, p.yIsIndependent, p.numSamplePoints);
+            p.data = p.fn.points(view, p.yIsIndependent, p.numSamplePoints, p.xDomain, p.yDomain);
             return p;
         };
         return FunctionPlot;
@@ -3322,7 +3340,8 @@ var KG;
             definition = _.defaults(definition, {
                 background: 'white',
                 mask: true,
-                show: true
+                show: true,
+                square: false
             });
             _super.call(this, definition, modelPath);
             if (definition.hasOwnProperty('xAxisDef')) {
@@ -3352,7 +3371,7 @@ var KG;
             var view = this;
             //console.log('calling update');
             view.update(scope, function () {
-                console.log('starting update');
+                //console.log('starting update');
                 view.updateParams = function (params) {
                     scope.updateParams(params);
                 };
@@ -3372,9 +3391,20 @@ var KG;
             if (element == undefined) {
                 return view;
             }
-            view.dimensions = {
-                width: Math.min(view.maxDimensions.width, element.clientWidth),
-                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop())) };
+            var width = Math.min(view.maxDimensions.width, element.clientWidth), height = Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()));
+            if (view.square) {
+                var side = Math.min(width, height);
+                view.dimensions = {
+                    width: side,
+                    height: side
+                };
+            }
+            else {
+                view.dimensions = {
+                    width: width,
+                    height: height
+                };
+            }
             var frameTranslation = KG.positionByPixelCoordinates({ x: (element.clientWidth - view.dimensions.width) / 2, y: 0 });
             var visTranslation = KG.translateByPixelCoordinates({ x: view.margins.left, y: view.margins.top });
             d3.select(element).select('div').remove();
@@ -3663,8 +3693,8 @@ var KG;
         __extends(Graph, _super);
         function Graph(definition, modelPath) {
             // ensure dimensions and margins are set; set any missing elements to defaults
-            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 800, height: 800 });
-            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 100, bottom: 70, right: 20 });
+            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 1000, height: 1000 });
+            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 40, bottom: 70, right: 20 });
             _super.call(this, definition, modelPath);
         }
         Graph.prototype._update = function (scope) {
@@ -4506,6 +4536,51 @@ var EconGraphs;
         return ConstantElasticity;
     })(EconGraphs.Elasticity);
     EconGraphs.ConstantElasticity = ConstantElasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var IndividualAndMarketSandD = (function (_super) {
+        __extends(IndividualAndMarketSandD, _super);
+        function IndividualAndMarketSandD(definition, modelPath) {
+            definition = _.defaults(definition, {
+                alpha: 0.25,
+                income: 64,
+                nc: 100,
+                nf: 36,
+                wage: 9,
+                price: 15
+            });
+            _super.call(this, definition, modelPath);
+            var d = this;
+            d.individualDemandFunction = new KGMath.Functions.Monomial({
+                coefficient: KG.multiplyDefs(definition.alpha, definition.income),
+                powers: [-1]
+            });
+            d.individualSupplyFunction = new KGMath.Functions.Monomial({
+                coefficient: KG.divideDefs(1, definition.wage),
+                powers: [1]
+            });
+            d.marketDemandFunction = d.individualDemandFunction.multiply(definition.nc);
+            d.marketSupplyFunction = d.individualSupplyFunction.multiply(definition.nf);
+        }
+        IndividualAndMarketSandD.prototype._update = function (scope) {
+            var d = this;
+            d.equilibriumPrice = Math.sqrt(d.alpha * d.income * d.wage * d.nc / d.nf);
+            d.equilibriumQuantity = Math.sqrt(d.alpha * d.income * d.nc * d.nf / d.wage);
+            if (d.snapToEquilibrium) {
+                d.price = d.equilibriumPrice;
+            }
+            d.inEquilibrium = KG.isAlmostTo(d.price, d.equilibriumPrice);
+            d.individualQuantityDemanded = d.individualDemandFunction.update(scope).value(d.price);
+            d.individualQuantitySupplied = d.individualSupplyFunction.update(scope).value(d.price);
+            d.marketQuantityDemanded = d.marketDemandFunction.update(scope).value(d.price);
+            d.marketQuantitySupplied = d.marketSupplyFunction.update(scope).value(d.price);
+            return d;
+        };
+        return IndividualAndMarketSandD;
+    })(KG.Model);
+    EconGraphs.IndividualAndMarketSandD = IndividualAndMarketSandD;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 var EconGraphs;
@@ -6914,6 +6989,7 @@ var EconGraphs;
 /// <reference path="basic_concepts/elasticity/constant.ts"/>
 /* MICRO */
 /* Supply and Demand */
+/// <reference path="micro/supply_and_demand/individual_and_market_supply_and_demand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/demand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/linearDemand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/constantElasticityDemand.ts"/>

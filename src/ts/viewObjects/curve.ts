@@ -104,8 +104,7 @@ module KG {
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     color: definition.color,
-                    show: definition.show,
-                    backgroundColor: 'white'
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 this.labelDiv = new GraphDiv(labelDef);
