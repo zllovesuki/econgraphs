@@ -1,14 +1,29 @@
 @import 'kinetic-graphs.less';
 @import 'econ-colors.less';
 
+.price {
+  color: @price;
+  stroke: @price;
+  stroke-width: 2;
+  stroke-dasharray: 10,10;
+}
+
 .demand {
   color: @demand;
   stroke: @demand;
+  fill: @demand-old;
 }
 
 .supply {
   color: @supply;
   stroke: @supply;
+  fill: @supply-old;
+}
+
+.equilibrium {
+  color: @equilibrium;
+  stroke: @equilibrium;
+  fill: @equilibrium-old;
 }
 
 .growth {
@@ -31,43 +46,43 @@
 .consumption {
   color: @consumption;
   stroke: @consumption;
-  fill: @consumption;
+  fill: @consumption-old;
 }
 
 .totalCost {
   color: @totalCost;
   stroke: @totalCost;
-  fill: @totalCost;
+  fill: @totalCost-old;
 }
 
 .averageCost {
   color: @averageCost;
   stroke: @averageCost;
-  fill: @averageCost;
+  fill: @averageCost-old;
 }
 
 .marginalCost {
   color: @marginalCost;
   stroke: @marginalCost;
-  fill: @marginalCost;
+  fill: @marginalCost-old;
 }
 
 .variableCost {
   color: @variableCost;
   stroke: @variableCost;
-  fill: @variableCost;
+  fill: @variableCost-old;
 }
 
 .averageVariableCost {
   color: @averageVariableCost;
   stroke: @averageVariableCost;
-  fill: @averageVariableCost;
+  fill: @averageVariableCost-old;
 }
 
 .utility {
   color: @utility;
   stroke: @utility;
-  fill: @utility;
+  fill: @utility-old;
 }
 
 .utility-old {

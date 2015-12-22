@@ -1,19 +1,18 @@
-{% extends 'layouts/econgraphs.html' %}
+{% extends 'layouts/econ50/base.html' %}
 
 {% block body %}
 
-<div ng-controller="KineticGraphCtrl">
+<div>
     <div class="row">
         <div class="col-md-9"><h1>Individual and Market Supply and Demand</h1></div>
         <div class="col-md-3">
             <toggle param="snapToEquilibrium" class="green">
                 <span ng-if="params.snapToEquilibrium">Make price draggable</span>
-                <span ng-if="!params.snapToEquilibrium">Snap to equilibrium</span>
+                <span ng-if="!params.snapToEquilibrium">Keep at equilibrium</span>
             </toggle>
             <toggle param="showShortageSurplus" ng-if="!params.snapToEquilibrium" class="purple" show-hide="true">shortage/surplus</toggle>
         </div>
     </div>
-    <hr/>
     <div class="row">
         <div class="col-md-4">
             <div id="individualDemandGraph"></div>
@@ -187,7 +186,7 @@
                                 name: 'equilibriumPriceline',
                                 show: 'model.inEquilibrium',
                                 className: "equilibrium price",
-                                y: 'model.price',
+                                y: 'model.equilibriumPrice',
                                 yDrag: 'params.price',
                                 params: {
                                     yInterceptLabel: 'P^E'
@@ -260,8 +259,8 @@
                                 className: 'equilibrium',
                                 show: 'model.inEquilibrium',
                                 coordinates: {
-                                    x: 'model.marketQuantitySupplied',
-                                    y: 'model.price'
+                                    x: 'model.equilibriumQuantity',
+                                    y: 'model.equilibriumPrice'
                                 },
                                 params: {
                                     xAxisLabel: 'Q^E'

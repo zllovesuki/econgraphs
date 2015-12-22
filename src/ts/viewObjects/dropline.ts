@@ -40,7 +40,7 @@ module KG {
                     name: definition.name + '_label',
                     className: definition.className,
                     text: definition.axisLabel,
-                    dimensions: {width: 60, height:20},
+                    dimensions: {width: 25, height:20},
                     backgroundColor: 'white',
                     show: definition.show
                 };

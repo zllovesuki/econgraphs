@@ -209,6 +209,12 @@ module KG {
 
             var dataPath:D3.Selection = group.select(selector);
 
+            if(!curve.show) {
+                var element_name = curve.name+'_label';
+                //console.log('removing element ',element_name);
+                d3.select('#'+element_name).remove();
+            }
+
             dataPath
                 .attr({
                     'class': curve.classAndVisibility(),

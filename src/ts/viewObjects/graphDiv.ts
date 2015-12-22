@@ -50,7 +50,7 @@ module KG
         constructor(definition:GraphDivDefinition, modelPath?: string) {
 
             definition = _.defaults(definition,{
-                dimensions: {width: 50, height: 20},
+                dimensions: {width: 30, height: 20},
                 text: '',
                 color: KG.colorForClassName(definition.className)
             });
@@ -74,7 +74,7 @@ module KG
             var x, y;
 
             if(divObj.coordinates.x == GraphDiv.AXIS_COORDINATE_INDICATOR) {
-                x = view.margins.left - view.yAxis.textMargin;
+                x = view.margins.left - view.yAxis.textMargin + 2;
                 divObj.align = 'right';
                 divObj.valign = 'middle';
                 if(!view.yAxis.domain.contains(divObj.coordinates.y)) {
@@ -101,6 +101,8 @@ module KG
                 draggable = (divObj.xDrag || divObj.yDrag);
 
             var div:D3.Selection = view.getDiv(this.objectName || this.name);
+
+            console.log('drawing div with text', text);
 
             div
                 .style('cursor','default')

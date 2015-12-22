@@ -39,7 +39,7 @@ module KG
 
             // ensure dimensions and margins are set; set any missing elements to defaults
             definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 1000, height: 1000 });
-            definition.margins = _.defaults(definition.margins || {}, {top: 20, left: 40, bottom: 70, right: 20});
+            definition.margins = _.defaults(definition.margins || {}, {top: 20, left: 50, bottom: 70, right: 20});
             super(definition, modelPath);
         }
 

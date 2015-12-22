@@ -247,11 +247,18 @@ a {
   shape-rendering: crispEdges;
 }
 
+button {
+  background-color: transparent;
+  border: none;
+}
 
+button:hover {
+  background-color: lightyellow;
+}
 
 .dropline {
   stroke-dasharray: 10, 10;
-  stroke-width: 2px;
+  stroke-width: 2;
   stroke: grey;
 }
 
@@ -260,8 +267,12 @@ a {
 }
 
 .draw, .segment, .dataPath, .line, .curve {
-  stroke-width: 4;
+  stroke-width: 3;
   fill: none;
+}
+
+.pointSymbol {
+  stroke-width: 3;
 }
 
 .dataPathFamily {
@@ -372,5 +383,5 @@ a {
 .purple {
   stroke: @purple-dark;
   fill: @purple-dark;
-  color: @red-dark;
+  color: @purple-dark;
 }

@@ -2414,7 +2414,7 @@ var KG;
                     name: definition.name + '_label',
                     className: definition.className,
                     text: definition.axisLabel,
-                    dimensions: { width: 60, height: 20 },
+                    dimensions: { width: 25, height: 20 },
                     backgroundColor: 'white',
                     show: definition.show
                 };
@@ -2602,6 +2602,11 @@ var KG;
                 .y(function (d) { return d.y; });
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
             var dataPath = group.select(selector);
+            if (!curve.show) {
+                var element_name = curve.name + '_label';
+                //console.log('removing element ',element_name);
+                d3.select('#' + element_name).remove();
+            }
             dataPath
                 .attr({
                 'class': curve.classAndVisibility(),
@@ -2630,6 +2635,17 @@ var KG;
             _super.call(this, definition, modelPath);
             this.viewObjectClass = 'segment';
         }
+        Segment.prototype._update = function (scope) {
+            var s = this;
+            if (s.trimPercent > 0) {
+                var diffX = (s.data[1].x - s.data[0].x) * s.trimPercent, diffY = (s.data[1].y - s.data[0].y) * s.trimPercent;
+                s.data[0].x += diffX;
+                s.data[1].x -= diffX;
+                s.data[0].y += diffY;
+                s.data[1].y -= diffY;
+            }
+            return s;
+        };
         return Segment;
     })(KG.Curve);
     KG.Segment = Segment;
@@ -2726,9 +2742,10 @@ var KG;
                     name: definition.name + 'x_intercept_label',
                     className: definition.className,
                     text: definition.xInterceptLabel,
-                    dimensions: { width: 30, height: 20 },
+                    dimensions: { width: 25, height: 20 },
                     xDrag: definition.xDrag,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
             }
@@ -2737,9 +2754,10 @@ var KG;
                     name: definition.name + 'y_intercept_label',
                     className: definition.className,
                     text: definition.yInterceptLabel,
-                    dimensions: { width: 50, height: 20 },
+                    dimensions: { width: 25, height: 20 },
                     yDrag: definition.yDrag,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
             }
@@ -3061,7 +3079,7 @@ var KG;
         __extends(GraphDiv, _super);
         function GraphDiv(definition, modelPath) {
             definition = _.defaults(definition, {
-                dimensions: { width: 50, height: 20 },
+                dimensions: { width: 30, height: 20 },
                 text: '',
                 color: KG.colorForClassName(definition.className)
             });
@@ -3077,7 +3095,7 @@ var KG;
             }
             var x, y;
             if (divObj.coordinates.x == GraphDiv.AXIS_COORDINATE_INDICATOR) {
-                x = view.margins.left - view.yAxis.textMargin;
+                x = view.margins.left - view.yAxis.textMargin + 2;
                 divObj.align = 'right';
                 divObj.valign = 'middle';
                 if (!view.yAxis.domain.contains(divObj.coordinates.y)) {
@@ -3100,6 +3118,7 @@ var KG;
             }
             var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
             var div = view.getDiv(this.objectName || this.name);
+            console.log('drawing div with text', text);
             div
                 .style('cursor', 'default')
                 .style('text-align', 'center')
@@ -3694,7 +3713,7 @@ var KG;
         function Graph(definition, modelPath) {
             // ensure dimensions and margins are set; set any missing elements to defaults
             definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 1000, height: 1000 });
-            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 40, bottom: 70, right: 20 });
+            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 50, bottom: 70, right: 20 });
             _super.call(this, definition, modelPath);
         }
         Graph.prototype._update = function (scope) {
@@ -4549,7 +4568,8 @@ var EconGraphs;
                 nc: 100,
                 nf: 36,
                 wage: 9,
-                price: 15
+                price: 15,
+                snapTolerance: 0.05
             });
             _super.call(this, definition, modelPath);
             var d = this;
@@ -4568,14 +4588,18 @@ var EconGraphs;
             var d = this;
             d.equilibriumPrice = Math.sqrt(d.alpha * d.income * d.wage * d.nc / d.nf);
             d.equilibriumQuantity = Math.sqrt(d.alpha * d.income * d.nc * d.nf / d.wage);
-            if (d.snapToEquilibrium) {
+            if (d.snapToEquilibrium || KG.isAlmostTo(d.price, d.equilibriumPrice, d.snapTolerance)) {
                 d.price = d.equilibriumPrice;
+                d.inEquilibrium = true;
             }
-            d.inEquilibrium = KG.isAlmostTo(d.price, d.equilibriumPrice);
+            else {
+                d.inEquilibrium = false;
+            }
             d.individualQuantityDemanded = d.individualDemandFunction.update(scope).value(d.price);
             d.individualQuantitySupplied = d.individualSupplyFunction.update(scope).value(d.price);
             d.marketQuantityDemanded = d.marketDemandFunction.update(scope).value(d.price);
             d.marketQuantitySupplied = d.marketSupplyFunction.update(scope).value(d.price);
+            d.surplusShortageWord = d.inEquilibrium ? '' : (d.marketQuantitySupplied > d.marketQuantityDemanded) ? "\\text{surplus}" : "\\text{shortage}";
             return d;
         };
         return IndividualAndMarketSandD;

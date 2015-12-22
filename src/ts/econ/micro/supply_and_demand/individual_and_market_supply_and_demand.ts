@@ -64,6 +64,8 @@ module EconGraphs {
         public equilibriumQuantity;
         public snapToEquilibrium;
         public inEquilibrium;
+        public surplusShortageWord;
+        public snapTolerance;
 
 
         constructor(definition:IndividualAndMarketSandDDefinition, modelPath?:string) {
@@ -74,7 +76,8 @@ module EconGraphs {
                 nc: 100,
                 nf: 36,
                 wage: 9,
-                price: 15
+                price: 15,
+                snapTolerance: 0.05
             });
 
             super(definition, modelPath);
@@ -100,14 +103,17 @@ module EconGraphs {
             var d = this;
             d.equilibriumPrice = Math.sqrt(d.alpha*d.income*d.wage*d.nc/d.nf);
             d.equilibriumQuantity = Math.sqrt(d.alpha*d.income*d.nc*d.nf/d.wage);
-            if(d.snapToEquilibrium) {
+            if(d.snapToEquilibrium || KG.isAlmostTo(d.price, d.equilibriumPrice, d.snapTolerance)) {
                 d.price = d.equilibriumPrice;
+                d.inEquilibrium = true;
+            } else {
+                d.inEquilibrium = false;
             }
-            d.inEquilibrium = KG.isAlmostTo(d.price, d.equilibriumPrice);
             d.individualQuantityDemanded = d.individualDemandFunction.update(scope).value(d.price);
             d.individualQuantitySupplied = d.individualSupplyFunction.update(scope).value(d.price);
             d.marketQuantityDemanded = d.marketDemandFunction.update(scope).value(d.price);
             d.marketQuantitySupplied = d.marketSupplyFunction.update(scope).value(d.price);
+            d.surplusShortageWord = d.inEquilibrium ? '' : (d.marketQuantitySupplied > d.marketQuantityDemanded) ? "\\text{surplus}" : "\\text{shortage}";
             return d;
         }
 
