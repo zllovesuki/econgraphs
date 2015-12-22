@@ -720,27 +720,39 @@ var KGMath;
             Base.prototype.xValue = function (y) {
                 return null;
             };
-            Base.prototype.points = function (view, yIsIndependent, numSamplePoints) {
+            Base.prototype.points = function (view, yIsIndependent, numSamplePoints, xDomain, yDomain) {
                 var fn = this, points = [];
                 numSamplePoints = numSamplePoints || 51;
-                var xSamplePoints = view.xAxis.domain.samplePoints(numSamplePoints), ySamplePoints = view.yAxis.domain.samplePoints(numSamplePoints);
-                for (var i = 0; i < numSamplePoints; i++) {
-                    var x = xSamplePoints[i];
-                    var yOfX = fn.yValue(x);
-                    if (yOfX && !isNaN(yOfX) && yOfX != Infinity) {
-                        points.push({ x: x, y: yOfX });
+                var xSamplePoints = view.xAxis.domain.intersection(xDomain).samplePoints(numSamplePoints), ySamplePoints = view.yAxis.domain.intersection(yDomain).samplePoints(numSamplePoints);
+                if (fn.univariate && yIsIndependent) {
+                    for (var i = 0; i < numSamplePoints; i++) {
+                        var y = ySamplePoints[i];
+                        var xOfY = fn.value(y);
+                        if (xOfY && !isNaN(xOfY) && xOfY != Infinity) {
+                            points.push({ x: xOfY, y: y });
+                        }
                     }
-                    var y = ySamplePoints[i];
-                    var xOfY = fn.xValue(y);
-                    if (xOfY && !isNaN(xOfY) && xOfY != Infinity) {
-                        points.push({ x: xOfY, y: y });
-                    }
-                }
-                if (yIsIndependent) {
-                    return points.sort(KG.sortObjects('y'));
+                    return points;
                 }
                 else {
-                    return points.sort(KG.sortObjects('x'));
+                    for (var i = 0; i < numSamplePoints; i++) {
+                        var x = xSamplePoints[i];
+                        var yOfX = fn.yValue(x);
+                        if (yOfX && !isNaN(yOfX) && yOfX != Infinity) {
+                            points.push({ x: x, y: yOfX });
+                        }
+                        var y = ySamplePoints[i];
+                        var xOfY = fn.xValue(y);
+                        if (xOfY && !isNaN(xOfY) && xOfY != Infinity) {
+                            points.push({ x: xOfY, y: y });
+                        }
+                    }
+                    if (yIsIndependent) {
+                        return points.sort(KG.sortObjects('y'));
+                    }
+                    else {
+                        return points.sort(KG.sortObjects('x'));
+                    }
                 }
             };
             return Base;
@@ -871,6 +883,7 @@ var KGMath;
                     powers: definition.powers.map(function (p) { return p.toString(); })
                 };
                 _super.call(this, definition, modelPath);
+                this.univariate = (definition.powers.length == 1);
             }
             // Establish setters
             Monomial.prototype.setCoefficient = function (coefficient) {
@@ -2126,6 +2139,12 @@ var KG;
                     this.yDragParam = definition.coordinates.y.replace('params.', '');
                 }
             }
+            if (definition.hasOwnProperty('xDomainDef')) {
+                viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
+            }
+            if (definition.hasOwnProperty('yDomainDef')) {
+                viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
+            }
         }
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
@@ -2395,7 +2414,7 @@ var KG;
                     name: definition.name + '_label',
                     className: definition.className,
                     text: definition.axisLabel,
-                    dimensions: { width: 60, height: 20 },
+                    dimensions: { width: 25, height: 20 },
                     backgroundColor: 'white',
                     show: definition.show
                 };
@@ -2497,8 +2516,7 @@ var KG;
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     color: definition.color,
-                    show: definition.show,
-                    backgroundColor: 'white'
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 this.labelDiv = new KG.GraphDiv(labelDef);
@@ -2584,6 +2602,11 @@ var KG;
                 .y(function (d) { return d.y; });
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
             var dataPath = group.select(selector);
+            if (!curve.show) {
+                var element_name = curve.name + '_label';
+                //console.log('removing element ',element_name);
+                d3.select('#' + element_name).remove();
+            }
             dataPath
                 .attr({
                 'class': curve.classAndVisibility(),
@@ -2612,6 +2635,17 @@ var KG;
             _super.call(this, definition, modelPath);
             this.viewObjectClass = 'segment';
         }
+        Segment.prototype._update = function (scope) {
+            var s = this;
+            if (s.trimPercent > 0) {
+                var diffX = (s.data[1].x - s.data[0].x) * s.trimPercent, diffY = (s.data[1].y - s.data[0].y) * s.trimPercent;
+                s.data[0].x += diffX;
+                s.data[1].x -= diffX;
+                s.data[0].y += diffY;
+                s.data[1].y -= diffY;
+            }
+            return s;
+        };
         return Segment;
     })(KG.Curve);
     KG.Segment = Segment;
@@ -2708,9 +2742,10 @@ var KG;
                     name: definition.name + 'x_intercept_label',
                     className: definition.className,
                     text: definition.xInterceptLabel,
-                    dimensions: { width: 30, height: 20 },
+                    dimensions: { width: 25, height: 20 },
                     xDrag: definition.xDrag,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
             }
@@ -2719,9 +2754,10 @@ var KG;
                     name: definition.name + 'y_intercept_label',
                     className: definition.className,
                     text: definition.yInterceptLabel,
-                    dimensions: { width: 50, height: 20 },
+                    dimensions: { width: 25, height: 20 },
                     yDrag: definition.yDrag,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
             }
@@ -3043,7 +3079,7 @@ var KG;
         __extends(GraphDiv, _super);
         function GraphDiv(definition, modelPath) {
             definition = _.defaults(definition, {
-                dimensions: { width: 50, height: 20 },
+                dimensions: { width: 30, height: 20 },
                 text: '',
                 color: KG.colorForClassName(definition.className)
             });
@@ -3059,7 +3095,7 @@ var KG;
             }
             var x, y;
             if (divObj.coordinates.x == GraphDiv.AXIS_COORDINATE_INDICATOR) {
-                x = view.margins.left - view.yAxis.textMargin;
+                x = view.margins.left - view.yAxis.textMargin + 2;
                 divObj.align = 'right';
                 divObj.valign = 'middle';
                 if (!view.yAxis.domain.contains(divObj.coordinates.y)) {
@@ -3082,6 +3118,7 @@ var KG;
             }
             var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
             var div = view.getDiv(this.objectName || this.name);
+            console.log('drawing div with text', text);
             div
                 .style('cursor', 'default')
                 .style('text-align', 'center')
@@ -3201,7 +3238,7 @@ var KG;
         };
         FunctionPlot.prototype.updateDataForView = function (view) {
             var p = this;
-            p.data = p.fn.points(view, p.yIsIndependent, p.numSamplePoints);
+            p.data = p.fn.points(view, p.yIsIndependent, p.numSamplePoints, p.xDomain, p.yDomain);
             return p;
         };
         return FunctionPlot;
@@ -3322,7 +3359,8 @@ var KG;
             definition = _.defaults(definition, {
                 background: 'white',
                 mask: true,
-                show: true
+                show: true,
+                square: false
             });
             _super.call(this, definition, modelPath);
             if (definition.hasOwnProperty('xAxisDef')) {
@@ -3352,7 +3390,7 @@ var KG;
             var view = this;
             //console.log('calling update');
             view.update(scope, function () {
-                console.log('starting update');
+                //console.log('starting update');
                 view.updateParams = function (params) {
                     scope.updateParams(params);
                 };
@@ -3372,9 +3410,20 @@ var KG;
             if (element == undefined) {
                 return view;
             }
-            view.dimensions = {
-                width: Math.min(view.maxDimensions.width, element.clientWidth),
-                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop())) };
+            var width = Math.min(view.maxDimensions.width, element.clientWidth), height = Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()));
+            if (view.square) {
+                var side = Math.min(width, height);
+                view.dimensions = {
+                    width: side,
+                    height: side
+                };
+            }
+            else {
+                view.dimensions = {
+                    width: width,
+                    height: height
+                };
+            }
             var frameTranslation = KG.positionByPixelCoordinates({ x: (element.clientWidth - view.dimensions.width) / 2, y: 0 });
             var visTranslation = KG.translateByPixelCoordinates({ x: view.margins.left, y: view.margins.top });
             d3.select(element).select('div').remove();
@@ -3663,8 +3712,8 @@ var KG;
         __extends(Graph, _super);
         function Graph(definition, modelPath) {
             // ensure dimensions and margins are set; set any missing elements to defaults
-            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 800, height: 800 });
-            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 100, bottom: 70, right: 20 });
+            definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 1000, height: 1000 });
+            definition.margins = _.defaults(definition.margins || {}, { top: 20, left: 50, bottom: 70, right: 20 });
             _super.call(this, definition, modelPath);
         }
         Graph.prototype._update = function (scope) {
@@ -4506,6 +4555,56 @@ var EconGraphs;
         return ConstantElasticity;
     })(EconGraphs.Elasticity);
     EconGraphs.ConstantElasticity = ConstantElasticity;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var IndividualAndMarketSandD = (function (_super) {
+        __extends(IndividualAndMarketSandD, _super);
+        function IndividualAndMarketSandD(definition, modelPath) {
+            definition = _.defaults(definition, {
+                alpha: 0.25,
+                income: 64,
+                nc: 100,
+                nf: 36,
+                wage: 9,
+                price: 15,
+                snapTolerance: 0.05
+            });
+            _super.call(this, definition, modelPath);
+            var d = this;
+            d.individualDemandFunction = new KGMath.Functions.Monomial({
+                coefficient: KG.multiplyDefs(definition.alpha, definition.income),
+                powers: [-1]
+            });
+            d.individualSupplyFunction = new KGMath.Functions.Monomial({
+                coefficient: KG.divideDefs(1, definition.wage),
+                powers: [1]
+            });
+            d.marketDemandFunction = d.individualDemandFunction.multiply(definition.nc);
+            d.marketSupplyFunction = d.individualSupplyFunction.multiply(definition.nf);
+        }
+        IndividualAndMarketSandD.prototype._update = function (scope) {
+            var d = this;
+            d.equilibriumPrice = Math.sqrt(d.alpha * d.income * d.wage * d.nc / d.nf);
+            d.equilibriumQuantity = Math.sqrt(d.alpha * d.income * d.nc * d.nf / d.wage);
+            if (d.snapToEquilibrium || KG.isAlmostTo(d.price, d.equilibriumPrice, d.snapTolerance)) {
+                d.price = d.equilibriumPrice;
+                d.inEquilibrium = true;
+            }
+            else {
+                d.inEquilibrium = false;
+            }
+            d.individualQuantityDemanded = d.individualDemandFunction.update(scope).value(d.price);
+            d.individualQuantitySupplied = d.individualSupplyFunction.update(scope).value(d.price);
+            d.marketQuantityDemanded = d.marketDemandFunction.update(scope).value(d.price);
+            d.marketQuantitySupplied = d.marketSupplyFunction.update(scope).value(d.price);
+            d.surplusShortageWord = d.inEquilibrium ? '' : (d.marketQuantitySupplied > d.marketQuantityDemanded) ? "\\text{surplus}" : "\\text{shortage}";
+            return d;
+        };
+        return IndividualAndMarketSandD;
+    })(KG.Model);
+    EconGraphs.IndividualAndMarketSandD = IndividualAndMarketSandD;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 var EconGraphs;
@@ -6914,6 +7013,7 @@ var EconGraphs;
 /// <reference path="basic_concepts/elasticity/constant.ts"/>
 /* MICRO */
 /* Supply and Demand */
+/// <reference path="micro/supply_and_demand/individual_and_market_supply_and_demand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/demand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/linearDemand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/constantElasticityDemand.ts"/>

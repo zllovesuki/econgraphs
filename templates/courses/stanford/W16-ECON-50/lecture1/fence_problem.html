@@ -1,4 +1,4 @@
-{% extends 'layouts/slides/title-body-right.html' %}
+{% extends 'layouts/econ50/title-body-right.html' %}
 
 {% block title %}Fence Problem{% endblock %}
 
@@ -65,7 +65,7 @@
                 type: 'KG.Graph',
                 definition: {
                     element_id: 'graph',
-                    maxDimensions: {width: 550, height:550},
+                    square: true,
                     xAxisDef: {min: 0, max: 25, title: '\\text{Length }(L)'},
                     yAxisDef: {min: 0, max: 25, title: '\\text{Width }(W)'},
                     objects: [

@@ -21,6 +21,7 @@ module KGMath.Functions {
         slopeBetweenPoints: (a: number, b?: number, inverse?: boolean) => number;
         xDomain: KG.IDomain;
         yDomain: KG.IDomain;
+        univariate: boolean;
     }
 
     export class Base extends KG.Model {
@@ -29,6 +30,7 @@ module KGMath.Functions {
         public bases;
         public xDomain;
         public yDomain;
+        public univariate;
 
         constructor(definition,modelPath?) {
 
@@ -102,34 +104,47 @@ module KGMath.Functions {
             return null;
         }
 
-        points(view, yIsIndependent, numSamplePoints) {
+        points(view, yIsIndependent, numSamplePoints, xDomain?, yDomain?) {
 
             var fn = this,
                 points = [];
 
             numSamplePoints = numSamplePoints || 51;
 
-            var xSamplePoints = view.xAxis.domain.samplePoints(numSamplePoints),
-                ySamplePoints = view.yAxis.domain.samplePoints(numSamplePoints);
+            var xSamplePoints = view.xAxis.domain.intersection(xDomain).samplePoints(numSamplePoints),
+                ySamplePoints = view.yAxis.domain.intersection(yDomain).samplePoints(numSamplePoints);
 
-            for(var i = 0; i < numSamplePoints; i++) {
-                var x = xSamplePoints[i];
-                var yOfX = fn.yValue(x);
-                if(yOfX && !isNaN(yOfX) && yOfX != Infinity) {
-                    points.push({x: x, y: yOfX})
+            if(fn.univariate && yIsIndependent) {
+                for(var i = 0; i < numSamplePoints; i++) {
+                    var y = ySamplePoints[i];
+                    var xOfY = fn.value(y);
+                    if(xOfY && !isNaN(xOfY) && xOfY != Infinity) {
+                        points.push({x: xOfY, y: y})
+                    }
                 }
-                var y = ySamplePoints[i];
-                var xOfY = fn.xValue(y);
-                if(xOfY && !isNaN(xOfY) && xOfY != Infinity) {
-                    points.push({x: xOfY, y: y})
-                }
-            }
-
-            if (yIsIndependent) {
-                return points.sort(KG.sortObjects('y'));
+                return points;
             } else {
-                return points.sort(KG.sortObjects('x'));
+                for(var i = 0; i < numSamplePoints; i++) {
+                    var x = xSamplePoints[i];
+                    var yOfX = fn.yValue(x);
+                    if(yOfX && !isNaN(yOfX) && yOfX != Infinity) {
+                        points.push({x: x, y: yOfX})
+                    }
+                    var y = ySamplePoints[i];
+                    var xOfY = fn.xValue(y);
+                    if(xOfY && !isNaN(xOfY) && xOfY != Infinity) {
+                        points.push({x: xOfY, y: y})
+                    }
+                }
+
+                if (yIsIndependent) {
+                    return points.sort(KG.sortObjects('y'));
+                } else {
+                    return points.sort(KG.sortObjects('x'));
+                }
             }
+
+
 
         }
     }

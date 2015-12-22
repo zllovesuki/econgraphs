@@ -130,9 +130,10 @@ module KG {
                     name: definition.name + 'x_intercept_label',
                     className: definition.className,
                     text: definition.xInterceptLabel,
-                    dimensions: {width: 30, height:20},
+                    dimensions: {width: 25, height:20},
                     xDrag: definition.xDrag,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
             }
@@ -142,9 +143,10 @@ module KG {
                     name: definition.name + 'y_intercept_label',
                     className: definition.className,
                     text: definition.yInterceptLabel,
-                    dimensions: {width: 50, height:20},
+                    dimensions: {width: 25, height:20},
                     yDrag: definition.yDrag,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
             }

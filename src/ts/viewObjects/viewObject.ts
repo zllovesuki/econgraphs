@@ -82,6 +82,8 @@ module KG
         public yDragDelta;
         public viewObjectSVGtype;
         public viewObjectClass;
+        public xDomain;
+        public yDomain;
 
         constructor(definition:ViewObjectDefinition, modelPath?: string) {
 
@@ -155,6 +157,13 @@ module KG
                 } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
                     this.yDragParam = definition.coordinates.y.replace('params.','');
                 }
+            }
+
+            if(definition.hasOwnProperty('xDomainDef')) {
+                viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
+            }
+            if(definition.hasOwnProperty('yDomainDef')) {
+                viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
             }
         }
 

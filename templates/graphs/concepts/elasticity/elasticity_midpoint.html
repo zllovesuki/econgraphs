@@ -86,6 +86,7 @@
                     type: 'KG.Graph',
                     definition: {
                         element_id: 'graph',
+                        square: true,
                         xAxisDef: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
                         yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
                         objects: ['model.line', 'model.point1view', 'model.point2view', 'model.midpoint', 'model.xDiffSegment', 'model.yDiffSegment']
@@ -96,4 +97,8 @@
     </script>
 
     {% endraw %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
 {% endblock %}

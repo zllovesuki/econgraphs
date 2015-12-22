@@ -104,8 +104,7 @@ module KG {
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     color: definition.color,
-                    show: definition.show,
-                    backgroundColor: 'white'
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 this.labelDiv = new GraphDiv(labelDef);
@@ -209,6 +208,12 @@ module KG {
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
 
             var dataPath:D3.Selection = group.select(selector);
+
+            if(!curve.show) {
+                var element_name = curve.name+'_label';
+                //console.log('removing element ',element_name);
+                d3.select('#'+element_name).remove();
+            }
 
             dataPath
                 .attr({

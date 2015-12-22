@@ -11,6 +11,7 @@
 
 /* Supply and Demand */
 
+/// <reference path="micro/supply_and_demand/individual_and_market_supply_and_demand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/demand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/linearDemand.ts"/>
 /// <reference path="micro/supply_and_demand/market_demand/constantElasticityDemand.ts"/>

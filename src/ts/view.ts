@@ -15,12 +15,14 @@ module KG
         objects?: ViewObjectDefinition[];
         background?: string;
         mask?: boolean;
+        square?: boolean;
     }
 
     export interface IView extends IModel
     {
 
         show: boolean;
+        square: boolean;
 
         // layers into which objects or text may be rendered, and selectors for those objects once placed
         masked: D3.Selection;
@@ -53,6 +55,7 @@ module KG
     export class View extends Model implements IView
     {
         public show;
+        public square;
         public element_id;
         public maxDimensions;
         public dimensions;
@@ -70,7 +73,8 @@ module KG
             definition = _.defaults(definition,{
                 background: 'white',
                 mask: true,
-                show: true
+                show: true,
+                square: false
             });
             super(definition, modelPath);
             if(definition.hasOwnProperty('xAxisDef')){
@@ -102,7 +106,7 @@ module KG
             var view = this;
             //console.log('calling update');
             view.update(scope, function(){
-                console.log('starting update');
+                //console.log('starting update');
                 view.updateParams = function(params){
                     scope.updateParams(params)
                 };
@@ -126,9 +130,23 @@ module KG
                 return view;
             }
 
-            view.dimensions = {
-                width: Math.min(view.maxDimensions.width, element.clientWidth),
-                height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))};
+            var width = Math.min(view.maxDimensions.width, element.clientWidth),
+                height = Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
+
+            if(view.square) {
+                var side = Math.min(width,height);
+                view.dimensions = {
+                    width: side,
+                    height: side
+                };
+            } else {
+                view.dimensions = {
+                    width: width,
+                    height: height
+                };
+            }
+
+
             var frameTranslation = KG.positionByPixelCoordinates({x:(element.clientWidth - view.dimensions.width)/2,y:0});
             var visTranslation = KG.translateByPixelCoordinates({x:view.margins.left, y:view.margins.top});
 

@@ -5,6 +5,11 @@
     padding: 20px;
   }
 }
+@media screen and (min-width: 500px) {
+  .big {
+    font-size: 18pt;
+  }
+}
 @media print {
   a[href]:after {
     content: none;
@@ -236,9 +241,16 @@ a {
   stroke: #000;
   shape-rendering: crispEdges;
 }
+button {
+  background-color: transparent;
+  border: none;
+}
+button:hover {
+  background-color: lightyellow;
+}
 .dropline {
   stroke-dasharray: 10, 10;
-  stroke-width: 2px;
+  stroke-width: 2;
   stroke: grey;
 }
 .invisible {
@@ -249,8 +261,11 @@ a {
 .dataPath,
 .line,
 .curve {
-  stroke-width: 4;
+  stroke-width: 3;
   fill: none;
+}
+.pointSymbol {
+  stroke-width: 3;
 }
 .dataPathFamily {
   stroke: lightgrey;
@@ -289,9 +304,6 @@ a {
 .matrix td {
   padding: 5px;
   text-align: center;
-}
-.big {
-  font-size: 20pt;
 }
 .arrow {
   stroke-width: 1.5pt;
@@ -348,7 +360,7 @@ a {
 .purple {
   stroke: #9467bd;
   fill: #9467bd;
-  color: #d62728;
+  color: #9467bd;
 }
 .asset {
   color: #1f77b4;
