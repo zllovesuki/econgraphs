@@ -1,4 +1,4 @@
-{% extends 'layouts/eg-layout.html' %}
+{% extends 'layouts/econgraphs.html' %}
 
 {% block body %}
 {% raw %}
@@ -29,6 +29,10 @@
             </div>
         </div>
     </div>
+    {% endraw %}
+{% endblock %}
+
+{% block model %}
     <script>
         var scopeDefinition = {
             params: {
@@ -89,16 +93,189 @@
                         square: true,
                         xAxisDef: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
                         yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
-                        objects: ['model.line', 'model.point1view', 'model.point2view', 'model.midpoint', 'model.xDiffSegment', 'model.yDiffSegment']
+                        objects: [
+                            {
+                                type: 'KG.Dropline',
+                                definition: {
+                                    name: 'point1quantity',
+                                    className: 'green',
+                                    coordinates: {
+                                        x: 'params.x1',
+                                        y: 'params.y1'
+                                    },
+                                    horizontal: false,
+                                    draggable: true,
+                                    axisLabel: 'Q_B'
+                                }
+                            },
+                            {
+                                type: 'KG.Dropline',
+                                definition: {
+                                    name: 'point2quantity',
+                                    className: 'green',
+                                    coordinates: {
+                                        x: 'params.x2',
+                                        y: 'params.y2'
+                                    },
+                                    horizontal: false,
+                                    draggable: true,
+                                    axisLabel: 'Q_A'
+                                }
+                            },
+                            {
+                                type: 'KG.Dropline',
+                                definition: {
+                                    name: 'point1price',
+                                    className: 'purple',
+                                    coordinates: {
+                                        x: 'params.x1',
+                                        y: 'params.y1'
+                                    },
+                                    horizontal: true,
+                                    draggable: true,
+                                    axisLabel: 'P_B'
+                                }
+                            },
+                            {
+                                type: 'KG.Dropline',
+                                definition: {
+                                    name: 'point2price',
+                                    className: 'purple',
+                                    coordinates: {
+                                        x: 'params.x2',
+                                        y: 'params.y2'
+                                    },
+                                    horizontal: true,
+                                    draggable: true,
+                                    axisLabel: 'P_A'
+                                }
+                            },
+                            {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'point1',
+                                coordinates: {
+                                    x: 'params.x1',
+                                    y: 'params.y1'
+                                },
+                                className: 'demand',
+                                size: 500,
+                                params: {
+                                    xDragParam: 'x1',
+                                    yDragParam: 'y1',
+                                    label: 'B'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'point2',
+                                coordinates: {
+                                    x: 'params.x2',
+                                    y: 'params.y2'
+                                },
+                                className: 'demand',
+                                size: 500,
+                                params: {
+                                    xDragParam: 'x2',
+                                    yDragParam: 'y2',
+                                    label: 'A'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'midpoint',
+                                coordinates: {
+                                    x: 'model.xAvg',
+                                    y: 'model.yAvg'
+                                },
+                                className: 'demand small',
+                                size: 40,
+                                xDrag: false,
+                                yDrag: false,
+                                label: {
+                                    text: 'M',
+                                    align: 'left',
+                                    valign: "(model.elasticity) > 0 ? 'top' : 'bottom'",
+                                    color: 'grey'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Line',
+                            definition: {
+                                name: 'demand',
+                                className: 'demand',
+                                arrows: 'NONE',
+                                lineDef: {
+                                    point1: {
+                                        x: 'params.x1',
+                                        y: 'params.y1'
+                                    },
+                                    point2: {
+                                        x: 'params.x2',
+                                        y: 'params.y2'
+                                    }
+
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Arrow',
+                            definition: {
+                                name: 'xDiffSegment',
+                                className: 'diff2',
+                                begin: {
+                                    x: 'params.x2',
+                                    y: 5
+                                },
+                                end: {
+                                    x: 'params.x1',
+                                    y: 5
+                                },
+                                label: {
+                                    text: 'model.xPercentDiff | percentage:0',
+                                    valign: 'top',
+                                    align: 'center'
+                                },
+                                trimPercent: 0.05
+                            }
+                        },
+                        {
+                            type: 'KG.Arrow',
+                            definition: {
+                                name: 'yDiffSegment',
+                                className: 'diff1',
+                                begin: {
+                                    x: 15,
+                                    y: 'params.y2'
+                                },
+                                end: {
+                                    x: 15,
+                                    y: 'params.y1'
+                                },
+                                label: {
+                                    text: 'model.yPercentDiff | percentage:0',
+                                    align: 'right',
+                                    dimensions: {width:100, height:20}
+
+                                },
+                                trimPercent: 0.05
+                            }
+                        }
+                        ]
                     }
                 }
             ]
         }
     </script>
-
-    {% endraw %}
 {% endblock %}
 
 {% block js %}
+
     <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
 {% endblock %}

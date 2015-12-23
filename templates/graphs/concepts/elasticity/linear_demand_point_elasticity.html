@@ -150,13 +150,14 @@
                                     name: 'slopeLabel',
                                     className: 'green',
                                     coordinates: {
-                                        x: 'model.quantityAtPrice(params.demandPriceIntercept/3) + 3',
-                                        y: 'params.demandPriceIntercept/3'
+                                        x: 'model.quantityAtPrice(params.demandPriceIntercept/3) + 1',
+                                        y: 'params.demandPriceIntercept/3 + 1'
                                     },
                                     text: ["\\frac{dQ^D}{dP} =", 'model.demandFunction.inverseSlope | number:2'],
                                     align: 'left',
                                     valign: 'bottom',
-                                    dimensions: {width: 100, height: 20}
+                                    dimensions: {width: 100, height: 30},
+                                    backgroundColor: 'white'
                                 }
                             }]
                     }

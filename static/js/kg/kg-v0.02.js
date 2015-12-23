@@ -2284,14 +2284,12 @@ var KG;
             if (definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
+                    className: definition.className,
                     coordinates: definition.coordinates,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     show: definition.show
                 });
-                if (!labelDef.hasOwnProperty('align')) {
-                    labelDef.className = 'pointLabel';
-                }
                 this.labelDiv = new KG.GraphDiv(labelDef);
             }
             if (definition.droplines) {
@@ -2664,14 +2662,14 @@ var KG;
     var Arrow = (function (_super) {
         __extends(Arrow, _super);
         function Arrow(definition, modelPath) {
-            definition.labelPosition = KG.Curve.LABEL_POSITION_MIDDLE;
-            definition.data = [KG.getCoordinates(definition.begin), KG.getCoordinates(definition.end)];
+            definition.a = definition.begin;
+            definition.b = definition.end;
             definition.arrows = KG.Curve.END_ARROW_STRING;
             _super.call(this, definition, modelPath);
             this.viewObjectClass = 'arrow';
         }
         return Arrow;
-    })(KG.Curve);
+    })(KG.Segment);
     KG.Arrow = Arrow;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -4403,99 +4401,6 @@ var EconGraphs;
         __extends(MidpointElasticity, _super);
         function MidpointElasticity(definition, modelPath) {
             _super.call(this, definition, modelPath);
-            this.point1view = new KG.Point({
-                name: 'point1',
-                coordinates: definition.point1,
-                size: 500,
-                xDrag: true,
-                yDrag: true,
-                label: {
-                    text: 'B'
-                },
-                droplines: {
-                    horizontal: 'P_B',
-                    vertical: 'Q_B'
-                }
-            });
-            this.point2view = new KG.Point({
-                name: 'point2',
-                coordinates: definition.point2,
-                size: 500,
-                xDrag: true,
-                yDrag: true,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    horizontal: 'P_A',
-                    vertical: 'Q_A'
-                }
-            });
-            this.midpoint = new KG.Point({
-                name: 'midpoint',
-                coordinates: {
-                    x: 'model.xAvg',
-                    y: 'model.yAvg' },
-                symbol: 'cross',
-                color: 'grey',
-                size: 100,
-                xDrag: false,
-                yDrag: false,
-                label: {
-                    text: 'M',
-                    align: 'right',
-                    valign: 'top',
-                    color: 'grey'
-                }
-            });
-            this.line = new KG.Line({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                lineDef: {
-                    point1: {
-                        x: 'params.x1',
-                        y: 'params.y1'
-                    },
-                    point2: {
-                        x: 'params.x2',
-                        y: 'params.y2'
-                    }
-                }
-            });
-            this.xDiffSegment = new KG.Arrow({
-                name: 'xDiffSegment',
-                className: 'diff2',
-                begin: {
-                    x: definition.point2.x,
-                    y: 5
-                },
-                end: {
-                    x: definition.point1.x,
-                    y: 5
-                },
-                label: {
-                    text: 'model.xPercentDiff | percentage:0',
-                    valign: 'top',
-                    align: 'center'
-                }
-            });
-            this.yDiffSegment = new KG.Arrow({
-                name: 'yDiffSegment',
-                className: 'diff1',
-                begin: {
-                    x: 15,
-                    y: definition.point2.y
-                },
-                end: {
-                    x: 15,
-                    y: definition.point1.y
-                },
-                label: {
-                    text: 'model.yPercentDiff | percentage:0',
-                    align: 'right'
-                }
-            });
         }
         MidpointElasticity.prototype._calculateElasticity = function (inputs) {
             var e = this;

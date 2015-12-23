@@ -97,14 +97,12 @@ module KG
             if(definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
+                    className: definition.className,
                     coordinates:definition.coordinates,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     show: definition.show
                 });
-                if(!labelDef.hasOwnProperty('align')) {
-                    labelDef.className = 'pointLabel'
-                }
                 this.labelDiv = new GraphDiv(labelDef);
             }
 
