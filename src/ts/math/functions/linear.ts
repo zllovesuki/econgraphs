@@ -94,6 +94,13 @@ module KGMath.Functions {
         }
 
         _update(scope) {
+            var l = this;
+            if(l.xDomain) {
+                l.xDomain.update(scope);
+            }
+            if(l.yDomain) {
+                l.yDomain.update(scope);
+            }
             return this.updateLine();
         }
 

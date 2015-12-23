@@ -28,6 +28,7 @@ module KG {
 
     export interface ILine extends IViewObject {
 
+        definition: LineDefinition;
         linear: KGMath.Functions.Linear;
         labelDiv: GraphDiv;
         xInterceptLabelDiv: GraphDiv;
@@ -39,6 +40,7 @@ module KG {
 
     export class Line extends ViewObject implements ILine {
 
+        public definition;
         public linear;
         public arrows;
 
@@ -154,8 +156,20 @@ module KG {
         }
 
         _update(scope) {
-            this.linear.update(scope);
-            return this;
+            var line = this;
+            line.linear.update(scope);
+            if(line.xInterceptLabelDiv) {
+                line.xInterceptLabelDiv.update(scope)
+            }
+
+            if(line.yInterceptLabelDiv) {
+                line.yInterceptLabelDiv.update(scope)
+            }
+
+            if(line.labelDiv) {
+                line.labelDiv.update(scope)
+            }
+            return line;
         }
 
         createSubObjects(view,scope) {
@@ -228,7 +242,9 @@ module KG {
 
                 if(line.labelDiv) {
 
-                    var labelPoint, labelAlign = 'left', labelValign = 'bottom';
+                    var labelPoint,
+                        labelAlign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('align')) ? line.definition.label.align : 'left',
+                        labelValign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('valign')) ? line.definition.label.valign : 'bottom';
 
                     if(line instanceof VerticalLine) {
                         labelPoint = xTopEdge;

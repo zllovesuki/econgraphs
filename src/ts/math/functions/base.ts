@@ -126,12 +126,12 @@ module KGMath.Functions {
             } else {
                 for(var i = 0; i < numSamplePoints; i++) {
                     var x = xSamplePoints[i];
-                    var yOfX = fn.yValue(x);
+                    var yOfX:number = fn.yValue(x);
                     if(yOfX && !isNaN(yOfX) && yOfX != Infinity) {
                         points.push({x: x, y: yOfX})
                     }
                     var y = ySamplePoints[i];
-                    var xOfY = fn.xValue(y);
+                    var xOfY:number = fn.xValue(y);
                     if(xOfY && !isNaN(xOfY) && xOfY != Infinity) {
                         points.push({x: xOfY, y: y})
                     }

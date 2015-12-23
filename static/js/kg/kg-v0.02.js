@@ -1282,6 +1282,13 @@ var KGMath;
                 l.interceptDef = l.interceptDef || KG.multiplyDefs(-1, KG.divideDefs(definition.coefficients.c, definition.coefficients.b));
             }
             Linear.prototype._update = function (scope) {
+                var l = this;
+                if (l.xDomain) {
+                    l.xDomain.update(scope);
+                }
+                if (l.yDomain) {
+                    l.yDomain.update(scope);
+                }
                 return this.updateLine();
             };
             Linear.prototype.updateLine = function () {
@@ -2763,8 +2770,18 @@ var KG;
             }
         }
         Line.prototype._update = function (scope) {
-            this.linear.update(scope);
-            return this;
+            var line = this;
+            line.linear.update(scope);
+            if (line.xInterceptLabelDiv) {
+                line.xInterceptLabelDiv.update(scope);
+            }
+            if (line.yInterceptLabelDiv) {
+                line.yInterceptLabelDiv.update(scope);
+            }
+            if (line.labelDiv) {
+                line.labelDiv.update(scope);
+            }
+            return line;
         };
         Line.prototype.createSubObjects = function (view, scope) {
             var line = this;
@@ -2821,7 +2838,7 @@ var KG;
                     line.removeArrow(group, 'end');
                 }
                 if (line.labelDiv) {
-                    var labelPoint, labelAlign = 'left', labelValign = 'bottom';
+                    var labelPoint, labelAlign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('align')) ? line.definition.label.align : 'left', labelValign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('valign')) ? line.definition.label.valign : 'bottom';
                     if (line instanceof VerticalLine) {
                         labelPoint = xTopEdge;
                         labelAlign = 'center';
@@ -4618,36 +4635,6 @@ var EconGraphs;
             var d = this;
             d.demandFunction = new KGMath.Functions[definition.type](definition.def);
             d.elasticity = (definition.elasticityMethod == 'point') ? new EconGraphs.PointElasticity({}) : (definition.elasticityMethod = 'constant') ? new EconGraphs.ConstantElasticity({}) : new EconGraphs.MidpointElasticity({});
-            var priceLineDrag = (typeof definition.price == 'string') ? definition.price.replace('params.', '') : false;
-            d.priceLine = new KG.HorizontalLine({
-                name: 'priceLine',
-                color: 'grey',
-                arrows: 'NONE',
-                yDrag: definition.priceDrag,
-                y: d.modelProperty('price')
-            });
-            this.quantityLine = new KG.VerticalLine({
-                name: 'quantityLine',
-                color: 'grey',
-                arrows: 'NONE',
-                xDrag: definition.quantityDrag,
-                x: d.modelProperty('quantity')
-            });
-            this.quantityDemandedPoint = new KG.Point({
-                name: 'quantityDemandedAtPrice',
-                coordinates: { x: this.modelProperty('quantity'), y: this.modelProperty('price') },
-                size: 500,
-                color: 'black',
-                yDrag: definition.price,
-                xDrag: definition.quantity,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    vertical: 'Q^D_A',
-                    horizontal: 'P_A'
-                }
-            });
         }
         Demand.prototype._update = function (scope) {
             var d = this;
@@ -4763,27 +4750,6 @@ var EconGraphs;
         function LinearDemand(definition, modelPath) {
             _super.call(this, definition, modelPath);
             var demand = this;
-            demand.priceInterceptPoint = new KG.Point({
-                name: 'demandPriceIntercept',
-                coordinates: { x: 0, y: demand.modelProperty('priceIntercept') },
-                className: 'demand',
-                yDrag: definition.priceInterceptDrag
-            });
-            demand.quantityInterceptPoint = new KG.Point({
-                name: 'demandQuantityIntercept',
-                coordinates: { x: demand.modelProperty('quantityIntercept'), y: 0 },
-                className: 'demand',
-                xDrag: definition.quantityInterceptDrag
-            });
-            demand.curve = new KG.Line({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                lineDef: definition.def,
-                label: {
-                    text: definition.curveLabel
-                }
-            });
             demand.consumerSurplus = new KG.Area({
                 name: 'consumerSurplus',
                 className: 'demand',
@@ -4844,63 +4810,14 @@ var EconGraphs;
         __extends(ConstantElasticityDemand, _super);
         function ConstantElasticityDemand(definition, modelPath) {
             _super.call(this, definition, modelPath);
-            this.slopeAtPrice = function (price) {
-                var d = this, a = d.demandFunction.level, b = d.demandFunction.powers[1];
-                return (-1) * a * b * Math.pow(price, -(1 + b));
-            };
-            this.slopeAtPriceWords = function (price) {
-                return "\\frac { dQ^D }{ dP } = " + this.slopeAtPrice(price).toFixed(2);
-            };
-            this.curve = new KG.FunctionPlot({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                fn: 'model.demandFunction',
-                label: {
-                    text: 'D'
-                }
-            });
-            this.priceLine = new KG.HorizontalLine({
-                name: 'priceLine',
-                color: 'grey',
-                arrows: 'NONE',
-                type: 'HorizontalLine',
-                yDrag: 'price',
-                y: 'params.price'
-            });
-            this.quantityDemandedAtPrice = new KG.Point({
-                name: 'quantityDemandedAtPrice',
-                coordinates: { x: 'model.quantityAtPrice(params.price)', y: 'params.price' },
-                size: 500,
-                color: 'black',
-                yDrag: true,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    vertical: 'Q^D(P)',
-                    horizontal: 'P'
-                }
-            });
-            this.slopeLine = new KG.Line({
-                name: 'slopeLine',
-                className: 'demand dotted',
-                lineDef: {
-                    point: { x: 'model.quantityAtPrice(params.price)', y: 'params.price' },
-                    slope: '1/model.slopeAtPrice(params.price)'
-                },
-                label: {
-                    text: 'model.slopeAtPriceWords(params.price)'
-                }
-            });
             this.elasticity.elasticity = definition.def.powers[1];
         }
-        ConstantElasticityDemand.prototype._update = function (scope) {
-            var d = this;
-            d.demandFunction.update(scope);
-            d.slopeLine.linear.update(scope);
-            d.elasticity.update(scope);
-            return d;
+        ConstantElasticityDemand.prototype.slopeAtPrice = function (price) {
+            var d = this, a = d.demandFunction.level, b = d.demandFunction.powers[1];
+            return (-1) * a * b * Math.pow(price, -(1 + b));
+        };
+        ConstantElasticityDemand.prototype.slopeAtPriceWords = function (price) {
+            return "\\frac { dQ^D }{ dP } = " + this.slopeAtPrice(price).toFixed(2);
         };
         return ConstantElasticityDemand;
     })(EconGraphs.Demand);
