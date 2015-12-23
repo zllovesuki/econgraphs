@@ -165,47 +165,41 @@ module KG
                 .attr('height', view.dimensions.height);
 
             // Establish marker style for arrow
-            var endMarkers = svg.append("svg:defs").selectAll("marker").data(allColors()).enter()
-                .append("marker")
-                .attr("id", function(d){return "arrow-end-" + d})
-                .attr("refX", 11)
-                .attr("refY", 6)
-                .attr("markerWidth", 13)
-                .attr("markerHeight", 13)
-                .attr("orient", "auto")
-                .attr("markerUnits","userSpaceOnUse");
+            var markerParameters = [
+                {
+                    arrowName: "-end-",
+                    refX: 11,
+                    maskPath: "M3,1 L3,12 L12,7 L12,5 L3,1",
+                    arrowPath: "M2,2 L2,11 L10,6 L2,2"
+                },
+                {
+                    arrowName: "-start-",
+                    refX: 2,
+                    maskPath: "M10,1 L10,12 L0,7 L0,5 L10,1",
+                    arrowPath: "M11,2 L11,11 L2,6 L11,2"
+                }
+            ];
 
-            /*endMarkers.append("svg:rect")
-                .attr('x',2)
-                .attr('width', 11)
-                .attr('height', 13)
-                .attr('fill','white');*/
+            markerParameters.forEach(function(markerParam){
+                var markers = svg.append("svg:defs").selectAll("marker").data(allColors()).enter()
+                    .append("marker")
+                    .attr("id", function(d){return "arrow" + markerParam.arrowName + d})
+                    .attr("refX", markerParam.refX)
+                    .attr("refY", 6)
+                    .attr("markerWidth", 13)
+                    .attr("markerHeight", 13)
+                    .attr("orient", "auto")
+                    .attr("markerUnits","userSpaceOnUse");
 
-            endMarkers.append("svg:path")
-                .attr("d", "M2,2 L2,11 L10,6 L2,2")
-                .attr("fill",function(d) {return d});
+                markers.append("svg:path")
+                    .attr("d", markerParam.maskPath)
+                    .attr("fill","white");
 
-            // Establish marker style for arrow
-            var startMarkers = svg.append("svg:defs").selectAll("marker").data(allColors()).enter()
-                .append("svg:marker")
-                .attr("id", function(d){return "arrow-start-" + d})
-                .attr("refX", 2)
-                .attr("refY", 6)
-                .attr("markerWidth", 13)
-                .attr("markerHeight", 13)
-                .attr("orient", "auto")
-                .attr("markerUnits","userSpaceOnUse");
+                markers.append("svg:path")
+                    .attr("d", markerParam.arrowPath)
+                    .attr("fill",function(d) {return d});
 
-            // TODO need a better way to mask the portion of the line that extends under the arrow
-            /*startMarkers.append("svg:rect")
-                .attr('x',2)
-                .attr('width', 11)
-                .attr('height', 13)*/
-
-
-            startMarkers.append("svg:path")
-                .attr("d", "M11,2 L11,11 L2,6 L11,2")
-                .attr("fill",function(d) {return d});
+            });
 
             // Add a div above the SVG for labels and controls
             view.divs = frame.append('div').attr({style: visTranslation});
