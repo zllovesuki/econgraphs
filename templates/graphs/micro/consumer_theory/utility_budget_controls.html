@@ -159,18 +159,13 @@
                     definition: {
                         income: 'params.income',
                         px: 'params.px',
-                        py: 'params.py',
-                        budgetConstraintLabel: 'BL',
-                        xInterceptLabel: "\\frac{I}{P_x}",
-                        yInterceptLabel: "\\frac{I}{P_y}"
+                        py: 'params.py'
                     }
                 },
                 utility: selectorDefinition
             }
         },
         views: [
-            {% block graphDefs %}
-            {% endblock %},
             {
                 type: 'KG.Slider',
                 definition: {

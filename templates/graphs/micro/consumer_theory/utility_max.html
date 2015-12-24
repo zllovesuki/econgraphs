@@ -15,30 +15,84 @@
             <toggle param="showMap" class="utility"><span ng-if="params.showMap">Hide</span><span ng-if="!params.showMap">Show</span> indifference curve map</toggle>
 {% endblock %}
 
-{% block graphDefs %}
-    {
-        type: 'KG.Graph',
-        definition: {
-            element_id: 'utility',
-            xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
-            yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
-            objects: [
-                        "model.utility.indifferenceCurveFamily([5,10,15,20,25,30,35,40,45],{show: params.showMap})",
-                        "model.utility.optimalIndifferenceCurve(model.budget,{className: 'utility-old', label:'U^*', name:'optimal'})",
-                        "model.utility.indifferenceCurveThroughBundle(model.bundle,{label: 'U'})",
-                        "model.utility.mrsLine(model.bundle,{show: (params.showMRS && !params.snapToOptimal), label: 'MRS_{x,y}'})",
-                        "model.budget.budgetLine",
-                        "model.utility.bundlePoint(model.bundle,{className: 'utility', xDrag: 'x', xAxisLabel: 'x', yAxisLabel: 'y', show: !params.snapToOptimal})",
-                        "model.utility.optimalBundlePoint(model.budget,{className: 'utility', xAxisLabel: 'x^*', yAxisLabel: 'y^*', show: params.snapToOptimal})"
-
-                    ]
-        }
-    }
-{% endblock %}
-
     {% block jsadjustments %}
         <script>
         scopeDefinition.params.snapToOptimal = false;
         scopeDefinition.params.showMRS = false;
+
+        scopeDefinition.views.push({
+            type: 'KG.Graph',
+            definition: {
+                element_id: 'utility',
+                square: true,
+                xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
+                yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
+                objects: [
+                    "model.utility.indifferenceCurveFamily([5,10,15,20,25,30,35,40,45],{show: params.showMap})",
+                    {
+                        type: 'KG.Line',
+                        definition: {
+                            name: 'BL',
+                            className: 'budget',
+                            linear: 'model.budget.budgetSegments[0].linear',
+                            params: {
+                                label: 'BL',
+                                xInterceptLabel: "\\frac{I}{P_x}",
+                                yInterceptLabel: "\\frac{I}{P_y}"
+                            }
+                        }
+                    },
+                    {
+                        type: 'KG.Point',
+                        definition: {
+                            name: 'bundle',
+                            className: 'utility',
+                            coordinates: {
+                                x: 'model.bundle.x',
+                                y: 'model.bundle.y'
+                            },
+                            params: {
+                                xDragParam: 'x',
+                                xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
+                                yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
+                            }
+                        }
+                    },
+                    {
+                        type: 'KG.FunctionPlot',
+                        definition: {
+                            name: 'indifference_curve',
+                            className: 'utility',
+                            params: {label: 'params.snapToOptimal ? "U^*" : "U"'},
+                            fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))"
+                        }
+                    },
+                    {
+                        type: 'KG.Line',
+                        definition: {
+                            name: 'MRS',
+                            className: 'demand dotted',
+                            lineDef: {
+                                        point: {
+                                            x: 'params.x',
+                                            y: 'model.bundle.y'
+                                        },
+                                        slope: '-1*model.utility.mrs(model.bundle)',
+                                        xDomainDef: {
+                                            min: '0.5*params.x',
+                                            max: '1.5*params.x'
+                                        }
+                                    },
+                            show: '(params.showMRS && !params.snapToOptimal)',
+                            label: {
+                                text: 'MRS_{x,y}',
+                                valign: 'top',
+                                align: 'center'
+                            }
+                        }
+                    }
+                ]
+            }
+        })
         </script>
     {% endblock %}
