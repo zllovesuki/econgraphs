@@ -5881,7 +5881,7 @@ var EconGraphs;
                 params: segmentParams
             });
         };
-        UtilityDemand.prototype.demandCurve = function (demandParams, curveParams) {
+        UtilityDemand.prototype.demandCurveData = function (demandParams) {
             demandParams = _.defaults(demandParams, {
                 good: 'x',
                 min: 1,
@@ -5900,13 +5900,7 @@ var EconGraphs;
             samplePoints.forEach(function (price) {
                 curveData.push({ x: d.quantityAtPrice(price, demandParams.good), y: price });
             });
-            curveData = curveData.sort(KG.sortObjects('x'));
-            return new KG.Curve({
-                name: 'demand' + demandParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'demand'
-            });
+            return curveData.sort(KG.sortObjects('x'));
         };
         return UtilityDemand;
     })(KG.Model);

@@ -17,8 +17,7 @@ module EconGraphs {
         utilitySelector: KG.Selector;
 
         quantityAtPrice: (price:number, good?: string) => number;
-        quantityAtPricePoint: (price:number, priceParams?: any, pointParams?: KG.PointParamsDefinition) => KG.Point;
-        demandCurve: (demandParams: UtilityDemandCurveParams, curveParams: KG.CurveParamsDefinition) => KG.Curve;
+        demandCurveData: (demandParams: UtilityDemandCurveParams) => KG.ICoordinates[];
 
         price: (good?: string) => number; // current price of good x or good y
     }
@@ -92,7 +91,7 @@ module EconGraphs {
 
         }
 
-        demandCurve(demandParams, curveParams) {
+        demandCurveData(demandParams) {
 
             demandParams = _.defaults(demandParams, {
                 good: 'x',
@@ -121,14 +120,8 @@ module EconGraphs {
                 curveData.push({x: d.quantityAtPrice(price, demandParams.good), y: price});
             });
 
-            curveData = curveData.sort(KG.sortObjects('x'));
+            return curveData.sort(KG.sortObjects('x'));
 
-            return new KG.Curve({
-                name: 'demand' + demandParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'demand'
-            });
         }
 
     }
