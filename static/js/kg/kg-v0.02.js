@@ -5844,45 +5844,8 @@ var EconGraphs;
         UtilityDemand.prototype.otherQuantityAtPrice = function (price, good) {
             return 0; // overridden by subclass
         };
-        UtilityDemand.prototype.quantityAtPricePoint = function (price, priceParams, pointParams) {
-            var d = this;
-            priceParams = _.defaults(priceParams, {
-                good: 'x'
-            });
-            var quantityProperty = 'quantityAtPrice(' + price + ',"' + priceParams.good + '")';
-            return new KG.Point({
-                name: 'q' + priceParams.good + 'd',
-                className: 'demand',
-                coordinates: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                params: pointParams
-            });
-        };
-        UtilityDemand.prototype.quantitiesAtPriceSegment = function (price, segmentParams) {
-            var d = this;
-            segmentParams = _.defaults(segmentParams, {
-                good: 'x'
-            });
-            var quantityProperty = 'quantityAtPrice(' + price + ',' + segmentParams.good + ')';
-            var otherQuantityProperty = 'otherQuantityAtPrice(' + price + ',' + segmentParams.good + ')';
-            return new KG.Segment({
-                name: 'q' + segmentParams.good + 'dSegment',
-                className: 'demand',
-                a: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                b: {
-                    x: d.modelProperty(otherQuantityProperty),
-                    y: price
-                },
-                params: segmentParams
-            });
-        };
         UtilityDemand.prototype.demandCurveData = function (demandParams) {
-            demandParams = _.defaults(demandParams, {
+            demandParams = _.defaults(demandParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 50,
@@ -5890,11 +5853,18 @@ var EconGraphs;
             });
             var d = this, curveData = [], relevantDemandParams = _.clone(demandParams);
             if (d.utility instanceof EconGraphs.SubstitutesUtility) {
-                curveData.push({ x: 0, y: demandParams.max });
-                // get other price from specific demand function
-                // set new maximum to critical price ratio
+                // set new maximum to critical price ratio, if that's on the graph
                 relevantDemandParams.max = (demandParams.good == 'x') ? d.utility.criticalPriceRatio * d.price('y') : d.price('x') / d.utility.criticalPriceRatio;
-                curveData.push({ x: 0, y: relevantDemandParams.max });
+                if (relevantDemandParams.max < demandParams.max) {
+                    curveData.push({ x: 0, y: demandParams.max });
+                    curveData.push({ x: 0, y: relevantDemandParams.max });
+                    if (d.hasOwnProperty('budget')) {
+                        curveData.push({ x: d['budget']['income'] / relevantDemandParams.max, y: relevantDemandParams.max });
+                    }
+                }
+                else {
+                    relevantDemandParams.max = demandParams.max;
+                }
             }
             var samplePoints = KG.samplePointsForDomain(relevantDemandParams).reverse();
             samplePoints.forEach(function (price) {
@@ -5962,8 +5932,8 @@ var EconGraphs;
             d.budget.setIncome(originalIncome);
             return quantity;
         };
-        MarshallianDemand.prototype.priceConsumptionCurve = function (pccParams, curveParams) {
-            pccParams = _.defaults(pccParams, {
+        MarshallianDemand.prototype.priceConsumptionCurveData = function (pccParams) {
+            pccParams = _.defaults(pccParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 100,
@@ -5977,15 +5947,16 @@ var EconGraphs;
             });
             // reset budget price
             budget['p' + pccParams.good] = initialPrice;
-            return new KG.Curve({
+            return curveData;
+            /*return new KG.Curve({
                 name: 'PCC' + pccParams.good,
                 data: curveData,
                 params: curveParams,
                 className: 'pcc'
-            });
+            })*/
         };
-        MarshallianDemand.prototype.incomeConsumptionCurve = function (iccParams, curveParams) {
-            iccParams = _.defaults(iccParams, {
+        MarshallianDemand.prototype.incomeConsumptionCurveData = function (iccParams) {
+            iccParams = _.defaults(iccParams || {}, {
                 min: 1,
                 max: 200,
                 numSamplePoints: 200
@@ -5998,46 +5969,20 @@ var EconGraphs;
             });
             // reset budget price
             budget.income = initialIncome;
-            return new KG.Curve({
-                name: 'ICC',
-                data: curveData,
-                params: curveParams,
-                className: 'icc'
-            });
+            return curveData;
         };
-        MarshallianDemand.prototype.quantityAtIncomePoint = function (price, incomeParams, pointParams) {
-            var d = this;
-            incomeParams = _.defaults(incomeParams, {
-                good: 'x'
-            });
-            var quantityProperty = 'quantityAtIncome(' + price + ',"' + incomeParams.good + '")';
-            return new KG.Point({
-                name: 'q' + incomeParams.good + 'd',
-                className: 'engel',
-                coordinates: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                params: pointParams
-            });
-        };
-        MarshallianDemand.prototype.engelCurve = function (engelParams, curveParams) {
-            engelParams = _.defaults(engelParams, {
+        MarshallianDemand.prototype.engelCurveData = function (engelParams) {
+            engelParams = _.defaults(engelParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 200,
-                numSamplePoints: 201
+                numSamplePoints: 200
             });
             var d = this, samplePoints = KG.samplePointsForDomain(engelParams), curveData = [];
             samplePoints.forEach(function (price) {
                 curveData.push({ x: d.quantityAtIncome(price, engelParams.good), y: price });
             });
-            return new KG.Curve({
-                name: 'Engel' + engelParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'engel'
-            });
+            return curveData;
         };
         return MarshallianDemand;
     })(EconGraphs.UtilityDemand);

@@ -460,12 +460,12 @@ button:hover {
 .budget {
   color: #014421;
   stroke: #014421;
-  fill: #014421;
+  fill: #ffbb78;
 }
 .engel {
   color: #ff7f0e;
   stroke: #ff7f0e;
-  fill: #ff7f0e;
+  fill: #ffbb78;
 }
 .curve {
   fill: none;

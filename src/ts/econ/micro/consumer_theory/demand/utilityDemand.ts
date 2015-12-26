@@ -45,55 +45,9 @@ module EconGraphs {
             return 0; // overridden by subclass
         }
 
-        quantityAtPricePoint(price, priceParams, pointParams) {
-            var d = this;
-
-            priceParams = _.defaults(priceParams,{
-                good: 'x'
-            });
-
-            var quantityProperty = 'quantityAtPrice(' + price + ',"' + priceParams.good + '")';
-
-            return new KG.Point({
-                name: 'q'+priceParams.good + 'd',
-                className: 'demand',
-                coordinates: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                params: pointParams
-            })
-        }
-
-        quantitiesAtPriceSegment(price, segmentParams) {
-            var d = this;
-
-            segmentParams = _.defaults(segmentParams,{
-                good: 'x'
-            });
-
-            var quantityProperty = 'quantityAtPrice(' + price + ',' + segmentParams.good + ')';
-            var otherQuantityProperty = 'otherQuantityAtPrice(' + price + ',' + segmentParams.good + ')';
-
-            return new KG.Segment({
-                name: 'q'+segmentParams.good + 'dSegment',
-                className: 'demand',
-                a: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                b: {
-                    x: d.modelProperty(otherQuantityProperty),
-                    y: price
-                },
-                params: segmentParams
-            })
-
-        }
-
         demandCurveData(demandParams) {
 
-            demandParams = _.defaults(demandParams, {
+            demandParams = _.defaults(demandParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 50,
@@ -105,12 +59,20 @@ module EconGraphs {
                 relevantDemandParams = _.clone(demandParams);
 
             if(d.utility instanceof SubstitutesUtility) {
-                curveData.push({x: 0, y: demandParams.max});
-                // get other price from specific demand function
-
-                // set new maximum to critical price ratio
+                // set new maximum to critical price ratio, if that's on the graph
                 relevantDemandParams.max = (demandParams.good == 'x') ? d.utility.criticalPriceRatio * d.price('y') : d.price('x')/d.utility.criticalPriceRatio;
-                curveData.push({x: 0, y: relevantDemandParams.max});
+
+                if(relevantDemandParams.max < demandParams.max) {
+                    curveData.push({x: 0, y: demandParams.max});
+                    curveData.push({x: 0, y: relevantDemandParams.max});
+                    if(d.hasOwnProperty('budget')) {
+                        curveData.push({x: d['budget']['income']/relevantDemandParams.max,y: relevantDemandParams.max});
+                    }
+                }
+                else {
+                    relevantDemandParams.max = demandParams.max;
+                }
+
             }
 
             var samplePoints = KG.samplePointsForDomain(relevantDemandParams).reverse();

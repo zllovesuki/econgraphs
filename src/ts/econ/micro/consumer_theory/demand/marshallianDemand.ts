@@ -17,9 +17,9 @@ module EconGraphs {
         budget: BudgetConstraint | KG.Selector;
         snapToOptimalBundle?: boolean;
 
-        priceConsumptionCurve: (pccParams: UtilityDemandCurveParams, curveParams: KG.CurveParamsDefinition) => KG.Curve;
-        incomeConsumptionCurve: (iccParams: UtilityDemandCurveParams, curveParams: KG.CurveParamsDefinition) => KG.Curve;
-        engelCurve: (engelParams: UtilityDemandCurveParams, curveParams: KG.CurveParamsDefinition) => KG.Curve;
+        priceConsumptionCurveData: (pccParams?: UtilityDemandCurveParams) => KG.ICoordinates[];
+        incomeConsumptionCurveData: (iccParams?: UtilityDemandCurveParams) => KG.ICoordinates[];
+        engelCurveData: (engelParams?: UtilityDemandCurveParams) => KG.ICoordinates[];
 
     }
 
@@ -98,9 +98,9 @@ module EconGraphs {
 
         }
 
-        priceConsumptionCurve(pccParams, curveParams) {
+        priceConsumptionCurveData(pccParams?) {
 
-            pccParams = _.defaults(pccParams, {
+            pccParams = _.defaults(pccParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 100,
@@ -122,17 +122,19 @@ module EconGraphs {
             // reset budget price
             budget['p' + pccParams.good] = initialPrice;
 
-            return new KG.Curve({
+            return curveData;
+
+            /*return new KG.Curve({
                 name: 'PCC' + pccParams.good,
                 data: curveData,
                 params: curveParams,
                 className: 'pcc'
-            })
+            })*/
         }
 
-        incomeConsumptionCurve(iccParams?, curveParams?) {
+        incomeConsumptionCurveData(iccParams?) {
 
-            iccParams = _.defaults(iccParams, {
+            iccParams = _.defaults(iccParams || {}, {
                 min: 1,
                 max: 200,
                 numSamplePoints: 200
@@ -153,41 +155,16 @@ module EconGraphs {
             // reset budget price
             budget.income = initialIncome;
 
-            return new KG.Curve({
-                name: 'ICC',
-                data: curveData,
-                params: curveParams,
-                className: 'icc'
-            });
+            return curveData;
         }
 
-        quantityAtIncomePoint(price, incomeParams, pointParams) {
-            var d = this;
+        engelCurveData(engelParams?) {
 
-            incomeParams = _.defaults(incomeParams,{
-                good: 'x'
-            });
-
-            var quantityProperty = 'quantityAtIncome(' + price + ',"' + incomeParams.good + '")';
-
-            return new KG.Point({
-                name: 'q'+incomeParams.good + 'd',
-                className: 'engel',
-                coordinates: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                params: pointParams
-            })
-        }
-
-        engelCurve(engelParams, curveParams) {
-
-            engelParams = _.defaults(engelParams, {
+            engelParams = _.defaults(engelParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 200,
-                numSamplePoints: 201
+                numSamplePoints: 200
             });
 
             var d = this,
@@ -198,12 +175,7 @@ module EconGraphs {
                 curveData.push({x: d.quantityAtIncome(price, engelParams.good), y: price});
             });
 
-            return new KG.Curve({
-                name: 'Engel' + engelParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'engel'
-            });
+            return curveData;
 
         }
 
