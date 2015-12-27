@@ -102,34 +102,29 @@ module EconGraphs {
 
             pccParams = _.defaults(pccParams || {}, {
                 good: 'x',
-                min: 1,
-                max: 100,
-                numSamplePoints: 100
+                min: 0,
+                max: 10,
+                numSamplePoints: 101
             });
 
             var d = this,
-                budget = d.budget,
                 samplePoints = KG.samplePointsForDomain(pccParams),
                 curveData = [];
 
-            var initialPrice = budget['p' + pccParams.good];
+            var initialPrice = d.budget['p' + pccParams.good];
+            console.log('setting initial price to ',initialPrice);
 
             samplePoints.forEach(function(price) {
-                budget['p' + pccParams.good] = price;
-                curveData.push(d.utility.optimalBundle(budget));
+                d.budget.setPrice(price,pccParams.good)
+                var optimalBundle = d.utility.optimalBundle(d.budget)
+                if(!isNaN(optimalBundle.x) && !isNaN(optimalBundle.y)) {curveData.push(optimalBundle)};
             });
 
             // reset budget price
-            budget['p' + pccParams.good] = initialPrice;
+            d.budget.setPrice(initialPrice,pccParams.good);
 
             return curveData;
 
-            /*return new KG.Curve({
-                name: 'PCC' + pccParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'pcc'
-            })*/
         }
 
         incomeConsumptionCurveData(iccParams?) {
@@ -141,19 +136,20 @@ module EconGraphs {
             });
 
             var d = this,
-                budget = d.budget,
                 samplePoints = KG.samplePointsForDomain(iccParams),
-                curveData = [];
+                curveData = [],
+                optimalBundle;
 
-            var initialIncome = budget.income;
+            var initialIncome = d.budget.income;
 
             samplePoints.forEach(function(income) {
-                budget.income = income;
-                curveData.push(d.utility.optimalBundle(budget));
+                d.budget.setIncome(income);
+                optimalBundle = d.utility.optimalBundle(d.budget);
+                if(!isNaN(optimalBundle.x) && !isNaN(optimalBundle.y)) {curveData.push(optimalBundle)};
             });
 
             // reset budget price
-            budget.income = initialIncome;
+            d.budget.setIncome(initialIncome);
 
             return curveData;
         }

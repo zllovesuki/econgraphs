@@ -211,10 +211,13 @@ module KG
                 var mask = svg.append('g').attr('class','mask');
 
                 // Put mask around vis to clip objects that extend beyond the desired viewable area
-                mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top, fill:view.background});
-                mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom, width: view.dimensions.width, height: view.margins.bottom, fill:view.background});
-                mask.append('rect').attr({x: 0, y: 0, width: view.margins.left, height: view.dimensions.height, fill:view.background});
-                mask.append('rect').attr({x: view.dimensions.width - view.margins.right, y: 0, width: view.margins.right, height: view.dimensions.height, fill:view.background});
+
+                var maskBorder = 5;
+
+                mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill:view.background}); // top
+                mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill:view.background}); // bottom
+                mask.append('rect').attr({x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill:view.background}); // left
+                mask.append('rect').attr({x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill:view.background}); // right
 
             }
 

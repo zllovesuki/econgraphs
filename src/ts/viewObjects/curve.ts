@@ -201,7 +201,7 @@ module KG {
             curve.positionLabel(view);
 
             var dataLine = d3.svg.line()
-                .interpolate(this.interpolation)
+                .interpolate(curve.interpolation)
                 .x(function (d) { return d.x })
                 .y(function (d) { return d.y });
 

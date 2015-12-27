@@ -17,6 +17,115 @@
 
 {% block jsadjustments2 %}
     <script>
+
+        // objects for Engel curve diagram
+        var engelCurveX = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'engelCurveX',
+                        className: 'engel',
+                        data: 'model.engelCurveData({good:"x"})',
+                        params: {
+                            label: 'E_x'
+                        }
+                    }
+                },
+                engelCurveY = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'engelCurveY',
+                        className: 'engel',
+                        data: 'model.engelCurveData({good:"y"})',
+                        params: {
+                            label: 'E_y'
+                        }
+                    }
+                },
+                XquantityDemandedAtI = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'XquantityDemandedAtI',
+                        className: 'engel',
+                        coordinates: {
+                            x: 'model.bundle.x',
+                            y: 'params.income'
+                        },
+                        params: {
+                            yDragParam: 'income',
+                            xAxisLabel: 'x^*'
+                        }
+                    }
+                },
+                YquantityDemandedAtI = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'YquantityDemandedAtI',
+                        className: 'engel',
+                        coordinates: {
+                            x: 'model.bundle.y',
+                            y: 'params.income'
+                        },
+                        params: {
+                            yDragParam: 'income',
+                            xAxisLabel: 'y^*'
+                        }
+                    }
+                },
+                incomeLine = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'incomeLine',
+                        className: 'price',
+                        y: 'params.income',
+                        yDrag: 'params.income',
+                        params: {
+                            yInterceptLabel: 'I'
+                        }
+                    }
+                };
+
+
+        // objects for Y demand curve diagram
+        var demandCurveY = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'demandCurveY',
+                        className: 'demand',
+                        data: 'model.demandCurveData({min: 0.1, numSamplePoints: 201, good: "y"})',
+                        params: {
+                            label: 'D_y'
+                        }
+                    }
+                },
+                quantityDemandedAtPriceY = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'quantityDemandedAtPriceY',
+                        className: 'demand',
+                        coordinates: {
+                            x: 'model.bundle.y',
+                            y: 'params.py'
+                        },
+                        params: {
+                            yDragParam: 'py',
+                            xAxisLabel: 'y^*'
+                        }
+                    }
+                },
+                priceLineY = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'priceLineY',
+                        className: 'price',
+                        y: 'params.py',
+                        yDrag: 'params.py',
+                        params: {
+                            yInterceptLabel: 'P_y'
+                        }
+                    }
+                };
+
+
         scopeDefinition.views.push({
                     type: 'KG.TwoVerticalGraphs',
                     definition: {
@@ -24,117 +133,12 @@
                         topGraph: {
                             xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X and Y at }I'},
                             yAxisDef: {min: 1, max: 200, title: '\\text{Income}'},
-                            objects: [
-                                {
-                                    type: 'KG.Curve',
-                                    definition: {
-                                        name: 'engelCurveX',
-                                        className: 'engel',
-                                        data: 'model.engelCurveData({good:"x"})',
-                                        params: {
-                                            label: 'E_x'
-                                        }
-                                    }
-                                },
-                                {
-                                    type: 'KG.Curve',
-                                    definition: {
-                                        name: 'engelCurveY',
-                                        className: 'engel',
-                                        data: 'model.engelCurveData({good:"y"})',
-                                        params: {
-                                            label: 'E_y'
-                                        }
-                                    }
-                                },
-                                {
-                                    type: 'KG.Point',
-                                    definition: {
-                                        name: 'XquantityDemandedAtI',
-                                        className: 'engel',
-                                        coordinates: {
-                                            x: 'model.bundle.x',
-                                            y: 'params.income'
-                                        },
-                                        params: {
-                                            yDragParam: 'income',
-                                            xAxisLabel: 'x^*'
-                                        }
-                                    }
-                                },
-                                {
-                                    type: 'KG.Point',
-                                    definition: {
-                                        name: 'YquantityDemandedAtI',
-                                        className: 'engel',
-                                        coordinates: {
-                                            x: 'model.bundle.y',
-                                            y: 'params.income'
-                                        },
-                                        params: {
-                                            yDragParam: 'income',
-                                            xAxisLabel: 'y^*'
-                                        }
-                                    }
-                                },
-                                {
-                                    type: 'KG.HorizontalLine',
-                                    definition: {
-                                        name: 'incomeLine',
-                                        className: 'price',
-                                        y: 'params.income',
-                                        yDrag: 'params.income',
-                                        params: {
-                                            yInterceptLabel: 'I'
-                                        }
-                                    }
-                                }
-                            ]
+                            objects: [engelCurveX, engelCurveY, XquantityDemandedAtI, YquantityDemandedAtI, incomeLine]
                         },
                         bottomGraph: {
-                            xAxisDef: {min: 0, max: 50
-                                , title: '\\text{Quantity Demanded of Y at }P_y'},
+                            xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of Y at }P_y'},
                             yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good Y}'},
-                            objects: [
-                                {
-                                    type: 'KG.Curve',
-                                    definition: {
-                                        name: 'demandCurveY',
-                                        className: 'demand',
-                                        data: 'model.demandCurveData({min: 0.1, numSamplePoints: 201, good: "y"})',
-                                        params: {
-                                            label: 'D_y'
-                                        }
-                                    }
-                                },
-                                {
-                                    type: 'KG.Point',
-                                    definition: {
-                                        name: 'quantityDemandedAtPriceY',
-                                        className: 'demand',
-                                        coordinates: {
-                                            x: 'model.bundle.y',
-                                            y: 'params.py'
-                                        },
-                                        params: {
-                                            yDragParam: 'py',
-                                            xAxisLabel: 'y^*'
-                                        }
-                                    }
-                                },
-                                {
-                                    type: 'KG.HorizontalLine',
-                                    definition: {
-                                        name: 'priceLineY',
-                                        className: 'price',
-                                        y: 'params.py',
-                                        yDrag: 'params.py',
-                                        params: {
-                                            yInterceptLabel: 'P_y'
-                                        }
-                                    }
-                                }
-                            ]
+                            objects: [demandCurveY, quantityDemandedAtPriceY, priceLineY]
                         },
                         objects: []
                     }

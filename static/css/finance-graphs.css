@@ -1,5 +1,4 @@
 /* Note: these colors are chosen to match the ordinal scales in D3 */
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
 @media screen {
   body {
     padding: 20px;
@@ -263,6 +262,13 @@ button:hover {
 .curve {
   stroke-width: 3;
   fill: none;
+}
+.draw:hover,
+.segment:hover,
+.dataPath:hover,
+.line:hover,
+.curve:hover {
+  stroke-width: 5;
 }
 .pointSymbol {
   stroke-width: 3;
