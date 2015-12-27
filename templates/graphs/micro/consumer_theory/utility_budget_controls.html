@@ -332,6 +332,18 @@
                             label: 'PCC_y'
                         }
                     }
+                },
+                ICC = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'ICC',
+                        data: 'model.incomeConsumptionCurveData()',
+                        className: 'engel',
+                        interpolation: 'basis',
+                        params: {
+                            label: 'ICC'
+                        }
+                    }
                 }
 
     </script>
