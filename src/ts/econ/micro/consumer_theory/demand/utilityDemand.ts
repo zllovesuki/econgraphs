@@ -58,7 +58,7 @@ module EconGraphs {
                 curveData = [],
                 relevantDemandParams = _.clone(demandParams);
 
-            if(d.utility instanceof SubstitutesUtility) {
+            if(d.utility instanceof SubstitutesUtility || (d.utility instanceof CESUtility && d.utility.r == 1)) {
                 // set new maximum to critical price ratio, if that's on the graph
                 relevantDemandParams.max = (demandParams.good == 'x') ? d.utility.criticalPriceRatio * d.price('y') : d.price('x')/d.utility.criticalPriceRatio;
 

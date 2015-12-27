@@ -5692,6 +5692,7 @@ var EconGraphs;
     var CESUtility = (function (_super) {
         __extends(CESUtility, _super);
         function CESUtility(definition, modelPath) {
+            definition.alpha = definition.alpha || 0.5;
             // Can defined with either r or s or (more commonly) 'sub', which ranges from -1 to 1
             if (definition.hasOwnProperty('r')) {
                 definition.s = KG.divideDefs(1, KG.subtractDefs(1, definition.r)); // s = 1/(1-r)
@@ -5704,6 +5705,7 @@ var EconGraphs;
                 definition.s = KG.divideDefs(1, KG.subtractDefs(1, definition.r)); // s = 1/(1-r)
                 console.log('oops, must instantiate a CES utility function with either r or s');
             }
+            definition.criticalPriceRatio = KG.divideDefs(definition.alpha, KG.subtractDefs(1, definition.alpha));
             definition.type = 'CES';
             definition.def = {
                 coefficient: definition.coefficient || 1,
@@ -5852,7 +5854,7 @@ var EconGraphs;
                 numSamplePoints: 101
             });
             var d = this, curveData = [], relevantDemandParams = _.clone(demandParams);
-            if (d.utility instanceof EconGraphs.SubstitutesUtility) {
+            if (d.utility instanceof EconGraphs.SubstitutesUtility || (d.utility instanceof EconGraphs.CESUtility && d.utility.r == 1)) {
                 // set new maximum to critical price ratio, if that's on the graph
                 relevantDemandParams.max = (demandParams.good == 'x') ? d.utility.criticalPriceRatio * d.price('y') : d.price('x') / d.utility.criticalPriceRatio;
                 if (relevantDemandParams.max < demandParams.max) {
