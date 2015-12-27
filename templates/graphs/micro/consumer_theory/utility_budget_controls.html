@@ -48,7 +48,7 @@
                         <div class="col-xs-9" id="pySlider"></div>
                     </div>
                 </div>
-                <div ng-show="model.utility.type == 'Linear'">Note: assumes income split evenly if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
+                <div ng-show="model.utility.type == 'Linear'">Note: assumes buy only Y if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
                 {% endraw %}
                 <hr/>
                 <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
@@ -311,6 +311,7 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'PCCX',
+                        show: 'params.showPCCX',
                         data: 'model.priceConsumptionCurveData({good:"x"})',
                         className: 'demand',
                         interpolation: 'basis',
@@ -324,6 +325,7 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'PCCY',
+                        show: 'params.showPCCY',
                         data: 'model.priceConsumptionCurveData({good:"y"})',
                         className: 'demand',
                         interpolation: 'basis',
@@ -337,6 +339,7 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'ICC',
+                        show: 'params.showICC',
                         data: 'model.incomeConsumptionCurveData()',
                         className: 'engel',
                         interpolation: 'basis',

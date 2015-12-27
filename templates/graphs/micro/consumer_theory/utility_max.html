@@ -11,7 +11,10 @@
 {% block belowControls %}
     <hr/>
             <toggle param="snapToOptimal" class="utility"><span ng-if="params.snapToOptimal">Make bundle draggable</span><span ng-if="!params.snapToOptimal">Snap to optimal bundle</span></toggle>
-            <toggle param="showMRS" class="utility" ng-if="!params.snapToOptimal"><span ng-if="params.showMRS">Hide</span><span ng-if="!params.showMRS">Show</span> MRS line</toggle>
+            <toggle param="showPCCX" class="demand" show-hide="true" ng-if="params.snapToOptimal"><span class="math">PCC_X</span></toggle>
+            <toggle param="showPCCY" class="demand" show-hide="true" ng-if="params.snapToOptimal"><span class="math">PCC_Y</span></toggle>
+            <toggle param="showICC" class="engel" show-hide="true" ng-if="params.snapToOptimal"><span class="math">ICC</span></toggle>
+            <toggle param="showMRS" class="utility" show-hide="true" ng-if="!params.snapToOptimal">MRS line</toggle>
             <toggle param="showMap" class="utility"><span ng-if="params.showMap">Hide</span><span ng-if="!params.showMap">Show</span> indifference curve map</toggle>
 {% endblock %}
 
