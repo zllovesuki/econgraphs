@@ -42,7 +42,7 @@ module KG {
                     text: definition.axisLabel,
                     dimensions: {width: 25, height:20},
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
                 };
 
                 if(definition.horizontal) {
@@ -51,19 +51,26 @@ module KG {
                         y: definition.coordinates.y
                     };
                     labelDef.yDrag = definition.draggable;
+                    labelDef.yDragParam = definition.yDragParam;
                 } else {
                     labelDef.coordinates = {
                         x: definition.coordinates.x,
                         y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
                     };
                     labelDef.xDrag = definition.draggable;
+                    labelDef.xDragParam = definition.xDragParam;
                 }
 
                 this.labelDiv = new GraphDiv(labelDef);
+                this.labelDiv.parentObject = this;
+                this.subObjects.push(this.labelDiv);
             }
 
             this.viewObjectSVGtype = 'line';
             this.viewObjectClass = 'dropline';
+
+            console.log('dropline:');
+            console.log(this);
         }
 
         createSubObjects(view,scope) {
@@ -99,6 +106,8 @@ module KG {
                     'y2': pointY,
                     'class': dropline.classAndVisibility()
                 });
+
+            dropline.setHighlightBehavior(view);
 
             return view;
         }

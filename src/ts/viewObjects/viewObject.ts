@@ -22,6 +22,8 @@ module KG
         className?: string;
         xDrag?: any;
         yDrag?: any;
+        xDragParam?: string;
+        yDragParam?: string;
         color?: string;
         coordinates?: ICoordinates;
         xDomain?: Domain;
@@ -36,6 +38,7 @@ module KG
         // identifiers
         name: string;
         objectName?: string;
+        unmasked?: boolean;
         className?: string;
         color: string;
 
@@ -49,10 +52,23 @@ module KG
         render: (view: View) => View;
         addArrow: (group:D3.Selection, startOrEnd: string) => void;
         removeArrow: (group:D3.Selection, startOrEnd: string) => void;
+
+        // Related objects
+        parentObject?: ViewObject;
+        subObjects?: ViewObject[];
         createSubObjects: (view: View, scope: IScope) => View;
 
         // Updating
         updateDataForView: (view: View) => ViewObject
+
+        // Hover behavior
+        d3group: (view: View) => D3.Selection;
+        d3selection: (view:View) => D3.Selection;
+        highlight: (view: View, caller?: ViewObject) => void;
+        _highlight: (view: View) => void;
+        unhighlight: (view: View, caller?: ViewObject) => void;
+        _unhighlight: (view: View) => void;
+        setHighlightBehavior: (view: View) => ViewObject;
 
         // Dragging behavior
         coordinates: ICoordinates;
@@ -63,6 +79,7 @@ module KG
         xDragDelta: number;
         yDragDelta: number;
         setDragBehavior: (view: View, obj: D3.Selection) => View;
+
     }
 
     export class ViewObject extends Model implements IViewObject
@@ -73,6 +90,11 @@ module KG
         public color;
         public name;
         public objectName;
+        public unmasked;
+
+        public parentObject;
+        public subObjects;
+
         public coordinates;
         public xDrag;
         public yDrag;
@@ -131,7 +153,27 @@ module KG
                 color: KG.colorForClassName(definition.className),
                 show: true,
                 xDrag: false,
-                yDrag: false});
+                yDrag: false,
+                unmasked: false
+            });
+
+            if(definition.hasOwnProperty('xDrag') && !definition.hasOwnProperty('xDragParam')) {
+                if(typeof definition.xDrag == 'string') {
+                    definition.xDragParam = definition.xDrag.replace('params.','');
+                    definition.xDrag = true;
+                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
+                    definition.xDragParam = definition.coordinates.x.replace('params.','');
+                }
+            }
+
+            if(definition.hasOwnProperty('yDrag') && !definition.hasOwnProperty('yDragParam')) {
+                if(typeof definition.yDrag == 'string') {
+                    definition.yDragParam = definition.yDrag.replace('params.','');
+                    definition.yDrag = true;
+                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
+                    definition.yDragParam = definition.coordinates.y.replace('params.','');
+                }
+            }
 
             super(definition, modelPath);
 
@@ -141,30 +183,14 @@ module KG
             viewObj.xDragDelta = 0;
             viewObj.yDragDelta = 0;
 
-            if(definition.xDrag) {
-                if(typeof definition.xDrag == 'string') {
-                    viewObj.xDragParam = definition.xDrag.replace('params.','');
-                    viewObj.xDrag = true;
-                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
-                    this.xDragParam = definition.coordinates.x.replace('params.','');
-                }
-            }
-
-            if(definition.yDrag) {
-                if(typeof definition.yDrag == 'string') {
-                    viewObj.yDragParam = definition.yDrag.replace('params.','');
-                    viewObj.yDrag = true;
-                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
-                    this.yDragParam = definition.coordinates.y.replace('params.','');
-                }
-            }
-
             if(definition.hasOwnProperty('xDomainDef')) {
                 viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
             }
             if(definition.hasOwnProperty('yDomainDef')) {
                 viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
             }
+
+            viewObj.subObjects = [];
         }
 
         classAndVisibility() {
@@ -195,6 +221,73 @@ module KG
             group.attr("marker-" + startOrEnd, null);
         }
 
+        d3group(view) {
+            var viewObj = this;
+            return view.objectGroup(viewObj.name, viewObj.initGroupFn(), viewObj.unmasked);
+        }
+
+        d3selection(view){
+            var viewObj = this;
+            var group = viewObj.d3group(view);
+            if(group) {
+                return group.select('.' + viewObj.viewObjectClass);
+            }
+        }
+
+        // send highlight message
+        highlight(view, caller?) {
+            var viewObj = this;
+            viewObj._highlight(view);
+            if(viewObj.hasOwnProperty('parentObject')) {
+                if(viewObj.parentObject != caller) {
+                    viewObj.parentObject.highlight(view, viewObj);
+                }
+            }
+            if(viewObj.hasOwnProperty('subObjects')) {
+                viewObj.subObjects.forEach(function(subObject:ViewObject) {
+                    if(subObject != caller) {
+                        subObject.highlight(view, viewObj);
+                    }
+                });
+            }
+        }
+
+        // highlight itself
+        _highlight(view) {
+            var viewObj = this,
+                symbol = viewObj.d3selection(view);
+            if(symbol) {
+                symbol.classed('highlight',true);
+            }
+        }
+
+        // send unhighlight message
+        unhighlight(view, caller?) {
+            var viewObj = this;
+            viewObj._unhighlight(view);
+            if(viewObj.hasOwnProperty('parentObject')) {
+                if(viewObj.parentObject != caller) {
+                    viewObj.parentObject.unhighlight(view, viewObj);
+                }
+            }
+            if(viewObj.hasOwnProperty('subObjects')) {
+                viewObj.subObjects.forEach(function(subObject:ViewObject) {
+                    if(subObject != caller) {
+                        subObject.unhighlight(view, viewObj);
+                    }
+                });
+            }
+        }
+
+        // unhighlight itself
+        _unhighlight(view) {
+            var viewObj = this,
+                symbol = viewObj.d3selection(view);
+            if(symbol){
+                symbol.classed('highlight',false);
+            }
+        }
+
         render(view) {
             return view; // overridden by child class
         }
@@ -215,9 +308,19 @@ module KG
         setDragBehavior(view, obj) {
             var viewObj = this;
             obj.style('cursor', viewObj.xDrag ? (viewObj.yDrag ? 'move' : 'ew-resize') : 'ns-resize');
-            obj.call(view.drag(viewObj.xDragParam, viewObj.yDragParam, viewObj.xDragDelta, viewObj.yDragDelta));
+            obj.call(view.drag(viewObj));
             return view;
         }
+
+        setHighlightBehavior(view) {
+            var viewObj = this,
+                selection = viewObj.d3selection(view);
+            selection.on('mouseover', function() {viewObj.highlight(view)});
+            selection.on('mouseout', function() {viewObj.unhighlight(view)});
+            return viewObj;
+        }
+
+
 
     }
 

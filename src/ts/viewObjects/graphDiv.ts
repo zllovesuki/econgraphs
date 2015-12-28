@@ -52,16 +52,23 @@ module KG
             definition = _.defaults(definition,{
                 dimensions: {width: 30, height: 20},
                 text: '',
-                color: KG.colorForClassName(definition.className)
+                color: KG.colorForClassName(definition.className),
+                unmasked: true
             });
 
             super(definition, modelPath);
 
         }
 
+        d3selection(view) {
+            return view.getDiv(this.objectName || this.name);
+        }
+
         render(view) {
 
             var divObj = this;
+
+            console.log(divObj);
 
             if(divObj.text instanceof Array) {
                 divObj.text = divObj.text.join('')
@@ -100,7 +107,7 @@ module KG
                 text = divObj.text,
                 draggable = (divObj.xDrag || divObj.yDrag);
 
-            var div:D3.Selection = view.getDiv(this.objectName || this.name);
+            var div = divObj.d3selection(view);
 
             console.log('drawing div with text', text);
 
@@ -111,7 +118,6 @@ module KG
                 .style('width',width + 'px')
                 .style('height',height + 'px')
                 .style('line-height',height + 'px')
-                .style('background-color',divObj.backgroundColor)
                 .attr('class',divObj.classAndVisibility());
 
             // Set left pixel margin; default to centered on x coordinate
@@ -140,8 +146,9 @@ module KG
             katex.render(text.toString(),div[0][0]);
 
             if(draggable){
-                return divObj.setDragBehavior(view,div);
+                return divObj.setHighlightBehavior(view).setDragBehavior(view,div);
             } else {
+                divObj.setHighlightBehavior(view);
                 return view;
             }
 

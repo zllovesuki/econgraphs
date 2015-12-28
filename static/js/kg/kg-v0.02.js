@@ -2122,36 +2122,39 @@ var KG;
                 color: KG.colorForClassName(definition.className),
                 show: true,
                 xDrag: false,
-                yDrag: false });
+                yDrag: false,
+                unmasked: false
+            });
+            if (definition.hasOwnProperty('xDrag') && !definition.hasOwnProperty('xDragParam')) {
+                if (typeof definition.xDrag == 'string') {
+                    definition.xDragParam = definition.xDrag.replace('params.', '');
+                    definition.xDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
+                    definition.xDragParam = definition.coordinates.x.replace('params.', '');
+                }
+            }
+            if (definition.hasOwnProperty('yDrag') && !definition.hasOwnProperty('yDragParam')) {
+                if (typeof definition.yDrag == 'string') {
+                    definition.yDragParam = definition.yDrag.replace('params.', '');
+                    definition.yDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
+                    definition.yDragParam = definition.coordinates.y.replace('params.', '');
+                }
+            }
             _super.call(this, definition, modelPath);
             var viewObj = this;
             /* Set drag behavior on object */
             viewObj.xDragDelta = 0;
             viewObj.yDragDelta = 0;
-            if (definition.xDrag) {
-                if (typeof definition.xDrag == 'string') {
-                    viewObj.xDragParam = definition.xDrag.replace('params.', '');
-                    viewObj.xDrag = true;
-                }
-                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
-                    this.xDragParam = definition.coordinates.x.replace('params.', '');
-                }
-            }
-            if (definition.yDrag) {
-                if (typeof definition.yDrag == 'string') {
-                    viewObj.yDragParam = definition.yDrag.replace('params.', '');
-                    viewObj.yDrag = true;
-                }
-                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
-                    this.yDragParam = definition.coordinates.y.replace('params.', '');
-                }
-            }
             if (definition.hasOwnProperty('xDomainDef')) {
                 viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
             }
             if (definition.hasOwnProperty('yDomainDef')) {
                 viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
             }
+            viewObj.subObjects = [];
         }
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
@@ -2178,6 +2181,65 @@ var KG;
         ViewObject.prototype.removeArrow = function (group, startOrEnd) {
             group.attr("marker-" + startOrEnd, null);
         };
+        ViewObject.prototype.d3group = function (view) {
+            var viewObj = this;
+            return view.objectGroup(viewObj.name, viewObj.initGroupFn(), viewObj.unmasked);
+        };
+        ViewObject.prototype.d3selection = function (view) {
+            var viewObj = this;
+            var group = viewObj.d3group(view);
+            if (group) {
+                return group.select('.' + viewObj.viewObjectClass);
+            }
+        };
+        // send highlight message
+        ViewObject.prototype.highlight = function (view, caller) {
+            var viewObj = this;
+            viewObj._highlight(view);
+            if (viewObj.hasOwnProperty('parentObject')) {
+                if (viewObj.parentObject != caller) {
+                    viewObj.parentObject.highlight(view, viewObj);
+                }
+            }
+            if (viewObj.hasOwnProperty('subObjects')) {
+                viewObj.subObjects.forEach(function (subObject) {
+                    if (subObject != caller) {
+                        subObject.highlight(view, viewObj);
+                    }
+                });
+            }
+        };
+        // highlight itself
+        ViewObject.prototype._highlight = function (view) {
+            var viewObj = this, symbol = viewObj.d3selection(view);
+            if (symbol) {
+                symbol.classed('highlight', true);
+            }
+        };
+        // send unhighlight message
+        ViewObject.prototype.unhighlight = function (view, caller) {
+            var viewObj = this;
+            viewObj._unhighlight(view);
+            if (viewObj.hasOwnProperty('parentObject')) {
+                if (viewObj.parentObject != caller) {
+                    viewObj.parentObject.unhighlight(view, viewObj);
+                }
+            }
+            if (viewObj.hasOwnProperty('subObjects')) {
+                viewObj.subObjects.forEach(function (subObject) {
+                    if (subObject != caller) {
+                        subObject.unhighlight(view, viewObj);
+                    }
+                });
+            }
+        };
+        // unhighlight itself
+        ViewObject.prototype._unhighlight = function (view) {
+            var viewObj = this, symbol = viewObj.d3selection(view);
+            if (symbol) {
+                symbol.classed('highlight', false);
+            }
+        };
         ViewObject.prototype.render = function (view) {
             return view; // overridden by child class
         };
@@ -2194,8 +2256,14 @@ var KG;
         ViewObject.prototype.setDragBehavior = function (view, obj) {
             var viewObj = this;
             obj.style('cursor', viewObj.xDrag ? (viewObj.yDrag ? 'move' : 'ew-resize') : 'ns-resize');
-            obj.call(view.drag(viewObj.xDragParam, viewObj.yDragParam, viewObj.xDragDelta, viewObj.yDragDelta));
+            obj.call(view.drag(viewObj));
             return view;
+        };
+        ViewObject.prototype.setHighlightBehavior = function (view) {
+            var viewObj = this, selection = viewObj.d3selection(view);
+            selection.on('mouseover', function () { viewObj.highlight(view); });
+            selection.on('mouseout', function () { viewObj.unhighlight(view); });
+            return viewObj;
         };
         return ViewObject;
     })(KG.Model);
@@ -2281,6 +2349,7 @@ var KG;
                 symbol: 'circle'
             });
             _super.call(this, definition, modelPath);
+            var point = this;
             if (definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
@@ -2290,32 +2359,42 @@ var KG;
                     yDrag: definition.yDrag,
                     show: definition.show
                 });
-                this.labelDiv = new KG.GraphDiv(labelDef);
+                point.labelDiv = new KG.GraphDiv(labelDef);
+                point.labelDiv.parentObject = point;
+                point.subObjects.push(point.labelDiv);
             }
             if (definition.droplines) {
                 if (definition.droplines.hasOwnProperty('horizontal')) {
-                    this.horizontalDropline = new KG.HorizontalDropline({
+                    point.horizontalDropline = new KG.HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
                         draggable: definition.yDrag,
+                        yDrag: definition.yDrag,
+                        yDragParam: definition.yDragParam,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
                         show: definition.show
                     });
+                    point.horizontalDropline.parentObject = point;
+                    point.subObjects.push(point.horizontalDropline);
                 }
                 if (definition.droplines.hasOwnProperty('vertical')) {
-                    this.verticalDropline = new KG.VerticalDropline({
+                    point.verticalDropline = new KG.VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
                         draggable: definition.xDrag,
+                        xDrag: definition.xDrag,
+                        xDragParam: definition.xDragParam,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
                         show: definition.show
                     });
+                    point.verticalDropline.parentObject = point;
+                    point.subObjects.push(point.verticalDropline);
                 }
             }
-            this.viewObjectSVGtype = 'path';
-            this.viewObjectClass = 'pointSymbol';
+            point.viewObjectSVGtype = 'path';
+            point.viewObjectClass = 'pointSymbol';
         }
         Point.prototype.createSubObjects = function (view, scope) {
             var p = this;
@@ -2331,6 +2410,7 @@ var KG;
                         draggable: p.verticalDropline.draggable,
                         axisLabel: p.verticalDropline.axisLabel
                     });
+                    p.verticalDropline.parentObject = p;
                     p.verticalDropline.labelDiv = null;
                     view.topGraph.addObject(p.verticalDropline.update(scope));
                     view.bottomGraph.addObject(continuationDropLine.update(scope));
@@ -2339,6 +2419,7 @@ var KG;
                 }
                 if (p.horizontalDropline) {
                     view.topGraph.addObject(p.horizontalDropline.update(scope));
+                    p.horizontalDropline.parentObject = p;
                     p.horizontalDropline.createSubObjects(view.topGraph, scope); // TODO should probably make this more recursive by default
                 }
             }
@@ -2356,6 +2437,22 @@ var KG;
                 }
             }
             return view;
+        };
+        Point.prototype.d3selection = function (view) {
+            var point = this, subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
+            return subview.objectGroup(point.name, point.initGroupFn(), true).select('.' + point.viewObjectClass);
+        };
+        Point.prototype._highlight = function (view) {
+            var point = this, pointSymbol = point.d3selection(view);
+            pointSymbol
+                .attr('d', d3.svg.symbol().type(point.symbol).size(point.size * 1.5))
+                .classed('highlight', true);
+        };
+        Point.prototype._unhighlight = function (view) {
+            var point = this, pointSymbol = point.d3selection(view);
+            pointSymbol
+                .attr('d', d3.svg.symbol().type(point.symbol).size(point.size))
+                .classed('highlight', false);
         };
         Point.prototype.render = function (view) {
             var point = this, draggable = (point.xDrag || point.yDrag);
@@ -2380,7 +2477,6 @@ var KG;
                 pointSymbol
                     .attr({
                     'class': point.classAndVisibility(),
-                    'fill': point.color,
                     'd': d3.svg.symbol().type(point.symbol).size(point.size),
                     'transform': subview.translateByCoordinates(point.coordinates)
                 });
@@ -2389,12 +2485,12 @@ var KG;
                 console.log(error);
             }
             if (draggable) {
-                return point.setDragBehavior(subview, pointSymbol);
+                return point.setHighlightBehavior(view).setDragBehavior(subview, pointSymbol);
             }
             else {
+                point.setHighlightBehavior(view);
                 return view;
             }
-            return view;
         };
         return Point;
     })(KG.ViewObject);
@@ -2429,6 +2525,7 @@ var KG;
                         y: definition.coordinates.y
                     };
                     labelDef.yDrag = definition.draggable;
+                    labelDef.yDragParam = definition.yDragParam;
                 }
                 else {
                     labelDef.coordinates = {
@@ -2436,11 +2533,16 @@ var KG;
                         y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
                     };
                     labelDef.xDrag = definition.draggable;
+                    labelDef.xDragParam = definition.xDragParam;
                 }
                 this.labelDiv = new KG.GraphDiv(labelDef);
+                this.labelDiv.parentObject = this;
+                this.subObjects.push(this.labelDiv);
             }
             this.viewObjectSVGtype = 'line';
             this.viewObjectClass = 'dropline';
+            console.log('dropline:');
+            console.log(this);
         }
         Dropline.prototype.createSubObjects = function (view, scope) {
             var p = this;
@@ -2465,6 +2567,7 @@ var KG;
                 'y2': pointY,
                 'class': dropline.classAndVisibility()
             });
+            dropline.setHighlightBehavior(view);
             return view;
         };
         return Dropline;
@@ -2513,6 +2616,7 @@ var KG;
             }
             definition = _.defaults(definition, { data: [], interpolation: 'linear' });
             _super.call(this, definition, modelPath);
+            var curve = this;
             if (definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
@@ -2524,12 +2628,14 @@ var KG;
                     show: definition.show
                 });
                 //console.log(labelDef);
-                this.labelDiv = new KG.GraphDiv(labelDef);
+                curve.labelDiv = new KG.GraphDiv(labelDef);
+                curve.labelDiv.parentObject = curve;
+                curve.subObjects.push(curve.labelDiv);
             }
-            this.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
-            this.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
-            this.viewObjectSVGtype = 'path';
-            this.viewObjectClass = 'curve';
+            curve.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.viewObjectSVGtype = 'path';
+            curve.viewObjectClass = 'curve';
         }
         Curve.prototype.createSubObjects = function (view, scope) {
             var labelDiv = this.labelDiv;
@@ -2617,6 +2723,7 @@ var KG;
                 'class': curve.classAndVisibility(),
                 'd': dataLine(dataCoordinates)
             });
+            curve.setHighlightBehavior(view);
             return view;
         };
         Curve.LABEL_POSITION_MIDDLE = 'MIDDLE';
@@ -2730,11 +2837,15 @@ var KG;
                     className: definition.className,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
+                    xDragParam: definition.xDragParam,
+                    yDragParam: definition.yDragParam,
                     color: definition.color,
                     show: definition.show
                 });
                 //console.log(labelDef);
                 line.labelDiv = new KG.GraphDiv(labelDef);
+                line.labelDiv.parentObject = this;
+                line.subObjects.push(line.labelDiv);
             }
             if (definition.areaUnderDef) {
                 line.areaUnder = new KG.Area(definition.areaUnderDef);
@@ -2749,10 +2860,13 @@ var KG;
                     text: definition.xInterceptLabel,
                     dimensions: { width: 25, height: 20 },
                     xDrag: definition.xDrag,
+                    xDragParam: definition.xDragParam,
                     backgroundColor: 'white',
                     show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
+                line.xInterceptLabelDiv.parentObject = this;
+                line.subObjects.push(line.xInterceptLabelDiv);
             }
             if (definition.hasOwnProperty('yInterceptLabel')) {
                 var yInterceptLabelDef = {
@@ -2761,10 +2875,13 @@ var KG;
                     text: definition.yInterceptLabel,
                     dimensions: { width: 25, height: 20 },
                     yDrag: definition.yDrag,
+                    yDragParam: definition.yDragParam,
                     backgroundColor: 'white',
                     show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
+                line.yInterceptLabelDiv.parentObject = this;
+                line.subObjects.push(line.yInterceptLabelDiv);
             }
         }
         Line.prototype._update = function (scope) {
@@ -2967,10 +3084,12 @@ var KG;
                     'd': dataLine([startPoint, endPoint]),
                     'stroke': line.color
                 });
+                line.setHighlightBehavior(view);
                 if (draggable) {
                     return line.setDragBehavior(view, lineSelection);
                 }
                 else {
+                    lineSelection.style('cursor', 'auto');
                     return view;
                 }
             }
@@ -3096,12 +3215,17 @@ var KG;
             definition = _.defaults(definition, {
                 dimensions: { width: 30, height: 20 },
                 text: '',
-                color: KG.colorForClassName(definition.className)
+                color: KG.colorForClassName(definition.className),
+                unmasked: true
             });
             _super.call(this, definition, modelPath);
         }
+        GraphDiv.prototype.d3selection = function (view) {
+            return view.getDiv(this.objectName || this.name);
+        };
         GraphDiv.prototype.render = function (view) {
             var divObj = this;
+            console.log(divObj);
             if (divObj.text instanceof Array) {
                 divObj.text = divObj.text.join('');
             }
@@ -3132,7 +3256,7 @@ var KG;
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
             var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
-            var div = view.getDiv(this.objectName || this.name);
+            var div = divObj.d3selection(view);
             console.log('drawing div with text', text);
             div
                 .style('cursor', 'default')
@@ -3141,7 +3265,6 @@ var KG;
                 .style('width', width + 'px')
                 .style('height', height + 'px')
                 .style('line-height', height + 'px')
-                .style('background-color', divObj.backgroundColor)
                 .attr('class', divObj.classAndVisibility());
             // Set left pixel margin; default to centered on x coordinate
             var alignDelta = width * 0.5;
@@ -3167,9 +3290,10 @@ var KG;
             div.style('top', (y - vAlignDelta) + 'px');
             katex.render(text.toString(), div[0][0]);
             if (draggable) {
-                return divObj.setDragBehavior(view, div);
+                return divObj.setHighlightBehavior(view).setDragBehavior(view, div);
             }
             else {
+                divObj.setHighlightBehavior(view);
                 return view;
             }
         };
@@ -3568,13 +3692,17 @@ var KG;
         View.prototype.nearLeft = function (point) {
             return KG.isAlmostTo(point.x, this.xAxis.domain.min, 0.05, this.xAxis.domain.max - this.xAxis.domain.min);
         };
-        View.prototype.drag = function (xParam, yParam, xDelta, yDelta) {
+        View.prototype.drag = function (dragParams) {
             var view = this;
             var xAxis = view.xAxis;
             var yAxis = view.yAxis;
+            var xParam = dragParams.xDragParam, yParam = dragParams.yDragParam, xDelta = dragParams.xDragDelta, yDelta = dragParams.yDragDelta;
             return d3.behavior.drag()
                 .on('drag', function () {
                 d3.event.sourceEvent.preventDefault();
+                if (dragParams instanceof KG.ViewObject) {
+                    dragParams.highlight(view);
+                }
                 var dragUpdate = {}, newX, newY;
                 var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
                 if (xAxis && xParam !== null) {

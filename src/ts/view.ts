@@ -311,15 +311,23 @@ module KG
             return KG.isAlmostTo(point.x, this.xAxis.domain.min, 0.05, this.xAxis.domain.max - this.xAxis.domain.min)
         }
 
-        drag(xParam:string, yParam:string, xDelta:number, yDelta:number) {
+        drag(dragParams) {
 
             var view = this;
             var xAxis = view.xAxis;
             var yAxis = view.yAxis;
 
+            var xParam = dragParams.xDragParam,
+                yParam = dragParams.yDragParam,
+                xDelta = dragParams.xDragDelta,
+                yDelta = dragParams.yDragDelta;
+
             return d3.behavior.drag()
                 .on('drag', function () {
                     d3.event.sourceEvent.preventDefault();
+                    if(dragParams instanceof ViewObject) {
+                        dragParams.highlight(view);
+                    }
                     var dragUpdate = {}, newX, newY;
                     var relativeElement = view.unmasked[0][0],
                         mouseX = d3.mouse(relativeElement)[0],

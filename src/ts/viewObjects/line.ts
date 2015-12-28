@@ -112,11 +112,15 @@ module KG {
                     className: definition.className,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
+                    xDragParam: definition.xDragParam,
+                    yDragParam: definition.yDragParam,
                     color: definition.color,
                     show: definition.show
                 });
                 //console.log(labelDef);
                 line.labelDiv = new GraphDiv(labelDef);
+                line.labelDiv.parentObject = this;
+                line.subObjects.push(line.labelDiv);
             }
 
             if(definition.areaUnderDef) {
@@ -134,10 +138,13 @@ module KG {
                     text: definition.xInterceptLabel,
                     dimensions: {width: 25, height:20},
                     xDrag: definition.xDrag,
+                    xDragParam: definition.xDragParam,
                     backgroundColor: 'white',
                     show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
+                line.xInterceptLabelDiv.parentObject = this;
+                line.subObjects.push(line.xInterceptLabelDiv);
             }
 
             if(definition.hasOwnProperty('yInterceptLabel')) {
@@ -147,10 +154,13 @@ module KG {
                     text: definition.yInterceptLabel,
                     dimensions: {width: 25, height:20},
                     yDrag: definition.yDrag,
+                    yDragParam: definition.yDragParam,
                     backgroundColor: 'white',
                     show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
+                line.yInterceptLabelDiv.parentObject = this;
+                line.subObjects.push(line.yInterceptLabelDiv);
             }
 
         }
@@ -393,9 +403,12 @@ module KG {
                         'stroke': line.color,
                     });
 
+                line.setHighlightBehavior(view);
+
                 if(draggable){
                     return line.setDragBehavior(view,lineSelection);
                 } else {
+                    lineSelection.style('cursor','auto');
                     return view;
                 }
             }

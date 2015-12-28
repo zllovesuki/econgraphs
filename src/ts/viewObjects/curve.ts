@@ -96,6 +96,8 @@ module KG {
 
             super(definition, modelPath);
 
+            var curve = this;
+
             if(definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
@@ -107,14 +109,16 @@ module KG {
                     show: definition.show
                 });
                 //console.log(labelDef);
-                this.labelDiv = new GraphDiv(labelDef);
+                curve.labelDiv = new GraphDiv(labelDef);
+                curve.labelDiv.parentObject = curve;
+                curve.subObjects.push(curve.labelDiv);
             }
 
-            this.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
-            this.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
 
-            this.viewObjectSVGtype = 'path';
-            this.viewObjectClass = 'curve';
+            curve.viewObjectSVGtype = 'path';
+            curve.viewObjectClass = 'curve';
         }
 
         createSubObjects(view,scope) {
@@ -203,7 +207,8 @@ module KG {
             var dataLine = d3.svg.line()
                 .interpolate(curve.interpolation)
                 .x(function (d) { return d.x })
-                .y(function (d) { return d.y });
+                .y(function (d) { return d.y })
+
 
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
 
@@ -220,6 +225,8 @@ module KG {
                     'class': curve.classAndVisibility(),
                     'd': dataLine(dataCoordinates)
                 });
+
+            curve.setHighlightBehavior(view);
 
             return view;
         }
