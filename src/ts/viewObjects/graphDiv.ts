@@ -104,8 +104,7 @@ module KG
 
             var width = divObj.dimensions.width,
                 height = divObj.dimensions.height,
-                text = divObj.text,
-                draggable = (divObj.xDrag || divObj.yDrag);
+                text = divObj.text;
 
             var div = divObj.d3selection(view);
 
@@ -145,12 +144,10 @@ module KG
 
             katex.render(text.toString(),div[0][0]);
 
-            if(draggable){
-                return divObj.setHighlightBehavior(view).setDragBehavior(view,div);
-            } else {
-                divObj.setHighlightBehavior(view);
-                return view;
-            }
+            divObj.setHighlightBehavior(view);
+            divObj.dragHandler.setDragBehavior(view,div,divObj.highlightParam);
+
+            return view;
 
         }
     }

@@ -196,10 +196,7 @@ module KG
 
         render(view) {
 
-            var point = this,
-                draggable = (point.xDrag || point.yDrag);
-
-            var subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
+            var point = this
 
             if(!point.hasOwnProperty('coordinates')) {
                 return view;
@@ -208,6 +205,8 @@ module KG
             if(isNaN(point.coordinates.x) || isNaN(point.coordinates.y) || point.coordinates.x == Infinity || point.coordinates.y == Infinity) {
                 return view;
             }
+
+            var subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
 
             var group:D3.Selection = subview.objectGroup(point.name, point.initGroupFn(), true);
 
@@ -235,12 +234,10 @@ module KG
                 console.log(error);
             }
 
-            if(draggable){
-                return point.setHighlightBehavior(view).setDragBehavior(subview,pointSymbol);
-            } else {
-                point.setHighlightBehavior(view);
-                return view;
-            }
+            point.setHighlightBehavior(view);
+            point.dragHandler.setDragBehavior(view,pointSymbol,point.highlightParam);
+
+            return view;
 
         }
     }

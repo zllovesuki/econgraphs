@@ -2082,6 +2082,82 @@ var KGMath;
 'use strict';
 var KG;
 (function (KG) {
+    var DragHandler = (function (_super) {
+        __extends(DragHandler, _super);
+        function DragHandler(definition, modelPath) {
+            if (definition.hasOwnProperty('xDrag') && typeof definition.xDrag == 'string' && !definition.hasOwnProperty('xDragParam')) {
+                definition.xDragParam = definition.xDrag;
+                definition.xDrag = true;
+            }
+            if (definition.hasOwnProperty('yDrag') && typeof definition.yDrag == 'string' && !definition.hasOwnProperty('yDragParam')) {
+                definition.yDragParam = definition.yDrag;
+                definition.yDrag = true;
+            }
+            if (definition.hasOwnProperty('xDragParam') && typeof definition.xDragParam == 'string') {
+                definition.xDragParam = definition.xDragParam.replace('params.', '');
+            }
+            if (definition.hasOwnProperty('yDragParam') && typeof definition.yDragParam == 'string') {
+                definition.yDragParam = definition.yDragParam.replace('params.', '');
+            }
+            definition = _.defaults(definition, {
+                xDrag: false,
+                yDrag: false
+            });
+            _super.call(this, definition, modelPath);
+        }
+        DragHandler.prototype.setDragBehavior = function (view, selection, highlightParam) {
+            var dragHandler = this;
+            function drag() {
+                var xAxis = view.xAxis;
+                var yAxis = view.yAxis;
+                return d3.behavior.drag()
+                    .on('drag', function () {
+                    d3.event.sourceEvent.preventDefault();
+                    var dragUpdate = {};
+                    dragUpdate[highlightParam] = true;
+                    var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
+                    if (xAxis && dragHandler.xDragParam !== null) {
+                        dragUpdate[dragHandler.xDragParam] = xAxis.domain.closestValueTo(xAxis.scale.invert(mouseX));
+                    }
+                    if (yAxis && dragHandler.yDragParam !== null) {
+                        dragUpdate[dragHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
+                    }
+                    view.updateParams(dragUpdate);
+                })
+                    .on('dragend', function () {
+                    var dragUpdate = {};
+                    dragUpdate[highlightParam] = true;
+                    view.updateParams(dragUpdate);
+                });
+            }
+            function cursor(xDrag, yDrag) {
+                if (xDrag && yDrag) {
+                    return 'move';
+                }
+                else if (xDrag && !yDrag) {
+                    return 'ew-resize';
+                }
+                else if (!xDrag && yDrag) {
+                    return 'ns-resize';
+                }
+                else {
+                    return 'default';
+                }
+            }
+            selection.style('cursor', cursor(dragHandler.xDrag, dragHandler.yDrag));
+            if (this.xDrag || this.yDrag) {
+                selection.call(drag());
+            }
+            return view;
+        };
+        return DragHandler;
+    })(KG.Model);
+    KG.DragHandler = DragHandler;
+})(KG || (KG = {}));
+/// <reference path="../kg.ts"/>
+'use strict';
+var KG;
+(function (KG) {
     var ViewObject = (function (_super) {
         __extends(ViewObject, _super);
         function ViewObject(definition, modelPath) {
@@ -2116,44 +2192,32 @@ var KG;
                     definition.show = p.show;
                 }
             }
+            var dragHandlerDefinition = {
+                xDrag: definition.xDrag,
+                yDrag: definition.yDrag
+            };
+            if (definition.hasOwnProperty('xDragParam')) {
+                dragHandlerDefinition.xDragParam = definition.xDragParam;
+            }
+            if (definition.hasOwnProperty('yDragParam')) {
+                dragHandlerDefinition.yDragParam = definition.yDragParam;
+            }
             definition = _.defaults(definition, {
                 name: '',
                 className: '',
                 color: KG.colorForClassName(definition.className),
                 show: true,
-                xDrag: false,
-                yDrag: false,
                 unmasked: false
             });
-            if (definition.hasOwnProperty('xDrag') && !definition.hasOwnProperty('xDragParam')) {
-                if (typeof definition.xDrag == 'string') {
-                    definition.xDragParam = definition.xDrag.replace('params.', '');
-                    definition.xDrag = true;
-                }
-                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
-                    definition.xDragParam = definition.coordinates.x.replace('params.', '');
-                }
-            }
-            if (definition.hasOwnProperty('yDrag') && !definition.hasOwnProperty('yDragParam')) {
-                if (typeof definition.yDrag == 'string') {
-                    definition.yDragParam = definition.yDrag.replace('params.', '');
-                    definition.yDrag = true;
-                }
-                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
-                    definition.yDragParam = definition.coordinates.y.replace('params.', '');
-                }
-            }
             _super.call(this, definition, modelPath);
             var viewObj = this;
-            /* Set drag behavior on object */
-            viewObj.xDragDelta = 0;
-            viewObj.yDragDelta = 0;
             if (definition.hasOwnProperty('xDomainDef')) {
                 viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
             }
             if (definition.hasOwnProperty('yDomainDef')) {
                 viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
             }
+            viewObj.dragHandler = new KG.DragHandler(dragHandlerDefinition);
         }
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
@@ -2206,12 +2270,6 @@ var KG;
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass);
                 return newGroup;
             };
-        };
-        ViewObject.prototype.setDragBehavior = function (view, obj) {
-            var viewObj = this;
-            obj.style('cursor', viewObj.xDrag ? (viewObj.yDrag ? 'move' : 'ew-resize') : 'ns-resize');
-            obj.call(view.drag(viewObj));
-            return view;
         };
         ViewObject.prototype.setHighlightBehavior = function (view) {
             var viewObj = this, selection = viewObj.d3selection(view);
@@ -2406,14 +2464,14 @@ var KG;
             return subview.objectGroup(point.name, point.initGroupFn(), true).select('.' + point.viewObjectClass);
         };
         Point.prototype.render = function (view) {
-            var point = this, draggable = (point.xDrag || point.yDrag);
-            var subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
+            var point = this;
             if (!point.hasOwnProperty('coordinates')) {
                 return view;
             }
             if (isNaN(point.coordinates.x) || isNaN(point.coordinates.y) || point.coordinates.x == Infinity || point.coordinates.y == Infinity) {
                 return view;
             }
+            var subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
             var group = subview.objectGroup(point.name, point.initGroupFn(), true);
             if (!subview.onGraph(point.coordinates)) {
                 point.show = false;
@@ -2436,13 +2494,9 @@ var KG;
             catch (error) {
                 console.log(error);
             }
-            if (draggable) {
-                return point.setHighlightBehavior(view).setDragBehavior(subview, pointSymbol);
-            }
-            else {
-                point.setHighlightBehavior(view);
-                return view;
-            }
+            point.setHighlightBehavior(view);
+            point.dragHandler.setDragBehavior(view, pointSymbol, point.highlightParam);
+            return view;
         };
         return Point;
     })(KG.ViewObject);
@@ -2456,9 +2510,18 @@ var KG;
         __extends(Dropline, _super);
         function Dropline(definition, modelPath) {
             definition.coordinates = KG.getCoordinates(definition.coordinates);
+            if (definition.hasOwnProperty('draggable')) {
+                if (definition.horizontal) {
+                    definition.yDrag = definition.draggable;
+                    definition.yDragParam = definition.coordinates.y;
+                }
+                else {
+                    definition.xDrag = definition.draggable;
+                    definition.xDragParam = definition.coordinates.x;
+                }
+            }
             definition = _.defaults(definition, {
                 horizontal: false,
-                draggable: false,
                 axisLabel: ''
             });
             _super.call(this, definition, modelPath);
@@ -2520,6 +2583,7 @@ var KG;
                 'class': dropline.classAndVisibility()
             });
             dropline.setHighlightBehavior(view);
+            dropline.dragHandler.setDragBehavior(view, droplineSelection, dropline.highlightParam);
             return view;
         };
         return Dropline;
@@ -2869,7 +2933,7 @@ var KG;
         };
         Line.prototype.render = function (view) {
             var NO_ARROW_STRING = 'NONE', BOTH_ARROW_STRING = 'BOTH', OPEN_ARROW_STRING = 'OPEN';
-            var line = this, linear = this.linear, draggable = (line.xDrag || line.yDrag);
+            var line = this, linear = this.linear;
             var group = view.objectGroup(line.name, line.initGroupFn(), false);
             var startPoint = linear.points(view)[0], endPoint = linear.points(view)[1];
             if (startPoint == undefined || endPoint == undefined) {
@@ -3037,13 +3101,8 @@ var KG;
                     'stroke': line.color
                 });
                 line.setHighlightBehavior(view);
-                if (draggable) {
-                    return line.setDragBehavior(view, lineSelection);
-                }
-                else {
-                    lineSelection.style('cursor', 'auto');
-                    return view;
-                }
+                line.dragHandler.setDragBehavior(view, lineSelection, line.highlightParam);
+                return view;
             }
         };
         return Line;
@@ -3207,7 +3266,7 @@ var KG;
             else {
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
-            var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
+            var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text;
             var div = divObj.d3selection(view);
             console.log('drawing div with text', text);
             div
@@ -3241,13 +3300,9 @@ var KG;
             }
             div.style('top', (y - vAlignDelta) + 'px');
             katex.render(text.toString(), div[0][0]);
-            if (draggable) {
-                return divObj.setHighlightBehavior(view).setDragBehavior(view, div);
-            }
-            else {
-                divObj.setHighlightBehavior(view);
-                return view;
-            }
+            divObj.setHighlightBehavior(view);
+            divObj.dragHandler.setDragBehavior(view, div, divObj.highlightParam);
+            return view;
         };
         GraphDiv.AXIS_COORDINATE_INDICATOR = 'AXIS';
         return GraphDiv;
@@ -3643,53 +3698,6 @@ var KG;
         };
         View.prototype.nearLeft = function (point) {
             return KG.isAlmostTo(point.x, this.xAxis.domain.min, 0.05, this.xAxis.domain.max - this.xAxis.domain.min);
-        };
-        View.prototype.drag = function (dragParams) {
-            var view = this;
-            var xAxis = view.xAxis;
-            var yAxis = view.yAxis;
-            var xParam = dragParams.xDragParam, yParam = dragParams.yDragParam, xDelta = dragParams.xDragDelta, yDelta = dragParams.yDragDelta;
-            return d3.behavior.drag()
-                .on('drag', function () {
-                d3.event.sourceEvent.preventDefault();
-                var dragUpdate = {}, newX, newY;
-                if (dragParams instanceof KG.ViewObject) {
-                    dragUpdate[dragParams.highlightParam] = true;
-                }
-                var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
-                if (xAxis && xParam !== null) {
-                    newX = xAxis.scale.invert(mouseX + xDelta);
-                    if (newX < xAxis.domain.min) {
-                        dragUpdate[xParam] = xAxis.domain.min;
-                    }
-                    else if (newX > xAxis.domain.max) {
-                        dragUpdate[xParam] = xAxis.domain.max;
-                    }
-                    else {
-                        dragUpdate[xParam] = newX;
-                    }
-                }
-                if (yAxis && yParam !== null) {
-                    newY = yAxis.scale.invert(mouseY + yDelta);
-                    if (newY < yAxis.domain.min) {
-                        dragUpdate[yParam] = yAxis.domain.min;
-                    }
-                    else if (newY > yAxis.domain.max) {
-                        dragUpdate[yParam] = yAxis.domain.max;
-                    }
-                    else {
-                        dragUpdate[yParam] = newY;
-                    }
-                }
-                view.updateParams(dragUpdate);
-            })
-                .on('dragend', function () {
-                var dragUpdate = {};
-                if (dragParams instanceof KG.ViewObject) {
-                    dragUpdate[dragParams.highlightParam] = false;
-                }
-                view.updateParams(dragUpdate);
-            });
         };
         return View;
     })(KG.Model);
@@ -6989,6 +6997,7 @@ var PhysicsGraphs;
 /// <reference path="restriction.ts" />
 /// <reference path="helpers/selector.ts" />
 /// <reference path="math/math.ts" />
+/// <reference path="viewObjects/dragHandler.ts"/>
 /// <reference path="viewObjects/viewObject.ts"/>
 /// <reference path="viewObjects/viewObjectGroup.ts"/>
 /// <reference path="viewObjects/point.ts"/>

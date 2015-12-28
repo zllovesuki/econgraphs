@@ -311,57 +311,5 @@ module KG
             return KG.isAlmostTo(point.x, this.xAxis.domain.min, 0.05, this.xAxis.domain.max - this.xAxis.domain.min)
         }
 
-        drag(dragParams) {
-
-            var view = this;
-            var xAxis = view.xAxis;
-            var yAxis = view.yAxis;
-
-            var xParam = dragParams.xDragParam,
-                yParam = dragParams.yDragParam,
-                xDelta = dragParams.xDragDelta,
-                yDelta = dragParams.yDragDelta;
-
-            return d3.behavior.drag()
-                .on('drag', function () {
-                    d3.event.sourceEvent.preventDefault();
-                    var dragUpdate = {}, newX, newY;
-                    if(dragParams instanceof ViewObject) {
-                        dragUpdate[dragParams.highlightParam] = true;
-                    }
-                    var relativeElement = view.unmasked[0][0],
-                        mouseX = d3.mouse(relativeElement)[0],
-                        mouseY = d3.mouse(relativeElement)[1];
-                    if(xAxis && xParam !== null) {
-                        newX = xAxis.scale.invert(mouseX + xDelta);
-                        if(newX < xAxis.domain.min) {
-                            dragUpdate[xParam] = xAxis.domain.min;
-                        } else if(newX > xAxis.domain.max) {
-                            dragUpdate[xParam] = xAxis.domain.max;
-                        } else {
-                            dragUpdate[xParam] = newX;
-                        }
-                    }
-                    if(yAxis && yParam !== null) {
-                        newY = yAxis.scale.invert(mouseY + yDelta);
-                        if(newY < yAxis.domain.min) {
-                            dragUpdate[yParam] = yAxis.domain.min;
-                        } else if(newY > yAxis.domain.max) {
-                            dragUpdate[yParam] = yAxis.domain.max;
-                        } else {
-                            dragUpdate[yParam] = newY;
-                        }
-                    }
-                    view.updateParams(dragUpdate)
-                })
-            .on('dragend', function() {
-                var dragUpdate = {};
-                if(dragParams instanceof ViewObject) {
-                        dragUpdate[dragParams.highlightParam] = false;
-                    }
-                view.updateParams(dragUpdate);
-            })
-        }
-
     }
 }

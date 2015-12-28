@@ -213,8 +213,7 @@ module KG {
                 OPEN_ARROW_STRING = 'OPEN';
 
             var line = this,
-                linear = this.linear,
-                draggable = (line.xDrag || line.yDrag);
+                linear = this.linear;
 
             var group:D3.Selection = view.objectGroup(line.name, line.initGroupFn(), false);
 
@@ -404,13 +403,8 @@ module KG {
                     });
 
                 line.setHighlightBehavior(view);
-
-                if(draggable){
-                    return line.setDragBehavior(view,lineSelection);
-                } else {
-                    lineSelection.style('cursor','auto');
-                    return view;
-                }
+                line.dragHandler.setDragBehavior(view,lineSelection,line.highlightParam);
+                return view;
             }
 
         }

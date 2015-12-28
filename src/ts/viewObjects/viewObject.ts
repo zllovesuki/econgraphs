@@ -72,13 +72,7 @@ module KG
 
         // Dragging behavior
         coordinates: ICoordinates;
-        xDrag:boolean;
-        yDrag:boolean;
-        xDragParam: string;
-        yDragParam: string;
-        xDragDelta: number;
-        yDragDelta: number;
-        setDragBehavior: (view: View, obj: D3.Selection) => View;
+        dragHandler: DragHandler;
 
     }
 
@@ -95,13 +89,9 @@ module KG
         public highlightParam;
         public highlight;
 
+        public dragHandler;
+
         public coordinates;
-        public xDrag;
-        public yDrag;
-        public xDragParam;
-        public yDragParam;
-        public xDragDelta;
-        public yDragDelta;
         public viewObjectSVGtype;
         public viewObjectClass;
         public xDomain;
@@ -147,41 +137,30 @@ module KG
 
             }
 
+            var dragHandlerDefinition:DragHandlerDefinition = {
+                xDrag: definition.xDrag,
+                yDrag: definition.yDrag
+            };
+
+            if(definition.hasOwnProperty('xDragParam')) {
+                dragHandlerDefinition.xDragParam = definition.xDragParam;
+            }
+
+            if(definition.hasOwnProperty('yDragParam')) {
+                dragHandlerDefinition.yDragParam = definition.yDragParam;
+            }
+
             definition = _.defaults(definition, {
                 name: '',
                 className: '',
                 color: KG.colorForClassName(definition.className),
                 show: true,
-                xDrag: false,
-                yDrag: false,
                 unmasked: false
             });
-
-            if(definition.hasOwnProperty('xDrag') && !definition.hasOwnProperty('xDragParam')) {
-                if(typeof definition.xDrag == 'string') {
-                    definition.xDragParam = definition.xDrag.replace('params.','');
-                    definition.xDrag = true;
-                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
-                    definition.xDragParam = definition.coordinates.x.replace('params.','');
-                }
-            }
-
-            if(definition.hasOwnProperty('yDrag') && !definition.hasOwnProperty('yDragParam')) {
-                if(typeof definition.yDrag == 'string') {
-                    definition.yDragParam = definition.yDrag.replace('params.','');
-                    definition.yDrag = true;
-                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
-                    definition.yDragParam = definition.coordinates.y.replace('params.','');
-                }
-            }
 
             super(definition, modelPath);
 
             var viewObj = this;
-
-            /* Set drag behavior on object */
-            viewObj.xDragDelta = 0;
-            viewObj.yDragDelta = 0;
 
             if(definition.hasOwnProperty('xDomainDef')) {
                 viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
@@ -189,6 +168,8 @@ module KG
             if(definition.hasOwnProperty('yDomainDef')) {
                 viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
             }
+
+            viewObj.dragHandler = new DragHandler(dragHandlerDefinition);
         }
 
         classAndVisibility() {
@@ -250,13 +231,6 @@ module KG
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass);
                 return newGroup;
             }
-        }
-
-        setDragBehavior(view, obj) {
-            var viewObj = this;
-            obj.style('cursor', viewObj.xDrag ? (viewObj.yDrag ? 'move' : 'ew-resize') : 'ns-resize');
-            obj.call(view.drag(viewObj));
-            return view;
         }
 
         setHighlightBehavior(view) {

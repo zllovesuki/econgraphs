@@ -28,11 +28,22 @@ module KG {
         constructor(definition:DroplineDefinition, modelPath?: string) {
 
             definition.coordinates = KG.getCoordinates(definition.coordinates);
+
+            if(definition.hasOwnProperty('draggable')) {
+                if(definition.horizontal) {
+                    definition.yDrag = definition.draggable;
+                    definition.yDragParam = definition.coordinates.y;
+                } else {
+                    definition.xDrag = definition.draggable;
+                    definition.xDragParam = definition.coordinates.x;
+                }
+            }
+
             definition = _.defaults(definition,{
                 horizontal: false,
-                draggable: false,
                 axisLabel: ''
             });
+
             super(definition,modelPath);
 
             if(definition.axisLabel.length > 0) {
@@ -108,6 +119,7 @@ module KG {
                 });
 
             dropline.setHighlightBehavior(view);
+            dropline.dragHandler.setDragBehavior(view, droplineSelection, dropline.highlightParam);
 
             return view;
         }
