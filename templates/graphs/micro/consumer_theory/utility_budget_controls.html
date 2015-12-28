@@ -148,7 +148,10 @@
                 selectedUtility: 'CobbDouglas',
                 showPCCX: false,
                 showPCCY: false,
-                showICC: false
+                showICC: false,
+                highlightBudget: false,
+                highlightUtility: false,
+                highlightBundle: false
             },
             graphParams: ['selectedUtility'],
             restrictions: [],
@@ -251,6 +254,8 @@
                         name: 'BL',
                         className: 'budget',
                         linear: 'model.budget.budgetSegments[0].linear',
+                        highlightParam: 'highlightBudget',
+                        highlight: 'params.highlightBudget',
                         params: {
                             label: 'BL',
                             xInterceptLabel: "\\frac{I}{P_x}",
@@ -269,6 +274,8 @@
                         },
                         xDrag: '!params.snapToOptimal',
                         xDragParam: 'x',
+                        highlightParam: 'highlightBundle',
+                        highlight: 'params.highlightBundle',
                         params: {
                             xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
                             yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
@@ -280,6 +287,8 @@
                     definition: {
                         name: 'indifference_curve',
                         className: 'utility',
+                        highlightParam: 'highlightUtility',
+                        highlight: 'params.highlightUtility',
                         params: {label: 'params.snapToOptimal ? "U^*" : "U"'},
                         fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))"
                     }

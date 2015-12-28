@@ -103,11 +103,11 @@ module KG
                     coordinates:definition.coordinates,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
                 point.labelDiv = new GraphDiv(labelDef);
-                point.labelDiv.parentObject = point;
-                point.subObjects.push(point.labelDiv);
             }
 
             if(definition.droplines) {
@@ -120,10 +120,10 @@ module KG
                         yDragParam: definition.yDragParam,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
-                        show: definition.show
+                        show: definition.show,
+                        highlightParam: definition.highlightParam,
+                        highlight: definition.highlight
                     });
-                    point.horizontalDropline.parentObject = point;
-                    point.subObjects.push(point.horizontalDropline);
                 }
                 if(definition.droplines.hasOwnProperty('vertical')) {
                     point.verticalDropline = new VerticalDropline({
@@ -134,10 +134,10 @@ module KG
                         xDragParam: definition.xDragParam,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
-                        show: definition.show
+                        show: definition.show,
+                        highlightParam: definition.highlightParam,
+                        highlight: definition.highlight
                     });
-                    point.verticalDropline.parentObject = point;
-                    point.subObjects.push(point.verticalDropline);
                 }
             }
 
@@ -159,7 +159,6 @@ module KG
                         draggable: p.verticalDropline.draggable,
                         axisLabel: p.verticalDropline.axisLabel
                     });
-                    p.verticalDropline.parentObject = p;
                     p.verticalDropline.labelDiv = null;
                     view.topGraph.addObject(p.verticalDropline.update(scope));
                     view.bottomGraph.addObject(continuationDropLine.update(scope));
@@ -195,24 +194,6 @@ module KG
             return subview.objectGroup(point.name, point.initGroupFn(), true).select('.'+point.viewObjectClass);
         }
 
-        _highlight(view) {
-            var point = this,
-                pointSymbol = point.d3selection(view);
-
-            pointSymbol
-                .attr('d',d3.svg.symbol().type(point.symbol).size(point.size*1.5))
-                .classed('highlight',true);
-        }
-
-        _unhighlight(view) {
-            var point = this,
-                pointSymbol = point.d3selection(view);
-
-            pointSymbol
-                .attr('d',d3.svg.symbol().type(point.symbol).size(point.size))
-                .classed('highlight',false);
-        }
-
         render(view) {
 
             var point = this,
@@ -241,11 +222,13 @@ module KG
 
             // draw the symbol at the point
             var pointSymbol:D3.Selection = group.select('.'+ point.viewObjectClass);
+
+            var currentSize = point.highlight ? point.size*1.5 : point.size;
             try {
                 pointSymbol
                     .attr({
                         'class': point.classAndVisibility(),
-                        'd': d3.svg.symbol().type(point.symbol).size(point.size),
+                        'd': d3.svg.symbol().type(point.symbol).size(currentSize),
                         'transform': subview.translateByCoordinates(point.coordinates)
                     });
             } catch(error) {

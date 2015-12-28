@@ -115,12 +115,12 @@ module KG {
                     xDragParam: definition.xDragParam,
                     yDragParam: definition.yDragParam,
                     color: definition.color,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
                 //console.log(labelDef);
                 line.labelDiv = new GraphDiv(labelDef);
-                line.labelDiv.parentObject = this;
-                line.subObjects.push(line.labelDiv);
             }
 
             if(definition.areaUnderDef) {
@@ -140,11 +140,11 @@ module KG {
                     xDrag: definition.xDrag,
                     xDragParam: definition.xDragParam,
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
-                line.xInterceptLabelDiv.parentObject = this;
-                line.subObjects.push(line.xInterceptLabelDiv);
             }
 
             if(definition.hasOwnProperty('yInterceptLabel')) {
@@ -156,11 +156,11 @@ module KG {
                     yDrag: definition.yDrag,
                     yDragParam: definition.yDragParam,
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
-                line.yInterceptLabelDiv.parentObject = this;
-                line.subObjects.push(line.yInterceptLabelDiv);
             }
 
         }

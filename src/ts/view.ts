@@ -325,10 +325,10 @@ module KG
             return d3.behavior.drag()
                 .on('drag', function () {
                     d3.event.sourceEvent.preventDefault();
-                    if(dragParams instanceof ViewObject) {
-                        dragParams.highlight(view);
-                    }
                     var dragUpdate = {}, newX, newY;
+                    if(dragParams instanceof ViewObject) {
+                        dragUpdate[dragParams.highlightParam] = true;
+                    }
                     var relativeElement = view.unmasked[0][0],
                         mouseX = d3.mouse(relativeElement)[0],
                         mouseY = d3.mouse(relativeElement)[1];
@@ -353,7 +353,14 @@ module KG
                         }
                     }
                     view.updateParams(dragUpdate)
-                });
+                })
+            .on('dragend', function() {
+                var dragUpdate = {};
+                if(dragParams instanceof ViewObject) {
+                        dragUpdate[dragParams.highlightParam] = false;
+                    }
+                view.updateParams(dragUpdate);
+            })
         }
 
     }

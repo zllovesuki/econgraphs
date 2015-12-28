@@ -43,6 +43,8 @@ module KG {
                     dimensions: {width: 25, height:20},
                     backgroundColor: 'white',
                     show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
 
                 if(definition.horizontal) {
@@ -62,8 +64,6 @@ module KG {
                 }
 
                 this.labelDiv = new GraphDiv(labelDef);
-                this.labelDiv.parentObject = this;
-                this.subObjects.push(this.labelDiv);
             }
 
             this.viewObjectSVGtype = 'line';

@@ -24,6 +24,10 @@ module KG
         yDrag?: any;
         xDragParam?: string;
         yDragParam?: string;
+
+        highlightParam?: string;
+        highlight?: string;
+
         color?: string;
         coordinates?: ICoordinates;
         xDomain?: Domain;
@@ -52,11 +56,11 @@ module KG
         render: (view: View) => View;
         addArrow: (group:D3.Selection, startOrEnd: string) => void;
         removeArrow: (group:D3.Selection, startOrEnd: string) => void;
-
-        // Related objects
-        parentObject?: ViewObject;
-        subObjects?: ViewObject[];
         createSubObjects: (view: View, scope: IScope) => View;
+
+        // Highlighting
+        highlightParam: string;
+        highlight: boolean;
 
         // Updating
         updateDataForView: (view: View) => ViewObject
@@ -64,10 +68,6 @@ module KG
         // Hover behavior
         d3group: (view: View) => D3.Selection;
         d3selection: (view:View) => D3.Selection;
-        highlight: (view: View, caller?: ViewObject) => void;
-        _highlight: (view: View) => void;
-        unhighlight: (view: View, caller?: ViewObject) => void;
-        _unhighlight: (view: View) => void;
         setHighlightBehavior: (view: View) => ViewObject;
 
         // Dragging behavior
@@ -92,8 +92,8 @@ module KG
         public objectName;
         public unmasked;
 
-        public parentObject;
-        public subObjects;
+        public highlightParam;
+        public highlight;
 
         public coordinates;
         public xDrag;
@@ -189,8 +189,6 @@ module KG
             if(definition.hasOwnProperty('yDomainDef')) {
                 viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
             }
-
-            viewObj.subObjects = [];
         }
 
         classAndVisibility() {
@@ -202,6 +200,9 @@ module KG
                 classString += ' visible';
             } else {
                 classString += ' invisible';
+            }
+            if(this.highlight) {
+                classString += ' highlight';
             }
             if(this.hasOwnProperty('objectName')) {
                 classString += ' ' + this.objectName
@@ -234,60 +235,6 @@ module KG
             }
         }
 
-        // send highlight message
-        highlight(view, caller?) {
-            var viewObj = this;
-            viewObj._highlight(view);
-            if(viewObj.hasOwnProperty('parentObject')) {
-                if(viewObj.parentObject != caller) {
-                    viewObj.parentObject.highlight(view, viewObj);
-                }
-            }
-            if(viewObj.hasOwnProperty('subObjects')) {
-                viewObj.subObjects.forEach(function(subObject:ViewObject) {
-                    if(subObject != caller) {
-                        subObject.highlight(view, viewObj);
-                    }
-                });
-            }
-        }
-
-        // highlight itself
-        _highlight(view) {
-            var viewObj = this,
-                symbol = viewObj.d3selection(view);
-            if(symbol) {
-                symbol.classed('highlight',true);
-            }
-        }
-
-        // send unhighlight message
-        unhighlight(view, caller?) {
-            var viewObj = this;
-            viewObj._unhighlight(view);
-            if(viewObj.hasOwnProperty('parentObject')) {
-                if(viewObj.parentObject != caller) {
-                    viewObj.parentObject.unhighlight(view, viewObj);
-                }
-            }
-            if(viewObj.hasOwnProperty('subObjects')) {
-                viewObj.subObjects.forEach(function(subObject:ViewObject) {
-                    if(subObject != caller) {
-                        subObject.unhighlight(view, viewObj);
-                    }
-                });
-            }
-        }
-
-        // unhighlight itself
-        _unhighlight(view) {
-            var viewObj = this,
-                symbol = viewObj.d3selection(view);
-            if(symbol){
-                symbol.classed('highlight',false);
-            }
-        }
-
         render(view) {
             return view; // overridden by child class
         }
@@ -315,8 +262,18 @@ module KG
         setHighlightBehavior(view) {
             var viewObj = this,
                 selection = viewObj.d3selection(view);
-            selection.on('mouseover', function() {viewObj.highlight(view)});
-            selection.on('mouseout', function() {viewObj.unhighlight(view)});
+            if(viewObj.hasOwnProperty('highlightParam')) {
+                selection.on('mouseover', function() {
+                    var highlightUpdate = {};
+                    highlightUpdate[viewObj.highlightParam] = true;
+                    view.updateParams(highlightUpdate);
+                });
+                selection.on('mouseout', function() {
+                    var highlightUpdate = {};
+                    highlightUpdate[viewObj.highlightParam] = false;
+                    view.updateParams(highlightUpdate);
+                });
+            }
             return viewObj;
         }
 

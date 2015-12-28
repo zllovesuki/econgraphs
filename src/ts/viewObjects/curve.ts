@@ -106,12 +106,12 @@ module KG {
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     color: definition.color,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
                 //console.log(labelDef);
                 curve.labelDiv = new GraphDiv(labelDef);
-                curve.labelDiv.parentObject = curve;
-                curve.subObjects.push(curve.labelDiv);
             }
 
             curve.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
