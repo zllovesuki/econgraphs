@@ -1,5 +1,31 @@
 /* Note: these colors are chosen to match the ordinal scales in D3 */
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
+/* Note: these fonts can b */
+@font-face {
+  font-family: 'Open Sans';
+  src: url(fonts/Open_Sans/OpenSans-Regular.ttf);
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url(fonts/Open_Sans/OpenSans-Bold.ttf);
+  font-weight: 700;
+  /* Bold */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url(fonts/Open_Sans/OpenSans-Italic.ttf);
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url(fonts/Open_Sans/OpenSans-BoldItalic.ttf);
+  font-weight: 700;
+  /* Bold */
+  font-style: italic;
+}
 @media screen {
   body {
     padding: 20px;
@@ -263,6 +289,11 @@ button:hover {
 .curve {
   stroke-width: 3;
   fill: none;
+}
+.highlight {
+  font-weight: bold;
+  stroke-width: 5;
+  background-color: yellow;
 }
 .pointSymbol {
   stroke-width: 3;

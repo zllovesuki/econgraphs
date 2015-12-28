@@ -94,45 +94,55 @@ module KG
 
             super(definition, modelPath);
 
+            var point = this;
+
             if(definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
+                    className: definition.className,
                     coordinates:definition.coordinates,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
-                if(!labelDef.hasOwnProperty('align')) {
-                    labelDef.className = 'pointLabel'
-                }
-                this.labelDiv = new GraphDiv(labelDef);
+                point.labelDiv = new GraphDiv(labelDef);
             }
 
             if(definition.droplines) {
                 if(definition.droplines.hasOwnProperty('horizontal')) {
-                    this.horizontalDropline = new HorizontalDropline({
+                    point.horizontalDropline = new HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
                         draggable: definition.yDrag,
+                        yDrag: definition.yDrag,
+                        yDragParam: definition.yDragParam,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
-                        show: definition.show
+                        show: definition.show,
+                        highlightParam: definition.highlightParam,
+                        highlight: definition.highlight
                     });
                 }
                 if(definition.droplines.hasOwnProperty('vertical')) {
-                    this.verticalDropline = new VerticalDropline({
+                    point.verticalDropline = new VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
                         draggable: definition.xDrag,
+                        xDrag: definition.xDrag,
+                        xDragParam: definition.xDragParam,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
-                        show: definition.show
+                        show: definition.show,
+                        highlightParam: definition.highlightParam,
+                        highlight: definition.highlight
                     });
                 }
             }
 
-            this.viewObjectSVGtype = 'path';
-            this.viewObjectClass = 'pointSymbol';
+            point.viewObjectSVGtype = 'path';
+            point.viewObjectClass = 'pointSymbol';
         }
 
         createSubObjects(view,scope) {
@@ -157,6 +167,7 @@ module KG
                 }
                 if(p.horizontalDropline) {
                     view.topGraph.addObject(p.horizontalDropline.update(scope));
+                    p.horizontalDropline.parentObject = p;
                     p.horizontalDropline.createSubObjects(view.topGraph,scope); // TODO should probably make this more recursive by default
                 }
             } else {
@@ -176,6 +187,13 @@ module KG
             return view;
         }
 
+        d3selection(view) {
+            var point = this,
+                subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
+
+            return subview.objectGroup(point.name, point.initGroupFn(), true).select('.'+point.viewObjectClass);
+        }
+
         render(view) {
 
             var point = this,
@@ -186,8 +204,6 @@ module KG
             if(!point.hasOwnProperty('coordinates')) {
                 return view;
             }
-
-
 
             if(isNaN(point.coordinates.x) || isNaN(point.coordinates.y) || point.coordinates.x == Infinity || point.coordinates.y == Infinity) {
                 return view;
@@ -206,12 +222,13 @@ module KG
 
             // draw the symbol at the point
             var pointSymbol:D3.Selection = group.select('.'+ point.viewObjectClass);
+
+            var currentSize = point.highlight ? point.size*1.5 : point.size;
             try {
                 pointSymbol
                     .attr({
                         'class': point.classAndVisibility(),
-                        'fill': point.color,
-                        'd': d3.svg.symbol().type(point.symbol).size(point.size),
+                        'd': d3.svg.symbol().type(point.symbol).size(currentSize),
                         'transform': subview.translateByCoordinates(point.coordinates)
                     });
             } catch(error) {
@@ -219,12 +236,11 @@ module KG
             }
 
             if(draggable){
-                return point.setDragBehavior(subview,pointSymbol);
+                return point.setHighlightBehavior(view).setDragBehavior(subview,pointSymbol);
             } else {
+                point.setHighlightBehavior(view);
                 return view;
             }
-
-            return view;
 
         }
     }

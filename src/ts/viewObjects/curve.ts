@@ -96,6 +96,8 @@ module KG {
 
             super(definition, modelPath);
 
+            var curve = this;
+
             if(definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
@@ -104,17 +106,19 @@ module KG {
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     color: definition.color,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
                 //console.log(labelDef);
-                this.labelDiv = new GraphDiv(labelDef);
+                curve.labelDiv = new GraphDiv(labelDef);
             }
 
-            this.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
-            this.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
 
-            this.viewObjectSVGtype = 'path';
-            this.viewObjectClass = 'curve';
+            curve.viewObjectSVGtype = 'path';
+            curve.viewObjectClass = 'curve';
         }
 
         createSubObjects(view,scope) {
@@ -201,9 +205,10 @@ module KG {
             curve.positionLabel(view);
 
             var dataLine = d3.svg.line()
-                .interpolate(this.interpolation)
+                .interpolate(curve.interpolation)
                 .x(function (d) { return d.x })
-                .y(function (d) { return d.y });
+                .y(function (d) { return d.y })
+
 
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
 
@@ -220,6 +225,8 @@ module KG {
                     'class': curve.classAndVisibility(),
                     'd': dataLine(dataCoordinates)
                 });
+
+            curve.setHighlightBehavior(view);
 
             return view;
         }

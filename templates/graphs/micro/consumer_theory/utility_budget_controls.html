@@ -2,222 +2,223 @@
 
 {% block body %}
 
-<div ng-controller="KineticGraphCtrl">
-    <div class="row">
-        <div class="col-md-8">
-            {% block graphs %}
-            {% endblock %}
-        </div>
-
-        <div class="col-md-4">
-        {% raw %}
-            <div class="well">
-                <div class="row">
-                    <div class="subtitle col-xs-3">utility</div>
-                    <div class="col-xs-9 math displayMath">u(x,y) = {{ model.utility.formula(false) }}<!-- = {{ model.utility.formula(true)}}--></div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
-                    </div>
-                    <div class="col-xs-9" id="alphaSlider"></div>
-                </div>
-                <div class="row" ng-show="params.selectedUtility == 'CES'">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
-                    </div>
-                    <div class="col-xs-9" id="subSlider"></div>
-                </div>
-            </div>
-            <div class="well">
-                <div class="row">
-                    <div class="subtitle col-xs-3">budget</div>
-                    <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
-                    </div>
-                    <div class="col-xs-9" id="incomeSlider"></div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
-                    </div>
-                    <div class="col-xs-9" id="pxSlider"></div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
-                    </div>
-                    <div class="col-xs-9" id="pySlider"></div>
-                </div>
-            </div>
-            <div ng-show="model.utility.type == 'Linear'">Note: assumes income split evenly if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
-            {% endraw %}
-            <hr/>
-            <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
-                <option value="CobbDouglas">Cobb-Douglas</option>
-                <option value="Complements">Complements</option>
-                <option value="Substitutes">Substitutes</option>
-                <option value="CES">CES</option>
-                <option value="Quasilinear">Quasilinear</option>
-            </select>
-            {% block belowControls %}
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            <div class="col-md-8">
+                {% block graphs %}
                 {% endblock %}
+            </div>
+
+            <div class="col-md-4">
+                {% raw %}
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">utility</div>
+                        <div class="col-xs-9 math displayMath">u(x,y) = {{ model.utility.formula(false) }}<!-- = {{ model.utility.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="alphaSlider"></div>
+                    </div>
+                    <div class="row" ng-show="params.selectedUtility == 'CES'">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="subSlider"></div>
+                    </div>
+                </div>
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">budget</div>
+                        <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
+                        </div>
+                        <div class="col-xs-9" id="incomeSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="pxSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="pySlider"></div>
+                    </div>
+                </div>
+                <div ng-show="model.utility.type == 'Linear'">Note: assumes buy only Y if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
+                {% endraw %}
+                <hr/>
+                <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
+                    <option value="CobbDouglas">Cobb-Douglas</option>
+                    <option value="Complements">Complements</option>
+                    <option value="Substitutes">Substitutes</option>
+                    <option value="CES">CES</option>
+                    <option value="Quasilinear">Quasilinear</option>
+                </select>
+                {% block belowControls %}
+                {% endblock %}
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block model %}
 
-<script>
+    <script>
 
-    var cobbDouglasDefinition = {
-            type: 'EconGraphs.CobbDouglasUtility',
-            definition: {
-                xPower: 'params.alpha'
-            }
-        },
-        complementsDefinition = {
-            type: 'EconGraphs.ComplementsUtility',
-            definition: {
-                bundle: {x: 'params.alpha', y: '1-params.alpha'}
-            }
-        },
-        substitutesDefinition = {
-            type: 'EconGraphs.SubstitutesUtility',
-            definition: {
-                xCoefficient: 'params.alpha'
-            }
-        },
-        cesDefinition = {
-            type: 'EconGraphs.CESUtility',
-            definition: {
-                alpha: 'params.alpha',
-                sub: 'params.sub'
-            }
-        },
-        quasilinearDefinition = {
-            type: 'EconGraphs.QuasilinearUtility',
-            definition: {
-                alpha: 'params.alpha'
-            }
-        },
-        selectorDefinition = {
-            type: 'KG.Selector',
-            definition: {
-                selected: 'params.selectedUtility',
-                options: [
-                    {
-                        name: 'CobbDouglas',
-                        label: 'Cobb-Douglas',
-                        selection: cobbDouglasDefinition
-                    },
-                    {
-                        name: 'Complements',
-                        label: 'Perfect Complements',
-                        selection: complementsDefinition
-                    },
-                    {
-                        name: 'Substitutes',
-                        label: 'Perfect Substitutes',
-                        selection: substitutesDefinition
-                    },
-                    {
-                        name: 'CES',
-                        label: 'CES',
-                        selection: cesDefinition
-                    },
-                    {
-                        name: 'Quasilinear',
-                        label: 'Quasilinear',
-                        selection: quasilinearDefinition
-                    }
-                ]
-            }
-        };
-
-
-    var scopeDefinition = {
-        params: {
-            x: 5,
-            alpha: 0.5,
-            income: 120,
-            px: 4,
-            py: 3,
-            sub: 0.5,
-            showMap: false,
-            snapToOptimal: true,
-            selectedUtility: 'CobbDouglas'
-        },
-        graphParams: ['selectedUtility'],
-        restrictions: [],
-        model: {
-            type: 'EconGraphs.MarshallianDemand',
-            definition: {
-                x: 'params.x',
-                snapToOptimalBundle: 'params.snapToOptimal',
-                budget:{
-                    type: 'EconGraphs.SimpleBudgetConstraint',
+        var cobbDouglasDefinition = {
+                    type: 'EconGraphs.CobbDouglasUtility',
                     definition: {
-                        income: 'params.income',
-                        px: 'params.px',
-                        py: 'params.py',
-                        budgetConstraintLabel: 'BL',
-                        xInterceptLabel: "\\frac{I}{P_x}",
-                        yInterceptLabel: "\\frac{I}{P_y}"
+                        xPower: 'params.alpha'
                     }
                 },
-                utility: selectorDefinition
-            }
-        },
-        views: [
-            {% block graphDefs %}
-            {% endblock %},
-            {
-                type: 'KG.Slider',
+                complementsDefinition = {
+                    type: 'EconGraphs.ComplementsUtility',
+                    definition: {
+                        bundle: {x: 'params.alpha', y: '1-params.alpha'}
+                    }
+                },
+                substitutesDefinition = {
+                    type: 'EconGraphs.SubstitutesUtility',
+                    definition: {
+                        xCoefficient: 'params.alpha'
+                    }
+                },
+                cesDefinition = {
+                    type: 'EconGraphs.CESUtility',
+                    definition: {
+                        alpha: 'params.alpha',
+                        sub: 'params.sub'
+                    }
+                },
+                quasilinearDefinition = {
+                    type: 'EconGraphs.QuasilinearUtility',
+                    definition: {
+                        alpha: 'params.alpha'
+                    }
+                },
+                selectorDefinition = {
+                    type: 'KG.Selector',
+                    definition: {
+                        selected: 'params.selectedUtility',
+                        options: [
+                            {
+                                name: 'CobbDouglas',
+                                label: 'Cobb-Douglas',
+                                selection: cobbDouglasDefinition
+                            },
+                            {
+                                name: 'Complements',
+                                label: 'Perfect Complements',
+                                selection: complementsDefinition
+                            },
+                            {
+                                name: 'Substitutes',
+                                label: 'Perfect Substitutes',
+                                selection: substitutesDefinition
+                            },
+                            {
+                                name: 'CES',
+                                label: 'CES',
+                                selection: cesDefinition
+                            },
+                            {
+                                name: 'Quasilinear',
+                                label: 'Quasilinear',
+                                selection: quasilinearDefinition
+                            }
+                        ]
+                    }
+                };
+
+
+        var scopeDefinition = {
+            params: {
+                x: 5,
+                alpha: 0.5,
+                income: 120,
+                px: 4,
+                py: 3,
+                sub: 0.5,
+                showMap: false,
+                snapToOptimal: true,
+                selectedUtility: 'CobbDouglas',
+                showPCCX: false,
+                showPCCY: false,
+                showICC: false,
+                highlightBudget: false,
+                highlightUtility: false,
+                highlightBundle: false
+            },
+            graphParams: ['selectedUtility'],
+            restrictions: [],
+            model: {
+                type: 'EconGraphs.MarshallianDemand',
                 definition: {
-                    element_id: 'alphaSlider',
-                    param: 'alpha',
-                    precision: '0.01',
-                    axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    x: 'params.x',
+                    snapToOptimalBundle: 'params.snapToOptimal',
+                    budget:{
+                        type: 'EconGraphs.SimpleBudgetConstraint',
+                        definition: {
+                            income: 'params.income',
+                            px: 'params.px',
+                            py: 'params.py'
+                        }
+                    },
+                    utility: selectorDefinition
                 }
             },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'subSlider',
-                    param: 'sub',
-                    axisDef: {min: -1, max: 1, ticks: 0}
+            views: [
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'subSlider',
+                        param: 'sub',
+                        axisDef: {min: -1, max: 1, ticks: 0}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'incomeSlider',
+                        param: 'income',
+                        precision: '1',
+                        axisDef: {min: 1, max: 200}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'pxSlider',
+                        param: 'px',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'pySlider',
+                        param: 'py',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
+                    }
                 }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'incomeSlider',
-                    param: 'income',
-                    precision: '1',
-                    axisDef: {min: 0, max: 200}
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'pxSlider',
-                    param: 'px',
-                    precision: '0.25',
-                    axisDef: {min: 0, max: 10}
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'pySlider',
-                    param: 'py',
-                    precision: '0.25',
-                    axisDef: {min: 0, max: 10}
-                }
-            }
-        ]
-    }
-</script>
+            ]
+        }
+    </script>
 {% endblock %}
 
 
@@ -246,6 +247,117 @@
             delete scopeDefinition.params.selectedUtility;
             scopeDefinition.model.definition.utility = quasilinearDefinition;
         }
+
+        var budgetLine = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'BL',
+                        className: 'budget',
+                        linear: 'model.budget.budgetSegments[0].linear',
+                        highlightParam: 'highlightBudget',
+                        highlight: 'params.highlightBudget',
+                        params: {
+                            label: 'BL',
+                            xInterceptLabel: "\\frac{I}{P_x}",
+                            yInterceptLabel: "\\frac{I}{P_y}"
+                        }
+                    }
+                },
+                bundlePoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundle',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.bundle.x',
+                            y: 'model.bundle.y'
+                        },
+                        xDrag: '!params.snapToOptimal',
+                        xDragParam: 'x',
+                        highlightParam: 'highlightBundle',
+                        highlight: 'params.highlightBundle',
+                        params: {
+                            xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
+                            yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
+                        }
+                    }
+                },
+                indifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'indifference_curve',
+                        className: 'utility',
+                        highlightParam: 'highlightUtility',
+                        highlight: 'params.highlightUtility',
+                        params: {label: 'params.snapToOptimal ? "U^*" : "U"'},
+                        fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))"
+                    }
+                },
+                MRSline = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'MRS',
+                        className: 'demand dotted',
+                        lineDef: {
+                            point: {
+                                x: 'params.x',
+                                y: 'model.bundle.y'
+                            },
+                            slope: '-1*model.utility.mrs(model.bundle)',
+                            xDomainDef: {
+                                min: '0.5*params.x',
+                                max: '1.5*params.x'
+                            }
+                        },
+                        show: '(params.showMRS && !params.snapToOptimal)',
+                        label: {
+                            text: 'MRS_{x,y}',
+                            valign: 'top',
+                            align: 'center'
+                        }
+                    }
+                },
+                PCCX = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'PCCX',
+                        show: 'params.showPCCX',
+                        data: 'model.priceConsumptionCurveData({good:"x"})',
+                        className: 'demand',
+                        interpolation: 'basis',
+                        labelPosition: 'START',
+                        params: {
+                            label: 'PCC_x'
+                        }
+                    }
+                },
+                PCCY = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'PCCY',
+                        show: 'params.showPCCY',
+                        data: 'model.priceConsumptionCurveData({good:"y"})',
+                        className: 'demand',
+                        interpolation: 'basis',
+                        labelPosition: 'START',
+                        params: {
+                            label: 'PCC_y'
+                        }
+                    }
+                },
+                ICC = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'ICC',
+                        show: 'params.showICC',
+                        data: 'model.incomeConsumptionCurveData()',
+                        className: 'engel',
+                        interpolation: 'basis',
+                        params: {
+                            label: 'ICC'
+                        }
+                    }
+                }
 
     </script>
 

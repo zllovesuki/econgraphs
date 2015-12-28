@@ -22,6 +22,12 @@ module KG
         className?: string;
         xDrag?: any;
         yDrag?: any;
+        xDragParam?: string;
+        yDragParam?: string;
+
+        highlightParam?: string;
+        highlight?: string;
+
         color?: string;
         coordinates?: ICoordinates;
         xDomain?: Domain;
@@ -36,6 +42,7 @@ module KG
         // identifiers
         name: string;
         objectName?: string;
+        unmasked?: boolean;
         className?: string;
         color: string;
 
@@ -51,8 +58,17 @@ module KG
         removeArrow: (group:D3.Selection, startOrEnd: string) => void;
         createSubObjects: (view: View, scope: IScope) => View;
 
+        // Highlighting
+        highlightParam: string;
+        highlight: boolean;
+
         // Updating
         updateDataForView: (view: View) => ViewObject
+
+        // Hover behavior
+        d3group: (view: View) => D3.Selection;
+        d3selection: (view:View) => D3.Selection;
+        setHighlightBehavior: (view: View) => ViewObject;
 
         // Dragging behavior
         coordinates: ICoordinates;
@@ -63,6 +79,7 @@ module KG
         xDragDelta: number;
         yDragDelta: number;
         setDragBehavior: (view: View, obj: D3.Selection) => View;
+
     }
 
     export class ViewObject extends Model implements IViewObject
@@ -73,6 +90,11 @@ module KG
         public color;
         public name;
         public objectName;
+        public unmasked;
+
+        public highlightParam;
+        public highlight;
+
         public coordinates;
         public xDrag;
         public yDrag;
@@ -131,7 +153,27 @@ module KG
                 color: KG.colorForClassName(definition.className),
                 show: true,
                 xDrag: false,
-                yDrag: false});
+                yDrag: false,
+                unmasked: false
+            });
+
+            if(definition.hasOwnProperty('xDrag') && !definition.hasOwnProperty('xDragParam')) {
+                if(typeof definition.xDrag == 'string') {
+                    definition.xDragParam = definition.xDrag.replace('params.','');
+                    definition.xDrag = true;
+                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
+                    definition.xDragParam = definition.coordinates.x.replace('params.','');
+                }
+            }
+
+            if(definition.hasOwnProperty('yDrag') && !definition.hasOwnProperty('yDragParam')) {
+                if(typeof definition.yDrag == 'string') {
+                    definition.yDragParam = definition.yDrag.replace('params.','');
+                    definition.yDrag = true;
+                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
+                    definition.yDragParam = definition.coordinates.y.replace('params.','');
+                }
+            }
 
             super(definition, modelPath);
 
@@ -140,24 +182,6 @@ module KG
             /* Set drag behavior on object */
             viewObj.xDragDelta = 0;
             viewObj.yDragDelta = 0;
-
-            if(definition.xDrag) {
-                if(typeof definition.xDrag == 'string') {
-                    viewObj.xDragParam = definition.xDrag.replace('params.','');
-                    viewObj.xDrag = true;
-                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
-                    this.xDragParam = definition.coordinates.x.replace('params.','');
-                }
-            }
-
-            if(definition.yDrag) {
-                if(typeof definition.yDrag == 'string') {
-                    viewObj.yDragParam = definition.yDrag.replace('params.','');
-                    viewObj.yDrag = true;
-                } else if(definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
-                    this.yDragParam = definition.coordinates.y.replace('params.','');
-                }
-            }
 
             if(definition.hasOwnProperty('xDomainDef')) {
                 viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
@@ -177,6 +201,9 @@ module KG
             } else {
                 classString += ' invisible';
             }
+            if(this.highlight) {
+                classString += ' highlight';
+            }
             if(this.hasOwnProperty('objectName')) {
                 classString += ' ' + this.objectName
             }
@@ -193,6 +220,19 @@ module KG
 
         removeArrow(group: D3.Selection, startOrEnd: string) {
             group.attr("marker-" + startOrEnd, null);
+        }
+
+        d3group(view) {
+            var viewObj = this;
+            return view.objectGroup(viewObj.name, viewObj.initGroupFn(), viewObj.unmasked);
+        }
+
+        d3selection(view){
+            var viewObj = this;
+            var group = viewObj.d3group(view);
+            if(group) {
+                return group.select('.' + viewObj.viewObjectClass);
+            }
         }
 
         render(view) {
@@ -215,9 +255,29 @@ module KG
         setDragBehavior(view, obj) {
             var viewObj = this;
             obj.style('cursor', viewObj.xDrag ? (viewObj.yDrag ? 'move' : 'ew-resize') : 'ns-resize');
-            obj.call(view.drag(viewObj.xDragParam, viewObj.yDragParam, viewObj.xDragDelta, viewObj.yDragDelta));
+            obj.call(view.drag(viewObj));
             return view;
         }
+
+        setHighlightBehavior(view) {
+            var viewObj = this,
+                selection = viewObj.d3selection(view);
+            if(viewObj.hasOwnProperty('highlightParam')) {
+                selection.on('mouseover', function() {
+                    var highlightUpdate = {};
+                    highlightUpdate[viewObj.highlightParam] = true;
+                    view.updateParams(highlightUpdate);
+                });
+                selection.on('mouseout', function() {
+                    var highlightUpdate = {};
+                    highlightUpdate[viewObj.highlightParam] = false;
+                    view.updateParams(highlightUpdate);
+                });
+            }
+            return viewObj;
+        }
+
+
 
     }
 

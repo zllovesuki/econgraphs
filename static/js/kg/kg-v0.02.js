@@ -1282,6 +1282,13 @@ var KGMath;
                 l.interceptDef = l.interceptDef || KG.multiplyDefs(-1, KG.divideDefs(definition.coefficients.c, definition.coefficients.b));
             }
             Linear.prototype._update = function (scope) {
+                var l = this;
+                if (l.xDomain) {
+                    l.xDomain.update(scope);
+                }
+                if (l.yDomain) {
+                    l.yDomain.update(scope);
+                }
                 return this.updateLine();
             };
             Linear.prototype.updateLine = function () {
@@ -2115,30 +2122,32 @@ var KG;
                 color: KG.colorForClassName(definition.className),
                 show: true,
                 xDrag: false,
-                yDrag: false });
+                yDrag: false,
+                unmasked: false
+            });
+            if (definition.hasOwnProperty('xDrag') && !definition.hasOwnProperty('xDragParam')) {
+                if (typeof definition.xDrag == 'string') {
+                    definition.xDragParam = definition.xDrag.replace('params.', '');
+                    definition.xDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
+                    definition.xDragParam = definition.coordinates.x.replace('params.', '');
+                }
+            }
+            if (definition.hasOwnProperty('yDrag') && !definition.hasOwnProperty('yDragParam')) {
+                if (typeof definition.yDrag == 'string') {
+                    definition.yDragParam = definition.yDrag.replace('params.', '');
+                    definition.yDrag = true;
+                }
+                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
+                    definition.yDragParam = definition.coordinates.y.replace('params.', '');
+                }
+            }
             _super.call(this, definition, modelPath);
             var viewObj = this;
             /* Set drag behavior on object */
             viewObj.xDragDelta = 0;
             viewObj.yDragDelta = 0;
-            if (definition.xDrag) {
-                if (typeof definition.xDrag == 'string') {
-                    viewObj.xDragParam = definition.xDrag.replace('params.', '');
-                    viewObj.xDrag = true;
-                }
-                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.x == 'string') {
-                    this.xDragParam = definition.coordinates.x.replace('params.', '');
-                }
-            }
-            if (definition.yDrag) {
-                if (typeof definition.yDrag == 'string') {
-                    viewObj.yDragParam = definition.yDrag.replace('params.', '');
-                    viewObj.yDrag = true;
-                }
-                else if (definition.hasOwnProperty('coordinates') && typeof definition.coordinates.y == 'string') {
-                    this.yDragParam = definition.coordinates.y.replace('params.', '');
-                }
-            }
             if (definition.hasOwnProperty('xDomainDef')) {
                 viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
             }
@@ -2157,6 +2166,9 @@ var KG;
             else {
                 classString += ' invisible';
             }
+            if (this.highlight) {
+                classString += ' highlight';
+            }
             if (this.hasOwnProperty('objectName')) {
                 classString += ' ' + this.objectName;
             }
@@ -2170,6 +2182,17 @@ var KG;
         };
         ViewObject.prototype.removeArrow = function (group, startOrEnd) {
             group.attr("marker-" + startOrEnd, null);
+        };
+        ViewObject.prototype.d3group = function (view) {
+            var viewObj = this;
+            return view.objectGroup(viewObj.name, viewObj.initGroupFn(), viewObj.unmasked);
+        };
+        ViewObject.prototype.d3selection = function (view) {
+            var viewObj = this;
+            var group = viewObj.d3group(view);
+            if (group) {
+                return group.select('.' + viewObj.viewObjectClass);
+            }
         };
         ViewObject.prototype.render = function (view) {
             return view; // overridden by child class
@@ -2187,8 +2210,24 @@ var KG;
         ViewObject.prototype.setDragBehavior = function (view, obj) {
             var viewObj = this;
             obj.style('cursor', viewObj.xDrag ? (viewObj.yDrag ? 'move' : 'ew-resize') : 'ns-resize');
-            obj.call(view.drag(viewObj.xDragParam, viewObj.yDragParam, viewObj.xDragDelta, viewObj.yDragDelta));
+            obj.call(view.drag(viewObj));
             return view;
+        };
+        ViewObject.prototype.setHighlightBehavior = function (view) {
+            var viewObj = this, selection = viewObj.d3selection(view);
+            if (viewObj.hasOwnProperty('highlightParam')) {
+                selection.on('mouseover', function () {
+                    var highlightUpdate = {};
+                    highlightUpdate[viewObj.highlightParam] = true;
+                    view.updateParams(highlightUpdate);
+                });
+                selection.on('mouseout', function () {
+                    var highlightUpdate = {};
+                    highlightUpdate[viewObj.highlightParam] = false;
+                    view.updateParams(highlightUpdate);
+                });
+            }
+            return viewObj;
         };
         return ViewObject;
     })(KG.Model);
@@ -2274,43 +2313,52 @@ var KG;
                 symbol: 'circle'
             });
             _super.call(this, definition, modelPath);
+            var point = this;
             if (definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
+                    className: definition.className,
                     coordinates: definition.coordinates,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
-                if (!labelDef.hasOwnProperty('align')) {
-                    labelDef.className = 'pointLabel';
-                }
-                this.labelDiv = new KG.GraphDiv(labelDef);
+                point.labelDiv = new KG.GraphDiv(labelDef);
             }
             if (definition.droplines) {
                 if (definition.droplines.hasOwnProperty('horizontal')) {
-                    this.horizontalDropline = new KG.HorizontalDropline({
+                    point.horizontalDropline = new KG.HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
                         draggable: definition.yDrag,
+                        yDrag: definition.yDrag,
+                        yDragParam: definition.yDragParam,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
-                        show: definition.show
+                        show: definition.show,
+                        highlightParam: definition.highlightParam,
+                        highlight: definition.highlight
                     });
                 }
                 if (definition.droplines.hasOwnProperty('vertical')) {
-                    this.verticalDropline = new KG.VerticalDropline({
+                    point.verticalDropline = new KG.VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
                         draggable: definition.xDrag,
+                        xDrag: definition.xDrag,
+                        xDragParam: definition.xDragParam,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
-                        show: definition.show
+                        show: definition.show,
+                        highlightParam: definition.highlightParam,
+                        highlight: definition.highlight
                     });
                 }
             }
-            this.viewObjectSVGtype = 'path';
-            this.viewObjectClass = 'pointSymbol';
+            point.viewObjectSVGtype = 'path';
+            point.viewObjectClass = 'pointSymbol';
         }
         Point.prototype.createSubObjects = function (view, scope) {
             var p = this;
@@ -2334,6 +2382,7 @@ var KG;
                 }
                 if (p.horizontalDropline) {
                     view.topGraph.addObject(p.horizontalDropline.update(scope));
+                    p.horizontalDropline.parentObject = p;
                     p.horizontalDropline.createSubObjects(view.topGraph, scope); // TODO should probably make this more recursive by default
                 }
             }
@@ -2351,6 +2400,10 @@ var KG;
                 }
             }
             return view;
+        };
+        Point.prototype.d3selection = function (view) {
+            var point = this, subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
+            return subview.objectGroup(point.name, point.initGroupFn(), true).select('.' + point.viewObjectClass);
         };
         Point.prototype.render = function (view) {
             var point = this, draggable = (point.xDrag || point.yDrag);
@@ -2371,12 +2424,12 @@ var KG;
             }
             // draw the symbol at the point
             var pointSymbol = group.select('.' + point.viewObjectClass);
+            var currentSize = point.highlight ? point.size * 1.5 : point.size;
             try {
                 pointSymbol
                     .attr({
                     'class': point.classAndVisibility(),
-                    'fill': point.color,
-                    'd': d3.svg.symbol().type(point.symbol).size(point.size),
+                    'd': d3.svg.symbol().type(point.symbol).size(currentSize),
                     'transform': subview.translateByCoordinates(point.coordinates)
                 });
             }
@@ -2384,12 +2437,12 @@ var KG;
                 console.log(error);
             }
             if (draggable) {
-                return point.setDragBehavior(subview, pointSymbol);
+                return point.setHighlightBehavior(view).setDragBehavior(subview, pointSymbol);
             }
             else {
+                point.setHighlightBehavior(view);
                 return view;
             }
-            return view;
         };
         return Point;
     })(KG.ViewObject);
@@ -2416,7 +2469,9 @@ var KG;
                     text: definition.axisLabel,
                     dimensions: { width: 25, height: 20 },
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
                 if (definition.horizontal) {
                     labelDef.coordinates = {
@@ -2424,6 +2479,7 @@ var KG;
                         y: definition.coordinates.y
                     };
                     labelDef.yDrag = definition.draggable;
+                    labelDef.yDragParam = definition.yDragParam;
                 }
                 else {
                     labelDef.coordinates = {
@@ -2431,11 +2487,14 @@ var KG;
                         y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
                     };
                     labelDef.xDrag = definition.draggable;
+                    labelDef.xDragParam = definition.xDragParam;
                 }
                 this.labelDiv = new KG.GraphDiv(labelDef);
             }
             this.viewObjectSVGtype = 'line';
             this.viewObjectClass = 'dropline';
+            console.log('dropline:');
+            console.log(this);
         }
         Dropline.prototype.createSubObjects = function (view, scope) {
             var p = this;
@@ -2460,6 +2519,7 @@ var KG;
                 'y2': pointY,
                 'class': dropline.classAndVisibility()
             });
+            dropline.setHighlightBehavior(view);
             return view;
         };
         return Dropline;
@@ -2508,6 +2568,7 @@ var KG;
             }
             definition = _.defaults(definition, { data: [], interpolation: 'linear' });
             _super.call(this, definition, modelPath);
+            var curve = this;
             if (definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
@@ -2516,15 +2577,17 @@ var KG;
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
                     color: definition.color,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
                 //console.log(labelDef);
-                this.labelDiv = new KG.GraphDiv(labelDef);
+                curve.labelDiv = new KG.GraphDiv(labelDef);
             }
-            this.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
-            this.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
-            this.viewObjectSVGtype = 'path';
-            this.viewObjectClass = 'curve';
+            curve.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
+            curve.viewObjectSVGtype = 'path';
+            curve.viewObjectClass = 'curve';
         }
         Curve.prototype.createSubObjects = function (view, scope) {
             var labelDiv = this.labelDiv;
@@ -2597,7 +2660,7 @@ var KG;
             curve.addArrows(group);
             curve.positionLabel(view);
             var dataLine = d3.svg.line()
-                .interpolate(this.interpolation)
+                .interpolate(curve.interpolation)
                 .x(function (d) { return d.x; })
                 .y(function (d) { return d.y; });
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
@@ -2612,6 +2675,7 @@ var KG;
                 'class': curve.classAndVisibility(),
                 'd': dataLine(dataCoordinates)
             });
+            curve.setHighlightBehavior(view);
             return view;
         };
         Curve.LABEL_POSITION_MIDDLE = 'MIDDLE';
@@ -2657,14 +2721,14 @@ var KG;
     var Arrow = (function (_super) {
         __extends(Arrow, _super);
         function Arrow(definition, modelPath) {
-            definition.labelPosition = KG.Curve.LABEL_POSITION_MIDDLE;
-            definition.data = [KG.getCoordinates(definition.begin), KG.getCoordinates(definition.end)];
+            definition.a = definition.begin;
+            definition.b = definition.end;
             definition.arrows = KG.Curve.END_ARROW_STRING;
             _super.call(this, definition, modelPath);
             this.viewObjectClass = 'arrow';
         }
         return Arrow;
-    })(KG.Curve);
+    })(KG.Segment);
     KG.Arrow = Arrow;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2725,8 +2789,12 @@ var KG;
                     className: definition.className,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
+                    xDragParam: definition.xDragParam,
+                    yDragParam: definition.yDragParam,
                     color: definition.color,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
                 //console.log(labelDef);
                 line.labelDiv = new KG.GraphDiv(labelDef);
@@ -2744,8 +2812,11 @@ var KG;
                     text: definition.xInterceptLabel,
                     dimensions: { width: 25, height: 20 },
                     xDrag: definition.xDrag,
+                    xDragParam: definition.xDragParam,
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
             }
@@ -2756,15 +2827,28 @@ var KG;
                     text: definition.yInterceptLabel,
                     dimensions: { width: 25, height: 20 },
                     yDrag: definition.yDrag,
+                    yDragParam: definition.yDragParam,
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
             }
         }
         Line.prototype._update = function (scope) {
-            this.linear.update(scope);
-            return this;
+            var line = this;
+            line.linear.update(scope);
+            if (line.xInterceptLabelDiv) {
+                line.xInterceptLabelDiv.update(scope);
+            }
+            if (line.yInterceptLabelDiv) {
+                line.yInterceptLabelDiv.update(scope);
+            }
+            if (line.labelDiv) {
+                line.labelDiv.update(scope);
+            }
+            return line;
         };
         Line.prototype.createSubObjects = function (view, scope) {
             var line = this;
@@ -2821,7 +2905,7 @@ var KG;
                     line.removeArrow(group, 'end');
                 }
                 if (line.labelDiv) {
-                    var labelPoint, labelAlign = 'left', labelValign = 'bottom';
+                    var labelPoint, labelAlign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('align')) ? line.definition.label.align : 'left', labelValign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('valign')) ? line.definition.label.valign : 'bottom';
                     if (line instanceof VerticalLine) {
                         labelPoint = xTopEdge;
                         labelAlign = 'center';
@@ -2952,10 +3036,12 @@ var KG;
                     'd': dataLine([startPoint, endPoint]),
                     'stroke': line.color
                 });
+                line.setHighlightBehavior(view);
                 if (draggable) {
                     return line.setDragBehavior(view, lineSelection);
                 }
                 else {
+                    lineSelection.style('cursor', 'auto');
                     return view;
                 }
             }
@@ -3081,12 +3167,17 @@ var KG;
             definition = _.defaults(definition, {
                 dimensions: { width: 30, height: 20 },
                 text: '',
-                color: KG.colorForClassName(definition.className)
+                color: KG.colorForClassName(definition.className),
+                unmasked: true
             });
             _super.call(this, definition, modelPath);
         }
+        GraphDiv.prototype.d3selection = function (view) {
+            return view.getDiv(this.objectName || this.name);
+        };
         GraphDiv.prototype.render = function (view) {
             var divObj = this;
+            console.log(divObj);
             if (divObj.text instanceof Array) {
                 divObj.text = divObj.text.join('');
             }
@@ -3117,7 +3208,7 @@ var KG;
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
             var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text, draggable = (divObj.xDrag || divObj.yDrag);
-            var div = view.getDiv(this.objectName || this.name);
+            var div = divObj.d3selection(view);
             console.log('drawing div with text', text);
             div
                 .style('cursor', 'default')
@@ -3126,7 +3217,6 @@ var KG;
                 .style('width', width + 'px')
                 .style('height', height + 'px')
                 .style('line-height', height + 'px')
-                .style('background-color', divObj.backgroundColor)
                 .attr('class', divObj.classAndVisibility());
             // Set left pixel margin; default to centered on x coordinate
             var alignDelta = width * 0.5;
@@ -3152,9 +3242,10 @@ var KG;
             div.style('top', (y - vAlignDelta) + 'px');
             katex.render(text.toString(), div[0][0]);
             if (draggable) {
-                return divObj.setDragBehavior(view, div);
+                return divObj.setHighlightBehavior(view).setDragBehavior(view, div);
             }
             else {
+                divObj.setHighlightBehavior(view);
                 return view;
             }
         };
@@ -3437,41 +3528,37 @@ var KG;
                 .attr('width', view.dimensions.width)
                 .attr('height', view.dimensions.height);
             // Establish marker style for arrow
-            var endMarkers = svg.append("svg:defs").selectAll("marker").data(KG.allColors()).enter()
-                .append("marker")
-                .attr("id", function (d) { return "arrow-end-" + d; })
-                .attr("refX", 11)
-                .attr("refY", 6)
-                .attr("markerWidth", 13)
-                .attr("markerHeight", 13)
-                .attr("orient", "auto")
-                .attr("markerUnits", "userSpaceOnUse");
-            /*endMarkers.append("svg:rect")
-                .attr('x',2)
-                .attr('width', 11)
-                .attr('height', 13)
-                .attr('fill','white');*/
-            endMarkers.append("svg:path")
-                .attr("d", "M2,2 L2,11 L10,6 L2,2")
-                .attr("fill", function (d) { return d; });
-            // Establish marker style for arrow
-            var startMarkers = svg.append("svg:defs").selectAll("marker").data(KG.allColors()).enter()
-                .append("svg:marker")
-                .attr("id", function (d) { return "arrow-start-" + d; })
-                .attr("refX", 2)
-                .attr("refY", 6)
-                .attr("markerWidth", 13)
-                .attr("markerHeight", 13)
-                .attr("orient", "auto")
-                .attr("markerUnits", "userSpaceOnUse");
-            // TODO need a better way to mask the portion of the line that extends under the arrow
-            /*startMarkers.append("svg:rect")
-                .attr('x',2)
-                .attr('width', 11)
-                .attr('height', 13)*/
-            startMarkers.append("svg:path")
-                .attr("d", "M11,2 L11,11 L2,6 L11,2")
-                .attr("fill", function (d) { return d; });
+            var markerParameters = [
+                {
+                    arrowName: "-end-",
+                    refX: 11,
+                    maskPath: "M3,1 L3,12 L12,7 L12,5 L3,1",
+                    arrowPath: "M2,2 L2,11 L10,6 L2,2"
+                },
+                {
+                    arrowName: "-start-",
+                    refX: 2,
+                    maskPath: "M10,1 L10,12 L0,7 L0,5 L10,1",
+                    arrowPath: "M11,2 L11,11 L2,6 L11,2"
+                }
+            ];
+            markerParameters.forEach(function (markerParam) {
+                var markers = svg.append("svg:defs").selectAll("marker").data(KG.allColors()).enter()
+                    .append("marker")
+                    .attr("id", function (d) { return "arrow" + markerParam.arrowName + d; })
+                    .attr("refX", markerParam.refX)
+                    .attr("refY", 6)
+                    .attr("markerWidth", 13)
+                    .attr("markerHeight", 13)
+                    .attr("orient", "auto")
+                    .attr("markerUnits", "userSpaceOnUse");
+                markers.append("svg:path")
+                    .attr("d", markerParam.maskPath)
+                    .attr("fill", "white");
+                markers.append("svg:path")
+                    .attr("d", markerParam.arrowPath)
+                    .attr("fill", function (d) { return d; });
+            });
             // Add a div above the SVG for labels and controls
             view.divs = frame.append('div').attr({ style: visTranslation });
             if (view.mask) {
@@ -3479,10 +3566,11 @@ var KG;
                 view.masked = svg.append('g').attr('transform', visTranslation);
                 var mask = svg.append('g').attr('class', 'mask');
                 // Put mask around vis to clip objects that extend beyond the desired viewable area
-                mask.append('rect').attr({ x: 0, y: 0, width: view.dimensions.width, height: view.margins.top, fill: view.background });
-                mask.append('rect').attr({ x: 0, y: view.dimensions.height - view.margins.bottom, width: view.dimensions.width, height: view.margins.bottom, fill: view.background });
-                mask.append('rect').attr({ x: 0, y: 0, width: view.margins.left, height: view.dimensions.height, fill: view.background });
-                mask.append('rect').attr({ x: view.dimensions.width - view.margins.right, y: 0, width: view.margins.right, height: view.dimensions.height, fill: view.background });
+                var maskBorder = 5;
+                mask.append('rect').attr({ x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill: view.background }); // top
+                mask.append('rect').attr({ x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill: view.background }); // bottom
+                mask.append('rect').attr({ x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill: view.background }); // left
+                mask.append('rect').attr({ x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill: view.background }); // right
             }
             if (view.xAxis || view.yAxis) {
                 // Establish SVG group for axes
@@ -3556,14 +3644,18 @@ var KG;
         View.prototype.nearLeft = function (point) {
             return KG.isAlmostTo(point.x, this.xAxis.domain.min, 0.05, this.xAxis.domain.max - this.xAxis.domain.min);
         };
-        View.prototype.drag = function (xParam, yParam, xDelta, yDelta) {
+        View.prototype.drag = function (dragParams) {
             var view = this;
             var xAxis = view.xAxis;
             var yAxis = view.yAxis;
+            var xParam = dragParams.xDragParam, yParam = dragParams.yDragParam, xDelta = dragParams.xDragDelta, yDelta = dragParams.yDragDelta;
             return d3.behavior.drag()
                 .on('drag', function () {
                 d3.event.sourceEvent.preventDefault();
                 var dragUpdate = {}, newX, newY;
+                if (dragParams instanceof KG.ViewObject) {
+                    dragUpdate[dragParams.highlightParam] = true;
+                }
                 var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
                 if (xAxis && xParam !== null) {
                     newX = xAxis.scale.invert(mouseX + xDelta);
@@ -3588,6 +3680,13 @@ var KG;
                     else {
                         dragUpdate[yParam] = newY;
                     }
+                }
+                view.updateParams(dragUpdate);
+            })
+                .on('dragend', function () {
+                var dragUpdate = {};
+                if (dragParams instanceof KG.ViewObject) {
+                    dragUpdate[dragParams.highlightParam] = false;
                 }
                 view.updateParams(dragUpdate);
             });
@@ -4386,99 +4485,6 @@ var EconGraphs;
         __extends(MidpointElasticity, _super);
         function MidpointElasticity(definition, modelPath) {
             _super.call(this, definition, modelPath);
-            this.point1view = new KG.Point({
-                name: 'point1',
-                coordinates: definition.point1,
-                size: 500,
-                xDrag: true,
-                yDrag: true,
-                label: {
-                    text: 'B'
-                },
-                droplines: {
-                    horizontal: 'P_B',
-                    vertical: 'Q_B'
-                }
-            });
-            this.point2view = new KG.Point({
-                name: 'point2',
-                coordinates: definition.point2,
-                size: 500,
-                xDrag: true,
-                yDrag: true,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    horizontal: 'P_A',
-                    vertical: 'Q_A'
-                }
-            });
-            this.midpoint = new KG.Point({
-                name: 'midpoint',
-                coordinates: {
-                    x: 'model.xAvg',
-                    y: 'model.yAvg' },
-                symbol: 'cross',
-                color: 'grey',
-                size: 100,
-                xDrag: false,
-                yDrag: false,
-                label: {
-                    text: 'M',
-                    align: 'right',
-                    valign: 'top',
-                    color: 'grey'
-                }
-            });
-            this.line = new KG.Line({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                lineDef: {
-                    point1: {
-                        x: 'params.x1',
-                        y: 'params.y1'
-                    },
-                    point2: {
-                        x: 'params.x2',
-                        y: 'params.y2'
-                    }
-                }
-            });
-            this.xDiffSegment = new KG.Arrow({
-                name: 'xDiffSegment',
-                className: 'diff2',
-                begin: {
-                    x: definition.point2.x,
-                    y: 5
-                },
-                end: {
-                    x: definition.point1.x,
-                    y: 5
-                },
-                label: {
-                    text: 'model.xPercentDiff | percentage:0',
-                    valign: 'top',
-                    align: 'center'
-                }
-            });
-            this.yDiffSegment = new KG.Arrow({
-                name: 'yDiffSegment',
-                className: 'diff1',
-                begin: {
-                    x: 15,
-                    y: definition.point2.y
-                },
-                end: {
-                    x: 15,
-                    y: definition.point1.y
-                },
-                label: {
-                    text: 'model.yPercentDiff | percentage:0',
-                    align: 'right'
-                }
-            });
         }
         MidpointElasticity.prototype._calculateElasticity = function (inputs) {
             var e = this;
@@ -4618,36 +4624,6 @@ var EconGraphs;
             var d = this;
             d.demandFunction = new KGMath.Functions[definition.type](definition.def);
             d.elasticity = (definition.elasticityMethod == 'point') ? new EconGraphs.PointElasticity({}) : (definition.elasticityMethod = 'constant') ? new EconGraphs.ConstantElasticity({}) : new EconGraphs.MidpointElasticity({});
-            var priceLineDrag = (typeof definition.price == 'string') ? definition.price.replace('params.', '') : false;
-            d.priceLine = new KG.HorizontalLine({
-                name: 'priceLine',
-                color: 'grey',
-                arrows: 'NONE',
-                yDrag: definition.priceDrag,
-                y: d.modelProperty('price')
-            });
-            this.quantityLine = new KG.VerticalLine({
-                name: 'quantityLine',
-                color: 'grey',
-                arrows: 'NONE',
-                xDrag: definition.quantityDrag,
-                x: d.modelProperty('quantity')
-            });
-            this.quantityDemandedPoint = new KG.Point({
-                name: 'quantityDemandedAtPrice',
-                coordinates: { x: this.modelProperty('quantity'), y: this.modelProperty('price') },
-                size: 500,
-                color: 'black',
-                yDrag: definition.price,
-                xDrag: definition.quantity,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    vertical: 'Q^D_A',
-                    horizontal: 'P_A'
-                }
-            });
         }
         Demand.prototype._update = function (scope) {
             var d = this;
@@ -4763,27 +4739,6 @@ var EconGraphs;
         function LinearDemand(definition, modelPath) {
             _super.call(this, definition, modelPath);
             var demand = this;
-            demand.priceInterceptPoint = new KG.Point({
-                name: 'demandPriceIntercept',
-                coordinates: { x: 0, y: demand.modelProperty('priceIntercept') },
-                className: 'demand',
-                yDrag: definition.priceInterceptDrag
-            });
-            demand.quantityInterceptPoint = new KG.Point({
-                name: 'demandQuantityIntercept',
-                coordinates: { x: demand.modelProperty('quantityIntercept'), y: 0 },
-                className: 'demand',
-                xDrag: definition.quantityInterceptDrag
-            });
-            demand.curve = new KG.Line({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                lineDef: definition.def,
-                label: {
-                    text: definition.curveLabel
-                }
-            });
             demand.consumerSurplus = new KG.Area({
                 name: 'consumerSurplus',
                 className: 'demand',
@@ -4844,63 +4799,14 @@ var EconGraphs;
         __extends(ConstantElasticityDemand, _super);
         function ConstantElasticityDemand(definition, modelPath) {
             _super.call(this, definition, modelPath);
-            this.slopeAtPrice = function (price) {
-                var d = this, a = d.demandFunction.level, b = d.demandFunction.powers[1];
-                return (-1) * a * b * Math.pow(price, -(1 + b));
-            };
-            this.slopeAtPriceWords = function (price) {
-                return "\\frac { dQ^D }{ dP } = " + this.slopeAtPrice(price).toFixed(2);
-            };
-            this.curve = new KG.FunctionPlot({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                fn: 'model.demandFunction',
-                label: {
-                    text: 'D'
-                }
-            });
-            this.priceLine = new KG.HorizontalLine({
-                name: 'priceLine',
-                color: 'grey',
-                arrows: 'NONE',
-                type: 'HorizontalLine',
-                yDrag: 'price',
-                y: 'params.price'
-            });
-            this.quantityDemandedAtPrice = new KG.Point({
-                name: 'quantityDemandedAtPrice',
-                coordinates: { x: 'model.quantityAtPrice(params.price)', y: 'params.price' },
-                size: 500,
-                color: 'black',
-                yDrag: true,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    vertical: 'Q^D(P)',
-                    horizontal: 'P'
-                }
-            });
-            this.slopeLine = new KG.Line({
-                name: 'slopeLine',
-                className: 'demand dotted',
-                lineDef: {
-                    point: { x: 'model.quantityAtPrice(params.price)', y: 'params.price' },
-                    slope: '1/model.slopeAtPrice(params.price)'
-                },
-                label: {
-                    text: 'model.slopeAtPriceWords(params.price)'
-                }
-            });
             this.elasticity.elasticity = definition.def.powers[1];
         }
-        ConstantElasticityDemand.prototype._update = function (scope) {
-            var d = this;
-            d.demandFunction.update(scope);
-            d.slopeLine.linear.update(scope);
-            d.elasticity.update(scope);
-            return d;
+        ConstantElasticityDemand.prototype.slopeAtPrice = function (price) {
+            var d = this, a = d.demandFunction.level, b = d.demandFunction.powers[1];
+            return (-1) * a * b * Math.pow(price, -(1 + b));
+        };
+        ConstantElasticityDemand.prototype.slopeAtPriceWords = function (price) {
+            return "\\frac { dQ^D }{ dP } = " + this.slopeAtPrice(price).toFixed(2);
         };
         return ConstantElasticityDemand;
     })(EconGraphs.Demand);
@@ -5874,6 +5780,7 @@ var EconGraphs;
     var CESUtility = (function (_super) {
         __extends(CESUtility, _super);
         function CESUtility(definition, modelPath) {
+            definition.alpha = definition.alpha || 0.5;
             // Can defined with either r or s or (more commonly) 'sub', which ranges from -1 to 1
             if (definition.hasOwnProperty('r')) {
                 definition.s = KG.divideDefs(1, KG.subtractDefs(1, definition.r)); // s = 1/(1-r)
@@ -5886,6 +5793,7 @@ var EconGraphs;
                 definition.s = KG.divideDefs(1, KG.subtractDefs(1, definition.r)); // s = 1/(1-r)
                 console.log('oops, must instantiate a CES utility function with either r or s');
             }
+            definition.criticalPriceRatio = KG.divideDefs(definition.alpha, KG.subtractDefs(1, definition.alpha));
             definition.type = 'CES';
             definition.def = {
                 coefficient: definition.coefficient || 1,
@@ -6026,69 +5934,33 @@ var EconGraphs;
         UtilityDemand.prototype.otherQuantityAtPrice = function (price, good) {
             return 0; // overridden by subclass
         };
-        UtilityDemand.prototype.quantityAtPricePoint = function (price, priceParams, pointParams) {
-            var d = this;
-            priceParams = _.defaults(priceParams, {
-                good: 'x'
-            });
-            var quantityProperty = 'quantityAtPrice(' + price + ',"' + priceParams.good + '")';
-            return new KG.Point({
-                name: 'q' + priceParams.good + 'd',
-                className: 'demand',
-                coordinates: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                params: pointParams
-            });
-        };
-        UtilityDemand.prototype.quantitiesAtPriceSegment = function (price, segmentParams) {
-            var d = this;
-            segmentParams = _.defaults(segmentParams, {
-                good: 'x'
-            });
-            var quantityProperty = 'quantityAtPrice(' + price + ',' + segmentParams.good + ')';
-            var otherQuantityProperty = 'otherQuantityAtPrice(' + price + ',' + segmentParams.good + ')';
-            return new KG.Segment({
-                name: 'q' + segmentParams.good + 'dSegment',
-                className: 'demand',
-                a: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                b: {
-                    x: d.modelProperty(otherQuantityProperty),
-                    y: price
-                },
-                params: segmentParams
-            });
-        };
-        UtilityDemand.prototype.demandCurve = function (demandParams, curveParams) {
-            demandParams = _.defaults(demandParams, {
+        UtilityDemand.prototype.demandCurveData = function (demandParams) {
+            demandParams = _.defaults(demandParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 50,
                 numSamplePoints: 101
             });
             var d = this, curveData = [], relevantDemandParams = _.clone(demandParams);
-            if (d.utility instanceof EconGraphs.SubstitutesUtility) {
-                curveData.push({ x: 0, y: demandParams.max });
-                // get other price from specific demand function
-                // set new maximum to critical price ratio
+            if (d.utility instanceof EconGraphs.SubstitutesUtility || (d.utility instanceof EconGraphs.CESUtility && d.utility.r == 1)) {
+                // set new maximum to critical price ratio, if that's on the graph
                 relevantDemandParams.max = (demandParams.good == 'x') ? d.utility.criticalPriceRatio * d.price('y') : d.price('x') / d.utility.criticalPriceRatio;
-                curveData.push({ x: 0, y: relevantDemandParams.max });
+                if (relevantDemandParams.max < demandParams.max) {
+                    curveData.push({ x: 0, y: demandParams.max });
+                    curveData.push({ x: 0, y: relevantDemandParams.max });
+                    if (d.hasOwnProperty('budget')) {
+                        curveData.push({ x: d['budget']['income'] / relevantDemandParams.max, y: relevantDemandParams.max });
+                    }
+                }
+                else {
+                    relevantDemandParams.max = demandParams.max;
+                }
             }
             var samplePoints = KG.samplePointsForDomain(relevantDemandParams).reverse();
             samplePoints.forEach(function (price) {
                 curveData.push({ x: d.quantityAtPrice(price, demandParams.good), y: price });
             });
-            curveData = curveData.sort(KG.sortObjects('x'));
-            return new KG.Curve({
-                name: 'demand' + demandParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'demand'
-            });
+            return curveData.sort(KG.sortObjects('x'));
         };
         return UtilityDemand;
     })(KG.Model);
@@ -6150,82 +6022,60 @@ var EconGraphs;
             d.budget.setIncome(originalIncome);
             return quantity;
         };
-        MarshallianDemand.prototype.priceConsumptionCurve = function (pccParams, curveParams) {
-            pccParams = _.defaults(pccParams, {
+        MarshallianDemand.prototype.priceConsumptionCurveData = function (pccParams) {
+            pccParams = _.defaults(pccParams || {}, {
                 good: 'x',
-                min: 1,
-                max: 100,
-                numSamplePoints: 100
+                min: 0,
+                max: 10,
+                numSamplePoints: 101
             });
-            var d = this, budget = d.budget, samplePoints = KG.samplePointsForDomain(pccParams), curveData = [];
-            var initialPrice = budget['p' + pccParams.good];
+            var d = this, samplePoints = KG.samplePointsForDomain(pccParams), curveData = [];
+            var initialPrice = d.budget['p' + pccParams.good];
+            console.log('setting initial price to ', initialPrice);
             samplePoints.forEach(function (price) {
-                budget['p' + pccParams.good] = price;
-                curveData.push(d.utility.optimalBundle(budget));
+                d.budget.setPrice(price, pccParams.good);
+                var optimalBundle = d.utility.optimalBundle(d.budget);
+                if (!isNaN(optimalBundle.x) && !isNaN(optimalBundle.y)) {
+                    curveData.push(optimalBundle);
+                }
+                ;
             });
             // reset budget price
-            budget['p' + pccParams.good] = initialPrice;
-            return new KG.Curve({
-                name: 'PCC' + pccParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'pcc'
-            });
+            d.budget.setPrice(initialPrice, pccParams.good);
+            return curveData;
         };
-        MarshallianDemand.prototype.incomeConsumptionCurve = function (iccParams, curveParams) {
-            iccParams = _.defaults(iccParams, {
+        MarshallianDemand.prototype.incomeConsumptionCurveData = function (iccParams) {
+            iccParams = _.defaults(iccParams || {}, {
                 min: 1,
                 max: 200,
                 numSamplePoints: 200
             });
-            var d = this, budget = d.budget, samplePoints = KG.samplePointsForDomain(iccParams), curveData = [];
-            var initialIncome = budget.income;
+            var d = this, samplePoints = KG.samplePointsForDomain(iccParams), curveData = [], optimalBundle;
+            var initialIncome = d.budget.income;
             samplePoints.forEach(function (income) {
-                budget.income = income;
-                curveData.push(d.utility.optimalBundle(budget));
+                d.budget.setIncome(income);
+                optimalBundle = d.utility.optimalBundle(d.budget);
+                if (!isNaN(optimalBundle.x) && !isNaN(optimalBundle.y)) {
+                    curveData.push(optimalBundle);
+                }
+                ;
             });
             // reset budget price
-            budget.income = initialIncome;
-            return new KG.Curve({
-                name: 'ICC',
-                data: curveData,
-                params: curveParams,
-                className: 'icc'
-            });
+            d.budget.setIncome(initialIncome);
+            return curveData;
         };
-        MarshallianDemand.prototype.quantityAtIncomePoint = function (price, incomeParams, pointParams) {
-            var d = this;
-            incomeParams = _.defaults(incomeParams, {
-                good: 'x'
-            });
-            var quantityProperty = 'quantityAtIncome(' + price + ',"' + incomeParams.good + '")';
-            return new KG.Point({
-                name: 'q' + incomeParams.good + 'd',
-                className: 'engel',
-                coordinates: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                params: pointParams
-            });
-        };
-        MarshallianDemand.prototype.engelCurve = function (engelParams, curveParams) {
-            engelParams = _.defaults(engelParams, {
+        MarshallianDemand.prototype.engelCurveData = function (engelParams) {
+            engelParams = _.defaults(engelParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 200,
-                numSamplePoints: 201
+                numSamplePoints: 200
             });
             var d = this, samplePoints = KG.samplePointsForDomain(engelParams), curveData = [];
             samplePoints.forEach(function (price) {
                 curveData.push({ x: d.quantityAtIncome(price, engelParams.good), y: price });
             });
-            return new KG.Curve({
-                name: 'Engel' + engelParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'engel'
-            });
+            return curveData;
         };
         return MarshallianDemand;
     })(EconGraphs.UtilityDemand);

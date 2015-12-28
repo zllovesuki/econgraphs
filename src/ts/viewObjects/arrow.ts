@@ -4,25 +4,25 @@
 
 module KG {
 
-    export interface ArrowDefinition extends CurveDefinition {
+    export interface ArrowDefinition extends SegmentDefinition {
         begin: any;
         end: any;
     }
 
-    export interface IArrow extends ICurve {
+    export interface IArrow extends ISegment {
         begin: ICoordinates;
         end: ICoordinates;
     }
 
-    export class Arrow extends Curve implements IArrow {
+    export class Arrow extends Segment implements IArrow {
 
         public begin;
         public end;
 
         constructor(definition:ArrowDefinition, modelPath?: string) {
 
-            definition.labelPosition = Curve.LABEL_POSITION_MIDDLE;
-            definition.data = [KG.getCoordinates(definition.begin), KG.getCoordinates(definition.end)];
+            definition.a = definition.begin;
+            definition.b = definition.end;
             definition.arrows = Curve.END_ARROW_STRING;
 
             super(definition, modelPath);

@@ -28,6 +28,7 @@ module KG {
 
     export interface ILine extends IViewObject {
 
+        definition: LineDefinition;
         linear: KGMath.Functions.Linear;
         labelDiv: GraphDiv;
         xInterceptLabelDiv: GraphDiv;
@@ -39,6 +40,7 @@ module KG {
 
     export class Line extends ViewObject implements ILine {
 
+        public definition;
         public linear;
         public arrows;
 
@@ -110,8 +112,12 @@ module KG {
                     className: definition.className,
                     xDrag: definition.xDrag,
                     yDrag: definition.yDrag,
+                    xDragParam: definition.xDragParam,
+                    yDragParam: definition.yDragParam,
                     color: definition.color,
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 });
                 //console.log(labelDef);
                 line.labelDiv = new GraphDiv(labelDef);
@@ -132,8 +138,11 @@ module KG {
                     text: definition.xInterceptLabel,
                     dimensions: {width: 25, height:20},
                     xDrag: definition.xDrag,
+                    xDragParam: definition.xDragParam,
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
             }
@@ -145,8 +154,11 @@ module KG {
                     text: definition.yInterceptLabel,
                     dimensions: {width: 25, height:20},
                     yDrag: definition.yDrag,
+                    yDragParam: definition.yDragParam,
                     backgroundColor: 'white',
-                    show: definition.show
+                    show: definition.show,
+                    highlightParam: definition.highlightParam,
+                    highlight: definition.highlight
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
             }
@@ -154,8 +166,20 @@ module KG {
         }
 
         _update(scope) {
-            this.linear.update(scope);
-            return this;
+            var line = this;
+            line.linear.update(scope);
+            if(line.xInterceptLabelDiv) {
+                line.xInterceptLabelDiv.update(scope)
+            }
+
+            if(line.yInterceptLabelDiv) {
+                line.yInterceptLabelDiv.update(scope)
+            }
+
+            if(line.labelDiv) {
+                line.labelDiv.update(scope)
+            }
+            return line;
         }
 
         createSubObjects(view,scope) {
@@ -228,7 +252,9 @@ module KG {
 
                 if(line.labelDiv) {
 
-                    var labelPoint, labelAlign = 'left', labelValign = 'bottom';
+                    var labelPoint,
+                        labelAlign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('align')) ? line.definition.label.align : 'left',
+                        labelValign = (line.definition.hasOwnProperty('label') && line.definition.label.hasOwnProperty('valign')) ? line.definition.label.valign : 'bottom';
 
                     if(line instanceof VerticalLine) {
                         labelPoint = xTopEdge;
@@ -377,9 +403,12 @@ module KG {
                         'stroke': line.color,
                     });
 
+                line.setHighlightBehavior(view);
+
                 if(draggable){
                     return line.setDragBehavior(view,lineSelection);
                 } else {
+                    lineSelection.style('cursor','auto');
                     return view;
                 }
             }

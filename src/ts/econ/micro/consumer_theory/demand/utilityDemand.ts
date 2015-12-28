@@ -17,8 +17,7 @@ module EconGraphs {
         utilitySelector: KG.Selector;
 
         quantityAtPrice: (price:number, good?: string) => number;
-        quantityAtPricePoint: (price:number, priceParams?: any, pointParams?: KG.PointParamsDefinition) => KG.Point;
-        demandCurve: (demandParams: UtilityDemandCurveParams, curveParams: KG.CurveParamsDefinition) => KG.Curve;
+        demandCurveData: (demandParams: UtilityDemandCurveParams) => KG.ICoordinates[];
 
         price: (good?: string) => number; // current price of good x or good y
     }
@@ -46,55 +45,9 @@ module EconGraphs {
             return 0; // overridden by subclass
         }
 
-        quantityAtPricePoint(price, priceParams, pointParams) {
-            var d = this;
+        demandCurveData(demandParams) {
 
-            priceParams = _.defaults(priceParams,{
-                good: 'x'
-            });
-
-            var quantityProperty = 'quantityAtPrice(' + price + ',"' + priceParams.good + '")';
-
-            return new KG.Point({
-                name: 'q'+priceParams.good + 'd',
-                className: 'demand',
-                coordinates: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                params: pointParams
-            })
-        }
-
-        quantitiesAtPriceSegment(price, segmentParams) {
-            var d = this;
-
-            segmentParams = _.defaults(segmentParams,{
-                good: 'x'
-            });
-
-            var quantityProperty = 'quantityAtPrice(' + price + ',' + segmentParams.good + ')';
-            var otherQuantityProperty = 'otherQuantityAtPrice(' + price + ',' + segmentParams.good + ')';
-
-            return new KG.Segment({
-                name: 'q'+segmentParams.good + 'dSegment',
-                className: 'demand',
-                a: {
-                    x: d.modelProperty(quantityProperty),
-                    y: price
-                },
-                b: {
-                    x: d.modelProperty(otherQuantityProperty),
-                    y: price
-                },
-                params: segmentParams
-            })
-
-        }
-
-        demandCurve(demandParams, curveParams) {
-
-            demandParams = _.defaults(demandParams, {
+            demandParams = _.defaults(demandParams || {}, {
                 good: 'x',
                 min: 1,
                 max: 50,
@@ -105,13 +58,21 @@ module EconGraphs {
                 curveData = [],
                 relevantDemandParams = _.clone(demandParams);
 
-            if(d.utility instanceof SubstitutesUtility) {
-                curveData.push({x: 0, y: demandParams.max});
-                // get other price from specific demand function
-
-                // set new maximum to critical price ratio
+            if(d.utility instanceof SubstitutesUtility || (d.utility instanceof CESUtility && d.utility.r == 1)) {
+                // set new maximum to critical price ratio, if that's on the graph
                 relevantDemandParams.max = (demandParams.good == 'x') ? d.utility.criticalPriceRatio * d.price('y') : d.price('x')/d.utility.criticalPriceRatio;
-                curveData.push({x: 0, y: relevantDemandParams.max});
+
+                if(relevantDemandParams.max < demandParams.max) {
+                    curveData.push({x: 0, y: demandParams.max});
+                    curveData.push({x: 0, y: relevantDemandParams.max});
+                    if(d.hasOwnProperty('budget')) {
+                        curveData.push({x: d['budget']['income']/relevantDemandParams.max,y: relevantDemandParams.max});
+                    }
+                }
+                else {
+                    relevantDemandParams.max = demandParams.max;
+                }
+
             }
 
             var samplePoints = KG.samplePointsForDomain(relevantDemandParams).reverse();
@@ -121,14 +82,8 @@ module EconGraphs {
                 curveData.push({x: d.quantityAtPrice(price, demandParams.good), y: price});
             });
 
-            curveData = curveData.sort(KG.sortObjects('x'));
+            return curveData.sort(KG.sortObjects('x'));
 
-            return new KG.Curve({
-                name: 'demand' + demandParams.good,
-                data: curveData,
-                params: curveParams,
-                className: 'demand'
-            });
         }
 
     }

@@ -14,8 +14,6 @@ module EconGraphs {
     {
         point1: KG.ICoordinates;
         point2: KG.ICoordinates;
-        point1view: KG.Point;
-        point2view: KG.Point;
         xDiff: number;
         yDiff: number;
         xAvg: number;
@@ -29,8 +27,6 @@ module EconGraphs {
     {
         public point1;
         public point2;
-        public point1view;
-        public point2view;
         public midpoint;
         public xDiff;
         public yDiff;
@@ -38,106 +34,10 @@ module EconGraphs {
         public yAvg;
         public xPercentDiff;
         public yPercentDiff;
-        public xDiffSegment;
-        public yDiffSegment;
-        public line;
 
         constructor(definition:MidpointElasticityDefinition, modelPath?:string) {
             super(definition, modelPath);
-            this.point1view = new KG.Point({
-                name: 'point1',
-                coordinates: definition.point1,
-                size: 500,
-                xDrag: true,
-                yDrag: true,
-                label: {
-                    text: 'B'
-                },
-                droplines: {
-                    horizontal: 'P_B',
-                    vertical: 'Q_B'
-                }
-            });
-            this.point2view = new KG.Point({
-                name: 'point2',
-                coordinates: definition.point2,
-                size: 500,
-                xDrag: true,
-                yDrag: true,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    horizontal: 'P_A',
-                    vertical: 'Q_A'
-                }
-            });
-            this.midpoint = new KG.Point({
-                name: 'midpoint',
-                coordinates: {
-                    x: 'model.xAvg',
-                    y: 'model.yAvg'},
-                symbol: 'cross',
-                color: 'grey',
-                size: 100,
-                xDrag: false,
-                yDrag: false,
-                label: {
-                    text: 'M',
-                    align: 'right',
-                    valign: 'top',
-                    color: 'grey'
-                }
-            });
-            this.line = new KG.Line({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                lineDef: {
-                    point1: {
-                        x: 'params.x1',
-                        y: 'params.y1'
-                    },
-                    point2: {
-                        x: 'params.x2',
-                        y: 'params.y2'
-                    }
 
-                }
-            });
-            this.xDiffSegment = new KG.Arrow({
-                name: 'xDiffSegment',
-                className: 'diff2',
-                begin: {
-                    x: definition.point2.x,
-                    y: 5
-                },
-                end: {
-                    x: definition.point1.x,
-                    y: 5
-                },
-                label: {
-                    text: 'model.xPercentDiff | percentage:0',
-                    valign: 'top',
-                    align: 'center'
-                }
-            });
-            this.yDiffSegment = new KG.Arrow({
-                name: 'yDiffSegment',
-                className: 'diff1',
-                begin: {
-                    x: 15,
-                    y: definition.point2.y
-                },
-                end: {
-                    x: 15,
-                    y: definition.point1.y
-                },
-                label: {
-                    text: 'model.yPercentDiff | percentage:0',
-                    align: 'right'
-                }
-            });
         }
 
         _calculateElasticity(inputs) {

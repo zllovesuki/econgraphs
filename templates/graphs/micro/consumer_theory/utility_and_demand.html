@@ -4,36 +4,70 @@
     {% raw %}
     <h1>Utility and Demand: {{ model.utility.title }}</h1>
     <hr/>
-    <div id="utility"></div>
+    <div id="utilityAndDemandX"></div>
     {% endraw %}
 {% endblock %}
 
-{% block graphDefs %}
-    {
-                type: 'KG.TwoVerticalGraphs',
-                definition: {
-                    element_id: 'utility',
-                    topGraph: {
-                        xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
-                        yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
-                        objects: [
-                            "model.budget.budgetLine",
-                            'model.utility.optimalIndifferenceCurve(model.budget,{label: "U^*"})'
+{% block jsadjustments %}
+    <script>
 
-                        ]
-                    },
-                    bottomGraph: {
-                        xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_x'},
-                        yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good X}'},
-                        objects: [
-                            'model.demandCurve({min: 0.01, max: 10, good: "x"},{label:"D_x"})',
-                            'model.quantityAtPricePoint(params.px, {good: "x"},{yDrag: "params.px", xAxisLabel:"x^*", yAxisLabel: "P_x"})'
-                        ]
-                    },
-                    objects: [
-                        'model.utility.optimalBundlePoint(model.budget,{xAxisLabel:"x^*", yAxisLabel: "y^*"})',
+        var demandCurveX = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'demandCurveX',
+                        className: 'demand',
+                        data: 'model.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
+                        params: {
+                            label: 'D_x'
+                        }
+                    }
+                },
+                quantityDemandedAtPriceX = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'quantityDemandedAtPriceX',
+                        className: 'demand',
+                        coordinates: {
+                            x: 'model.bundle.x',
+                            y: 'params.px'
+                        },
+                        params: {
+                            yDragParam: 'px',
+                            xAxisLabel: 'x^*'
+                        }
+                    }
+                },
+                priceLineX = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'priceLineX',
+                        className: 'price',
+                        y: 'params.px',
+                        yDrag: 'params.px',
+                        params: {
+                            yInterceptLabel: 'P_x'
+                        }
+                    }
+                };
 
-                    ]
-                }
+        scopeDefinition.views.push({
+            type: 'KG.TwoVerticalGraphs',
+            definition: {
+                element_id: 'utilityAndDemandX',
+                topGraph: {
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
+                    yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
+                    objects: [budgetLine, bundlePoint, indifferenceCurve]
+                },
+                bottomGraph: {
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_x'},
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good X}'},
+                    objects: [demandCurveX, quantityDemandedAtPriceX, priceLineX]
+                },
+                objects: []
             }
+        });
+    </script>
+    {% block jsadjustments2 %}
+    {% endblock %}
 {% endblock %}

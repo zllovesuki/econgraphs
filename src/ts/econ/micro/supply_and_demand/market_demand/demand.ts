@@ -12,8 +12,6 @@ module EconGraphs {
         elasticityMethod?: string;
         price?: any;
         quantity?: any;
-        priceDrag?: string;
-        quantityDrag?: string;
     }
 
     export interface IDemand extends KG.IModel
@@ -22,20 +20,8 @@ module EconGraphs {
         quantityAtPrice: (price: number) => number;
         priceAtQuantity: (quantity: number) => number;
         priceElasticity: (price: number) => Elasticity;
-        curve: KG.ViewObject;
-        className: string;
-        curveLabel: string;
-        quantityLabel: string;
-
         price: number;
         quantity: number;
-
-        priceLine: KG.HorizontalLine;
-        quantityLine: KG.VerticalLine;
-        quantityDemandedPoint: KG.Point;
-        consumerSurplus: KG.Area;
-        marginalRevenueAtQuantitySlope: (quantity:number, label:string) => KG.Line;
-        totalRevenueAtQuantityPoint: (quantity:number, label:string) => KG.Point;
     }
 
     export class Demand extends KG.Model implements IDemand
@@ -43,11 +29,8 @@ module EconGraphs {
 
         public className;
         public curveLabel;
-        public quantityLabel;
         public demandFunction;
-        public quantityAtPriceView;
         public elasticity: Elasticity;
-        public curve;
 
         public marginalRevenueFunction;
         public totalRevenueFunction;
@@ -75,40 +58,6 @@ module EconGraphs {
             d.demandFunction = new KGMath.Functions[definition.type](definition.def);
 
             d.elasticity = (definition.elasticityMethod == 'point') ? new PointElasticity({}) : (definition.elasticityMethod = 'constant') ? new ConstantElasticity({}) : new MidpointElasticity({});
-
-            var priceLineDrag = (typeof definition.price == 'string') ? definition.price.replace('params.','') : false;
-
-            d.priceLine = new KG.HorizontalLine({
-                name: 'priceLine',
-                color: 'grey',
-                arrows: 'NONE',
-                yDrag: definition.priceDrag,
-                y: d.modelProperty('price')
-            });
-
-            this.quantityLine = new KG.VerticalLine({
-                name: 'quantityLine',
-                color: 'grey',
-                arrows: 'NONE',
-                xDrag: definition.quantityDrag,
-                x: d.modelProperty('quantity')
-            });
-
-            this.quantityDemandedPoint = new KG.Point({
-                name: 'quantityDemandedAtPrice',
-                coordinates: {x: this.modelProperty('quantity'), y: this.modelProperty('price')},
-                size: 500,
-                color: 'black',
-                yDrag: definition.price,
-                xDrag: definition.quantity,
-                label: {
-                    text: 'A'
-                },
-                droplines: {
-                    vertical: 'Q^D_A',
-                    horizontal: 'P_A'
-                }
-            });
 
         }
 

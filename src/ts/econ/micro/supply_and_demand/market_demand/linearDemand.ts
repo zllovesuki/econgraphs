@@ -2,16 +2,9 @@
 
 module EconGraphs {
 
-    export interface PointSlopeDemandDefinition extends DemandDefinition
-    {
-        def: KGMath.Functions.LinearDefinition;
-    }
-
     export interface LinearDemandDefinition extends DemandDefinition
     {
         def: KGMath.Functions.LinearDefinition;
-        priceInterceptDrag?: string;
-        quantityInterceptDrag?: string;
     }
 
     export interface ILinearDemand extends IDemand
@@ -35,30 +28,6 @@ module EconGraphs {
             super(definition,modelPath);
 
             var demand = this;
-
-            demand.priceInterceptPoint = new KG.Point({
-                name: 'demandPriceIntercept',
-                coordinates: {x: 0, y: demand.modelProperty('priceIntercept')},
-                className: 'demand',
-                yDrag: definition.priceInterceptDrag
-            });
-
-            demand.quantityInterceptPoint = new KG.Point({
-                name: 'demandQuantityIntercept',
-                coordinates: {x: demand.modelProperty('quantityIntercept'), y:0},
-                className: 'demand',
-                xDrag: definition.quantityInterceptDrag
-            });
-
-            demand.curve = new KG.Line({
-                name: 'demand',
-                className: 'demand',
-                arrows: 'NONE',
-                lineDef: definition.def,
-                label: {
-                    text: definition.curveLabel
-                }
-            });
 
             demand.consumerSurplus = new KG.Area({
                 name: 'consumerSurplus',

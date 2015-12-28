@@ -9,7 +9,8 @@ module EconGraphs {
         r?: any;
         s?: any;
         sub: any;
-        alpha: any;
+        alpha?: any;
+        criticalPriceRatio: any;
         def?: KGMath.Functions.CESDefinition;
     }
 
@@ -19,6 +20,7 @@ module EconGraphs {
         s: number;
         alpha: number;
         sub: number;
+        criticalPriceRatio: number;
     }
 
     export class CESUtility extends TwoGoodUtility implements ICESUtility {
@@ -28,10 +30,13 @@ module EconGraphs {
         public s;
         public alpha;
         public sub;
+        public criticalPriceRatio;
 
         public static title = 'CES';
 
         constructor(definition:CESUtilityDefinition, modelPath?:string) {
+
+            definition.alpha = definition.alpha || 0.5;
 
             // Can defined with either r or s or (more commonly) 'sub', which ranges from -1 to 1
             if(definition.hasOwnProperty('r')) {
@@ -43,6 +48,8 @@ module EconGraphs {
                 definition.s = KG.divideDefs(1,KG.subtractDefs(1,definition.r)); // s = 1/(1-r)
                 console.log('oops, must instantiate a CES utility function with either r or s')
             }
+
+            definition.criticalPriceRatio = KG.divideDefs(definition.alpha, KG.subtractDefs(1, definition.alpha));
 
             definition.type = 'CES';
             definition.def = {
