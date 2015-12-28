@@ -5,8 +5,12 @@
 module KG
 {
 
-    export interface DragHandlerDefinition extends ModelDefinition
+    export interface InteractionHandlerDefinition extends ModelDefinition
     {
+
+        // If there's an obvious way the object can be dragged, can just set 'draggable' to 'true'
+        // The view object class will use this to set xDrag and yDrag appropriately.
+        draggable?: any;
 
         // xDrag and yDrag may be parameters ('params.x') or expressions that evaluate to booleans ('!model.snap')
         xDrag?: any;
@@ -15,26 +19,34 @@ module KG
         // xDragParam and yDragParam are parameter names ('x', not 'params.x')
         xDragParam?: string;
         yDragParam?: string;
+
+        highlight?: any;
+        highlightParam?: any;
+
     }
 
-    export interface IDragHandler extends IModel
+    export interface IInteractionHandler extends IModel
     {
         xDrag:boolean;
         yDrag:boolean;
         xDragParam: string;
         yDragParam: string;
-        setDragBehavior: (view: View, selection: D3.Selection, highlightParam: string) => View;
+        highlightParam: string;
+        highlight: boolean;
+        setBehavior: (view: View, selection: D3.Selection) => View;
     }
 
-    export class DragHandler extends Model implements IDragHandler
+    export class InteractionHandler extends Model implements IInteractionHandler
     {
 
         public xDrag;
         public yDrag;
         public xDragParam;
         public yDragParam;
+        public highlight;
+        public highlightParam;
 
-        constructor(definition:DragHandlerDefinition, modelPath?: string) {
+        constructor(definition:InteractionHandlerDefinition, modelPath?: string) {
 
             if(definition.hasOwnProperty('xDrag') && typeof definition.xDrag == 'string' && !definition.hasOwnProperty('xDragParam')) {
                 definition.xDragParam = definition.xDrag;
@@ -55,17 +67,16 @@ module KG
             }
 
             definition = _.defaults(definition, {
-                xDrag: false,
-                yDrag: false,
+                highlight: false
             });
 
             super(definition, modelPath);
 
         }
 
-        setDragBehavior(view, selection, highlightParam) {
+        setBehavior(view, selection) {
 
-            var dragHandler = this;
+            var interactionHandler = this;
 
             function drag() {
                 var xAxis = view.xAxis;
@@ -74,21 +85,21 @@ module KG
                     .on('drag', function () {
                         d3.event.sourceEvent.preventDefault();
                         var dragUpdate = {};
-                        dragUpdate[highlightParam] = true;
+                        dragUpdate[interactionHandler.highlightParam] = true;
                         var relativeElement = view.unmasked[0][0],
                             mouseX = d3.mouse(relativeElement)[0],
                             mouseY = d3.mouse(relativeElement)[1];
-                        if(xAxis && dragHandler.xDragParam !== null) {
-                            dragUpdate[dragHandler.xDragParam] = xAxis.domain.closestValueTo(xAxis.scale.invert(mouseX));
+                        if(xAxis && interactionHandler.xDragParam !== null) {
+                            dragUpdate[interactionHandler.xDragParam] = xAxis.domain.closestValueTo(xAxis.scale.invert(mouseX));
                         }
-                        if(yAxis && dragHandler.yDragParam !== null) {
-                            dragUpdate[dragHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
+                        if(yAxis && interactionHandler.yDragParam !== null) {
+                            dragUpdate[interactionHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
                         }
                         view.updateParams(dragUpdate);
                     })
                     .on('dragend', function() {
                         var dragUpdate = {};
-                        dragUpdate[highlightParam] = true;
+                        dragUpdate[interactionHandler.highlightParam] = true;
                         view.updateParams(dragUpdate);
                     })
             }
@@ -106,10 +117,24 @@ module KG
 
             }
 
-            selection.style('cursor', cursor(dragHandler.xDrag, dragHandler.yDrag));
+            selection.style('cursor', cursor(interactionHandler.xDrag, interactionHandler.yDrag));
             if(this.xDrag || this.yDrag) {
                 selection.call(drag());
             }
+
+            if(interactionHandler.hasOwnProperty('highlightParam')) {
+                selection.on('mouseover', function() {
+                    var highlightUpdate = {};
+                    highlightUpdate[interactionHandler.highlightParam] = true;
+                    view.updateParams(highlightUpdate);
+                });
+                selection.on('mouseout', function() {
+                    var highlightUpdate = {};
+                    highlightUpdate[interactionHandler.highlightParam] = false;
+                    view.updateParams(highlightUpdate);
+                });
+            }
+
             return view;
         }
 

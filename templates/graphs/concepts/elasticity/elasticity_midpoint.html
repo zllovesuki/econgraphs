@@ -39,7 +39,9 @@
                 x1: 36,
                 y1: 70,
                 x2: 24,
-                y2: 90
+                y2: 90,
+                highlightA: false,
+                highlightB: true
             },
             restrictions: [
                 {
@@ -95,7 +97,7 @@
                         yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
                         objects: [
                             {
-                                type: 'KG.Dropline',
+                                type: 'KG.VerticalDropline',
                                 definition: {
                                     name: 'point1quantity',
                                     className: 'green',
@@ -103,13 +105,15 @@
                                         x: 'params.x1',
                                         y: 'params.y1'
                                     },
-                                    horizontal: false,
-                                    draggable: true,
+                                    interaction: {
+                                        draggable:true,
+                                        highlightParam: 'highlightB'
+                                    },
                                     axisLabel: 'Q_B'
                                 }
                             },
                             {
-                                type: 'KG.Dropline',
+                                type: 'KG.VerticalDropline',
                                 definition: {
                                     name: 'point2quantity',
                                     className: 'green',
@@ -117,13 +121,15 @@
                                         x: 'params.x2',
                                         y: 'params.y2'
                                     },
-                                    horizontal: false,
-                                    draggable: true,
+                                    interaction: {
+                                        draggable:true,
+                                        highlightParam: 'highlightA'
+                                    },
                                     axisLabel: 'Q_A'
                                 }
                             },
                             {
-                                type: 'KG.Dropline',
+                                type: 'KG.HorizontalDropline',
                                 definition: {
                                     name: 'point1price',
                                     className: 'purple',
@@ -131,13 +137,15 @@
                                         x: 'params.x1',
                                         y: 'params.y1'
                                     },
-                                    horizontal: true,
-                                    draggable: true,
+                                    interaction: {
+                                        draggable:true,
+                                        highlightParam: 'highlightB'
+                                    },
                                     axisLabel: 'P_B'
                                 }
                             },
                             {
-                                type: 'KG.Dropline',
+                                type: 'KG.HorizontalDropline',
                                 definition: {
                                     name: 'point2price',
                                     className: 'purple',
@@ -145,8 +153,10 @@
                                         x: 'params.x2',
                                         y: 'params.y2'
                                     },
-                                    horizontal: true,
-                                    draggable: true,
+                                    interaction: {
+                                        draggable:true,
+                                        highlightParam: 'highlightA'
+                                    },
                                     axisLabel: 'P_A'
                                 }
                             },
@@ -160,11 +170,14 @@
                                 },
                                 className: 'demand',
                                 size: 500,
-                                params: {
-                                    xDragParam: 'x1',
-                                    yDragParam: 'y1',
-                                    label: 'B'
+                                interaction: {
+                                    draggable: true,
+                                    highlightParam: 'highlightB'
+                                },
+                                label: {
+                                    text: 'B'
                                 }
+
                             }
                         },
                         {
@@ -177,10 +190,12 @@
                                 },
                                 className: 'demand',
                                 size: 500,
-                                params: {
-                                    xDragParam: 'x2',
-                                    yDragParam: 'y2',
-                                    label: 'A'
+                                interaction: {
+                                    draggable: true,
+                                    highlightParam: 'highlightA'
+                                },
+                                label: {
+                                    text: 'A'
                                 }
                             }
                         },
@@ -194,8 +209,9 @@
                                 },
                                 className: 'demand small',
                                 size: 40,
-                                xDrag: false,
-                                yDrag: false,
+                                interaction: {
+                                    highlightParam: 'highlightM'
+                                },
                                 label: {
                                     text: 'M',
                                     align: 'left',
@@ -209,7 +225,6 @@
                             definition: {
                                 name: 'demand',
                                 className: 'demand',
-                                arrows: 'NONE',
                                 lineDef: {
                                     point1: {
                                         x: 'params.x1',
@@ -219,7 +234,6 @@
                                         x: 'params.x2',
                                         y: 'params.y2'
                                     }
-
                                 }
                             }
                         },
@@ -261,7 +275,6 @@
                                     text: 'model.yPercentDiff | percentage:0',
                                     align: 'right',
                                     dimensions: {width:100, height:20}
-
                                 },
                                 trimPercent: 0.05
                             }

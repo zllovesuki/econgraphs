@@ -8,6 +8,7 @@ module KG
 {
 
     export interface GraphDivDefinition extends ViewObjectDefinition {
+        coordinates?: ICoordinates;
         dimensions?: IDimensions;
         textArray?: any[];
         text?: any;
@@ -19,7 +20,6 @@ module KG
 
     export interface IGraphDiv extends IViewObject {
 
-        // GraphDiv-specific attributes
         coordinates: ICoordinates; // pixel coordinates, not model coordinates
         dimensions: IDimensions;
         text: string;
@@ -144,8 +144,7 @@ module KG
 
             katex.render(text.toString(),div[0][0]);
 
-            divObj.setHighlightBehavior(view);
-            divObj.dragHandler.setDragBehavior(view,div,divObj.highlightParam);
+            divObj.interactionHandler.setBehavior(view,div);
 
             return view;
 

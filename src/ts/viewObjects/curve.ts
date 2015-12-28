@@ -226,7 +226,7 @@ module KG {
                     'd': dataLine(dataCoordinates)
                 });
 
-            curve.setHighlightBehavior(view);
+            curve.interactionHandler.setBehavior(view,dataPath);
 
             return view;
         }

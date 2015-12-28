@@ -262,6 +262,15 @@ var KG;
         }
     }
     KG.getPropertyAsString = getPropertyAsString;
+    function getParameterName(str) {
+        if (typeof str == 'string') {
+            return str.replace('params.', '');
+        }
+        else {
+            return str;
+        }
+    }
+    KG.getParameterName = getParameterName;
     function binaryFunction(def1, def2, fn) {
         if (typeof def1 == 'number' && typeof def2 == 'number') {
             switch (fn) {
@@ -2082,9 +2091,9 @@ var KGMath;
 'use strict';
 var KG;
 (function (KG) {
-    var DragHandler = (function (_super) {
-        __extends(DragHandler, _super);
-        function DragHandler(definition, modelPath) {
+    var InteractionHandler = (function (_super) {
+        __extends(InteractionHandler, _super);
+        function InteractionHandler(definition, modelPath) {
             if (definition.hasOwnProperty('xDrag') && typeof definition.xDrag == 'string' && !definition.hasOwnProperty('xDragParam')) {
                 definition.xDragParam = definition.xDrag;
                 definition.xDrag = true;
@@ -2100,13 +2109,12 @@ var KG;
                 definition.yDragParam = definition.yDragParam.replace('params.', '');
             }
             definition = _.defaults(definition, {
-                xDrag: false,
-                yDrag: false
+                highlight: false
             });
             _super.call(this, definition, modelPath);
         }
-        DragHandler.prototype.setDragBehavior = function (view, selection, highlightParam) {
-            var dragHandler = this;
+        InteractionHandler.prototype.setBehavior = function (view, selection) {
+            var interactionHandler = this;
             function drag() {
                 var xAxis = view.xAxis;
                 var yAxis = view.yAxis;
@@ -2114,19 +2122,19 @@ var KG;
                     .on('drag', function () {
                     d3.event.sourceEvent.preventDefault();
                     var dragUpdate = {};
-                    dragUpdate[highlightParam] = true;
+                    dragUpdate[interactionHandler.highlightParam] = true;
                     var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
-                    if (xAxis && dragHandler.xDragParam !== null) {
-                        dragUpdate[dragHandler.xDragParam] = xAxis.domain.closestValueTo(xAxis.scale.invert(mouseX));
+                    if (xAxis && interactionHandler.xDragParam !== null) {
+                        dragUpdate[interactionHandler.xDragParam] = xAxis.domain.closestValueTo(xAxis.scale.invert(mouseX));
                     }
-                    if (yAxis && dragHandler.yDragParam !== null) {
-                        dragUpdate[dragHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
+                    if (yAxis && interactionHandler.yDragParam !== null) {
+                        dragUpdate[interactionHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
                     }
                     view.updateParams(dragUpdate);
                 })
                     .on('dragend', function () {
                     var dragUpdate = {};
-                    dragUpdate[highlightParam] = true;
+                    dragUpdate[interactionHandler.highlightParam] = true;
                     view.updateParams(dragUpdate);
                 });
             }
@@ -2144,15 +2152,27 @@ var KG;
                     return 'default';
                 }
             }
-            selection.style('cursor', cursor(dragHandler.xDrag, dragHandler.yDrag));
+            selection.style('cursor', cursor(interactionHandler.xDrag, interactionHandler.yDrag));
             if (this.xDrag || this.yDrag) {
                 selection.call(drag());
             }
+            if (interactionHandler.hasOwnProperty('highlightParam')) {
+                selection.on('mouseover', function () {
+                    var highlightUpdate = {};
+                    highlightUpdate[interactionHandler.highlightParam] = true;
+                    view.updateParams(highlightUpdate);
+                });
+                selection.on('mouseout', function () {
+                    var highlightUpdate = {};
+                    highlightUpdate[interactionHandler.highlightParam] = false;
+                    view.updateParams(highlightUpdate);
+                });
+            }
             return view;
         };
-        return DragHandler;
+        return InteractionHandler;
     })(KG.Model);
-    KG.DragHandler = DragHandler;
+    KG.InteractionHandler = InteractionHandler;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
 'use strict';
@@ -2161,63 +2181,15 @@ var KG;
     var ViewObject = (function (_super) {
         __extends(ViewObject, _super);
         function ViewObject(definition, modelPath) {
-            if (definition.hasOwnProperty('params')) {
-                var p = definition.params;
-                if (p.hasOwnProperty('className')) {
-                    if (definition.hasOwnProperty('className')) {
-                        definition.className += ' ' + p.className;
-                    }
-                    else {
-                        definition.className = p.className;
-                    }
-                }
-                if (p.hasOwnProperty('name')) {
-                    if (definition.hasOwnProperty('name')) {
-                        definition.name += '_' + p.name;
-                    }
-                    else {
-                        definition.name = p.name;
-                    }
-                }
-                if (p.hasOwnProperty('objectName')) {
-                    definition.objectName = p.objectName;
-                }
-                if (p.hasOwnProperty('xDrag')) {
-                    definition.xDrag = p.xDrag;
-                }
-                if (p.hasOwnProperty('yDrag')) {
-                    definition.yDrag = p.yDrag;
-                }
-                if (p.hasOwnProperty('show')) {
-                    definition.show = p.show;
-                }
-            }
-            var dragHandlerDefinition = {
-                xDrag: definition.xDrag,
-                yDrag: definition.yDrag
-            };
-            if (definition.hasOwnProperty('xDragParam')) {
-                dragHandlerDefinition.xDragParam = definition.xDragParam;
-            }
-            if (definition.hasOwnProperty('yDragParam')) {
-                dragHandlerDefinition.yDragParam = definition.yDragParam;
-            }
             definition = _.defaults(definition, {
                 name: '',
                 className: '',
-                color: KG.colorForClassName(definition.className),
                 show: true,
-                unmasked: false
+                unmasked: false,
+                interaction: {}
             });
             _super.call(this, definition, modelPath);
-            var viewObj = this;
-            if (definition.hasOwnProperty('xDomainDef')) {
-                viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
-            }
-            if (definition.hasOwnProperty('yDomainDef')) {
-                viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
-            }
-            viewObj.dragHandler = new KG.DragHandler(dragHandlerDefinition);
+            this.interactionHandler = new KG.InteractionHandler(definition.interaction);
         }
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
@@ -2230,7 +2202,7 @@ var KG;
             else {
                 classString += ' invisible';
             }
-            if (this.highlight) {
+            if (this.interactionHandler.highlight) {
                 classString += ' highlight';
             }
             if (this.hasOwnProperty('objectName')) {
@@ -2242,7 +2214,7 @@ var KG;
             return this;
         };
         ViewObject.prototype.addArrow = function (group, startOrEnd) {
-            group.attr("marker-" + startOrEnd, "url(#arrow-" + startOrEnd + "-" + this.color + ")");
+            group.attr("marker-" + startOrEnd, "url(#arrow-" + startOrEnd + "-" + KG.colorForClassName(this.className) + ")");
         };
         ViewObject.prototype.removeArrow = function (group, startOrEnd) {
             group.attr("marker-" + startOrEnd, null);
@@ -2270,22 +2242,6 @@ var KG;
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass);
                 return newGroup;
             };
-        };
-        ViewObject.prototype.setHighlightBehavior = function (view) {
-            var viewObj = this, selection = viewObj.d3selection(view);
-            if (viewObj.hasOwnProperty('highlightParam')) {
-                selection.on('mouseover', function () {
-                    var highlightUpdate = {};
-                    highlightUpdate[viewObj.highlightParam] = true;
-                    view.updateParams(highlightUpdate);
-                });
-                selection.on('mouseout', function () {
-                    var highlightUpdate = {};
-                    highlightUpdate[viewObj.highlightParam] = false;
-                    view.updateParams(highlightUpdate);
-                });
-            }
-            return viewObj;
         };
         return ViewObject;
     })(KG.Model);
@@ -2332,31 +2288,6 @@ var KG;
     var Point = (function (_super) {
         __extends(Point, _super);
         function Point(definition, modelPath) {
-            if (definition.hasOwnProperty('params')) {
-                var p = definition.params;
-                if (p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    };
-                }
-                if (p.hasOwnProperty('xAxisLabel') || p.hasOwnProperty('yAxisLabel')) {
-                    if (!definition.hasOwnProperty('droplines')) {
-                        definition.droplines = {};
-                    }
-                    if (p.hasOwnProperty('xAxisLabel')) {
-                        definition.droplines.vertical = p.xAxisLabel;
-                    }
-                    if (p.hasOwnProperty('yAxisLabel')) {
-                        definition.droplines.horizontal = p.yAxisLabel;
-                    }
-                }
-                if (p.hasOwnProperty('xDragParam')) {
-                    definition.xDrag = 'params.' + p.xDragParam;
-                }
-                if (p.hasOwnProperty('yDragParam')) {
-                    definition.yDrag = 'params.' + p.yDragParam;
-                }
-            }
             var defaultSize = 100;
             if (definition.hasOwnProperty('label')) {
                 if (definition.label.hasOwnProperty('text')) {
@@ -2377,11 +2308,8 @@ var KG;
                     name: definition.name + '_label',
                     className: definition.className,
                     coordinates: definition.coordinates,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction,
+                    show: definition.show
                 });
                 point.labelDiv = new KG.GraphDiv(labelDef);
             }
@@ -2390,28 +2318,20 @@ var KG;
                     point.horizontalDropline = new KG.HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        draggable: definition.yDrag,
-                        yDrag: definition.yDrag,
-                        yDragParam: definition.yDragParam,
+                        interaction: definition.interaction,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
-                        show: definition.show,
-                        highlightParam: definition.highlightParam,
-                        highlight: definition.highlight
+                        show: definition.show
                     });
                 }
                 if (definition.droplines.hasOwnProperty('vertical')) {
                     point.verticalDropline = new KG.VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        draggable: definition.xDrag,
-                        xDrag: definition.xDrag,
-                        xDragParam: definition.xDragParam,
+                        interaction: definition.interaction,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
-                        show: definition.show,
-                        highlightParam: definition.highlightParam,
-                        highlight: definition.highlight
+                        show: definition.show
                     });
                 }
             }
@@ -2429,7 +2349,7 @@ var KG;
                         name: p.verticalDropline.name,
                         className: p.verticalDropline.className,
                         coordinates: { x: p.verticalDropline.definition.coordinates.x, y: view.bottomGraph.yAxis.domain.max },
-                        draggable: p.verticalDropline.draggable,
+                        interaction: p.verticalDropline.definition.interaction,
                         axisLabel: p.verticalDropline.axisLabel
                     });
                     p.verticalDropline.labelDiv = null;
@@ -2440,7 +2360,6 @@ var KG;
                 }
                 if (p.horizontalDropline) {
                     view.topGraph.addObject(p.horizontalDropline.update(scope));
-                    p.horizontalDropline.parentObject = p;
                     p.horizontalDropline.createSubObjects(view.topGraph, scope); // TODO should probably make this more recursive by default
                 }
             }
@@ -2482,7 +2401,7 @@ var KG;
             }
             // draw the symbol at the point
             var pointSymbol = group.select('.' + point.viewObjectClass);
-            var currentSize = point.highlight ? point.size * 1.5 : point.size;
+            var currentSize = point.interactionHandler.highlight ? point.size * 1.5 : point.size;
             try {
                 pointSymbol
                     .attr({
@@ -2494,8 +2413,7 @@ var KG;
             catch (error) {
                 console.log(error);
             }
-            point.setHighlightBehavior(view);
-            point.dragHandler.setDragBehavior(view, pointSymbol, point.highlightParam);
+            point.interactionHandler.setBehavior(view, pointSymbol);
             return view;
         };
         return Point;
@@ -2510,14 +2428,14 @@ var KG;
         __extends(Dropline, _super);
         function Dropline(definition, modelPath) {
             definition.coordinates = KG.getCoordinates(definition.coordinates);
-            if (definition.hasOwnProperty('draggable')) {
+            if (definition.interaction.hasOwnProperty('draggable')) {
                 if (definition.horizontal) {
-                    definition.yDrag = definition.draggable;
-                    definition.yDragParam = definition.coordinates.y;
+                    definition.interaction.yDrag = definition.draggable;
+                    definition.interaction.yDragParam = definition.coordinates.y;
                 }
                 else {
-                    definition.xDrag = definition.draggable;
-                    definition.xDragParam = definition.coordinates.x;
+                    definition.interaction.xDrag = definition.draggable;
+                    definition.interaction.xDragParam = definition.coordinates.x;
                 }
             }
             definition = _.defaults(definition, {
@@ -2533,24 +2451,19 @@ var KG;
                     dimensions: { width: 25, height: 20 },
                     backgroundColor: 'white',
                     show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction
                 };
                 if (definition.horizontal) {
                     labelDef.coordinates = {
                         x: KG.GraphDiv.AXIS_COORDINATE_INDICATOR,
                         y: definition.coordinates.y
                     };
-                    labelDef.yDrag = definition.draggable;
-                    labelDef.yDragParam = definition.yDragParam;
                 }
                 else {
                     labelDef.coordinates = {
                         x: definition.coordinates.x,
                         y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
                     };
-                    labelDef.xDrag = definition.draggable;
-                    labelDef.xDragParam = definition.xDragParam;
                 }
                 this.labelDiv = new KG.GraphDiv(labelDef);
             }
@@ -2582,8 +2495,7 @@ var KG;
                 'y2': pointY,
                 'class': dropline.classAndVisibility()
             });
-            dropline.setHighlightBehavior(view);
-            dropline.dragHandler.setDragBehavior(view, droplineSelection, dropline.highlightParam);
+            dropline.interactionHandler.setBehavior(view, droplineSelection);
             return view;
         };
         return Dropline;
@@ -2739,7 +2651,7 @@ var KG;
                 'class': curve.classAndVisibility(),
                 'd': dataLine(dataCoordinates)
             });
-            curve.setHighlightBehavior(view);
+            curve.interactionHandler.setBehavior(view, dataPath);
             return view;
         };
         Curve.LABEL_POSITION_MIDDLE = 'MIDDLE';
@@ -2802,38 +2714,6 @@ var KG;
     var Line = (function (_super) {
         __extends(Line, _super);
         function Line(definition, modelPath) {
-            if (definition.hasOwnProperty('params')) {
-                var p = definition.params;
-                if (p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    };
-                }
-                if (p.hasOwnProperty('areaUnderLabel')) {
-                    definition.areaUnderDef = {
-                        name: definition.name + '_areaUnder',
-                        className: definition.className,
-                        label: {
-                            text: p.areaUnderLabel
-                        }
-                    };
-                }
-                if (p.hasOwnProperty('areaOverLabel')) {
-                    definition.areaOverDef = {
-                        name: definition.name + 'areaOver',
-                        className: definition.className,
-                        label: {
-                            text: p.areaOverLabel
-                        }
-                    };
-                }
-                if (p.hasOwnProperty('xInterceptLabel')) {
-                    definition.xInterceptLabel = p.xInterceptLabel;
-                }
-                if (p.hasOwnProperty('yInterceptLabel')) {
-                    definition.yInterceptLabel = p.yInterceptLabel;
-                }
-            }
             _super.call(this, definition, modelPath);
             var line = this;
             if (line instanceof HorizontalLine) {
@@ -2851,14 +2731,8 @@ var KG;
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
                     className: definition.className,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    xDragParam: definition.xDragParam,
-                    yDragParam: definition.yDragParam,
-                    color: definition.color,
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction,
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 line.labelDiv = new KG.GraphDiv(labelDef);
@@ -2875,12 +2749,9 @@ var KG;
                     className: definition.className,
                     text: definition.xInterceptLabel,
                     dimensions: { width: 25, height: 20 },
-                    xDrag: definition.xDrag,
-                    xDragParam: definition.xDragParam,
+                    interaction: definition.interaction,
                     backgroundColor: 'white',
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
             }
@@ -2890,12 +2761,9 @@ var KG;
                     className: definition.className,
                     text: definition.yInterceptLabel,
                     dimensions: { width: 25, height: 20 },
-                    yDrag: definition.yDrag,
-                    yDragParam: definition.yDragParam,
+                    interaction: definition.interaction,
                     backgroundColor: 'white',
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
             }
@@ -3083,9 +2951,6 @@ var KG;
                 }
                 if (line.xInterceptLabelDiv) {
                     line.xInterceptLabelDiv.coordinates = { x: line.linear.xValue(view.yAxis.min), y: 'AXIS' };
-                    if (line.xInterceptLabelDiv.definition.text == 'foo') {
-                        line.xInterceptLabelDiv.text = line.linear.xValue(view.yAxis.min);
-                    }
                 }
                 if (line.yInterceptLabelDiv) {
                     line.yInterceptLabelDiv.coordinates = { x: 'AXIS', y: line.linear.yValue(view.xAxis.min) };
@@ -3097,11 +2962,9 @@ var KG;
                 lineSelection
                     .attr({
                     'class': line.classAndVisibility(),
-                    'd': dataLine([startPoint, endPoint]),
-                    'stroke': line.color
+                    'd': dataLine([startPoint, endPoint])
                 });
-                line.setHighlightBehavior(view);
-                line.dragHandler.setDragBehavior(view, lineSelection, line.highlightParam);
+                line.interactionHandler.setBehavior(view, lineSelection);
                 return view;
             }
         };
@@ -3300,8 +3163,7 @@ var KG;
             }
             div.style('top', (y - vAlignDelta) + 'px');
             katex.render(text.toString(), div[0][0]);
-            divObj.setHighlightBehavior(view);
-            divObj.dragHandler.setDragBehavior(view, div, divObj.highlightParam);
+            divObj.interactionHandler.setBehavior(view, div);
             return view;
         };
         GraphDiv.AXIS_COORDINATE_INDICATOR = 'AXIS';
@@ -6997,7 +6859,7 @@ var PhysicsGraphs;
 /// <reference path="restriction.ts" />
 /// <reference path="helpers/selector.ts" />
 /// <reference path="math/math.ts" />
-/// <reference path="viewObjects/dragHandler.ts"/>
+/// <reference path="viewObjects/interactionHandler.ts"/>
 /// <reference path="viewObjects/viewObject.ts"/>
 /// <reference path="viewObjects/viewObjectGroup.ts"/>
 /// <reference path="viewObjects/point.ts"/>

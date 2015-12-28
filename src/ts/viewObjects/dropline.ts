@@ -29,13 +29,13 @@ module KG {
 
             definition.coordinates = KG.getCoordinates(definition.coordinates);
 
-            if(definition.hasOwnProperty('draggable')) {
+            if(definition.interaction.hasOwnProperty('draggable')) {
                 if(definition.horizontal) {
-                    definition.yDrag = definition.draggable;
-                    definition.yDragParam = definition.coordinates.y;
+                    definition.interaction.yDrag = definition.draggable;
+                    definition.interaction.yDragParam = definition.coordinates.y;
                 } else {
-                    definition.xDrag = definition.draggable;
-                    definition.xDragParam = definition.coordinates.x;
+                    definition.interaction.xDrag = definition.draggable;
+                    definition.interaction.xDragParam = definition.coordinates.x;
                 }
             }
 
@@ -54,8 +54,7 @@ module KG {
                     dimensions: {width: 25, height:20},
                     backgroundColor: 'white',
                     show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction
                 };
 
                 if(definition.horizontal) {
@@ -63,15 +62,11 @@ module KG {
                         x: KG.GraphDiv.AXIS_COORDINATE_INDICATOR,
                         y: definition.coordinates.y
                     };
-                    labelDef.yDrag = definition.draggable;
-                    labelDef.yDragParam = definition.yDragParam;
                 } else {
                     labelDef.coordinates = {
                         x: definition.coordinates.x,
                         y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
                     };
-                    labelDef.xDrag = definition.draggable;
-                    labelDef.xDragParam = definition.xDragParam;
                 }
 
                 this.labelDiv = new GraphDiv(labelDef);
@@ -118,8 +113,7 @@ module KG {
                     'class': dropline.classAndVisibility()
                 });
 
-            dropline.setHighlightBehavior(view);
-            dropline.dragHandler.setDragBehavior(view, droplineSelection, dropline.highlightParam);
+            dropline.interactionHandler.setBehavior(view, droplineSelection);
 
             return view;
         }
