@@ -994,38 +994,6 @@ var KGMath;
                     bases: m.bases
                 });
             };
-            // Return the monomial that solves the function c(b1^p1)(b2^p2) = level for bn
-            // For example, to find the level curve where 3(x^2)(y^3) = 6 and express it as y(x), this would return
-            // y = [6/(3x^-2)]^(1/3) = [(6/2)^1/3][(x^-2)^1/3] = [(6/2)^1/3][x^-2/3]
-            // Note that the indices of the bases in the returned monomial are the same as the original.
-            Monomial.prototype.levelCurve = function (n, level) {
-                var m = this;
-                // note: level can be a numerical value or an array of bases at which to evaluate the monomial
-                if (level) {
-                    m.setLevel(level);
-                }
-                // n is the index of the term; first term by default
-                n = n - 1 || 0;
-                // pn is the power to which the base variable we're solving for is raised
-                var pn = m.powers[n];
-                if (pn == 0) {
-                    return null;
-                }
-                return new Monomial({
-                    // the coefficient of the new monomial is (level/c)^1/p
-                    coefficient: Math.pow(m.level / m.coefficient, 1 / pn),
-                    // each of the powers for the remaining bases is divided by -p
-                    powers: m.powers.map(function (p, index) {
-                        if (index == n) {
-                            return 0;
-                        }
-                        else {
-                            return -p / pn;
-                        }
-                    }),
-                    bases: m.bases
-                });
-            };
             // returns the y value corresponding to the given x value for m(x,y) = m.level
             Monomial.prototype.yValue = function (x) {
                 var m = this;
@@ -1033,13 +1001,7 @@ var KGMath;
                     return m.coefficient * Math.pow(x, m.powers[0]);
                 }
                 else {
-                    this.setBase(1, x);
-                    if (this.levelCurve(2)) {
-                        return this.levelCurve(2).value();
-                    }
-                    else {
-                        return null;
-                    }
+                    return Math.pow(m.level * Math.pow(x, -m.powers[0]), 1 / m.powers[1]);
                 }
             };
             // returns the x value corresponding to the given y value for m(x,y) = m.level
@@ -1049,13 +1011,7 @@ var KGMath;
                     return Math.pow(y / m.coefficient, 1 / m.powers[0]);
                 }
                 else {
-                    this.setBase(2, y);
-                    if (this.levelCurve(1)) {
-                        return this.levelCurve(1).value();
-                    }
-                    else {
-                        return null;
-                    }
+                    return Math.pow(m.level * Math.pow(y, -m.powers[1]), 1 / m.powers[0]);
                 }
             };
             return Monomial;

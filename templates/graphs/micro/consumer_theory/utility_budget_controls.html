@@ -345,7 +345,7 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'PCCX',
-                        show: 'params.showPCCX',
+                        show: 'params.showPCCX && params.snapToOptimal',
                         data: 'model.priceConsumptionCurveData({good:"x"})',
                         className: 'demand',
                         interpolation: 'basis',
@@ -359,7 +359,7 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'PCCY',
-                        show: 'params.showPCCY',
+                        show: 'params.showPCCY && params.snapToOptimal',
                         data: 'model.priceConsumptionCurveData({good:"y"})',
                         className: 'demand',
                         interpolation: 'basis',
@@ -373,7 +373,7 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'ICC',
-                        show: 'params.showICC',
+                        show: 'params.showICC && params.snapToOptimal',
                         data: 'model.incomeConsumptionCurveData()',
                         className: 'engel',
                         interpolation: 'basis',
