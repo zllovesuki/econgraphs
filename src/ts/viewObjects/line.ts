@@ -107,39 +107,28 @@ module KG {
         _update(scope) {
             var line = this;
             line.linear.update(scope);
-            if(line.xInterceptLabelDiv) {
-                line.xInterceptLabelDiv.update(scope)
-            }
-
-            if(line.yInterceptLabelDiv) {
-                line.yInterceptLabelDiv.update(scope)
-            }
-
-            if(line.labelDiv) {
-                line.labelDiv.update(scope)
-            }
             return line;
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
 
             var line = this;
 
             if(line.xInterceptLabelDiv) {
-                view.addObject(line.xInterceptLabelDiv.update(scope))
+                view.addObject(line.xInterceptLabelDiv)
             }
 
             if(line.yInterceptLabelDiv) {
-                view.addObject(line.yInterceptLabelDiv.update(scope))
+                view.addObject(line.yInterceptLabelDiv)
             }
 
             if(line.labelDiv) {
-                view.addObject(line.labelDiv.update(scope))
+                view.addObject(line.labelDiv)
             }
 
             if(line.areaUnder) {
-                view.addObject(line.areaUnder.update(scope));
-                view.addObject(line.areaUnder.labelDiv.update(scope));
+                view.addObject(line.areaUnder);
+                view.addObject(line.areaUnder.labelDiv);
             }
 
             return view;

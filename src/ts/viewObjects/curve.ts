@@ -4,18 +4,12 @@
 
 module KG {
 
-    export interface CurveParamsDefinition extends ViewObjectParamsDefinition {
-        label?: string;
-        labelPrefix?: string;
-    }
-
     export interface CurveDefinition extends ViewObjectDefinition {
         data?: any;
         interpolation?: string;
         label?: GraphDivDefinition;
         labelPosition?: string;
         arrows?: string;
-        params?: CurveParamsDefinition;
     }
 
     export interface ICurve extends IViewObject {
@@ -72,26 +66,6 @@ module KG {
 
         constructor(definition:CurveDefinition, modelPath?: string) {
 
-            if(definition.hasOwnProperty('params')) {
-
-                var p = definition.params;
-
-                if (p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    }
-                }
-
-                if (p.hasOwnProperty('labelPrefix')) {
-                    definition.label.text = p.labelPrefix + definition.label.text;
-                }
-
-                if (p.hasOwnProperty('areaUnderLabel')) {
-                    
-                }
-
-            }
-
             definition = _.defaults(definition, {data: [], interpolation: 'linear'});
 
             super(definition, modelPath);
@@ -103,12 +77,8 @@ module KG {
                     name: definition.name + '_label',
                     objectName: definition.objectName,
                     className: definition.className,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    color: definition.color,
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction,
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 curve.labelDiv = new GraphDiv(labelDef);
@@ -121,10 +91,10 @@ module KG {
             curve.viewObjectClass = 'curve';
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
             var labelDiv = this.labelDiv;
             if(labelDiv) {
-                return view.addObject(labelDiv.update(scope));
+                return view.addObject(labelDiv);
             } else {
                 return view;
             }

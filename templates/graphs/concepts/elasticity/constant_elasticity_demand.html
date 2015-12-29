@@ -130,7 +130,7 @@
                                     type: 'HorizontalLine',
                                     interaction: {
                                         yDrag: 'price',
-                                        highlightParam: 'highlightPrice'
+                                        highlightParam: 'price'
                                     },
                                     y: 'params.price',
                                     yInterceptLabel: 'P'
@@ -143,7 +143,8 @@
                                     className: 'demand',
                                     coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
                                     interaction: {
-                                        yDrag: true
+                                        yDrag: true,
+                                        highightParam: 'quantity'
                                     },
                                     droplines: {
                                         vertical: 'Q^D(P)'

@@ -100,7 +100,7 @@ module KG {
             return this;
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
 
             var piecewiseLinear = this;
 
@@ -117,7 +117,7 @@ module KG {
                         }
                     });
                     view.addObject(newLine.update(scope));
-                    view = newLine.createSubObjects(view,scope);
+                    view = newLine.createSubObjects(view);
                     piecewiseLinear.yIntercept = newLine.linear.yIntercept;
                 } else if(index == piecewiseLinear.sections.length - 1){
                     var newLine = new Line({
@@ -132,7 +132,7 @@ module KG {
                         }
                     });
                     view.addObject(newLine.update(scope));
-                    view = newLine.createSubObjects(view,scope);
+                    view = newLine.createSubObjects(view);
                     piecewiseLinear.xIntercept = newLine.linear.xIntercept;
                 } else {
                     var newLine = new Line({

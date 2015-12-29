@@ -88,12 +88,18 @@ module KG
         _update(scope) {
             var view = this;
             view.scope = scope;
+            var initialObjectsLength = view.objects.length;
             view.objects.forEach(function(viewObj) {
                 if(viewObj instanceof ViewObject) {
-                    viewObj.createSubObjects(view,scope);
+                    viewObj.createSubObjects(view);
                 }
             });
             console.log(view.objects);
+            for(var i = initialObjectsLength; i < view.objects.length; i++) {
+                if(view.objects[i] instanceof Model) {
+                    view.objects[i].update(scope);
+                }
+            };
             view.objects.forEach(function(viewObj) {
                 viewObj.view = view;
             });

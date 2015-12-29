@@ -39,7 +39,7 @@ module KG {
             return fmap;
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
             var fmap = this;
 
             fmap.levels.forEach(function(level,index) {

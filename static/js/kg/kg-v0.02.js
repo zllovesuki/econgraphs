@@ -2246,10 +2246,10 @@ var KG;
         function ViewObjectGroup(definition, modelPath) {
             _super.call(this, definition, modelPath);
         }
-        ViewObjectGroup.prototype.createSubObjects = function (view, scope) {
+        ViewObjectGroup.prototype.createSubObjects = function (view) {
             this.viewObjects.forEach(function (viewObject) {
                 view.addObject(viewObject.update(scope));
-                viewObject.createSubObjects(view, scope);
+                viewObject.createSubObjects(view);
             });
             return view;
         };
@@ -2314,7 +2314,7 @@ var KG;
                     name: definition.name + '_label',
                     className: definition.className,
                     coordinates: definition.coordinates,
-                    interaction: definition.interaction,
+                    interaction: _.clone(definition.interaction),
                     show: definition.show
                 });
                 point.labelDiv = new KG.GraphDiv(labelDef);
@@ -2324,7 +2324,7 @@ var KG;
                     point.horizontalDropline = new KG.HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: definition.interaction,
+                        interaction: _.clone(definition.interaction),
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
                         show: definition.show
@@ -2334,7 +2334,7 @@ var KG;
                     point.verticalDropline = new KG.VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: definition.interaction,
+                        interaction: _.clone(definition.interaction),
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
                         show: definition.show
@@ -2344,11 +2344,11 @@ var KG;
             point.viewObjectSVGtype = 'path';
             point.viewObjectClass = 'pointSymbol';
         }
-        Point.prototype.createSubObjects = function (view, scope) {
+        Point.prototype.createSubObjects = function (view) {
             var p = this;
             if (view instanceof KG.TwoVerticalGraphs) {
                 if (p.labelDiv) {
-                    view.topGraph.addObject(p.labelDiv.update(scope));
+                    view.topGraph.addObject(p.labelDiv);
                 }
                 if (p.verticalDropline) {
                     var continuationDropLine = new KG.VerticalDropline({
@@ -2359,27 +2359,27 @@ var KG;
                         axisLabel: p.verticalDropline.axisLabel
                     });
                     p.verticalDropline.labelDiv = null;
-                    view.topGraph.addObject(p.verticalDropline.update(scope));
-                    view.bottomGraph.addObject(continuationDropLine.update(scope));
-                    p.verticalDropline.createSubObjects(view.topGraph, scope); // TODO should probably make this more recursive by default
-                    continuationDropLine.createSubObjects(view.bottomGraph, scope);
+                    view.topGraph.addObject(p.verticalDropline);
+                    view.bottomGraph.addObject(continuationDropLine);
+                    p.verticalDropline.createSubObjects(view.topGraph); // TODO should probably make this more recursive by default
+                    continuationDropLine.createSubObjects(view.bottomGraph);
                 }
                 if (p.horizontalDropline) {
-                    view.topGraph.addObject(p.horizontalDropline.update(scope));
-                    p.horizontalDropline.createSubObjects(view.topGraph, scope); // TODO should probably make this more recursive by default
+                    view.topGraph.addObject(p.horizontalDropline);
+                    p.horizontalDropline.createSubObjects(view.topGraph); // TODO should probably make this more recursive by default
                 }
             }
             else {
                 if (p.labelDiv) {
-                    view.addObject(p.labelDiv.update(scope));
+                    view.addObject(p.labelDiv);
                 }
                 if (p.verticalDropline) {
-                    view.addObject(p.verticalDropline.update(scope));
-                    p.verticalDropline.createSubObjects(view, scope); // TODO should probably make this more recursive by default
+                    view.addObject(p.verticalDropline);
+                    p.verticalDropline.createSubObjects(view); // TODO should probably make this more recursive by default
                 }
                 if (p.horizontalDropline) {
-                    view.addObject(p.horizontalDropline.update(scope));
-                    p.horizontalDropline.createSubObjects(view, scope); // TODO should probably make this more recursive by default
+                    view.addObject(p.horizontalDropline);
+                    p.horizontalDropline.createSubObjects(view); // TODO should probably make this more recursive by default
                 }
             }
             return view;
@@ -2484,10 +2484,10 @@ var KG;
             this.viewObjectSVGtype = 'line';
             this.viewObjectClass = 'dropline';
         }
-        Dropline.prototype.createSubObjects = function (view, scope) {
+        Dropline.prototype.createSubObjects = function (view) {
             var p = this;
             if (p.labelDiv) {
-                view.addObject(p.labelDiv.update(scope));
+                view.addObject(p.labelDiv);
             }
             return view;
         };
@@ -2545,19 +2545,6 @@ var KG;
     var Curve = (function (_super) {
         __extends(Curve, _super);
         function Curve(definition, modelPath) {
-            if (definition.hasOwnProperty('params')) {
-                var p = definition.params;
-                if (p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    };
-                }
-                if (p.hasOwnProperty('labelPrefix')) {
-                    definition.label.text = p.labelPrefix + definition.label.text;
-                }
-                if (p.hasOwnProperty('areaUnderLabel')) {
-                }
-            }
             definition = _.defaults(definition, { data: [], interpolation: 'linear' });
             _super.call(this, definition, modelPath);
             var curve = this;
@@ -2566,12 +2553,8 @@ var KG;
                     name: definition.name + '_label',
                     objectName: definition.objectName,
                     className: definition.className,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    color: definition.color,
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction,
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 curve.labelDiv = new KG.GraphDiv(labelDef);
@@ -2581,10 +2564,10 @@ var KG;
             curve.viewObjectSVGtype = 'path';
             curve.viewObjectClass = 'curve';
         }
-        Curve.prototype.createSubObjects = function (view, scope) {
+        Curve.prototype.createSubObjects = function (view) {
             var labelDiv = this.labelDiv;
             if (labelDiv) {
-                return view.addObject(labelDiv.update(scope));
+                return view.addObject(labelDiv);
             }
             else {
                 return view;
@@ -2787,31 +2770,22 @@ var KG;
         Line.prototype._update = function (scope) {
             var line = this;
             line.linear.update(scope);
-            if (line.xInterceptLabelDiv) {
-                line.xInterceptLabelDiv.update(scope);
-            }
-            if (line.yInterceptLabelDiv) {
-                line.yInterceptLabelDiv.update(scope);
-            }
-            if (line.labelDiv) {
-                line.labelDiv.update(scope);
-            }
             return line;
         };
-        Line.prototype.createSubObjects = function (view, scope) {
+        Line.prototype.createSubObjects = function (view) {
             var line = this;
             if (line.xInterceptLabelDiv) {
-                view.addObject(line.xInterceptLabelDiv.update(scope));
+                view.addObject(line.xInterceptLabelDiv);
             }
             if (line.yInterceptLabelDiv) {
-                view.addObject(line.yInterceptLabelDiv.update(scope));
+                view.addObject(line.yInterceptLabelDiv);
             }
             if (line.labelDiv) {
-                view.addObject(line.labelDiv.update(scope));
+                view.addObject(line.labelDiv);
             }
             if (line.areaUnder) {
-                view.addObject(line.areaUnder.update(scope));
-                view.addObject(line.areaUnder.labelDiv.update(scope));
+                view.addObject(line.areaUnder);
+                view.addObject(line.areaUnder.labelDiv);
             }
             return view;
         };
@@ -3044,7 +3018,7 @@ var KG;
             piecewiseLinear.sections.forEach(function (section) { section.update(scope); });
             return this;
         };
-        PiecewiseLinear.prototype.createSubObjects = function (view, scope) {
+        PiecewiseLinear.prototype.createSubObjects = function (view) {
             var piecewiseLinear = this;
             piecewiseLinear.sections.forEach(function (section, index) {
                 if (index == 0) {
@@ -3059,7 +3033,7 @@ var KG;
                         }
                     });
                     view.addObject(newLine.update(scope));
-                    view = newLine.createSubObjects(view, scope);
+                    view = newLine.createSubObjects(view);
                     piecewiseLinear.yIntercept = newLine.linear.yIntercept;
                 }
                 else if (index == piecewiseLinear.sections.length - 1) {
@@ -3075,7 +3049,7 @@ var KG;
                         }
                     });
                     view.addObject(newLine.update(scope));
-                    view = newLine.createSubObjects(view, scope);
+                    view = newLine.createSubObjects(view);
                     piecewiseLinear.xIntercept = newLine.linear.xIntercept;
                 }
                 else {
@@ -3284,7 +3258,7 @@ var KG;
             fmap.curves.forEach(function (curve) { curve.update(scope); });
             return fmap;
         };
-        FunctionMap.prototype.createSubObjects = function (view, scope) {
+        FunctionMap.prototype.createSubObjects = function (view) {
             var fmap = this;
             fmap.levels.forEach(function (level, index) {
                 var curve = new KG.FunctionPlot({
@@ -3395,12 +3369,19 @@ var KG;
         View.prototype._update = function (scope) {
             var view = this;
             view.scope = scope;
+            var initialObjectsLength = view.objects.length;
             view.objects.forEach(function (viewObj) {
                 if (viewObj instanceof KG.ViewObject) {
-                    viewObj.createSubObjects(view, scope);
+                    viewObj.createSubObjects(view);
                 }
             });
             console.log(view.objects);
+            for (var i = initialObjectsLength; i < view.objects.length; i++) {
+                if (view.objects[i] instanceof KG.Model) {
+                    view.objects[i].update(scope);
+                }
+            }
+            ;
             view.objects.forEach(function (viewObj) {
                 viewObj.view = view;
             });
