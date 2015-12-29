@@ -2,225 +2,231 @@
 
 {% block body %}
 
-<div ng-controller="KineticGraphCtrl">
-{% raw %}
-    <h1>Individual and Market Demand</h1>
-    <hr/>
-    <div class="row">
-        <div class="col-md-4">
-            <div id="individualDemandGraph"></div>
-            <p>This graph shows how much an average individual demands of a good at different prices. For simplicity, we assume that this the the kind of good that consumers spend a constant fraction <span class="math">( \alpha )</span> of their income <span class="math">(I)</span> on this good.</p>
-        </div>
-        <div class="col-md-4">
-            <div id="marketDemandGraph"></div>
-            <p>This graph shows the overall market demand for this good if there are <span class="math">N</span> consumers who on average have the demand curve shown on the left. Thus, at any price <span class="math price">P</span>, if the quantity demanded by each individual is (on average) <span class="math">q^D(P)</span>, then the total amount demanded by all <span class="math">N</span> consumers is:</p>
-        </div>
-
-        <div class="col-md-4">
-
-            <div class="well">
-                <div class="subtitle">demand shifters</div>
-                <hr/>
-            <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income}}:
-                    </div>
-                    <div class="col-xs-9" id="incomeSlider"></div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number:2}}:
-                    </div>
-                    <div class="col-xs-9" id="alphaSlider"></div>
-                </div>
-            <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">N = {{params.nc}}:
-                    </div>
-                    <div class="col-xs-9" id="ncSlider"></div>
-                </div>
+    <div ng-controller="KineticGraphCtrl">
+        {% raw %}
+        <h1>Individual and Market Demand</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="individualDemandGraph"></div>
+                <p>This graph shows how much an average individual demands of a good at different prices. For simplicity, we assume that this the the kind of good that consumers spend a constant fraction <span class="math">( \alpha )</span> of their income <span class="math">(I)</span> on this good.</p>
             </div>
-            <p/>
-            <div>
-
+            <div class="col-md-4">
+                <div id="marketDemandGraph"></div>
+                <p>This graph shows the overall market demand for this good if there are <span class="math">N</span> consumers who on average have the demand curve shown on the left. Thus, at any price <span class="math price">P</span>, if the quantity demanded by each individual is (on average) <span class="math">q^D(P)</span>, then the total amount demanded by all <span class="math">N</span> consumers is:</p>
             </div>
 
+            <div class="col-md-4">
+
+                <div class="well">
+                    <div class="subtitle">demand shifters</div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income}}:
+                        </div>
+                        <div class="col-xs-9" id="incomeSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number:2}}:
+                        </div>
+                        <div class="col-xs-9" id="alphaSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">N = {{params.nc}}:
+                        </div>
+                        <div class="col-xs-9" id="ncSlider"></div>
+                    </div>
+                </div>
+                <p/>
+                <div>
+
+                </div>
+
+            </div>
         </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="demand math displayMath" highlight="individualQuantityDemanded">q^D(P) = \frac{\alpha I}{P} = \frac{ {{ params.alpha | number:2 }} \times {{ params.income }} }{ {{ model.price | number:2}} } = {{ model.individualQuantityDemanded | number:2 }}</div>
+            </div>
+            <div class="col-md-4">
+                <div class="demand math displayMath" highlight="marketQuantityDemanded">Q^D(P) = N \times q^D(P) = {{ params.nc }} \times {{ model.individualQuantityDemanded | number:2 }} = {{ model.marketQuantityDemanded | number:0 }}</div>
+            </div>
+        </div>
+        {% endraw %}
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="demand math displayMath">q^D(P) = \frac{\alpha I}{P} = \frac{ {{ params.alpha | number:2 }} \times {{ params.income }} }{ {{ model.price | number:2}} } = {{ model.individualQuantityDemanded | number:2 }}</div>
-        </div>
-        <div class="col-md-4">
-            <div class="demand math displayMath">Q^D(P) = N \times q^D(P) = {{ params.nc }} \times {{ model.individualQuantityDemanded | number:2 }} = {{ model.marketQuantityDemanded | number:0 }}</div>
-        </div>
-    </div>
-{% endraw %}
-</div>
 {% endblock %}
 
 {% block model %}
 
-<script>
+    <script>
 
-    var scopeDefinition = {
-        params: {
+        var priceLine = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'priceLine',
+                        className: 'price',
+                        y: 'model.price',
+                        yInterceptLabel: 'P',
+                        interaction: {
+                            yDrag: 'params.price',
+                            highlightParam: 'price'
+                        }
+                    }
+                },
+                individualDemandCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'individualDemand',
+                        className: 'demand',
+                        fn: 'model.individualDemandFunction',
+                        yIsIndependent: true,
+                        yDomainDef: {min: 1, max: 38},
+                        label: {
+                            text: "d",
+                            valign: 'bottom'
+                        },
+                        interaction: {
+                            highlightParam: 'individualDemand'
+                        }
+                    }
+                },
+                individualQuantityDemandedPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'individualQuantityDemanded',
+                        className: 'demand',
+                        coordinates: {
+                            x: 'model.individualQuantityDemanded',
+                            y: 'params.price'
+                        },
+                        droplines: {
+                            vertical: 'q^D'
+                        },
+                        interaction: {
+                            highlightParam: 'individualQuantityDemanded'
+                        }
+                    }
+                },
+                marketDemandCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'marketDemand',
+                        className: 'demand',
+                        fn: 'model.marketDemandFunction',
+                        yIsIndependent: true,
+                        yDomainDef: {min: 2, max: 38},
+                        label: {
+                            text: "D",
+                            valign: 'bottom'
+                        },
+                        interaction: {
+                            highlightParam: 'marketDemand'
+                        }
+                    }
+                },
+                marketQuantityDemanded = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'marketQuantityDemanded',
+                        className: 'demand',
+                        coordinates: {
+                            x: 'model.marketQuantityDemanded',
+                            y: 'params.price'
+                        },
+                        droplines: {
+                            vertical: 'Q^D'
+                        },
+                        interaction: {
+                            highlightParam: 'marketQuantityDemanded'
+                        }
+                    }
+                }
+
+        var scopeDefinition = {
+            params: {
                 alpha: 0.25,
                 income: 400,
                 nc: 300,
                 price: 20
             },
-        graphParams: [],
-        restrictions: [
-            {
-                restrictionType: 'range',
-                expression: 'params.price',
-                min: 4,
-                max: 36,
-                precision: 1
-            }
-        ],
-        model: {
-            type: 'EconGraphs.IndividualAndMarketSandD',
-            definition: {
-                alpha: 'params.alpha',
-                income: 'params.income',
-                nc: 'params.nc',
-                price: 'params.price'
-            }
-        },
-        views: [
-            {
-                type: 'KG.Graph',
+            graphParams: [],
+            restrictions: [
+                {
+                    restrictionType: 'range',
+                    expression: 'params.price',
+                    min: 4,
+                    max: 36,
+                    precision: 1
+                }
+            ],
+            model: {
+                type: 'EconGraphs.IndividualAndMarketSandD',
                 definition: {
-                    element_id: 'individualDemandGraph',
-                    xAxisDef: {min: 0, max: 20, title: '\\text{Individual Quantity Demanded}'},
-                    yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
-                    square: true,
-                    objects: [
-                        {
-                            type: 'KG.HorizontalLine',
-                            definition: {
-                                name: 'priceLine',
-                                className: 'price',
-                                y: 'model.price',
-                                yDrag: 'params.price',
-                                params: {
-                                    yInterceptLabel: 'P'
-                                }
-                            }
-                        },
-                        {
-                            type: 'KG.FunctionPlot',
-                            definition: {
-                                name: 'individualDemand',
-                                className: 'demand',
-                                fn: 'model.individualDemandFunction',
-                                yIsIndependent: true,
-                                yDomainDef: {min: 1, max: 38},
-                                label: {
-                                    text: "d",
-                                    valign: 'bottom'
-                                }
-                            }
-                        },
-                        {
-                            type: 'KG.Point',
-                            definition: {
-                                name: 'individualQuantityDemanded',
-                                className: 'demand',
-                                coordinates: {
-                                    x: 'model.individualQuantityDemanded',
-                                    y: 'model.price'
-                                },
-                                yDrag: 'params.price',
-                                params: {
-                                    xAxisLabel: 'q^D'
-                                }
-                            }
-                        }
-                    ]
+                    alpha: 'params.alpha',
+                    income: 'params.income',
+                    nc: 'params.nc',
+                    price: 'params.price'
                 }
             },
-            {
-                type: 'KG.Graph',
-                definition: {
-                    element_id: 'marketDemandGraph',
-                    xAxisDef: {min: 0, max: 5000, title: '\\text{Market Quantity Demanded}'},
-                    yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
-                    square: true,
-                    objects: [
-                        {
-                            type: 'KG.HorizontalLine',
-                            definition: {
-                                name: 'priceLine',
-                                className: 'price',
-                                y: 'model.price',
-                                yDrag: 'params.price',
-                                params: {
-                                    yInterceptLabel: 'P'
-                                }
-                            }
-                        },
-                        {
-                            type: 'KG.FunctionPlot',
-                            definition: {
-                                name: 'marketDemand',
-                                className: 'demand',
-                                fn: 'model.marketDemandFunction',
-                                yIsIndependent: true,
-                                yDomainDef: {min: 2, max: 38},
-                                label: {
-                                    text: "D",
-                                    valign: 'bottom'
-                                }
-                            }
-                        },
-                        {
-                            type: 'KG.Point',
-                            definition: {
-                                name: 'marketQuantityDemanded',
-                                className: 'demand',
-                                coordinates: {
-                                    x: 'model.marketQuantityDemanded',
-                                    y: 'model.price'
-                                },
-                                yDrag: 'params.price',
-                                params: {
-                                    xAxisLabel: 'Q^D'
-                                }
-                            }
-                        }
-                    ]
+            views: [
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'individualDemandGraph',
+                        xAxisDef: {min: 0, max: 20, title: '\\text{Individual Quantity Demanded}'},
+                        yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
+                        square: true,
+                        objects: [
+                            priceLine,
+                            individualDemandCurve,
+                            individualQuantityDemandedPoint
+                        ]
+                    }
+                },
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'marketDemandGraph',
+                        xAxisDef: {min: 0, max: 5000, title: '\\text{Market Quantity Demanded}'},
+                        yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
+                        square: true,
+                        objects: [
+                            priceLine,
+                            marketDemandCurve,
+                            marketQuantityDemanded
+                        ]
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'incomeSlider',
+                        param: 'income',
+                        precision: '1',
+                        axisDef: {min: 100, max: 1000}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'ncSlider',
+                        param: 'nc',
+                        precision: '10',
+                        axisDef: {min: 200, max: 1000}
+                    }
                 }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'incomeSlider',
-                    param: 'income',
-                    precision: '1',
-                    axisDef: {min: 100, max: 1000}
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'alphaSlider',
-                    param: 'alpha',
-                    precision: '0.01',
-                    axisDef: {min: 0, max: 1}
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'ncSlider',
-                    param: 'nc',
-                    precision: '10',
-                    axisDef: {min: 200, max: 1000}
-                }
-            }
-        ]
-    }
-</script>
+            ]
+        }
+    </script>
 {% endblock %}
 
 

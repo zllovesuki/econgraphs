@@ -98,4 +98,27 @@ angular.module('KineticGraphs', [])
             transclude: true,
             template: "<button ng-click='toggle()' style='width: 100%'>{{ showHide() }} <span ng-transclude/></button>"
         };
-    });
+    }).directive('highlight', function() {
+
+        function link(scope, el, attrs) {
+
+            el.on('mouseover', function(){
+                scope.updateParams({highlight: attrs.highlight});
+            });
+
+            el.on('mouseout', function(){
+                scope.updateParams({highlight:null});
+            });
+
+
+            scope.$watch('params.highlight',function(){if(scope.params.highlight == attrs.highlight) {el.addClass('highlight')} else {el.removeClass('highlight')}})
+
+        }
+
+        return {
+            link: link,
+            restrict: 'A',
+            replace: false,
+            scope: true
+        }
+    })
