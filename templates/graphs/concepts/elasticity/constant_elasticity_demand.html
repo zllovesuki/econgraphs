@@ -128,11 +128,12 @@
                                     name: 'priceLine',
                                     className: 'price',
                                     type: 'HorizontalLine',
-                                    yDrag: 'price',
+                                    interaction: {
+                                        yDrag: 'price',
+                                        highlightParam: 'highlightPrice'
+                                    },
                                     y: 'params.price',
-                                    params: {
-                                        yInterceptLabel: 'P'
-                                    }
+                                    yInterceptLabel: 'P'
                                 }
                             },
                             {
@@ -141,7 +142,9 @@
                                     name: 'quantityDemandedAtPrice',
                                     className: 'demand',
                                     coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
-                                    yDrag: true,
+                                    interaction: {
+                                        yDrag: true
+                                    },
                                     droplines: {
                                         vertical: 'Q^D(P)'
                                     }
@@ -162,6 +165,9 @@
                                             min: '0.5*params.price',
                                             max: '1.5*params.price'
                                         }
+                                    },
+                                    interaction: {
+                                        highlightParam: 'highlightMRS'
                                     },
                                     label: {
                                         text: 'model.slopeAtPriceWords(params.price)',

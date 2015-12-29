@@ -360,6 +360,7 @@ var KG;
                     }
                 }
             }
+            console.log(this);
         }
         Model.prototype.modelProperty = function (name) {
             return this.modelPath + '.' + name;
@@ -1709,7 +1710,6 @@ var KGMath;
                 m.minimands = definition.minimandDefs.map(function (fnDef, index) {
                     return new KGMath.Functions[fnDef.type](fnDef.def, m.modelProperty('minimands[' + index + ']'));
                 });
-                console.log(m.minimands);
             }
             Min.prototype.value = function (bases) {
                 var m = this;
@@ -2108,9 +2108,6 @@ var KG;
             if (definition.hasOwnProperty('yDragParam') && typeof definition.yDragParam == 'string') {
                 definition.yDragParam = definition.yDragParam.replace('params.', '');
             }
-            definition = _.defaults(definition, {
-                highlight: false
-            });
             _super.call(this, definition, modelPath);
         }
         InteractionHandler.prototype.setBehavior = function (view, selection) {
@@ -2130,12 +2127,12 @@ var KG;
                     if (yAxis && interactionHandler.yDragParam !== null) {
                         dragUpdate[interactionHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
                     }
-                    view.updateParams(dragUpdate);
+                    view.scope.updateParams(dragUpdate);
                 })
                     .on('dragend', function () {
                     var dragUpdate = {};
-                    dragUpdate[interactionHandler.highlightParam] = true;
-                    view.updateParams(dragUpdate);
+                    dragUpdate[interactionHandler.highlightParam] = false;
+                    view.scope.updateParams(dragUpdate);
                 });
             }
             function cursor(xDrag, yDrag) {
@@ -2160,12 +2157,12 @@ var KG;
                 selection.on('mouseover', function () {
                     var highlightUpdate = {};
                     highlightUpdate[interactionHandler.highlightParam] = true;
-                    view.updateParams(highlightUpdate);
+                    view.scope.updateParams(highlightUpdate);
                 });
                 selection.on('mouseout', function () {
                     var highlightUpdate = {};
                     highlightUpdate[interactionHandler.highlightParam] = false;
-                    view.updateParams(highlightUpdate);
+                    view.scope.updateParams(highlightUpdate);
                 });
             }
             return view;
@@ -2181,6 +2178,9 @@ var KG;
     var ViewObject = (function (_super) {
         __extends(ViewObject, _super);
         function ViewObject(definition, modelPath) {
+            if (definition.hasOwnProperty('interaction') && definition.interaction.hasOwnProperty('highlightParam') && !definition.hasOwnProperty('highlight')) {
+                definition.highlight = 'params.' + definition.interaction.highlightParam;
+            }
             definition = _.defaults(definition, {
                 name: '',
                 className: '',
@@ -2202,7 +2202,7 @@ var KG;
             else {
                 classString += ' invisible';
             }
-            if (this.interactionHandler.highlight) {
+            if (this.highlight == true) {
                 classString += ' highlight';
             }
             if (this.hasOwnProperty('objectName')) {
@@ -2301,6 +2301,23 @@ var KG;
                 size: defaultSize,
                 symbol: 'circle'
             });
+            var subObjectInteraction = _.clone(definition.interaction);
+            if (definition.hasOwnProperty('interaction')) {
+                if (definition.interaction.hasOwnProperty('draggable')) {
+                    definition.interaction.xDrag = definition.interaction.draggable;
+                    definition.interaction.yDrag = definition.interaction.draggable;
+                }
+                if (definition.interaction.hasOwnProperty('xDrag')) {
+                    definition.interaction.xDragParam = definition.coordinates.x;
+                }
+                if (definition.interaction.hasOwnProperty('yDrag')) {
+                    definition.interaction.yDragParam = definition.coordinates.y;
+                }
+                if (definition.hasOwnProperty('label') && definition.hasOwnProperty('highlightParam')) {
+                    definition.highlight = definition.highlight || definition.interaction.highlightParam;
+                    definition.interaction.highlightParam = null;
+                }
+            }
             _super.call(this, definition, modelPath);
             var point = this;
             if (definition.label) {
@@ -2308,7 +2325,7 @@ var KG;
                     name: definition.name + '_label',
                     className: definition.className,
                     coordinates: definition.coordinates,
-                    interaction: definition.interaction,
+                    interaction: subObjectInteraction,
                     show: definition.show
                 });
                 point.labelDiv = new KG.GraphDiv(labelDef);
@@ -2318,7 +2335,7 @@ var KG;
                     point.horizontalDropline = new KG.HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: definition.interaction,
+                        interaction: subObjectInteraction,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
                         show: definition.show
@@ -2328,7 +2345,7 @@ var KG;
                     point.verticalDropline = new KG.VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: definition.interaction,
+                        interaction: subObjectInteraction,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
                         show: definition.show
@@ -2430,12 +2447,20 @@ var KG;
             definition.coordinates = KG.getCoordinates(definition.coordinates);
             if (definition.interaction.hasOwnProperty('draggable')) {
                 if (definition.horizontal) {
-                    definition.interaction.yDrag = definition.draggable;
+                    definition.interaction.yDrag = definition.interaction.draggable;
                     definition.interaction.yDragParam = definition.coordinates.y;
                 }
                 else {
-                    definition.interaction.xDrag = definition.draggable;
+                    definition.interaction.xDrag = definition.interaction.draggable;
                     definition.interaction.xDragParam = definition.coordinates.x;
+                }
+            }
+            else {
+                if (definition.horizontal) {
+                    definition.interaction.xDrag = false;
+                }
+                else {
+                    definition.interaction.yDrag = false;
                 }
             }
             definition = _.defaults(definition, {
@@ -2469,8 +2494,6 @@ var KG;
             }
             this.viewObjectSVGtype = 'line';
             this.viewObjectClass = 'dropline';
-            console.log('dropline:');
-            console.log(this);
         }
         Dropline.prototype.createSubObjects = function (view, scope) {
             var p = this;
@@ -2504,7 +2527,9 @@ var KG;
     var VerticalDropline = (function (_super) {
         __extends(VerticalDropline, _super);
         function VerticalDropline(definition, modelPath) {
-            definition.name += '_vDropline';
+            if (definition.name.indexOf('_vDropline') == -1) {
+                definition.name += '_vDropline';
+            }
             definition.horizontal = false;
             _super.call(this, definition, modelPath);
         }
@@ -2514,7 +2539,9 @@ var KG;
     var HorizontalDropline = (function (_super) {
         __extends(HorizontalDropline, _super);
         function HorizontalDropline(definition, modelPath) {
-            definition.name += '_hDropline';
+            if (definition.name.indexOf('_hDropline') == -1) {
+                definition.name += '_hDropline';
+            }
             definition.horizontal = true;
             _super.call(this, definition, modelPath);
         }
@@ -3099,7 +3126,6 @@ var KG;
         };
         GraphDiv.prototype.render = function (view) {
             var divObj = this;
-            console.log(divObj);
             if (divObj.text instanceof Array) {
                 divObj.text = divObj.text.join('');
             }
@@ -3131,7 +3157,6 @@ var KG;
             }
             var width = divObj.dimensions.width, height = divObj.dimensions.height, text = divObj.text;
             var div = divObj.d3selection(view);
-            console.log('drawing div with text', text);
             div
                 .style('cursor', 'default')
                 .style('text-align', 'center')
@@ -3377,41 +3402,29 @@ var KG;
             if (definition.hasOwnProperty('yAxisDef')) {
                 this.yAxis = new KG.YAxis(definition.yAxisDef);
             }
-            /*this.objects = definition.objects.map(function(objectDefinition){
-                if(objectDefinition.hasOwnProperty('type') && objectDefinition.hasOwnProperty('definition')) {
-                    return createInstance(objectDefinition);
-                } else {
-                    return objectDefinition;
-                }
-            })*/
         }
         View.prototype._update = function (scope) {
             var view = this;
-            view.objects.forEach(function (object) {
-                if (object instanceof KG.Model) {
-                    object.update(scope).createSubObjects(view, scope);
+            view.scope = scope;
+            view.objects.forEach(function (viewObj) {
+                if (viewObj instanceof KG.ViewObject) {
+                    viewObj.createSubObjects(view, scope);
                 }
             });
+            console.log(view.objects);
             return view;
         };
-        View.prototype.render = function (scope, redraw) {
+        View.prototype.render = function (redraw) {
             var view = this;
-            //console.log('calling update');
-            view.update(scope, function () {
-                //console.log('starting update');
-                view.updateParams = function (params) {
-                    scope.updateParams(params);
-                };
-                if (redraw) {
-                    view.redraw(scope);
-                }
-                else {
-                    view.drawObjects(scope);
-                }
-                //console.log('finished update')
-            });
+            console.log('calling update');
+            if (redraw) {
+                view.redraw();
+            }
+            else {
+                view.drawObjects();
+            }
         };
-        View.prototype.redraw = function (scope) {
+        View.prototype.redraw = function () {
             var view = this;
             // Establish dimensions of the view
             var element = $('#' + view.element_id)[0];
@@ -3499,18 +3512,19 @@ var KG;
                 };
                 // draw axes
                 if (view.xAxis) {
-                    view.xAxis.update(scope).draw(axes, view.divs, axisDimensions, view.margins);
+                    view.xAxis.update(view.scope).draw(axes, view.divs, axisDimensions, view.margins);
                 }
                 if (view.yAxis) {
-                    view.yAxis.update(scope).draw(axes, view.divs, axisDimensions, view.margins);
+                    view.yAxis.update(view.scope).draw(axes, view.divs, axisDimensions, view.margins);
                 }
             }
             // Establish SVG group for objects that lie above the axes (e.g., points and labels)
             view.unmasked = svg.append('g').attr('transform', visTranslation);
-            return view.drawObjects(scope);
+            return view.drawObjects();
         };
-        View.prototype.drawObjects = function (scope) {
+        View.prototype.drawObjects = function () {
             var view = this;
+            console.log('drawing objects');
             view.objects.forEach(function (object) {
                 if (object instanceof KG.ViewObject) {
                     object.render(view);
@@ -3520,9 +3534,7 @@ var KG;
         };
         View.prototype.addObject = function (newObj) {
             this.objects.push(newObj);
-        };
-        View.prototype.updateParams = function (params) {
-            console.log('updateParams called before scope applied');
+            newObj.createSubObjects(this);
         };
         View.prototype.objectGroup = function (name, init, unmasked) {
             var layer = unmasked ? this.unmasked : this.masked;
@@ -3772,7 +3784,7 @@ var KG;
             definition.bottomGraph.element_id = definition.element_id + '_bottom';
             this.bottomGraph = new KG.Graph(definition.bottomGraph);
         }
-        TwoVerticalGraphs.prototype.redraw = function (scope) {
+        TwoVerticalGraphs.prototype.redraw = function () {
             var view = this;
             // Establish dimensions of the view
             var element = $('#' + view.element_id)[0];
@@ -3788,21 +3800,21 @@ var KG;
             frame.append('div').attr({ 'id': view.bottomGraph.element_id, 'style': bottomGraphTranslation });
             view.topGraph.maxDimensions.height = graphHeight;
             view.bottomGraph.maxDimensions.height = graphHeight;
-            view.topGraph.updateParams = view.updateParams;
-            view.bottomGraph.updateParams = view.updateParams;
-            view.bottomGraph.redraw(scope);
-            view.topGraph.redraw(scope);
-            return view.drawObjects(scope);
+            view.topGraph.scope = view.scope;
+            view.bottomGraph.scope = view.scope;
+            view.bottomGraph.redraw();
+            view.topGraph.redraw();
+            return view.drawObjects();
         };
-        TwoVerticalGraphs.prototype.drawObjects = function (scope) {
+        TwoVerticalGraphs.prototype.drawObjects = function () {
             var view = this;
-            view.topGraph.drawObjects(scope);
-            view.bottomGraph.drawObjects(scope);
+            view.topGraph.drawObjects();
+            view.bottomGraph.drawObjects();
             if (view.hasOwnProperty('objects')) {
                 view.objects.forEach(function (object) { object.createSubObjects(view); });
-                view.objects.forEach(function (object) { object.update(scope).render(view); });
-                view.topGraph.objects.forEach(function (object) { object.update(scope).render(view.topGraph); });
-                view.bottomGraph.objects.forEach(function (object) { object.update(scope).render(view.bottomGraph); });
+                view.objects.forEach(function (object) { object.render(view); });
+                view.topGraph.objects.forEach(function (object) { object.render(view.topGraph); });
+                view.bottomGraph.objects.forEach(function (object) { object.render(view.bottomGraph); });
             }
             return view;
         };
@@ -3840,15 +3852,18 @@ var KG;
     var SliderControl = (function (_super) {
         __extends(SliderControl, _super);
         function SliderControl(definition, modelPath) {
-            definition.xDrag = true;
-            definition.yDrag = false;
-            definition.coordinates = { x: definition.param, y: 0 };
+            definition.interaction = {
+                xDrag: true,
+                xDragParam: definition.param
+            },
+                definition.coordinates = { x: definition.param, y: 0 };
             _super.call(this, definition, modelPath);
             this.viewObjectSVGtype = 'g';
             this.viewObjectClass = 'sliderControl';
         }
         SliderControl.prototype.render = function (view) {
             var control = this;
+            control.update(view.scope);
             var group = view.objectGroup(control.name, control.initGroupFn(), true);
             if (!group) {
                 return view;
@@ -3873,8 +3888,8 @@ var KG;
             controlCircle.attr({
                 'cx': view.xAxis.scale(control.param)
             });
-            control.setDragBehavior(view, controlSquare);
-            control.setDragBehavior(view, controlCircle);
+            control.interactionHandler.setBehavior(view, controlSquare);
+            control.interactionHandler.setBehavior(view, controlCircle);
             return control;
         };
         return SliderControl;
@@ -3975,7 +3990,7 @@ var KG;
             // Updates and redraws interactive objects (graphs and sliders) when a parameter changes
             function render(redraw) {
                 $scope.model.update($scope, function () {
-                    $scope.views.forEach(function (view) { view.render($scope, redraw); });
+                    $scope.views.forEach(function (view) { view.update($scope).render(redraw); });
                     $scope.renderMath();
                 });
             }
@@ -4026,7 +4041,6 @@ var KG;
                 }
             };
             $scope.init(scopeDefinition);
-            render(true);
         }
         return Controller;
     })();
@@ -4371,7 +4385,6 @@ var EconGraphs;
             e.xPercentDiff = e.xDiff / e.xAvg;
             e.yPercentDiff = e.yDiff / e.yAvg;
             e.elasticity = e.xPercentDiff / e.yPercentDiff;
-            console.log('calculating elasticity');
             return e;
         };
         return MidpointElasticity;
@@ -4746,7 +4759,6 @@ var EconGraphs;
                 }
                 else {
                     console.log('Endowment must have x and y properties:');
-                    console.log(definition.endowment);
                 }
             }
             definition.priceRatio = KG.divideDefs(definition.px, definition.py);
@@ -6935,4 +6947,3 @@ angular.module('KineticGraphs', [])
         template: "<button ng-click='toggle()' style='width: 100%'>{{ showHide() }} <span ng-transclude/></button>"
     };
 });
-//# sourceMappingURL=kg-v0.02.js.map

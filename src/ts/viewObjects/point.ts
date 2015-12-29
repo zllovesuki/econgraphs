@@ -52,6 +52,25 @@ module KG
                 symbol: 'circle'
             });
 
+            var subObjectInteraction = _.clone(definition.interaction);
+
+            if(definition.hasOwnProperty('interaction')) {
+                if(definition.interaction.hasOwnProperty('draggable')) {
+                    definition.interaction.xDrag = definition.interaction.draggable;
+                    definition.interaction.yDrag = definition.interaction.draggable;
+                }
+                if(definition.interaction.hasOwnProperty('xDrag')) {
+                    definition.interaction.xDragParam = definition.coordinates.x;
+                }
+                if(definition.interaction.hasOwnProperty('yDrag')) {
+                    definition.interaction.yDragParam = definition.coordinates.y;
+                }
+                if(definition.hasOwnProperty('label') && definition.hasOwnProperty('highlightParam')) {
+                    definition.highlight = definition.highlight || definition.interaction.highlightParam;
+                    definition.interaction.highlightParam = null;
+                }
+            }
+
             super(definition, modelPath);
 
             var point = this;
@@ -61,7 +80,7 @@ module KG
                     name: definition.name + '_label',
                     className: definition.className,
                     coordinates:definition.coordinates,
-                    interaction: definition.interaction,
+                    interaction: subObjectInteraction,
                     show: definition.show
                 });
                 point.labelDiv = new GraphDiv(labelDef);
@@ -72,7 +91,7 @@ module KG
                     point.horizontalDropline = new HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: definition.interaction,
+                        interaction: subObjectInteraction,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
                         show: definition.show
@@ -82,7 +101,7 @@ module KG
                     point.verticalDropline = new VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: definition.interaction,
+                        interaction: subObjectInteraction,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
                         show: definition.show
@@ -92,6 +111,7 @@ module KG
 
             point.viewObjectSVGtype = 'path';
             point.viewObjectClass = 'pointSymbol';
+
         }
 
         createSubObjects(view,scope) {

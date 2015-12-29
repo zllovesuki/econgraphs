@@ -31,11 +31,17 @@ module KG {
 
             if(definition.interaction.hasOwnProperty('draggable')) {
                 if(definition.horizontal) {
-                    definition.interaction.yDrag = definition.draggable;
+                    definition.interaction.yDrag = definition.interaction.draggable;
                     definition.interaction.yDragParam = definition.coordinates.y;
                 } else {
-                    definition.interaction.xDrag = definition.draggable;
+                    definition.interaction.xDrag = definition.interaction.draggable;
                     definition.interaction.xDragParam = definition.coordinates.x;
+                }
+            } else {
+                if(definition.horizontal) {
+                    definition.interaction.xDrag = false;
+                } else {
+                    definition.interaction.yDrag = false;
                 }
             }
 
@@ -74,9 +80,6 @@ module KG {
 
             this.viewObjectSVGtype = 'line';
             this.viewObjectClass = 'dropline';
-
-            console.log('dropline:');
-            console.log(this);
         }
 
         createSubObjects(view,scope) {
@@ -123,7 +126,9 @@ module KG {
     export class VerticalDropline extends Dropline {
 
         constructor(definition, modelPath?: string) {
-            definition.name += '_vDropline';
+            if(definition.name.indexOf('_vDropline') == -1) {
+                definition.name += '_vDropline';
+            }
             definition.horizontal = false;
             super(definition, modelPath);
         }
@@ -132,7 +137,9 @@ module KG {
     export class HorizontalDropline extends Dropline {
 
         constructor(definition, modelPath?: string) {
-            definition.name += '_hDropline';
+            if(definition.name.indexOf('_hDropline') == -1) {
+                definition.name += '_hDropline';
+            }
             definition.horizontal = true;
             super(definition, modelPath);
         }

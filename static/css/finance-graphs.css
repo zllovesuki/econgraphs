@@ -290,11 +290,6 @@ button:hover {
   stroke-width: 3;
   fill: none;
 }
-.highlight {
-  font-weight: bold;
-  stroke-width: 5;
-  background-color: yellow;
-}
 .pointSymbol {
   stroke-width: 3;
 }
@@ -392,6 +387,17 @@ button:hover {
   stroke: #9467bd;
   fill: #9467bd;
   color: #9467bd;
+}
+.highlight {
+  font-weight: bold;
+  stroke-width: 5;
+  background-color: yellow;
+}
+.highlight.dotted {
+  stroke-dasharray: 5,5;
+}
+.highlight.dashed {
+  stroke-dasharray: 15,15;
 }
 .asset {
   color: #1f77b4;

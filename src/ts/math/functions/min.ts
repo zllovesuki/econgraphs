@@ -19,9 +19,7 @@ module KGMath.Functions {
 
             m.minimands = definition.minimandDefs.map(function(fnDef, index){
                 return new KGMath.Functions[fnDef.type](fnDef.def, m.modelProperty('minimands['+index+']'));
-            })
-
-            console.log(m.minimands)
+            });
         }
 
         value(bases?) {

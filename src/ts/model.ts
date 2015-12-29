@@ -52,6 +52,8 @@ module KG
                     }
                 }
             }
+
+            console.log(this);
         }
 
         modelProperty(name) {
@@ -141,7 +143,6 @@ module KG
 
             // Do any model-specific updating
             model = model._update(scope)._calculateValues();
-
 
             if(callback){
                 callback();

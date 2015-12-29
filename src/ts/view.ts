@@ -21,6 +21,8 @@ module KG
     export interface IView extends IModel
     {
 
+        scope: IScope;
+
         show: boolean;
         square: boolean;
 
@@ -40,20 +42,18 @@ module KG
         nearRight: (p:ICoordinates) => boolean;
 
         // render given current scope
-        render: (scope:IScope, redraw:boolean) => void;
-        redraw: (scope:IScope) => void;
-        drawObjects: (scope:IScope) => void;
+        render: (redraw:boolean) => void;
+        redraw: () => void;
+        drawObjects: () => void;
 
         // view objects
         objects: ViewObject[];
-
-        // method to bubble model changes to the controller from user interaction with the view
-        updateParams: (any) => void;
 
     }
 
     export class View extends Model implements IView
     {
+        public scope;
         public show;
         public square;
         public element_id;
@@ -83,43 +83,31 @@ module KG
             if(definition.hasOwnProperty('yAxisDef')){
                 this.yAxis = new YAxis(definition.yAxisDef);
             }
-            /*this.objects = definition.objects.map(function(objectDefinition){
-                if(objectDefinition.hasOwnProperty('type') && objectDefinition.hasOwnProperty('definition')) {
-                    return createInstance(objectDefinition);
-                } else {
-                    return objectDefinition;
-                }
-            })*/
         }
 
         _update(scope) {
             var view = this;
-            view.objects.forEach(function(object) {
-                if(object instanceof Model) {
-                    object.update(scope).createSubObjects(view,scope)
+            view.scope = scope;
+            view.objects.forEach(function(viewObj) {
+                if(viewObj instanceof ViewObject) {
+                    viewObj.createSubObjects(view,scope);
                 }
             });
+            console.log(view.objects);
             return view;
         }
 
-        render(scope, redraw) {
+        render(redraw) {
             var view = this;
-            //console.log('calling update');
-            view.update(scope, function(){
-                //console.log('starting update');
-                view.updateParams = function(params){
-                    scope.updateParams(params)
-                };
-                if(redraw){
-                    view.redraw(scope);
-                } else {
-                    view.drawObjects(scope);
-                }
-                //console.log('finished update')
-            });
+            console.log('calling update');
+            if(redraw){
+                view.redraw();
+            } else {
+                view.drawObjects();
+            }
         }
 
-        redraw(scope) {
+        redraw() {
             var view = this;
 
 
@@ -234,10 +222,10 @@ module KG
 
                 // draw axes
                 if(view.xAxis) {
-                    view.xAxis.update(scope).draw(axes, view.divs, axisDimensions, view.margins);
+                    view.xAxis.update(view.scope).draw(axes, view.divs, axisDimensions, view.margins);
                 }
                 if(view.yAxis) {
-                    view.yAxis.update(scope).draw(axes, view.divs, axisDimensions, view.margins);
+                    view.yAxis.update(view.scope).draw(axes, view.divs, axisDimensions, view.margins);
                 }
 
             }
@@ -245,11 +233,12 @@ module KG
             // Establish SVG group for objects that lie above the axes (e.g., points and labels)
             view.unmasked = svg.append('g').attr('transform', visTranslation);
 
-            return view.drawObjects(scope);
+            return view.drawObjects();
         }
 
-        drawObjects(scope) {
+        drawObjects() {
             var view = this;
+            console.log('drawing objects');
             view.objects.forEach(function(object) {
                 if(object instanceof ViewObject) {
                     object.render(view)
@@ -260,10 +249,7 @@ module KG
 
         addObject(newObj) {
             this.objects.push(newObj);
-        }
-
-        updateParams(params) {
-            console.log('updateParams called before scope applied');
+            newObj.createSubObjects(this);
         }
 
         objectGroup(name, init, unmasked) {

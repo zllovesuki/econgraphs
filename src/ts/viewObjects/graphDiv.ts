@@ -68,8 +68,6 @@ module KG
 
             var divObj = this;
 
-            console.log(divObj);
-
             if(divObj.text instanceof Array) {
                 divObj.text = divObj.text.join('')
             }
@@ -107,8 +105,6 @@ module KG
                 text = divObj.text;
 
             var div = divObj.d3selection(view);
-
-            console.log('drawing div with text', text);
 
             div
                 .style('cursor','default')

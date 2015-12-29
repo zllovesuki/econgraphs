@@ -44,7 +44,6 @@ module EconGraphs {
                     definition.income = KG.addDefs(endowmentValueX,endowmentValueY);
                 } else {
                     console.log('Endowment must have x and y properties:');
-                    console.log(definition.endowment);
                 }
             }
 

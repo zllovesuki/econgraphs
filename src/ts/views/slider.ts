@@ -19,6 +19,7 @@ module KG
     }
 
     export class Slider extends View implements ISlider {
+
         public axisDef;
 
         constructor(definition: SliderDefinition, modelPath?: string) {
@@ -44,8 +45,6 @@ module KG
             return true;
         }
 
-
-
     }
 
     export class SliderControl extends ViewObject {
@@ -53,8 +52,10 @@ module KG
         public param;
 
         constructor(definition, modelPath?: string) {
-            definition.xDrag = true;
-            definition.yDrag = false;
+            definition.interaction = {
+                xDrag: true,
+                xDragParam: definition.param
+            },
             definition.coordinates = {x: definition.param, y:0};
             super(definition, modelPath);
             this.viewObjectSVGtype = 'g';
@@ -64,6 +65,8 @@ module KG
         render(view) {
 
             var control = this;
+
+            control.update(view.scope);
 
             var group:D3.Selection = view.objectGroup(control.name, control.initGroupFn(), true);
 
@@ -98,8 +101,8 @@ module KG
                 'cx': view.xAxis.scale(control.param)
             });
 
-            control.setDragBehavior(view,controlSquare);
-            control.setDragBehavior(view,controlCircle);
+            control.interactionHandler.setBehavior(view,controlSquare);
+            control.interactionHandler.setBehavior(view,controlCircle);
 
             return control;
 

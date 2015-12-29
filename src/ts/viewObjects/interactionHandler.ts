@@ -66,10 +66,6 @@ module KG
                 definition.yDragParam = definition.yDragParam.replace('params.','');
             }
 
-            definition = _.defaults(definition, {
-                highlight: false
-            });
-
             super(definition, modelPath);
 
         }
@@ -95,12 +91,12 @@ module KG
                         if(yAxis && interactionHandler.yDragParam !== null) {
                             dragUpdate[interactionHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
                         }
-                        view.updateParams(dragUpdate);
+                        view.scope.updateParams(dragUpdate);
                     })
                     .on('dragend', function() {
                         var dragUpdate = {};
-                        dragUpdate[interactionHandler.highlightParam] = true;
-                        view.updateParams(dragUpdate);
+                        dragUpdate[interactionHandler.highlightParam] = false;
+                        view.scope.updateParams(dragUpdate);
                     })
             }
 
@@ -126,12 +122,12 @@ module KG
                 selection.on('mouseover', function() {
                     var highlightUpdate = {};
                     highlightUpdate[interactionHandler.highlightParam] = true;
-                    view.updateParams(highlightUpdate);
+                    view.scope.updateParams(highlightUpdate);
                 });
                 selection.on('mouseout', function() {
                     var highlightUpdate = {};
                     highlightUpdate[interactionHandler.highlightParam] = false;
-                    view.updateParams(highlightUpdate);
+                    view.scope.updateParams(highlightUpdate);
                 });
             }
 
