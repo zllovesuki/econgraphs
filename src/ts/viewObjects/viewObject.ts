@@ -81,6 +81,12 @@ module KG
 
         }
 
+        _update(scope) {
+            var viewObj = this;
+            viewObj.interactionHandler.update(scope);
+            return this;
+        }
+
         classAndVisibility() {
             var classString = this.viewObjectClass;
             if(this.className) {
@@ -136,10 +142,12 @@ module KG
         }
 
         initGroupFn() {
-            var viewObjectSVGtype = this.viewObjectSVGtype,
-                viewObjectClass = this.viewObjectClass;
+            var viewObject = this,
+                viewObjectSVGtype = viewObject.viewObjectSVGtype,
+                viewObjectClass = viewObject.viewObjectClass;
             return function(newGroup:D3.Selection) {
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass);
+                newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass + 'Handle')
                 return newGroup;
             }
         }

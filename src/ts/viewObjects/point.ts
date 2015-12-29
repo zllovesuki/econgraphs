@@ -57,10 +57,10 @@ module KG
                     definition.interaction.xDrag = definition.interaction.draggable;
                     definition.interaction.yDrag = definition.interaction.draggable;
                 }
-                if(definition.interaction.hasOwnProperty('xDrag')) {
+                if(definition.interaction.hasOwnProperty('xDrag') && !definition.interaction.hasOwnProperty('xDragParam')) {
                     definition.interaction.xDragParam = definition.coordinates.x;
                 }
-                if(definition.interaction.hasOwnProperty('yDrag')) {
+                if(definition.interaction.hasOwnProperty('yDrag') && !definition.interaction.hasOwnProperty('yDragParam')) {
                     definition.interaction.yDragParam = definition.coordinates.y;
                 }
                 if(definition.hasOwnProperty('label') && definition.hasOwnProperty('highlightParam')) {

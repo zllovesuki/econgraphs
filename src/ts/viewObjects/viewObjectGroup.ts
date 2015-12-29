@@ -23,8 +23,7 @@ module KG {
 
         createSubObjects(view) {
             this.viewObjects.forEach(function(viewObject){
-                view.addObject(viewObject.update(scope));
-                viewObject.createSubObjects(view);
+                view.addObject(viewObject);
             });
             return view;
         }

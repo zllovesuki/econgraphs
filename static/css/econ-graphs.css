@@ -401,6 +401,15 @@ button:hover {
   stroke-width: 3;
   fill: none;
 }
+.drawHandle,
+.segmentHandle,
+.dataPathHandle,
+.lineHandle,
+.curveHandle {
+  stroke-width: 40;
+  fill: none;
+  stroke: transparent;
+}
 .pointSymbol {
   stroke-width: 3;
 }

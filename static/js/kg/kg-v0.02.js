@@ -2128,6 +2128,10 @@ var KG;
                         dragUpdate[interactionHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
                     }
                     view.scope.updateParams(dragUpdate);
+                })
+                    .on('dragend', function () {
+                    d3.event.sourceEvent.preventDefault();
+                    view.scope.updateParams({ highlight: null });
                 });
             }
             function cursor(xDrag, yDrag) {
@@ -2179,6 +2183,11 @@ var KG;
             _super.call(this, definition, modelPath);
             this.interactionHandler = new KG.InteractionHandler(definition.interaction);
         }
+        ViewObject.prototype._update = function (scope) {
+            var viewObj = this;
+            viewObj.interactionHandler.update(scope);
+            return this;
+        };
         ViewObject.prototype.classAndVisibility = function () {
             var classString = this.viewObjectClass;
             if (this.className) {
@@ -2227,15 +2236,36 @@ var KG;
             return view; // overridden by child class
         };
         ViewObject.prototype.initGroupFn = function () {
-            var viewObjectSVGtype = this.viewObjectSVGtype, viewObjectClass = this.viewObjectClass;
+            var viewObject = this, viewObjectSVGtype = viewObject.viewObjectSVGtype, viewObjectClass = viewObject.viewObjectClass;
             return function (newGroup) {
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass);
+                newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass + 'Handle');
                 return newGroup;
             };
         };
         return ViewObject;
     })(KG.Model);
     KG.ViewObject = ViewObject;
+})(KG || (KG = {}));
+/// <reference path="../kg.ts"/>
+'use strict';
+var KG;
+(function (KG) {
+    var ViewObjectWithDomain = (function (_super) {
+        __extends(ViewObjectWithDomain, _super);
+        function ViewObjectWithDomain(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+            var viewObj = this;
+            if (definition.hasOwnProperty('xDomainDef')) {
+                viewObj.xDomain = new KG.Domain(definition.xDomainDef.min, definition.xDomainDef.max);
+            }
+            if (definition.hasOwnProperty('yDomainDef')) {
+                viewObj.yDomain = new KG.Domain(definition.yDomainDef.min, definition.yDomainDef.max);
+            }
+        }
+        return ViewObjectWithDomain;
+    })(KG.ViewObject);
+    KG.ViewObjectWithDomain = ViewObjectWithDomain;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
 'use strict';
@@ -2248,8 +2278,7 @@ var KG;
         }
         ViewObjectGroup.prototype.createSubObjects = function (view) {
             this.viewObjects.forEach(function (viewObject) {
-                view.addObject(viewObject.update(scope));
-                viewObject.createSubObjects(view);
+                view.addObject(viewObject);
             });
             return view;
         };
@@ -2296,10 +2325,10 @@ var KG;
                     definition.interaction.xDrag = definition.interaction.draggable;
                     definition.interaction.yDrag = definition.interaction.draggable;
                 }
-                if (definition.interaction.hasOwnProperty('xDrag')) {
+                if (definition.interaction.hasOwnProperty('xDrag') && !definition.interaction.hasOwnProperty('xDragParam')) {
                     definition.interaction.xDragParam = definition.coordinates.x;
                 }
-                if (definition.interaction.hasOwnProperty('yDrag')) {
+                if (definition.interaction.hasOwnProperty('yDrag') && !definition.interaction.hasOwnProperty('yDragParam')) {
                     definition.interaction.yDragParam = definition.coordinates.y;
                 }
                 if (definition.hasOwnProperty('label') && definition.hasOwnProperty('highlightParam')) {
@@ -2632,7 +2661,6 @@ var KG;
             curve.endPoint = dataCoordinates[dataLength - 1];
             curve.midPoint = KG.medianDataPoint(dataCoordinates);
             var group = view.objectGroup(curve.name, curve.initGroupFn(), false);
-            curve.addArrows(group);
             curve.positionLabel(view);
             var dataLine = d3.svg.line()
                 .interpolate(curve.interpolation)
@@ -2640,6 +2668,7 @@ var KG;
                 .y(function (d) { return d.y; });
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
             var dataPath = group.select(selector);
+            var dragHandle = group.select(selector + 'Handle');
             if (!curve.show) {
                 var element_name = curve.name + '_label';
                 //console.log('removing element ',element_name);
@@ -2650,7 +2679,14 @@ var KG;
                 'class': curve.classAndVisibility(),
                 'd': dataLine(dataCoordinates)
             });
+            curve.addArrows(dataPath);
+            dragHandle
+                .attr({
+                'class': 'curveHandle',
+                'd': dataLine(dataCoordinates)
+            });
             curve.interactionHandler.setBehavior(view, dataPath);
+            curve.interactionHandler.setBehavior(view, dragHandle);
             return view;
         };
         Curve.LABEL_POSITION_MIDDLE = 'MIDDLE';
@@ -2659,7 +2695,7 @@ var KG;
         Curve.END_ARROW_STRING = 'END';
         Curve.BOTH_ARROW_STRING = 'BOTH';
         return Curve;
-    })(KG.ViewObject);
+    })(KG.ViewObjectWithDomain);
     KG.Curve = Curve;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2949,12 +2985,19 @@ var KG;
                     .x(function (d) { return view.xAxis.scale(d.x); })
                     .y(function (d) { return view.yAxis.scale(d.y); });
                 var lineSelection = group.select('.' + line.viewObjectClass);
+                var lineHandle = group.select('.' + line.viewObjectClass + 'Handle');
                 lineSelection
                     .attr({
                     'class': line.classAndVisibility(),
                     'd': dataLine([startPoint, endPoint])
                 });
+                lineHandle
+                    .attr({
+                    'class': 'lineHandle',
+                    'd': dataLine([startPoint, endPoint])
+                });
                 line.interactionHandler.setBehavior(view, lineSelection);
+                line.interactionHandler.setBehavior(view, lineHandle);
                 return view;
             }
         };
@@ -3250,7 +3293,6 @@ var KG;
         function FunctionMap(definition, modelPath) {
             definition = _.defaults(definition, { interpolation: 'basis', numSamplePoints: 51 });
             _super.call(this, definition, modelPath);
-            var fmap = this;
         }
         FunctionMap.prototype._update = function (scope) {
             var fmap = this;
@@ -3263,9 +3305,10 @@ var KG;
             fmap.levels.forEach(function (level, index) {
                 var curve = new KG.FunctionPlot({
                     name: fmap.name + '_' + index,
+                    className: fmap.className,
                     fn: fmap.fn.setLevel(level)
                 });
-                var updatedCurve = curve.update(scope);
+                var updatedCurve = curve;
                 view.addObject(updatedCurve);
             });
             return view;
@@ -3430,13 +3473,11 @@ var KG;
             var svg = frame.append('svg')
                 .attr('width', view.dimensions.width)
                 .attr('height', view.dimensions.height);
-            svg.on('mouseover', function () {
-                console.log('remove!');
+            function removeHighlight() {
                 if (view.scope.params.highlight != null) {
-                    console.log('something is highlighted!');
                     view.scope.updateParams({ highlight: null });
                 }
-            });
+            }
             // Establish marker style for arrow
             var markerParameters = [
                 {
@@ -3477,10 +3518,14 @@ var KG;
                 var mask = svg.append('g').attr('class', 'mask');
                 // Put mask around vis to clip objects that extend beyond the desired viewable area
                 var maskBorder = 5;
-                mask.append('rect').attr({ x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill: view.background }); // top
-                mask.append('rect').attr({ x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill: view.background }); // bottom
-                mask.append('rect').attr({ x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill: view.background }); // left
-                mask.append('rect').attr({ x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill: view.background }); // right
+                var topMask = mask.append('rect').attr({ x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill: view.background });
+                var bottomMask = mask.append('rect').attr({ x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill: view.background });
+                var leftMask = mask.append('rect').attr({ x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill: view.background });
+                var rightMask = mask.append('rect').attr({ x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill: view.background });
+                topMask.on('mouseover', removeHighlight);
+                bottomMask.on('mouseover', removeHighlight);
+                leftMask.on('mouseover', removeHighlight);
+                rightMask.on('mouseover', removeHighlight);
             }
             if (view.xAxis || view.yAxis) {
                 // Establish SVG group for axes
@@ -3513,8 +3558,22 @@ var KG;
             return view;
         };
         View.prototype.addObject = function (newObj) {
-            this.objects.push(newObj);
-            newObj.createSubObjects(this);
+            console.log('evaluating ', newObj);
+            var view = this;
+            if (newObj instanceof KG.ViewObject) {
+                view.objects.push(newObj);
+            }
+            else if (typeof newObj == 'string') {
+                newObj = view.scope.$eval(newObj);
+                if (newObj instanceof KG.ViewObject) {
+                    view.objects.push(newObj);
+                }
+                else {
+                    console.log("tried to add something that wasn't a view object!");
+                }
+            }
+            console.log(newObj);
+            newObj.createSubObjects(view);
         };
         View.prototype.objectGroup = function (name, init, unmasked) {
             var layer = unmasked ? this.unmasked : this.masked;
@@ -5351,54 +5410,16 @@ var EconGraphs;
         TwoGoodUtility.prototype.mrs = function (bundle) {
             return this.mux(bundle) / this.muy(bundle);
         };
-        TwoGoodUtility.prototype.mrsLine = function (bundle, params) {
-            var u = this;
-            return new KG.Line({
-                name: 'mrsLine',
-                className: 'utility dotted',
-                lineDef: {
-                    point: bundle,
-                    slope: -1 * u.mrs(bundle)
-                },
-                params: params
-            });
-        };
-        TwoGoodUtility.prototype.bundlePoint = function (bundle, params) {
-            return new KG.Point({
-                coordinates: { x: bundle.x, y: bundle.y },
-                name: 'bundlePoint',
-                className: 'utility',
-                params: params
-            });
-        };
         /* Indifference curves */
-        TwoGoodUtility.prototype.indifferenceCurveAtUtility = function (utility, params, map) {
-            var u = this, originalLevel = u.utilityFunction.level;
-            var clone = _.clone(u.utilityFunction);
-            var indifferenceCurve = new KG.FunctionPlot({
-                name: 'indifferenceCurve',
-                fn: clone.setLevel(utility),
-                className: map ? 'dataPathFamily' : 'utility',
-                params: params
-            });
-            u.utilityFunction.setLevel(originalLevel);
-            return indifferenceCurve;
-        };
-        TwoGoodUtility.prototype.indifferenceCurveThroughBundle = function (bundle, params) {
-            var u = this, utility = u.utility(bundle);
-            return u.indifferenceCurveAtUtility(utility, params);
-        };
-        TwoGoodUtility.prototype.indifferenceCurveFamily = function (levels, params) {
+        TwoGoodUtility.prototype.indifferenceCurveAtUtilityFn = function (utility) {
             var u = this;
-            var indifferenceCurves = [];
-            params = _.defaults(params, {
-                name: 'map'
-            });
-            levels.forEach(function (level) {
-                params.objectName = "U" + level;
-                indifferenceCurves.push(u.modelProperty("indifferenceCurveAtUtility(" + level + "," + JSON.stringify(params) + ",true)"));
-            });
-            return new KG.ViewObjectGroup({ name: 'indifferenceCurve_' + params.name, viewObjects: indifferenceCurves });
+            var clone = _.clone(u.utilityFunction);
+            clone.setLevel(utility);
+            return clone;
+        };
+        TwoGoodUtility.prototype.indifferenceCurveThroughBundleFn = function (bundle) {
+            var u = this, utility = u.utility(bundle);
+            return u.indifferenceCurveAtUtilityFn(utility);
         };
         /* Utility maximization subject to a budget constraint */
         TwoGoodUtility.prototype._unconstrainedOptimalX = function (budgetSegment) {
@@ -6853,6 +6874,7 @@ var PhysicsGraphs;
 /// <reference path="math/math.ts" />
 /// <reference path="viewObjects/interactionHandler.ts"/>
 /// <reference path="viewObjects/viewObject.ts"/>
+/// <reference path="viewObjects/viewObjectWithDomain.ts"/>
 /// <reference path="viewObjects/viewObjectGroup.ts"/>
 /// <reference path="viewObjects/point.ts"/>
 /// <reference path="viewObjects/dropline.ts"/>

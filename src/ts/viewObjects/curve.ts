@@ -4,7 +4,7 @@
 
 module KG {
 
-    export interface CurveDefinition extends ViewObjectDefinition {
+    export interface CurveDefinition extends ViewObjectWithDomainDefinition {
         data?: any;
         interpolation?: string;
         label?: GraphDivDefinition;
@@ -12,7 +12,7 @@ module KG {
         arrows?: string;
     }
 
-    export interface ICurve extends IViewObject {
+    export interface ICurve extends IViewObjectWithDomain {
 
         data: ICoordinates[];
         interpolation: string;
@@ -36,7 +36,7 @@ module KG {
         BOTH_ARROW_STRING: string;
     }
 
-    export class Curve extends ViewObject implements ICurve {
+    export class Curve extends ViewObjectWithDomain implements ICurve {
 
         public data;
         public startPoint;
@@ -171,7 +171,7 @@ module KG {
 
             var group:D3.Selection = view.objectGroup(curve.name, curve.initGroupFn(), false);
 
-            curve.addArrows(group);
+
             curve.positionLabel(view);
 
             var dataLine = d3.svg.line()
@@ -183,6 +183,7 @@ module KG {
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
 
             var dataPath:D3.Selection = group.select(selector);
+            var dragHandle:D3.Selection = group.select(selector+'Handle');
 
             if(!curve.show) {
                 var element_name = curve.name+'_label';
@@ -196,7 +197,16 @@ module KG {
                     'd': dataLine(dataCoordinates)
                 });
 
+            curve.addArrows(dataPath);
+
+            dragHandle
+                .attr({
+                    'class': 'curveHandle',
+                    'd': dataLine(dataCoordinates)
+                });
+
             curve.interactionHandler.setBehavior(view,dataPath);
+            curve.interactionHandler.setBehavior(view,dragHandle);
 
             return view;
         }

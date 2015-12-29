@@ -14,6 +14,7 @@
 
 /// <reference path="viewObjects/interactionHandler.ts"/>
 /// <reference path="viewObjects/viewObject.ts"/>
+/// <reference path="viewObjects/viewObjectWithDomain.ts"/>
 /// <reference path="viewObjects/viewObjectGroup.ts"/>
 /// <reference path="viewObjects/point.ts"/>
 /// <reference path="viewObjects/dropline.ts"/>

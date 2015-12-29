@@ -49,7 +49,9 @@
                     </div>
                 </div>
                 <div ng-show="model.utility.type == 'Linear'">Note: assumes buy only Y if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
-                {% endraw %}
+                <hr/>
+                <div class="math">x = {{ params.x }}</div>{% endraw %}
+
                 <hr/>
                 <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
                     <option value="CobbDouglas">Cobb-Douglas</option>
@@ -254,13 +256,14 @@
                         name: 'BL',
                         className: 'budget',
                         linear: 'model.budget.budgetSegments[0].linear',
-                        highlightParam: 'highlightBudget',
-                        highlight: 'params.highlightBudget',
-                        params: {
-                            label: 'BL',
-                            xInterceptLabel: "\\frac{I}{P_x}",
-                            yInterceptLabel: "\\frac{I}{P_y}"
-                        }
+                        interaction: {
+                            highlightParam: 'budget'
+                        },
+                        label: {
+                            text: 'BL'
+                        },
+                        xInterceptLabel: "\\frac{I}{P_x}",
+                        yInterceptLabel: "\\frac{I}{P_y}"
                     }
                 },
                 bundlePoint = {
@@ -272,14 +275,13 @@
                             x: 'model.bundle.x',
                             y: 'model.bundle.y'
                         },
-                        xDrag: '!params.snapToOptimal',
-                        xDragParam: 'x',
-                        highlightParam: 'highlightBundle',
-                        highlight: 'params.highlightBundle',
-                        params: {
-                            xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
-                            yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
-                        }
+                        interaction: {
+                            xDrag: '!params.snapToOptimal',
+                            xDragParam: 'x',
+                            highlightParam: 'bundle'
+                        },
+                        xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
+                        yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
                     }
                 },
                 indifferenceCurve = {
@@ -287,12 +289,34 @@
                     definition: {
                         name: 'indifference_curve',
                         className: 'utility',
-                        highlightParam: 'highlightUtility',
-                        highlight: 'params.highlightUtility',
-                        params: {label: 'params.snapToOptimal ? "U^*" : "U"'},
-                        fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))"
+                        fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))",
+                        interaction: {
+                            highlightParam: 'utility'
+                        },
+                        label: {
+                            text: 'params.snapToOptimal ? "U^*" : "U"'
+                        }
                     }
                 },
+                indifferenceCurveMap = [5,10,15,20,25,30,35,40].map(function(level) {
+                    return {
+                        type: 'KG.FunctionPlot',
+                        definition: {
+                            name: 'indifference_curve_'+level,
+                            className: 'dataPathFamily',
+                            fn: "model.utility.indifferenceCurveAtUtilityFn(" + level + ")",
+                            interaction: {
+                                highlightParam: 'indifferenceMap' + level
+                            },
+                            show: 'params.showMap',
+                            label: {
+                                text: ['U =',level],
+                                show: 'params.highlight.indifferenceMap' + level
+                            }
+                        }
+                    }
+
+                }),
                 MRSline = {
                     type: 'KG.Line',
                     definition: {
@@ -326,8 +350,8 @@
                         className: 'demand',
                         interpolation: 'basis',
                         labelPosition: 'START',
-                        params: {
-                            label: 'PCC_x'
+                        label: {
+                            text: 'PCC_x'
                         }
                     }
                 },
@@ -340,8 +364,8 @@
                         className: 'demand',
                         interpolation: 'basis',
                         labelPosition: 'START',
-                        params: {
-                            label: 'PCC_y'
+                        label: {
+                            text: 'PCC_y'
                         }
                     }
                 },
@@ -353,8 +377,8 @@
                         data: 'model.incomeConsumptionCurveData()',
                         className: 'engel',
                         interpolation: 'basis',
-                        params: {
-                            label: 'ICC'
+                        label: {
+                            text: 'ICC'
                         }
                     }
                 }

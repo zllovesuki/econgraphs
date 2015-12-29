@@ -299,6 +299,7 @@ module KG {
                     .y(function (d) { return view.yAxis.scale(d.y) });
 
                 var lineSelection:D3.Selection = group.select('.'+ line.viewObjectClass);
+                var lineHandle:D3.Selection = group.select('.'+ line.viewObjectClass + 'Handle');
 
                 lineSelection
                     .attr({
@@ -306,7 +307,14 @@ module KG {
                         'd': dataLine([startPoint,endPoint])
                     });
 
+                lineHandle
+                    .attr({
+                        'class': 'lineHandle',
+                        'd': dataLine([startPoint,endPoint])
+                    });
+
                 line.interactionHandler.setBehavior(view,lineSelection);
+                line.interactionHandler.setBehavior(view,lineHandle);
                 return view;
             }
 

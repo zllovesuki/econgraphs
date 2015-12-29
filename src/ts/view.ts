@@ -161,13 +161,13 @@ module KG
                 .attr('width', view.dimensions.width)
                 .attr('height', view.dimensions.height);
 
-            svg.on('mouseover',function(){
-                console.log('remove!');
+            function removeHighlight(){
                 if(view.scope.params.highlight != null) {
-                    console.log('something is highlighted!')
                     view.scope.updateParams({highlight: null});
                 }
-            });
+            }
+
+
 
             // Establish marker style for arrow
             var markerParameters = [
@@ -219,10 +219,15 @@ module KG
 
                 var maskBorder = 5;
 
-                mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill:view.background}); // top
-                mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill:view.background}); // bottom
-                mask.append('rect').attr({x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill:view.background}); // left
-                mask.append('rect').attr({x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill:view.background}); // right
+                var topMask = mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill:view.background});
+                var bottomMask = mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill:view.background});
+                var leftMask = mask.append('rect').attr({x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill:view.background});
+                var rightMask = mask.append('rect').attr({x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill:view.background});
+
+                topMask.on('mouseover',removeHighlight);
+                bottomMask.on('mouseover',removeHighlight);
+                leftMask.on('mouseover',removeHighlight);
+                rightMask.on('mouseover',removeHighlight);
 
             }
 
@@ -265,8 +270,20 @@ module KG
         }
 
         addObject(newObj) {
-            this.objects.push(newObj);
-            newObj.createSubObjects(this);
+            console.log('evaluating ',newObj)
+            var view = this;
+            if(newObj instanceof ViewObject) {
+                view.objects.push(newObj);
+            } else if(typeof newObj == 'string') {
+                newObj = view.scope.$eval(newObj);
+                if(newObj instanceof ViewObject) {
+                    view.objects.push(newObj);
+                } else {
+                    console.log ("tried to add something that wasn't a view object!")
+                }
+            }
+            console.log(newObj);
+            newObj.createSubObjects(view);
         }
 
         objectGroup(name, init, unmasked) {

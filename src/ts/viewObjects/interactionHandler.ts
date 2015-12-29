@@ -93,6 +93,10 @@ module KG
                         }
                         view.scope.updateParams(dragUpdate);
                     })
+                    .on('dragend', function() {
+                        d3.event.sourceEvent.preventDefault();
+                        view.scope.updateParams({highlight: null});
+                    })
             }
 
             function cursor(xDrag, yDrag) {

@@ -27,9 +27,6 @@ module KG {
         constructor(definition:FunctionMapDefinition, modelPath?: string) {
             definition = _.defaults(definition, {interpolation: 'basis', numSamplePoints: 51});
             super(definition, modelPath);
-
-            var fmap = this;
-
         }
 
         _update(scope) {
@@ -43,12 +40,14 @@ module KG {
             var fmap = this;
 
             fmap.levels.forEach(function(level,index) {
-                var curve = new KG.FunctionPlot({
-                    name: fmap.name + '_' + index,
-                    fn: fmap.fn.setLevel(level)
-                });
-                var updatedCurve = curve.update(scope);
-                view.addObject(updatedCurve)
+                var curve = new KG.FunctionPlot(
+                    {
+                        name: fmap.name + '_' + index,
+                        className: fmap.className,
+                        fn: fmap.fn.setLevel(level)
+                    });
+                var updatedCurve = curve;
+                view.addObject(updatedCurve);
             });
 
             return view;
