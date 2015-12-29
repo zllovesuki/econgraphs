@@ -27,6 +27,7 @@ module KG
         error: string;
         interpolate: any;
         color: (className:string) => string;
+        updateVersion: number;
     }
 
     export class Controller
@@ -34,6 +35,8 @@ module KG
 
         constructor(public $scope:IScope, public $interpolate, $window:ng.IWindowService)
         {
+
+            $scope.updateVersion = 0;
 
             $scope.interpolate = $interpolate;
 
@@ -128,6 +131,8 @@ module KG
 
             // Updates and redraws interactive objects (graphs and sliders) when a parameter changes
             function render(redraw) {
+                $scope.updateVersion++;
+                console.log('Updating scope to version ',$scope.updateVersion);
                 $scope.model.update($scope, function(){
                     $scope.views.forEach(function(view) {view.update($scope).render(redraw)});
                     $scope.renderMath();

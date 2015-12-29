@@ -16,7 +16,8 @@ module KG
 
     export interface IModel
     {
-        definition;
+        definition: ModelDefinition;
+        updateVersion: number;
         params: any;
         modelPath: string;
         modelProperty: (name:string) => string;
@@ -33,7 +34,8 @@ module KG
     export class Model implements IModel
     {
 
-        public selector: Selector;
+        public updateVersion;
+        public selector;
         public params;
 
         constructor(public definition:ModelDefinition, public modelPath?: string) {
@@ -53,7 +55,7 @@ module KG
                 }
             }
 
-            console.log(this);
+            console.log('instantiating new ',this);
         }
 
         modelProperty(name) {
@@ -85,6 +87,14 @@ module KG
         // Update the model
         update(scope, callback?) {
 
+            if(scope.updateVersion == this.updateVersion) {
+                return this;
+            } else {
+                this.updateVersion = scope.updateVersion;
+            }
+
+            console.log('updating ',this);
+
             var model = this;
 
             if(model.hasOwnProperty('selector')) {
@@ -93,13 +103,21 @@ module KG
 
             // Iterates over an object's definition, getting the current value of each property
             function parseObject(def, obj?) {
+
+                function skip(keyName) {
+                    var skippedNames = ['objects'];
+                    return skippedNames.indexOf(keyName) > -1;
+                }
+
                 obj = obj || {};
                 if(def.hasOwnProperty('type') && def.hasOwnProperty('definition')) {
-                    return KG.createInstance(def).update(scope);
+                    return KG.createInstance(def);
                 }
                 for(var key in def) {
                     if(def.hasOwnProperty(key)) {
-                        if(obj[key] instanceof KG.Selector) {
+                        if(skip(key)) {
+                            console.log('not updating ',key, ' within Model.update(scope)')
+                        } else if(obj[key] instanceof KG.Selector) {
                             obj[key] = obj[key].update(scope);
                         } else if(obj[key] instanceof KG.Model) {
                             // if the property is itself a model, update the model

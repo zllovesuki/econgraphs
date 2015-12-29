@@ -77,31 +77,35 @@ module KG
                 square: false
             });
             super(definition, modelPath);
+            var view = this;
             if(definition.hasOwnProperty('xAxisDef')){
                 this.xAxis = new XAxis(definition.xAxisDef);
             }
             if(definition.hasOwnProperty('yAxisDef')){
                 this.yAxis = new YAxis(definition.yAxisDef);
             }
+            console.log('initialized view with objects', view.objects);
+            view.objects.forEach(function(viewObj,index) {
+                if(viewObj instanceof ViewObject) {
+                    viewObj.createSubObjects(view);
+                } else if(viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
+                    var newViewObj:ViewObject = createInstance(viewObj,modelPath + '['+index+']');
+                    view.objects[index] = newViewObj;
+                    newViewObj.createSubObjects(view);
+                }
+            });
+            console.log('added additional objects to view', view.objects)
+
+
         }
 
         _update(scope) {
             var view = this;
             view.scope = scope;
-            var initialObjectsLength = view.objects.length;
-            view.objects.forEach(function(viewObj) {
-                if(viewObj instanceof ViewObject) {
-                    viewObj.createSubObjects(view);
-                }
-            });
-            console.log(view.objects);
-            for(var i = initialObjectsLength; i < view.objects.length; i++) {
-                if(view.objects[i] instanceof Model) {
-                    view.objects[i].update(scope);
-                }
-            };
+            console.log('updating objects ',view.objects);
             view.objects.forEach(function(viewObj) {
                 viewObj.view = view;
+                view.objects.forEach(function(viewObj) {return viewObj.update(scope)});
             });
             return view;
         }

@@ -360,7 +360,7 @@ var KG;
                     }
                 }
             }
-            console.log(this);
+            console.log('instantiating new ', this);
         }
         Model.prototype.modelProperty = function (name) {
             return this.modelPath + '.' + name;
@@ -390,19 +390,33 @@ var KG;
         };
         // Update the model
         Model.prototype.update = function (scope, callback) {
+            if (scope.updateVersion == this.updateVersion) {
+                return this;
+            }
+            else {
+                this.updateVersion = scope.updateVersion;
+            }
+            console.log('updating ', this);
             var model = this;
             if (model.hasOwnProperty('selector')) {
                 return model.selector.update(scope, callback);
             }
             // Iterates over an object's definition, getting the current value of each property
             function parseObject(def, obj) {
+                function skip(keyName) {
+                    var skippedNames = ['objects'];
+                    return skippedNames.indexOf(keyName) > -1;
+                }
                 obj = obj || {};
                 if (def.hasOwnProperty('type') && def.hasOwnProperty('definition')) {
-                    return KG.createInstance(def).update(scope);
+                    return KG.createInstance(def);
                 }
                 for (var key in def) {
                     if (def.hasOwnProperty(key)) {
-                        if (obj[key] instanceof KG.Selector) {
+                        if (skip(key)) {
+                            console.log('not updating ', key, ' within Model.update(scope)');
+                        }
+                        else if (obj[key] instanceof KG.Selector) {
                             obj[key] = obj[key].update(scope);
                         }
                         else if (obj[key] instanceof KG.Model) {
@@ -2688,8 +2702,8 @@ var KG;
     var Arrow = (function (_super) {
         __extends(Arrow, _super);
         function Arrow(definition, modelPath) {
-            definition.a = definition.begin;
-            definition.b = definition.end;
+            definition.a = { x: definition.begin.x, y: definition.begin.y };
+            definition.b = { x: definition.end.x, y: definition.end.y };
             definition.arrows = KG.Curve.END_ARROW_STRING;
             _super.call(this, definition, modelPath);
             this.viewObjectClass = 'arrow';
@@ -3358,31 +3372,33 @@ var KG;
                 square: false
             });
             _super.call(this, definition, modelPath);
+            var view = this;
             if (definition.hasOwnProperty('xAxisDef')) {
                 this.xAxis = new KG.XAxis(definition.xAxisDef);
             }
             if (definition.hasOwnProperty('yAxisDef')) {
                 this.yAxis = new KG.YAxis(definition.yAxisDef);
             }
+            console.log('initialized view with objects', view.objects);
+            view.objects.forEach(function (viewObj, index) {
+                if (viewObj instanceof KG.ViewObject) {
+                    viewObj.createSubObjects(view);
+                }
+                else if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
+                    var newViewObj = KG.createInstance(viewObj, modelPath + '[' + index + ']');
+                    view.objects[index] = newViewObj;
+                    newViewObj.createSubObjects(view);
+                }
+            });
+            console.log('added additional objects to view', view.objects);
         }
         View.prototype._update = function (scope) {
             var view = this;
             view.scope = scope;
-            var initialObjectsLength = view.objects.length;
-            view.objects.forEach(function (viewObj) {
-                if (viewObj instanceof KG.ViewObject) {
-                    viewObj.createSubObjects(view);
-                }
-            });
-            console.log(view.objects);
-            for (var i = initialObjectsLength; i < view.objects.length; i++) {
-                if (view.objects[i] instanceof KG.Model) {
-                    view.objects[i].update(scope);
-                }
-            }
-            ;
+            console.log('updating objects ', view.objects);
             view.objects.forEach(function (viewObj) {
                 viewObj.view = view;
+                view.objects.forEach(function (viewObj) { return viewObj.update(scope); });
             });
             return view;
         };
@@ -3899,6 +3915,7 @@ var KG;
         function Controller($scope, $interpolate, $window) {
             this.$scope = $scope;
             this.$interpolate = $interpolate;
+            $scope.updateVersion = 0;
             $scope.interpolate = $interpolate;
             $scope.color = function (className) {
                 return KG.colorForClassName(className);
@@ -3984,6 +4001,8 @@ var KG;
             };
             // Updates and redraws interactive objects (graphs and sliders) when a parameter changes
             function render(redraw) {
+                $scope.updateVersion++;
+                console.log('Updating scope to version ', $scope.updateVersion);
                 $scope.model.update($scope, function () {
                     $scope.views.forEach(function (view) { view.update($scope).render(redraw); });
                     $scope.renderMath();
@@ -4394,21 +4413,6 @@ var EconGraphs;
         __extends(PointElasticity, _super);
         function PointElasticity(definition, modelPath) {
             _super.call(this, definition, modelPath);
-            this.pointView = new KG.Point({
-                name: 'point',
-                coordinates: definition.point,
-                size: 500,
-                xDrag: true,
-                yDrag: true,
-                droplines: {
-                    horizontal: 'P',
-                    vertical: 'Q'
-                }
-            });
-            this.line = new KGMath.Functions.Linear({
-                point: definition.point,
-                slope: definition.slope
-            });
         }
         PointElasticity.prototype._calculateElasticity = function (inputs) {
             var e = this;

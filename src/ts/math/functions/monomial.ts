@@ -24,7 +24,6 @@ module KGMath.Functions {
         setPowers: (powers: number[]) => any;
         bases: number[];
         value: (bases?: number[]) => number;
-        levelCurve: (n:number, level?:number) => Monomial;
         derivative: (n:number) => Monomial;
         average: (n:number) => Monomial;
         multiply: (x: number) => Monomial;
