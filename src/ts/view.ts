@@ -94,6 +94,9 @@ module KG
                 }
             });
             console.log(view.objects);
+            view.objects.forEach(function(viewObj) {
+                viewObj.view = view;
+            });
             return view;
         }
 
@@ -151,6 +154,14 @@ module KG
             var svg = frame.append('svg')
                 .attr('width', view.dimensions.width)
                 .attr('height', view.dimensions.height);
+
+            svg.on('mouseover',function(){
+                console.log('remove!');
+                if(view.scope.params.highlight != null) {
+                    console.log('something is highlighted!')
+                    view.scope.updateParams({highlight: null});
+                }
+            });
 
             // Establish marker style for arrow
             var markerParameters = [

@@ -17,6 +17,9 @@ module KG
 
     export interface IViewObject extends IModel
     {
+
+        view: View;
+
         // identifiers
         name: string;
         objectName?: string;
@@ -42,6 +45,8 @@ module KG
 
     export class ViewObject extends Model implements IViewObject
     {
+
+        public view;
 
         public show;
         public className;
@@ -86,8 +91,10 @@ module KG
             } else {
                 classString += ' invisible';
             }
-            if(this.highlight == true) {
-                classString += ' highlight';
+            if(this.view && this.view.scope && this.view.scope.params.highlight) {
+                if(this.interactionHandler.highlightParam == this.view.scope.params.highlight) {
+                    classString += ' highlight';
+                }
             }
             if(this.hasOwnProperty('objectName')) {
                 classString += ' ' + this.objectName

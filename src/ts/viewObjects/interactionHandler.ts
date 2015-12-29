@@ -81,7 +81,7 @@ module KG
                     .on('drag', function () {
                         d3.event.sourceEvent.preventDefault();
                         var dragUpdate = {};
-                        dragUpdate[interactionHandler.highlightParam] = true;
+                        view.scope.updateParams({highlight: interactionHandler.highlightParam});
                         var relativeElement = view.unmasked[0][0],
                             mouseX = d3.mouse(relativeElement)[0],
                             mouseY = d3.mouse(relativeElement)[1];
@@ -91,11 +91,6 @@ module KG
                         if(yAxis && interactionHandler.yDragParam !== null) {
                             dragUpdate[interactionHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
                         }
-                        view.scope.updateParams(dragUpdate);
-                    })
-                    .on('dragend', function() {
-                        var dragUpdate = {};
-                        dragUpdate[interactionHandler.highlightParam] = false;
                         view.scope.updateParams(dragUpdate);
                     })
             }
@@ -120,14 +115,7 @@ module KG
 
             if(interactionHandler.hasOwnProperty('highlightParam')) {
                 selection.on('mouseover', function() {
-                    var highlightUpdate = {};
-                    highlightUpdate[interactionHandler.highlightParam] = true;
-                    view.scope.updateParams(highlightUpdate);
-                });
-                selection.on('mouseout', function() {
-                    var highlightUpdate = {};
-                    highlightUpdate[interactionHandler.highlightParam] = false;
-                    view.scope.updateParams(highlightUpdate);
+                    view.scope.updateParams({highlight: interactionHandler.highlightParam});
                 });
             }
 

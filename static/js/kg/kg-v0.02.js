@@ -2119,7 +2119,7 @@ var KG;
                     .on('drag', function () {
                     d3.event.sourceEvent.preventDefault();
                     var dragUpdate = {};
-                    dragUpdate[interactionHandler.highlightParam] = true;
+                    view.scope.updateParams({ highlight: interactionHandler.highlightParam });
                     var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
                     if (xAxis && interactionHandler.xDragParam !== null) {
                         dragUpdate[interactionHandler.xDragParam] = xAxis.domain.closestValueTo(xAxis.scale.invert(mouseX));
@@ -2127,11 +2127,6 @@ var KG;
                     if (yAxis && interactionHandler.yDragParam !== null) {
                         dragUpdate[interactionHandler.yDragParam] = yAxis.domain.closestValueTo(yAxis.scale.invert(mouseY));
                     }
-                    view.scope.updateParams(dragUpdate);
-                })
-                    .on('dragend', function () {
-                    var dragUpdate = {};
-                    dragUpdate[interactionHandler.highlightParam] = false;
                     view.scope.updateParams(dragUpdate);
                 });
             }
@@ -2155,14 +2150,7 @@ var KG;
             }
             if (interactionHandler.hasOwnProperty('highlightParam')) {
                 selection.on('mouseover', function () {
-                    var highlightUpdate = {};
-                    highlightUpdate[interactionHandler.highlightParam] = true;
-                    view.scope.updateParams(highlightUpdate);
-                });
-                selection.on('mouseout', function () {
-                    var highlightUpdate = {};
-                    highlightUpdate[interactionHandler.highlightParam] = false;
-                    view.scope.updateParams(highlightUpdate);
+                    view.scope.updateParams({ highlight: interactionHandler.highlightParam });
                 });
             }
             return view;
@@ -2202,8 +2190,10 @@ var KG;
             else {
                 classString += ' invisible';
             }
-            if (this.highlight == true) {
-                classString += ' highlight';
+            if (this.view && this.view.scope && this.view.scope.params.highlight) {
+                if (this.interactionHandler.highlightParam == this.view.scope.params.highlight) {
+                    classString += ' highlight';
+                }
             }
             if (this.hasOwnProperty('objectName')) {
                 classString += ' ' + this.objectName;
@@ -2301,7 +2291,6 @@ var KG;
                 size: defaultSize,
                 symbol: 'circle'
             });
-            var subObjectInteraction = _.clone(definition.interaction);
             if (definition.hasOwnProperty('interaction')) {
                 if (definition.interaction.hasOwnProperty('draggable')) {
                     definition.interaction.xDrag = definition.interaction.draggable;
@@ -2325,7 +2314,7 @@ var KG;
                     name: definition.name + '_label',
                     className: definition.className,
                     coordinates: definition.coordinates,
-                    interaction: subObjectInteraction,
+                    interaction: definition.interaction,
                     show: definition.show
                 });
                 point.labelDiv = new KG.GraphDiv(labelDef);
@@ -2335,7 +2324,7 @@ var KG;
                     point.horizontalDropline = new KG.HorizontalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: subObjectInteraction,
+                        interaction: definition.interaction,
                         axisLabel: definition.droplines.horizontal,
                         className: definition.className,
                         show: definition.show
@@ -2345,7 +2334,7 @@ var KG;
                     point.verticalDropline = new KG.VerticalDropline({
                         name: definition.name,
                         coordinates: definition.coordinates,
-                        interaction: subObjectInteraction,
+                        interaction: definition.interaction,
                         axisLabel: definition.droplines.vertical,
                         className: definition.className,
                         show: definition.show
@@ -3412,6 +3401,9 @@ var KG;
                 }
             });
             console.log(view.objects);
+            view.objects.forEach(function (viewObj) {
+                viewObj.view = view;
+            });
             return view;
         };
         View.prototype.render = function (redraw) {
@@ -3457,6 +3449,13 @@ var KG;
             var svg = frame.append('svg')
                 .attr('width', view.dimensions.width)
                 .attr('height', view.dimensions.height);
+            svg.on('mouseover', function () {
+                console.log('remove!');
+                if (view.scope.params.highlight != null) {
+                    console.log('something is highlighted!');
+                    view.scope.updateParams({ highlight: null });
+                }
+            });
             // Establish marker style for arrow
             var markerParameters = [
                 {
