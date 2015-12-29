@@ -54,6 +54,7 @@ module EconGraphs {
                     y: d.budget.yValue(d.x)
                 }
             }
+            console.log('updated bundle to (',d.bundle.x,',',d.bundle.y,')');
             return d;
         }
 

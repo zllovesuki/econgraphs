@@ -420,8 +420,12 @@ var KG;
                             obj[key] = obj[key].update(scope);
                         }
                         else if (obj[key] instanceof KG.Model) {
-                            // if the property is itself a model, update the model
-                            obj[key].update(scope);
+                            if (typeof def[key] != 'string') {
+                                obj[key].update(scope);
+                            }
+                            else {
+                                obj[key] = scope.$eval(def[key]);
+                            }
                         }
                         else if (def[key] !== undefined) {
                             // otherwise parse the current value of the property
@@ -3380,17 +3384,19 @@ var KG;
                 this.yAxis = new KG.YAxis(definition.yAxisDef);
             }
             console.log('initialized view with objects', view.objects);
-            view.objects.forEach(function (viewObj, index) {
-                if (viewObj instanceof KG.ViewObject) {
-                    viewObj.createSubObjects(view);
-                }
-                else if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
-                    var newViewObj = KG.createInstance(viewObj, modelPath + '[' + index + ']');
-                    view.objects[index] = newViewObj;
-                    newViewObj.createSubObjects(view);
-                }
-            });
-            console.log('added additional objects to view', view.objects);
+            if (view.hasOwnProperty('objects')) {
+                view.objects.forEach(function (viewObj, index) {
+                    if (viewObj instanceof KG.ViewObject) {
+                        viewObj.createSubObjects(view);
+                    }
+                    else if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
+                        var newViewObj = KG.createInstance(viewObj, modelPath + '[' + index + ']');
+                        view.objects[index] = newViewObj;
+                        newViewObj.createSubObjects(view);
+                    }
+                });
+                console.log('added additional objects to view', view.objects);
+            }
         }
         View.prototype._update = function (scope) {
             var view = this;
@@ -3398,7 +3404,7 @@ var KG;
             console.log('updating objects ', view.objects);
             view.objects.forEach(function (viewObj) {
                 viewObj.view = view;
-                view.objects.forEach(function (viewObj) { return viewObj.update(scope); });
+                viewObj.update(scope);
             });
             return view;
         };
@@ -5341,6 +5347,7 @@ var EconGraphs;
             u.utilityFunction.update(scope);
             u.muxFunction.update(scope);
             u.muyFunction.update(scope);
+            console.log('updated utility function to ', u);
             return u;
         };
         /* Pure preferences */
@@ -5835,6 +5842,7 @@ var EconGraphs;
                     y: d.budget.yValue(d.x)
                 };
             }
+            console.log('updated bundle to (', d.bundle.x, ',', d.bundle.y, ')');
             return d;
         };
         MarshallianDemand.prototype.price = function (good) {

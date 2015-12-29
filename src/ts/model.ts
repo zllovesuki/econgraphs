@@ -120,8 +120,11 @@ module KG
                         } else if(obj[key] instanceof KG.Selector) {
                             obj[key] = obj[key].update(scope);
                         } else if(obj[key] instanceof KG.Model) {
-                            // if the property is itself a model, update the model
-                            obj[key].update(scope);
+                            if(typeof def[key] != 'string') {
+                                obj[key].update(scope);
+                            } else {
+                                obj[key] = scope.$eval(def[key]);
+                            }
                         } else if(def[key] !== undefined) {
                             // otherwise parse the current value of the property
                             obj[key] = deepParse(def[key]);

@@ -85,7 +85,8 @@ module KG
                 this.yAxis = new YAxis(definition.yAxisDef);
             }
             console.log('initialized view with objects', view.objects);
-            view.objects.forEach(function(viewObj,index) {
+            if(view.hasOwnProperty('objects')) {
+                view.objects.forEach(function(viewObj,index) {
                 if(viewObj instanceof ViewObject) {
                     viewObj.createSubObjects(view);
                 } else if(viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
@@ -95,8 +96,7 @@ module KG
                 }
             });
             console.log('added additional objects to view', view.objects)
-
-
+            }
         }
 
         _update(scope) {
@@ -105,7 +105,7 @@ module KG
             console.log('updating objects ',view.objects);
             view.objects.forEach(function(viewObj) {
                 viewObj.view = view;
-                view.objects.forEach(function(viewObj) {return viewObj.update(scope)});
+                viewObj.update(scope);
             });
             return view;
         }
