@@ -87,16 +87,18 @@ module KG
             console.log('initialized view with objects', view.objects);
             if(view.hasOwnProperty('objects')) {
                 view.objects.forEach(function(viewObj,index) {
-                if(viewObj instanceof ViewObject) {
-                    viewObj.createSubObjects(view);
-                } else if(viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
-                    var newViewObj:ViewObject = createInstance(viewObj,modelPath + '['+index+']');
-                    view.objects[index] = newViewObj;
-                    newViewObj.createSubObjects(view);
-                }
-            });
-            console.log('added additional objects to view', view.objects)
+                    if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
+                        view.objects[index] = createInstance(viewObj, '');
+                    }
+                });
+                view.objects.forEach(function(viewObj) {
+                    if (viewObj instanceof ViewObject) {
+                        viewObj.createSubObjects(view);
+                    }
+                });
+                console.log('added additional objects to view', view.objects);
             }
+
         }
 
         _update(scope) {

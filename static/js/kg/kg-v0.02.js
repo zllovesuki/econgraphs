@@ -3386,13 +3386,13 @@ var KG;
             console.log('initialized view with objects', view.objects);
             if (view.hasOwnProperty('objects')) {
                 view.objects.forEach(function (viewObj, index) {
+                    if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
+                        view.objects[index] = KG.createInstance(viewObj, '');
+                    }
+                });
+                view.objects.forEach(function (viewObj) {
                     if (viewObj instanceof KG.ViewObject) {
                         viewObj.createSubObjects(view);
-                    }
-                    else if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
-                        var newViewObj = KG.createInstance(viewObj, modelPath + '[' + index + ']');
-                        view.objects[index] = newViewObj;
-                        newViewObj.createSubObjects(view);
                     }
                 });
                 console.log('added additional objects to view', view.objects);
