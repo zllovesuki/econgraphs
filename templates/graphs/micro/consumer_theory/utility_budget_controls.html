@@ -257,7 +257,7 @@
                         className: 'budget',
                         linear: 'model.budget.budgetSegments[0].linear',
                         interaction: {
-                            highlightParam: 'budget'
+                            highlight: 'budget'
                         },
                         label: {
                             text: 'BL'
@@ -278,7 +278,7 @@
                         interaction: {
                             xDrag: '!params.snapToOptimal',
                             xDragParam: 'x',
-                            highlightParam: 'bundle'
+                            highlight: 'bundle'
                         },
                         xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
                         yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
@@ -291,7 +291,7 @@
                         className: 'utility',
                         fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))",
                         interaction: {
-                            highlightParam: 'utility'
+                            highlight: 'utility'
                         },
                         label: {
                             text: 'params.snapToOptimal ? "U^*" : "U"'
@@ -306,7 +306,7 @@
                             className: 'dataPathFamily',
                             fn: "model.utility.indifferenceCurveAtUtilityFn(" + level + ")",
                             interaction: {
-                                highlightParam: 'indifferenceMap' + level
+                                highlight: 'indifferenceMap' + level
                             },
                             show: 'params.showMap',
                             label: {

@@ -140,6 +140,10 @@ module KG
 
             katex.render(text.toString(),div[0][0]);
 
+            div.style('width',div[0][0].children[0].offsetWidth+'px');
+
+            console.log('rendered KaTex');
+
             divObj.interactionHandler.setBehavior(view,div);
 
             return view;

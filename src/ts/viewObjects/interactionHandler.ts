@@ -21,8 +21,6 @@ module KG
         yDragParam?: string;
 
         highlight?: any;
-        highlightParam?: any;
-
     }
 
     export interface IInteractionHandler extends IModel
@@ -31,8 +29,7 @@ module KG
         yDrag:boolean;
         xDragParam: string;
         yDragParam: string;
-        highlightParam: string;
-        highlight: boolean;
+        highlight: string;
         setBehavior: (view: View, selection: D3.Selection) => View;
     }
 
@@ -44,7 +41,6 @@ module KG
         public xDragParam;
         public yDragParam;
         public highlight;
-        public highlightParam;
 
         constructor(definition:InteractionHandlerDefinition, modelPath?: string) {
 
@@ -81,7 +77,7 @@ module KG
                     .on('drag', function () {
                         d3.event.sourceEvent.preventDefault();
                         var dragUpdate = {};
-                        view.scope.updateParams({highlight: interactionHandler.highlightParam});
+                        view.scope.updateParams({highlight: interactionHandler.highlight});
                         var relativeElement = view.unmasked[0][0],
                             mouseX = d3.mouse(relativeElement)[0],
                             mouseY = d3.mouse(relativeElement)[1];
@@ -117,9 +113,9 @@ module KG
                 selection.call(drag());
             }
 
-            if(interactionHandler.hasOwnProperty('highlightParam')) {
+            if(interactionHandler.hasOwnProperty('highlight')) {
                 selection.on('mouseover', function() {
-                    view.scope.updateParams({highlight: interactionHandler.highlightParam});
+                    view.scope.updateParams({highlight: interactionHandler.highlight});
                 });
             }
 

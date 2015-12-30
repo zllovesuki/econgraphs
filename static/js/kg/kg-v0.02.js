@@ -2093,7 +2093,7 @@ var KG;
                     .on('drag', function () {
                     d3.event.sourceEvent.preventDefault();
                     var dragUpdate = {};
-                    view.scope.updateParams({ highlight: interactionHandler.highlightParam });
+                    view.scope.updateParams({ highlight: interactionHandler.highlight });
                     var relativeElement = view.unmasked[0][0], mouseX = d3.mouse(relativeElement)[0], mouseY = d3.mouse(relativeElement)[1];
                     if (xAxis && interactionHandler.xDragParam !== null) {
                         dragUpdate[interactionHandler.xDragParam] = xAxis.domain.closestValueTo(xAxis.scale.invert(mouseX));
@@ -2126,9 +2126,9 @@ var KG;
             if (this.xDrag || this.yDrag) {
                 selection.call(drag());
             }
-            if (interactionHandler.hasOwnProperty('highlightParam')) {
+            if (interactionHandler.hasOwnProperty('highlight')) {
                 selection.on('mouseover', function () {
-                    view.scope.updateParams({ highlight: interactionHandler.highlightParam });
+                    view.scope.updateParams({ highlight: interactionHandler.highlight });
                 });
             }
             return view;
@@ -2144,8 +2144,8 @@ var KG;
     var ViewObject = (function (_super) {
         __extends(ViewObject, _super);
         function ViewObject(definition, modelPath) {
-            if (definition.hasOwnProperty('interaction') && definition.interaction.hasOwnProperty('highlightParam') && !definition.hasOwnProperty('highlight')) {
-                definition.highlight = 'params.' + definition.interaction.highlightParam;
+            if (definition.hasOwnProperty('interaction') && definition.interaction.hasOwnProperty('highlight') && !definition.hasOwnProperty('highlight')) {
+                definition.highlight = 'params.' + definition.interaction.highlight;
             }
             definition = _.defaults(definition, {
                 name: '',
@@ -2174,7 +2174,7 @@ var KG;
                 classString += ' invisible';
             }
             if (this.view && this.view.scope && this.view.scope.params.highlight) {
-                if (this.interactionHandler.highlightParam == this.view.scope.params.highlight) {
+                if (this.interactionHandler.highlight == this.view.scope.params.highlight) {
                     classString += ' highlight';
                 }
             }
@@ -2305,9 +2305,9 @@ var KG;
                 if (definition.interaction.hasOwnProperty('yDrag') && !definition.interaction.hasOwnProperty('yDragParam')) {
                     definition.interaction.yDragParam = definition.coordinates.y;
                 }
-                if (definition.hasOwnProperty('label') && definition.hasOwnProperty('highlightParam')) {
-                    definition.highlight = definition.highlight || definition.interaction.highlightParam;
-                    definition.interaction.highlightParam = null;
+                if (definition.hasOwnProperty('label') && definition.hasOwnProperty('highlight')) {
+                    definition.highlight = definition.highlight || definition.interaction.highlight;
+                    definition.interaction.highlight = null;
                 }
             }
             _super.call(this, definition, modelPath);
@@ -3168,6 +3168,8 @@ var KG;
             }
             div.style('top', (y - vAlignDelta) + 'px');
             katex.render(text.toString(), div[0][0]);
+            div.style('width', div[0][0].children[0].offsetWidth + 'px');
+            console.log('rendered KaTex');
             divObj.interactionHandler.setBehavior(view, div);
             return view;
         };

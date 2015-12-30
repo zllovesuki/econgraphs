@@ -63,8 +63,8 @@ module KG
 
         constructor(definition:ViewObjectDefinition, modelPath?: string) {
 
-            if(definition.hasOwnProperty('interaction') && definition.interaction.hasOwnProperty('highlightParam') && !definition.hasOwnProperty('highlight')) {
-                definition.highlight = 'params.' + definition.interaction.highlightParam;
+            if(definition.hasOwnProperty('interaction') && definition.interaction.hasOwnProperty('highlight') && !definition.hasOwnProperty('highlight')) {
+                definition.highlight = 'params.' + definition.interaction.highlight;
             }
 
             definition = _.defaults(definition, {
@@ -98,7 +98,7 @@ module KG
                 classString += ' invisible';
             }
             if(this.view && this.view.scope && this.view.scope.params.highlight) {
-                if(this.interactionHandler.highlightParam == this.view.scope.params.highlight) {
+                if(this.interactionHandler.highlight == this.view.scope.params.highlight) {
                     classString += ' highlight';
                 }
             }
