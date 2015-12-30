@@ -49,8 +49,7 @@
                     </div>
                 </div>
                 <div ng-show="model.utility.type == 'Linear'">Note: assumes buy only Y if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
-                <hr/>
-                <div class="math">x = {{ params.x }}</div>{% endraw %}
+                {% endraw %}
 
                 <hr/>
                 <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
@@ -109,7 +108,7 @@
                         options: [
                             {
                                 name: 'CobbDouglas',
-                                label: 'Cobb-Douglas',
+                                label: 'Cobb\-Douglas',
                                 selection: cobbDouglasDefinition
                             },
                             {
@@ -279,9 +278,12 @@
                             xDrag: '!params.snapToOptimal',
                             xDragParam: 'x',
                             highlight: 'bundle'
-                        },
-                        xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
-                        yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
+                        }
+                        ,droplines: {
+                            vertical: 'params.snapToOptimal ? "x^*" : "x"',
+                            horizontal: 'params.snapToOptimal ? "y^*" : "y"'
+                        }
+
                     }
                 },
                 indifferenceCurve = {

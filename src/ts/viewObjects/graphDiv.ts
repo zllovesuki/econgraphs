@@ -72,7 +72,7 @@ module KG
                 divObj.text = divObj.text.join('')
             }
 
-            if(!divObj.hasOwnProperty('coordinates') || divObj.text.length == 0) {
+            if(!divObj.hasOwnProperty('coordinates') || !divObj.hasOwnProperty('text') || divObj.text.length == 0) {
                 return view;
             }
 
@@ -130,7 +130,6 @@ module KG
             }
             div.style('left',(x - alignDelta) + 'px');
 
-
             // Set top pixel margin; default to centered on y coordinate
             var vAlignDelta = height*0.5;
             // Default to centered on x coordinate
@@ -140,8 +139,6 @@ module KG
                 vAlignDelta = height;
             }
             div.style('top',(y - vAlignDelta) + 'px');
-
-            console.log('rendered KaTex');
 
             divObj.interactionHandler.setBehavior(view,div);
 

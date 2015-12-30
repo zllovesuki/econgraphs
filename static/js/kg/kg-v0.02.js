@@ -360,7 +360,7 @@ var KG;
                     }
                 }
             }
-            console.log('instantiating new ', this);
+            //console.log('instantiating new ',this);
         }
         Model.prototype.modelProperty = function (name) {
             return this.modelPath + '.' + name;
@@ -396,9 +396,9 @@ var KG;
             else {
                 this.updateVersion = scope.updateVersion;
             }
-            console.log('updating ', this);
+            //console.log('updating ',this);
             var model = this;
-            if (model.hasOwnProperty('selector')) {
+            if (model.selector) {
                 return model.selector.update(scope, callback);
             }
             // Iterates over an object's definition, getting the current value of each property
@@ -665,18 +665,36 @@ var KG;
         };
         Selector.prototype.selectOption = function (name) {
             var s = this;
-            var selectedObject = s.getObjectByName(name);
-            if (selectedObject) {
-                s.selectedObjectDef = selectedObject;
-            }
+            s.selectedObject = s.getObjectByName(name);
         };
         Selector.prototype._update = function (scope) {
             var s = this;
             if (s.selected) {
                 s.selectOption(s.selected);
             }
-            s.selectedObject = KG.createInstance(s.selectedObjectDef, s.modelPath).update(scope);
+            if (s.selectedObject.hasOwnProperty('type') && s.selectedObject.hasOwnProperty('definition')) {
+                s.selectedObject = KG.createInstance(s.selectedObject, s.modelPath);
+            }
+            // hide the fact that this is a selector and update
+            s.selectedObject.selector = null;
+            s.selectedObject = s.selectedObject.update(scope);
+            // attach selector to object again and return
             s.selectedObject.selector = s;
+            function set(path, value) {
+                var schema = scope; // a moving reference to internal objects within obj
+                var pList = path.split('.');
+                var len = pList.length;
+                for (var i = 0; i < len - 1; i++) {
+                    var elem = pList[i];
+                    if (!schema[elem])
+                        schema[elem] = {};
+                    schema = schema[elem];
+                }
+                schema[pList[len - 1]] = value;
+            }
+            console.log(scope.model.utility);
+            set('model.utility', s.selectedObject);
+            console.log(scope.model.utility);
             return s.selectedObject;
         };
         return Selector;
@@ -2068,6 +2086,7 @@ var KG;
     var InteractionHandler = (function (_super) {
         __extends(InteractionHandler, _super);
         function InteractionHandler(definition, modelPath) {
+            definition = definition || {};
             if (definition.hasOwnProperty('xDrag') && typeof definition.xDrag == 'string' && !definition.hasOwnProperty('xDragParam')) {
                 definition.xDragParam = definition.xDrag;
                 definition.xDrag = true;
@@ -3109,7 +3128,7 @@ var KG;
             if (divObj.text instanceof Array) {
                 divObj.text = divObj.text.join('');
             }
-            if (!divObj.hasOwnProperty('coordinates') || divObj.text.length == 0) {
+            if (!divObj.hasOwnProperty('coordinates') || !divObj.hasOwnProperty('text') || divObj.text.length == 0) {
                 return view;
             }
             var x, y;
@@ -3169,7 +3188,6 @@ var KG;
                 vAlignDelta = height;
             }
             div.style('top', (y - vAlignDelta) + 'px');
-            console.log('rendered KaTex');
             divObj.interactionHandler.setBehavior(view, div);
             return view;
         };
@@ -3385,7 +3403,7 @@ var KG;
             if (definition.hasOwnProperty('yAxisDef')) {
                 this.yAxis = new KG.YAxis(definition.yAxisDef);
             }
-            console.log('initialized view with objects', view.objects);
+            //console.log('initialized view with objects', view.objects);
             if (view.hasOwnProperty('objects')) {
                 view.objects.forEach(function (viewObj, index) {
                     if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
@@ -3397,13 +3415,12 @@ var KG;
                         viewObj.createSubObjects(view);
                     }
                 });
-                console.log('added additional objects to view', view.objects);
             }
         }
         View.prototype._update = function (scope) {
             var view = this;
             view.scope = scope;
-            console.log('updating objects ', view.objects);
+            //console.log('updating objects ',view.objects);
             view.objects.forEach(function (viewObj) {
                 viewObj.view = view;
                 viewObj.update(scope);
@@ -3412,7 +3429,7 @@ var KG;
         };
         View.prototype.render = function (redraw) {
             var view = this;
-            console.log('calling update');
+            //console.log('calling update');
             if (redraw) {
                 view.redraw();
             }
@@ -3529,7 +3546,7 @@ var KG;
         };
         View.prototype.drawObjects = function () {
             var view = this;
-            console.log('drawing objects');
+            //console.log('drawing objects');
             view.objects.forEach(function (object) {
                 if (object instanceof KG.ViewObject) {
                     object.render(view);
@@ -3538,7 +3555,7 @@ var KG;
             return view;
         };
         View.prototype.addObject = function (newObj) {
-            console.log('evaluating ', newObj);
+            //console.log('evaluating ',newObj)
             var view = this;
             if (newObj instanceof KG.ViewObject) {
                 view.objects.push(newObj);
@@ -3552,7 +3569,7 @@ var KG;
                     console.log("tried to add something that wasn't a view object!");
                 }
             }
-            console.log(newObj);
+            //console.log(newObj);
             newObj.createSubObjects(view);
         };
         View.prototype.objectGroup = function (name, init, unmasked) {
@@ -3821,20 +3838,20 @@ var KG;
             view.bottomGraph.maxDimensions.height = graphHeight;
             view.topGraph.scope = view.scope;
             view.bottomGraph.scope = view.scope;
-            view.bottomGraph.redraw();
             view.topGraph.redraw();
-            return view.drawObjects();
+            view.bottomGraph.redraw();
+            return view;
         };
         TwoVerticalGraphs.prototype.drawObjects = function () {
             var view = this;
             view.topGraph.drawObjects();
             view.bottomGraph.drawObjects();
-            if (view.hasOwnProperty('objects')) {
-                view.objects.forEach(function (object) { object.createSubObjects(view); });
-                view.objects.forEach(function (object) { object.render(view); });
-                view.topGraph.objects.forEach(function (object) { object.render(view.topGraph); });
-                view.bottomGraph.objects.forEach(function (object) { object.render(view.bottomGraph); });
-            }
+            /*if(view.hasOwnProperty('objects')) {
+                view.objects.forEach(function(object) {object.createSubObjects(view)});
+                view.objects.forEach(function(object) {object.render(view)});
+                view.topGraph.objects.forEach(function(object) {object.render(view.topGraph)});
+                view.bottomGraph.objects.forEach(function(object) {object.render(view.bottomGraph)});
+            }*/
             return view;
         };
         return TwoVerticalGraphs;
@@ -5884,7 +5901,7 @@ var EconGraphs;
             });
             var d = this, samplePoints = KG.samplePointsForDomain(pccParams), curveData = [];
             var initialPrice = d.budget['p' + pccParams.good];
-            console.log('setting initial price to ', initialPrice);
+            //console.log('setting initial price to ',initialPrice);
             samplePoints.forEach(function (price) {
                 d.budget.setPrice(price, pccParams.good);
                 var optimalBundle = d.utility.optimalBundle(d.budget);

@@ -75,23 +75,22 @@ module KG
 
             view.topGraph.scope = view.scope;
             view.bottomGraph.scope = view.scope;
-            view.bottomGraph.redraw();
             view.topGraph.redraw();
+            view.bottomGraph.redraw();
 
-
-            return view.drawObjects();
+            return view;
         }
 
         drawObjects() {
             var view = this;
             view.topGraph.drawObjects();
             view.bottomGraph.drawObjects();
-            if(view.hasOwnProperty('objects')) {
+            /*if(view.hasOwnProperty('objects')) {
                 view.objects.forEach(function(object) {object.createSubObjects(view)});
                 view.objects.forEach(function(object) {object.render(view)});
                 view.topGraph.objects.forEach(function(object) {object.render(view.topGraph)});
                 view.bottomGraph.objects.forEach(function(object) {object.render(view.bottomGraph)});
-            }
+            }*/
             return view;
         }
 

@@ -84,7 +84,7 @@ module KG
             if(definition.hasOwnProperty('yAxisDef')){
                 this.yAxis = new YAxis(definition.yAxisDef);
             }
-            console.log('initialized view with objects', view.objects);
+            //console.log('initialized view with objects', view.objects);
             if(view.hasOwnProperty('objects')) {
                 view.objects.forEach(function(viewObj,index) {
                     if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
@@ -96,7 +96,7 @@ module KG
                         viewObj.createSubObjects(view);
                     }
                 });
-                console.log('added additional objects to view', view.objects);
+                //console.log('added additional objects to view', view.objects);
             }
 
         }
@@ -104,7 +104,7 @@ module KG
         _update(scope) {
             var view = this;
             view.scope = scope;
-            console.log('updating objects ',view.objects);
+            //console.log('updating objects ',view.objects);
             view.objects.forEach(function(viewObj) {
                 viewObj.view = view;
                 viewObj.update(scope);
@@ -114,7 +114,7 @@ module KG
 
         render(redraw) {
             var view = this;
-            console.log('calling update');
+            //console.log('calling update');
             if(redraw){
                 view.redraw();
             } else {
@@ -266,7 +266,7 @@ module KG
 
         drawObjects() {
             var view = this;
-            console.log('drawing objects');
+            //console.log('drawing objects');
             view.objects.forEach(function(object) {
                 if(object instanceof ViewObject) {
                     object.render(view)
@@ -276,7 +276,7 @@ module KG
         }
 
         addObject(newObj) {
-            console.log('evaluating ',newObj)
+            //console.log('evaluating ',newObj)
             var view = this;
             if(newObj instanceof ViewObject) {
                 view.objects.push(newObj);
@@ -288,7 +288,7 @@ module KG
                     console.log ("tried to add something that wasn't a view object!")
                 }
             }
-            console.log(newObj);
+            //console.log(newObj);
             newObj.createSubObjects(view);
         }
 

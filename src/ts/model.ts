@@ -55,7 +55,7 @@ module KG
                 }
             }
 
-            console.log('instantiating new ',this);
+            //console.log('instantiating new ',this);
         }
 
         modelProperty(name) {
@@ -93,11 +93,11 @@ module KG
                 this.updateVersion = scope.updateVersion;
             }
 
-            console.log('updating ',this);
+            //console.log('updating ',this);
 
             var model = this;
 
-            if(model.hasOwnProperty('selector')) {
+            if(model.selector) {
                 return model.selector.update(scope,callback);
             }
 

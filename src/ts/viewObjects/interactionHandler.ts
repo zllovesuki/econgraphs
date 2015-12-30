@@ -44,6 +44,8 @@ module KG
 
         constructor(definition:InteractionHandlerDefinition, modelPath?: string) {
 
+            definition = definition || {};
+
             if(definition.hasOwnProperty('xDrag') && typeof definition.xDrag == 'string' && !definition.hasOwnProperty('xDragParam')) {
                 definition.xDragParam = definition.xDrag;
                 definition.xDrag = true;

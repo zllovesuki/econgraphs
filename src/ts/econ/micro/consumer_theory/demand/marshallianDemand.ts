@@ -113,7 +113,7 @@ module EconGraphs {
                 curveData = [];
 
             var initialPrice = d.budget['p' + pccParams.good];
-            console.log('setting initial price to ',initialPrice);
+            //console.log('setting initial price to ',initialPrice);
 
             samplePoints.forEach(function(price) {
                 d.budget.setPrice(price,pccParams.good)
