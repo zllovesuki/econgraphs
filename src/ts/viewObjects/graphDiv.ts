@@ -100,11 +100,14 @@ module KG
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
 
-            var width = divObj.dimensions.width,
-                height = divObj.dimensions.height,
-                text = divObj.text;
-
             var div = divObj.d3selection(view);
+
+            katex.render(divObj.text.toString(),div[0][0]);
+
+            var width = div[0][0].children[0].offsetWidth || divObj.dimensions.width,
+                height = divObj.dimensions.height;
+
+            div.style('width',+'px');
 
             div
                 .style('cursor','default')
@@ -137,10 +140,6 @@ module KG
                 vAlignDelta = height;
             }
             div.style('top',(y - vAlignDelta) + 'px');
-
-            katex.render(text.toString(),div[0][0]);
-
-            div.style('width',div[0][0].children[0].offsetWidth+'px');
 
             console.log('rendered KaTex');
 
