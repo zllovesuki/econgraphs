@@ -98,7 +98,7 @@ module KG
                 classString += ' invisible';
             }
             if(this.view && this.view.scope && this.view.scope.params.highlight) {
-                if(this.interactionHandler.highlight == this.view.scope.params.highlight) {
+                if(this.view.scope.params.highlight.indexOf(this.interactionHandler.highlight) > -1) {
                     classString += ' highlight';
                 }
             }

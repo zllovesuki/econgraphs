@@ -300,19 +300,19 @@
                         }
                     }
                 },
-                indifferenceCurveMap = [5,10,15,20,25,30,35,40].map(function(level) {
+                indifferenceCurveMap = [5,10,15,20,25,30,35,40,45].map(function(level) {
                     return {
                         type: 'KG.FunctionPlot',
                         definition: {
                             name: 'indifference_curve_'+level,
                             className: 'dataPathFamily',
-                            fn: "model.utility.indifferenceCurveAtUtilityFn(" + level + ")",
+                            fn: "model.utility.indifferenceCurveThroughBundleFn({x:" + level + ",y:"+level+"})",
                             interaction: {
                                 highlight: 'indifferenceMap' + level
                             },
                             show: 'params.showMap',
                             label: {
-                                text: ['U =',level],
+                                text: ['U = U(',level,',',level,')'],
                                 show: 'params.highlight.indifferenceMap' + level
                             }
                         }
@@ -336,6 +336,9 @@
                             }
                         },
                         show: '(params.showMRS && !params.snapToOptimal)',
+                        interaction: {
+                            highlight: 'MRS'
+                        },
                         label: {
                             text: 'MRS_{x,y}',
                             valign: 'top',
@@ -364,7 +367,7 @@
                         show: 'params.showPCCY && params.snapToOptimal',
                         data: 'model.priceConsumptionCurveData({good:"y"})',
                         className: 'demand',
-                        interpolation: 'basis',
+                        interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
                         labelPosition: 'START',
                         label: {
                             text: 'PCC_y'
@@ -378,7 +381,7 @@
                         show: 'params.showICC && params.snapToOptimal',
                         data: 'model.incomeConsumptionCurveData()',
                         className: 'engel',
-                        interpolation: 'basis',
+                        interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
                         label: {
                             text: 'ICC'
                         }
