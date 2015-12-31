@@ -54,7 +54,8 @@ module KG
         constructor(definition, modelPath?: string) {
             definition.interaction = {
                 xDrag: true,
-                xDragParam: definition.param
+                xDragParam: definition.param,
+                highlight: definition.param.replace('params.','')
             },
             definition.coordinates = {x: definition.param, y:0};
             super(definition, modelPath);

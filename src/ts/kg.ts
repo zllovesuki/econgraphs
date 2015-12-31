@@ -110,8 +110,17 @@ angular.module('KineticGraphs', [])
                 scope.updateParams({highlight:null});
             });
 
-
-            scope.$watch('params.highlight',function(){if(scope.params.highlight == attrs.highlight) {el.addClass('highlight')} else {el.removeClass('highlight')}})
+            scope.$watch('params.highlight',function(){
+                console.log('scope highlight = ',scope.params.highlight);
+                console.log('this highlight = ',attrs.highlight);
+                console.log('match? ',KG.listMatch(scope.params.highlight,attrs.highlight));
+                if(KG.listMatch(scope.params.highlight, attrs.highlight)) {
+                    el.addClass('highlight')
+                }
+                else {
+                    el.removeClass('highlight')
+                }
+            })
 
         }
 

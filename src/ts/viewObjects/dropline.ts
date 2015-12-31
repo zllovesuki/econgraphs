@@ -106,6 +106,7 @@ module KG {
             var group:D3.Selection = view.objectGroup(dropline.name, dropline.initGroupFn(), false);
 
             var droplineSelection:D3.Selection = group.select('.'+ dropline.viewObjectClass);
+            var droplineHandle:D3.Selection = group.select('.'+ dropline.viewObjectClass + 'Handle');
 
             droplineSelection
                 .attr({
@@ -116,7 +117,17 @@ module KG {
                     'class': dropline.classAndVisibility()
                 });
 
+            droplineHandle
+                .attr({
+                    'x1': anchorX,
+                    'y1': anchorY,
+                    'x2': pointX,
+                    'y2': pointY,
+                    'class': dropline.classAndVisibility('Handle')
+                });
+
             dropline.interactionHandler.setBehavior(view, droplineSelection);
+            dropline.interactionHandler.setBehavior(view, droplineHandle);
 
             return view;
         }

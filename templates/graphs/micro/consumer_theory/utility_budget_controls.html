@@ -33,17 +33,17 @@
                         <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
+                        <div class="col-xs-3 math" highlight="income" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
                         </div>
                         <div class="col-xs-9" id="incomeSlider"></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
+                        <div class="col-xs-3 math" highlight="px" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
                         </div>
                         <div class="col-xs-9" id="pxSlider"></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
+                        <div class="col-xs-3 math" highlight="py" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
                         </div>
                         <div class="col-xs-9" id="pySlider"></div>
                     </div>
@@ -260,9 +260,37 @@
                         },
                         label: {
                             text: 'BL'
+                        }
+                    }
+                },
+                budgetXIntercept = {
+                    type: 'KG.GraphDiv',
+                    definition: {
+                        name: 'budgetXIntercept',
+                        className: 'budget',
+                        text: "\\frac{I}{P_x}",
+                        coordinates: {
+                            x: 'params.income/params.px',
+                            y: 'AXIS'
                         },
-                        xInterceptLabel: "\\frac{I}{P_x}",
-                        yInterceptLabel: "\\frac{I}{P_y}"
+                        interaction: {
+                            highlight: 'budget income px'
+                        }
+                    }
+                },
+                budgetYIntercept = {
+                    type: 'KG.GraphDiv',
+                    definition: {
+                        name: 'budgetYIntercept',
+                        className: 'budget',
+                        text: "\\frac{I}{P_y}",
+                        coordinates: {
+                            x: 'AXIS',
+                            y: 'params.income/params.py'
+                        },
+                        interaction: {
+                            highlight: 'budget income py'
+                        }
                     }
                 },
                 bundlePoint = {
@@ -270,18 +298,55 @@
                     definition: {
                         name: 'bundle',
                         className: 'utility',
+                        show: '!params.snapToOptimal',
+                        coordinates: {
+                            x: 'params.x',
+                            y: 'model.bundle.y'
+                        },
+                        interaction: {
+                            xDrag: true,
+                            highlight: 'bundle'
+                        },
+                        droplines: {
+                            vertical: 'x',
+                            horizontal: 'y'
+                        }
+
+                    }
+                },
+                bundleOptimalX = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleX',
+                        className: 'utility',
+                        show: 'params.snapToOptimal',
                         coordinates: {
                             x: 'model.bundle.x',
                             y: 'model.bundle.y'
                         },
                         interaction: {
-                            xDrag: '!params.snapToOptimal',
-                            xDragParam: 'x',
-                            highlight: 'bundle'
+                            highlight: 'x'
+                        },
+                        droplines: {
+                            vertical: 'x^*'
                         }
-                        ,droplines: {
-                            vertical: 'params.snapToOptimal ? "x^*" : "x"',
-                            horizontal: 'params.snapToOptimal ? "y^*" : "y"'
+                    }
+                },
+                bundleOptimalY = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleY',
+                        className: 'utility',
+                        show: 'params.snapToOptimal',
+                        coordinates: {
+                            x: 'model.bundle.x',
+                            y: 'model.bundle.y'
+                        },
+                        interaction: {
+                            highlight: 'y'
+                        }
+                        , droplines: {
+                            horizontal: 'y^*'
                         }
 
                     }

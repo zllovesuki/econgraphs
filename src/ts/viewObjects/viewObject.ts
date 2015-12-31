@@ -29,7 +29,7 @@ module KG
         show: boolean;
         d3group: (view: View) => D3.Selection;
         d3selection: (view:View) => D3.Selection;
-        classAndVisibility: () => string;
+        classAndVisibility: (suffix?:string) => string;
 
         // Creation and rendering
         initGroupFn: (svgType:string, className: string) => any;
@@ -87,8 +87,9 @@ module KG
             return this;
         }
 
-        classAndVisibility() {
-            var classString = this.viewObjectClass;
+        classAndVisibility(suffix?:string) {
+            suffix = suffix || '';
+            var classString = this.viewObjectClass + suffix;
             if(this.className) {
                 classString += ' ' + this.className;
             }
@@ -97,10 +98,8 @@ module KG
             } else {
                 classString += ' invisible';
             }
-            if(this.view && this.view.scope && this.view.scope.params.highlight) {
-                if(this.view.scope.params.highlight.indexOf(this.interactionHandler.highlight) > -1) {
-                    classString += ' highlight';
-                }
+            if(this.interactionHandler.highlightObject(this.view)) {
+                classString += ' highlight';
             }
             if(this.hasOwnProperty('objectName')) {
                 classString += ' ' + this.objectName

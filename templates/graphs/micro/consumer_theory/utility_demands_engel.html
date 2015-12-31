@@ -25,8 +25,8 @@
                         name: 'engelCurveX',
                         className: 'engel',
                         data: 'model.engelCurveData({good:"x"})',
-                        params: {
-                            label: 'E_x'
+                        label: {
+                            text: 'E_y'
                         }
                     }
                 },
@@ -36,8 +36,8 @@
                         name: 'engelCurveY',
                         className: 'engel',
                         data: 'model.engelCurveData({good:"y"})',
-                        params: {
-                            label: 'E_y'
+                        label: {
+                            text: 'E_y'
                         }
                     }
                 },
@@ -50,9 +50,11 @@
                             x: 'model.bundle.x',
                             y: 'params.income'
                         },
-                        params: {
-                            yDragParam: 'income',
-                            xAxisLabel: 'x^*'
+                        droplines: {
+                            vertical: 'x^*'
+                        },
+                        interaction: {
+                            highlight: 'x'
                         }
                     }
                 },
@@ -65,9 +67,11 @@
                             x: 'model.bundle.y',
                             y: 'params.income'
                         },
-                        params: {
-                            yDragParam: 'income',
-                            xAxisLabel: 'y^*'
+                        droplines: {
+                            vertical: 'y^*'
+                        },
+                        interaction: {
+                            highlight: 'y'
                         }
                     }
                 },
@@ -77,10 +81,11 @@
                         name: 'incomeLine',
                         className: 'price',
                         y: 'params.income',
-                        yDrag: 'params.income',
-                        params: {
-                            yInterceptLabel: 'I'
-                        }
+                        interaction: {
+                            yDrag: 'params.income',
+                            highlight: 'income'
+                        },
+                        yInterceptLabel: 'I'
                     }
                 };
 
@@ -91,10 +96,8 @@
                     definition: {
                         name: 'demandCurveY',
                         className: 'demand',
-                        data: 'model.demandCurveData({min: 0.1, numSamplePoints: 201, good: "y"})',
-                        params: {
-                            label: 'D_y'
-                        }
+                        data: 'model.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201, good:"y"})',
+                        label: {text: 'D_y'}
                     }
                 },
                 quantityDemandedAtPriceY = {
@@ -106,9 +109,11 @@
                             x: 'model.bundle.y',
                             y: 'params.py'
                         },
-                        params: {
-                            yDragParam: 'py',
-                            xAxisLabel: 'y^*'
+                        interaction: {
+                            highlight: 'y'
+                        },
+                        droplines: {
+                            vertical: 'y^*'
                         }
                     }
                 },
@@ -118,10 +123,11 @@
                         name: 'priceLineY',
                         className: 'price',
                         y: 'params.py',
-                        yDrag: 'params.py',
-                        params: {
-                            yInterceptLabel: 'P_y'
-                        }
+                        interaction: {
+                            yDrag: 'params.py',
+                            highlight: 'py'
+                        },
+                        yInterceptLabel: 'P_y'
                     }
                 };
 

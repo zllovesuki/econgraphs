@@ -31,6 +31,7 @@ module KG
         yDragParam: string;
         highlight: string;
         setBehavior: (view: View, selection: D3.Selection) => View;
+        highlightObject: (view: View) => boolean;
     }
 
     export class InteractionHandler extends Model implements IInteractionHandler
@@ -122,6 +123,13 @@ module KG
             }
 
             return view;
+        }
+
+        highlightObject(view) {
+
+            if(!view || !view.scope || !view.scope.params) { return false; }
+            return KG.listMatch(view.scope.params.highlight, this.highlight);
+
         }
 
     }

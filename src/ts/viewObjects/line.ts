@@ -309,7 +309,7 @@ module KG {
 
                 lineHandle
                     .attr({
-                        'class': 'lineHandle',
+                        'class': line.classAndVisibility('Handle'),
                         'd': dataLine([startPoint,endPoint])
                     });
 

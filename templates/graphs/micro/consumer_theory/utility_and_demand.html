@@ -17,7 +17,7 @@
                         name: 'demandCurveX',
                         className: 'demand',
                         data: 'model.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
-                        label: 'D_x'
+                        label: {text: 'D_x'}
                     }
                 },
                 quantityDemandedAtPriceX = {
@@ -30,7 +30,7 @@
                             y: 'params.px'
                         },
                         interaction: {
-                            yDragParam: 'px'
+                            highlight: 'x',
                         },
                         droplines: {
                             vertical: 'x^*'
@@ -44,7 +44,8 @@
                         className: 'price',
                         y: 'params.px',
                         interaction: {
-                            yDrag: 'params.px'
+                            yDrag: 'params.px',
+                            highlight: 'px'
                         },
                         yInterceptLabel: 'P_x'
                     }
@@ -57,7 +58,7 @@
                 topGraph: {
                     xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
                     yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
-                    objects: [budgetLine, bundlePoint, indifferenceCurve]
+                    objects: [budgetLine, budgetXIntercept, budgetYIntercept,bundleOptimalY, bundleOptimalX, indifferenceCurve]
                 },
                 bottomGraph: {
                     xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_x'},

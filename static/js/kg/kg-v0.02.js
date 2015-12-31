@@ -139,6 +139,19 @@ var KG;
         }
     }
     KG.arrayAverage = arrayAverage;
+    function listMatch(s1, s2) {
+        if (!s1 || !s2 || s1.length == 0 || s2.length == 0) {
+            return false;
+        }
+        var match = false, s1words = s1.split(' '), s2words = s2.split(' ');
+        s1words.forEach(function (word) {
+            if (s2words.indexOf(word) > -1) {
+                match = true;
+            }
+        });
+        return match;
+    }
+    KG.listMatch = listMatch;
     function averageTwoObjects(o1, o2) {
         if (typeof o1 == 'number' && typeof o2 == 'number') {
             return 0.5 * (o1 + o2);
@@ -2152,6 +2165,12 @@ var KG;
             }
             return view;
         };
+        InteractionHandler.prototype.highlightObject = function (view) {
+            if (!view || !view.scope || !view.scope.params) {
+                return false;
+            }
+            return KG.listMatch(view.scope.params.highlight, this.highlight);
+        };
         return InteractionHandler;
     })(KG.Model);
     KG.InteractionHandler = InteractionHandler;
@@ -2181,8 +2200,9 @@ var KG;
             viewObj.interactionHandler.update(scope);
             return this;
         };
-        ViewObject.prototype.classAndVisibility = function () {
-            var classString = this.viewObjectClass;
+        ViewObject.prototype.classAndVisibility = function (suffix) {
+            suffix = suffix || '';
+            var classString = this.viewObjectClass + suffix;
             if (this.className) {
                 classString += ' ' + this.className;
             }
@@ -2192,10 +2212,8 @@ var KG;
             else {
                 classString += ' invisible';
             }
-            if (this.view && this.view.scope && this.view.scope.params.highlight) {
-                if (this.view.scope.params.highlight.indexOf(this.interactionHandler.highlight) > -1) {
-                    classString += ' highlight';
-                }
+            if (this.interactionHandler.highlightObject(this.view)) {
+                classString += ' highlight';
             }
             if (this.hasOwnProperty('objectName')) {
                 classString += ' ' + this.objectName;
@@ -2521,6 +2539,7 @@ var KG;
             }
             var group = view.objectGroup(dropline.name, dropline.initGroupFn(), false);
             var droplineSelection = group.select('.' + dropline.viewObjectClass);
+            var droplineHandle = group.select('.' + dropline.viewObjectClass + 'Handle');
             droplineSelection
                 .attr({
                 'x1': anchorX,
@@ -2529,7 +2548,16 @@ var KG;
                 'y2': pointY,
                 'class': dropline.classAndVisibility()
             });
+            droplineHandle
+                .attr({
+                'x1': anchorX,
+                'y1': anchorY,
+                'x2': pointX,
+                'y2': pointY,
+                'class': dropline.classAndVisibility('Handle')
+            });
             dropline.interactionHandler.setBehavior(view, droplineSelection);
+            dropline.interactionHandler.setBehavior(view, droplineHandle);
             return view;
         };
         return Dropline;
@@ -2986,7 +3014,7 @@ var KG;
                 });
                 lineHandle
                     .attr({
-                    'class': 'lineHandle',
+                    'class': line.classAndVisibility('Handle'),
                     'd': dataLine([startPoint, endPoint])
                 });
                 line.interactionHandler.setBehavior(view, lineSelection);
@@ -3890,7 +3918,8 @@ var KG;
         function SliderControl(definition, modelPath) {
             definition.interaction = {
                 xDrag: true,
-                xDragParam: definition.param
+                xDragParam: definition.param,
+                highlight: definition.param.replace('params.', '')
             },
                 definition.coordinates = { x: definition.param, y: 0 };
             _super.call(this, definition, modelPath);
@@ -6943,12 +6972,17 @@ angular.module('KineticGraphs', [])
         el.on('mouseout', function () {
             scope.updateParams({ highlight: null });
         });
-        scope.$watch('params.highlight', function () { if (scope.params.highlight == attrs.highlight) {
-            el.addClass('highlight');
-        }
-        else {
-            el.removeClass('highlight');
-        } });
+        scope.$watch('params.highlight', function () {
+            console.log('scope highlight = ', scope.params.highlight);
+            console.log('this highlight = ', attrs.highlight);
+            console.log('match? ', KG.listMatch(scope.params.highlight, attrs.highlight));
+            if (KG.listMatch(scope.params.highlight, attrs.highlight)) {
+                el.addClass('highlight');
+            }
+            else {
+                el.removeClass('highlight');
+            }
+        });
     }
     return {
         link: link,
