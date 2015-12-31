@@ -3354,23 +3354,13 @@ var KG;
     var Area = (function (_super) {
         __extends(Area, _super);
         function Area(definition, modelPath) {
-            if (definition.hasOwnProperty('params')) {
-                var p = definition.params;
-                if (p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    };
-                }
-            }
             definition = _.defaults(definition, { interpolation: 'linear' });
             _super.call(this, definition, modelPath);
             if (definition.label) {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
                     className: definition.className,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    color: definition.color,
+                    interaction: definition.interaction,
                     show: definition.show
                 });
                 //console.log(labelDef);
@@ -3379,10 +3369,10 @@ var KG;
             this.viewObjectSVGtype = 'path';
             this.viewObjectClass = 'area';
         }
-        Area.prototype.createSubObjects = function (view, scope) {
+        Area.prototype.createSubObjects = function (view) {
             var labelDiv = this.labelDiv;
             if (labelDiv) {
-                return view.addObject(labelDiv.update(scope));
+                return view.addObject(labelDiv);
             }
             else {
                 return view;

@@ -80,8 +80,8 @@
                                     {x: 'params.length', y: 0}
                                 ],
                                 className: '(2*params.length + 2*params.width > params.perimeter) ? "red" : (2*params.length + 2*params.width == params.perimeter) ? "green" : "orange"',
-                                params: {
-                                    label: ['A = ','params.length*params.width']
+                                label: {
+                                    text: ['A = ','params.length*params.width']
                                 }
                             }
 
@@ -96,11 +96,12 @@
                                     x: 'params.length',
                                     y: 'params.width'
                                 },
-                                xDrag: 'params.length',
-                                yDrag: 'params.width',
-                                params: {
-                                    xAxisLabel: 'params.length',
-                                    yAxisLabel: 'params.width'
+                                interaction: {
+                                    draggable: true
+                                },
+                                droplines: {
+                                    vertical: 'params.length',
+                                    horizontal: 'params.width'
                                 }
 
                             }
@@ -110,13 +111,13 @@
                             definition: {
                                 name: 'boundary',
                                 show: 'params.showPerimeter',
-                                className: 'dashed',
+                                className: 'green',
                                 lineDef: {
                                     intercept: '0.5*params.perimeter',
                                     slope: -1
                                 },
-                                params: {
-                                    label: ['2L + 2W = ','params.perimeter']
+                                label: {
+                                    text: ['2L + 2W = ','params.perimeter']
                                 }
                             }
                         },
@@ -134,8 +135,8 @@
                                     }
                                 },
                                 className: '(2*params.length + 2*params.width > params.perimeter) ? "red" : (2*params.length + 2*params.width == params.perimeter) ? "green" : "orange"',
-                                params: {
-                                    label: ["LW = ",'params.length*params.width']
+                                label: {
+                                    text: ["LW = ",'params.length*params.width']
                                 }
                             }
 
