@@ -33,23 +33,24 @@
                         <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
+                        <div class="col-xs-3 math" highlight="income" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
                         </div>
                         <div class="col-xs-9" id="incomeSlider"></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
+                        <div class="col-xs-3 math" highlight="px" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
                         </div>
                         <div class="col-xs-9" id="pxSlider"></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
+                        <div class="col-xs-3 math" highlight="py" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
                         </div>
                         <div class="col-xs-9" id="pySlider"></div>
                     </div>
                 </div>
                 <div ng-show="model.utility.type == 'Linear'">Note: assumes buy only Y if <span class="math">MRS = \frac{P_x}{P_y}</span></div>
                 {% endraw %}
+
                 <hr/>
                 <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
                     <option value="CobbDouglas">Cobb-Douglas</option>
@@ -107,7 +108,7 @@
                         options: [
                             {
                                 name: 'CobbDouglas',
-                                label: 'Cobb-Douglas',
+                                label: 'Cobb\-Douglas',
                                 selection: cobbDouglasDefinition
                             },
                             {
@@ -254,12 +255,41 @@
                         name: 'BL',
                         className: 'budget',
                         linear: 'model.budget.budgetSegments[0].linear',
-                        highlightParam: 'highlightBudget',
-                        highlight: 'params.highlightBudget',
-                        params: {
-                            label: 'BL',
-                            xInterceptLabel: "\\frac{I}{P_x}",
-                            yInterceptLabel: "\\frac{I}{P_y}"
+                        interaction: {
+                            highlight: 'budget'
+                        },
+                        label: {
+                            text: 'BL'
+                        }
+                    }
+                },
+                budgetXIntercept = {
+                    type: 'KG.GraphDiv',
+                    definition: {
+                        name: 'budgetXIntercept',
+                        className: 'budget',
+                        text: "\\frac{I}{P_x}",
+                        coordinates: {
+                            x: 'params.income/params.px',
+                            y: 'AXIS'
+                        },
+                        interaction: {
+                            highlight: 'budget income px'
+                        }
+                    }
+                },
+                budgetYIntercept = {
+                    type: 'KG.GraphDiv',
+                    definition: {
+                        name: 'budgetYIntercept',
+                        className: 'budget',
+                        text: "\\frac{I}{P_y}",
+                        coordinates: {
+                            x: 'AXIS',
+                            y: 'params.income/params.py'
+                        },
+                        interaction: {
+                            highlight: 'budget income py'
                         }
                     }
                 },
@@ -268,18 +298,57 @@
                     definition: {
                         name: 'bundle',
                         className: 'utility',
+                        show: '!params.snapToOptimal',
+                        coordinates: {
+                            x: 'params.x',
+                            y: 'model.bundle.y'
+                        },
+                        interaction: {
+                            xDrag: true,
+                            highlight: 'bundle'
+                        },
+                        droplines: {
+                            vertical: 'x',
+                            horizontal: 'y'
+                        }
+
+                    }
+                },
+                bundleOptimalX = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleX',
+                        className: 'utility',
+                        show: 'params.snapToOptimal',
                         coordinates: {
                             x: 'model.bundle.x',
                             y: 'model.bundle.y'
                         },
-                        xDrag: '!params.snapToOptimal',
-                        xDragParam: 'x',
-                        highlightParam: 'highlightBundle',
-                        highlight: 'params.highlightBundle',
-                        params: {
-                            xAxisLabel: 'params.snapToOptimal ? "x^*" : "x"',
-                            yAxisLabel: 'params.snapToOptimal ? "y^*" : "y"'
+                        interaction: {
+                            highlight: 'x'
+                        },
+                        droplines: {
+                            vertical: 'x^*'
                         }
+                    }
+                },
+                bundleOptimalY = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleY',
+                        className: 'utility',
+                        show: 'params.snapToOptimal',
+                        coordinates: {
+                            x: 'model.bundle.x',
+                            y: 'model.bundle.y'
+                        },
+                        interaction: {
+                            highlight: 'y'
+                        }
+                        , droplines: {
+                            horizontal: 'y^*'
+                        }
+
                     }
                 },
                 indifferenceCurve = {
@@ -287,12 +356,34 @@
                     definition: {
                         name: 'indifference_curve',
                         className: 'utility',
-                        highlightParam: 'highlightUtility',
-                        highlight: 'params.highlightUtility',
-                        params: {label: 'params.snapToOptimal ? "U^*" : "U"'},
-                        fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))"
+                        fn: "model.utility.utilityFunction.setLevel(model.utility.utility(model.bundle))",
+                        interaction: {
+                            highlight: 'utility'
+                        },
+                        label: {
+                            text: 'params.snapToOptimal ? "U^*" : "U"'
+                        }
                     }
                 },
+                indifferenceCurveMap = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                        type: 'KG.FunctionPlot',
+                        definition: {
+                            name: 'indifference_curve_'+level,
+                            className: 'dataPathFamily',
+                            fn: "model.utility.indifferenceCurveThroughBundleFn({x:" + level + ",y:"+level+"})",
+                            interaction: {
+                                highlight: 'indifferenceMap' + level
+                            },
+                            show: 'params.showMap',
+                            label: {
+                                text: ['U = U(',level,',',level,')'],
+                                show: 'params.highlight.indifferenceMap' + level
+                            }
+                        }
+                    }
+
+                }),
                 MRSline = {
                     type: 'KG.Line',
                     definition: {
@@ -310,6 +401,9 @@
                             }
                         },
                         show: '(params.showMRS && !params.snapToOptimal)',
+                        interaction: {
+                            highlight: 'MRS'
+                        },
                         label: {
                             text: 'MRS_{x,y}',
                             valign: 'top',
@@ -321,13 +415,13 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'PCCX',
-                        show: 'params.showPCCX',
+                        show: 'params.showPCCX && params.snapToOptimal',
                         data: 'model.priceConsumptionCurveData({good:"x"})',
                         className: 'demand',
                         interpolation: 'basis',
                         labelPosition: 'START',
-                        params: {
-                            label: 'PCC_x'
+                        label: {
+                            text: 'PCC_x'
                         }
                     }
                 },
@@ -335,13 +429,13 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'PCCY',
-                        show: 'params.showPCCY',
+                        show: 'params.showPCCY && params.snapToOptimal',
                         data: 'model.priceConsumptionCurveData({good:"y"})',
                         className: 'demand',
-                        interpolation: 'basis',
+                        interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
                         labelPosition: 'START',
-                        params: {
-                            label: 'PCC_y'
+                        label: {
+                            text: 'PCC_y'
                         }
                     }
                 },
@@ -349,12 +443,12 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'ICC',
-                        show: 'params.showICC',
+                        show: 'params.showICC && params.snapToOptimal',
                         data: 'model.incomeConsumptionCurveData()',
                         className: 'engel',
-                        interpolation: 'basis',
-                        params: {
-                            label: 'ICC'
+                        interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
+                        label: {
+                            text: 'ICC'
                         }
                     }
                 }

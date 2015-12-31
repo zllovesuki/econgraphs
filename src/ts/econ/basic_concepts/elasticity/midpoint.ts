@@ -20,7 +20,6 @@ module EconGraphs {
         yAvg: number;
         xPercentDiff: number;
         yPercentDiff: number;
-        line: KG.Line;
     }
 
     export class MidpointElasticity extends Elasticity implements IMidpointElasticity
@@ -37,7 +36,6 @@ module EconGraphs {
 
         constructor(definition:MidpointElasticityDefinition, modelPath?:string) {
             super(definition, modelPath);
-
         }
 
         _calculateElasticity(inputs) {
@@ -57,8 +55,6 @@ module EconGraphs {
             e.xPercentDiff = e.xDiff / e.xAvg;
             e.yPercentDiff = e.yDiff / e.yAvg;
             e.elasticity = e.xPercentDiff / e.yPercentDiff;
-
-            console.log('calculating elasticity');
 
             return e;
         }

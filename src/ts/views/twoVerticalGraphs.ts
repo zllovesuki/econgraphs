@@ -50,7 +50,7 @@ module KG
 
         }
 
-        redraw(scope) {
+        redraw() {
             var view = this;
 
             // Establish dimensions of the view
@@ -73,25 +73,24 @@ module KG
             view.topGraph.maxDimensions.height = graphHeight;
             view.bottomGraph.maxDimensions.height = graphHeight;
 
-            view.topGraph.updateParams = view.updateParams;
-            view.bottomGraph.updateParams = view.updateParams;
-            view.bottomGraph.redraw(scope);
-            view.topGraph.redraw(scope);
+            view.topGraph.scope = view.scope;
+            view.bottomGraph.scope = view.scope;
+            view.topGraph.redraw();
+            view.bottomGraph.redraw();
 
-
-            return view.drawObjects(scope);
+            return view;
         }
 
-        drawObjects(scope) {
+        drawObjects() {
             var view = this;
-            view.topGraph.drawObjects(scope);
-            view.bottomGraph.drawObjects(scope);
-            if(view.hasOwnProperty('objects')) {
+            view.topGraph.drawObjects();
+            view.bottomGraph.drawObjects();
+            /*if(view.hasOwnProperty('objects')) {
                 view.objects.forEach(function(object) {object.createSubObjects(view)});
-                view.objects.forEach(function(object) {object.update(scope).render(view)});
-                view.topGraph.objects.forEach(function(object) {object.update(scope).render(view.topGraph)});
-                view.bottomGraph.objects.forEach(function(object) {object.update(scope).render(view.bottomGraph)});
-            }
+                view.objects.forEach(function(object) {object.render(view)});
+                view.topGraph.objects.forEach(function(object) {object.render(view.topGraph)});
+                view.bottomGraph.objects.forEach(function(object) {object.render(view.bottomGraph)});
+            }*/
             return view;
         }
 

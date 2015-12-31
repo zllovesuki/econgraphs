@@ -1,4 +1,115 @@
 /* Note: these colors are chosen to match the ordinal scales in D3 */
+.price {
+  color: #7f7f7f;
+  stroke: #7f7f7f;
+  stroke-width: 2;
+  stroke-dasharray: 10,10;
+}
+.demand {
+  color: #1f77b4;
+  stroke: #1f77b4;
+  fill: #aec7e8;
+}
+.supply {
+  color: #ff7f0e;
+  stroke: #ff7f0e;
+  fill: #ffbb78;
+}
+.equilibrium {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  fill: #98df8a;
+}
+.growth {
+  color: #2ca02c;
+  stroke: #2ca02c;
+}
+.balancedGrowth {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  stroke-dasharray: 10,10;
+}
+.capital {
+  color: #ff7f0e;
+  stroke: #ff7f0e;
+  fill: #ff7f0e;
+}
+.consumption {
+  color: #1f77b4;
+  stroke: #1f77b4;
+  fill: #aec7e8;
+}
+.totalCost {
+  color: #d62728;
+  stroke: #d62728;
+  fill: #ff9896;
+}
+.averageCost {
+  color: #9467bd;
+  stroke: #9467bd;
+  fill: #c5b0d5;
+}
+.marginalCost {
+  color: #ff7f0e;
+  stroke: #ff7f0e;
+  fill: #ffbb78;
+}
+.variableCost {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  fill: #98df8a;
+}
+.averageVariableCost {
+  color: #bcbd22;
+  stroke: #bcbd22;
+  fill: #dbdb8d;
+}
+.utility {
+  color: #6C3082;
+  stroke: #6C3082;
+  fill: #c5b0d5;
+}
+.utility-old {
+  color: #c5b0d5;
+  stroke: #c5b0d5;
+  fill: #c5b0d5;
+}
+.expectedUtility {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  fill: #98df8a;
+}
+.riskPremium {
+  color: #ff7f0e;
+  stroke: #ff7f0e;
+  fill: #ffbb78;
+}
+.totalRevenue {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  fill: #98df8a;
+}
+.marginalRevenue {
+  color: #bcbd22;
+  stroke: #bcbd22;
+  fill: #dbdb8d;
+}
+.budget {
+  color: #014421;
+  stroke: #014421;
+  fill: #ffbb78;
+}
+.engel {
+  color: #ff7f0e;
+  stroke: #ff7f0e;
+  fill: #ffbb78;
+}
+.curve {
+  fill: none;
+}
+.engel.curve {
+  fill: none;
+}
 /* Note: these fonts can b */
 @font-face {
   font-family: 'Open Sans';
@@ -267,6 +378,9 @@ a {
   stroke: #000;
   shape-rendering: crispEdges;
 }
+.axisLabel {
+  background-color: white;
+}
 button {
   background-color: transparent;
   border: none;
@@ -277,7 +391,6 @@ button:hover {
 .dropline {
   stroke-dasharray: 10, 10;
   stroke-width: 2;
-  stroke: grey;
 }
 .invisible {
   display: none;
@@ -289,11 +402,6 @@ button:hover {
 .curve {
   stroke-width: 3;
   fill: none;
-}
-.highlight {
-  font-weight: bold;
-  stroke-width: 5;
-  background-color: yellow;
 }
 .pointSymbol {
   stroke-width: 3;
@@ -393,114 +501,26 @@ button:hover {
   fill: #9467bd;
   color: #9467bd;
 }
-.price {
-  color: #7f7f7f;
-  stroke: #7f7f7f;
-  stroke-width: 2;
-  stroke-dasharray: 10,10;
+.highlight {
+  font-weight: bold;
+  stroke-width: 5;
+  background-color: yellow;
+  color: black;
 }
-.demand {
-  color: #1f77b4;
-  stroke: #1f77b4;
-  fill: #aec7e8;
+.highlight.dotted {
+  stroke-dasharray: 5,5;
 }
-.supply {
-  color: #ff7f0e;
-  stroke: #ff7f0e;
-  fill: #ffbb78;
+.highlight.dashed {
+  stroke-dasharray: 15,15;
 }
-.equilibrium {
-  color: #2ca02c;
-  stroke: #2ca02c;
-  fill: #98df8a;
-}
-.growth {
-  color: #2ca02c;
-  stroke: #2ca02c;
-}
-.balancedGrowth {
-  color: #2ca02c;
-  stroke: #2ca02c;
-  stroke-dasharray: 10,10;
-}
-.capital {
-  color: #ff7f0e;
-  stroke: #ff7f0e;
-  fill: #ff7f0e;
-}
-.consumption {
-  color: #1f77b4;
-  stroke: #1f77b4;
-  fill: #aec7e8;
-}
-.totalCost {
-  color: #d62728;
-  stroke: #d62728;
-  fill: #ff9896;
-}
-.averageCost {
-  color: #9467bd;
-  stroke: #9467bd;
-  fill: #c5b0d5;
-}
-.marginalCost {
-  color: #ff7f0e;
-  stroke: #ff7f0e;
-  fill: #ffbb78;
-}
-.variableCost {
-  color: #2ca02c;
-  stroke: #2ca02c;
-  fill: #98df8a;
-}
-.averageVariableCost {
-  color: #bcbd22;
-  stroke: #bcbd22;
-  fill: #dbdb8d;
-}
-.utility {
-  color: #6C3082;
-  stroke: #6C3082;
-  fill: #c5b0d5;
-}
-.utility-old {
-  color: #c5b0d5;
-  stroke: #c5b0d5;
-  fill: #c5b0d5;
-}
-.expectedUtility {
-  color: #2ca02c;
-  stroke: #2ca02c;
-  fill: #98df8a;
-}
-.riskPremium {
-  color: #9467bd;
-  stroke: #9467bd;
-  fill: #9467bd;
-}
-.totalRevenue {
-  color: #2ca02c;
-  stroke: #2ca02c;
-  fill: #2ca02c;
-}
-.marginalRevenue {
-  color: #bcbd22;
-  stroke: #bcbd22;
-  fill: #dbdb8d;
-}
-.budget {
-  color: #014421;
-  stroke: #014421;
-  fill: #ffbb78;
-}
-.engel {
-  color: #ff7f0e;
-  stroke: #ff7f0e;
-  fill: #ffbb78;
-}
-.curve {
+.drawHandle,
+.segmentHandle,
+.dataPathHandle,
+.lineHandle,
+.curveHandle,
+.droplineHandle {
+  stroke-width: 40;
+  stroke-dasharray: none;
   fill: none;
-}
-.engel.curve {
-  fill: none;
+  stroke: transparent;
 }

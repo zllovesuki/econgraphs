@@ -28,23 +28,40 @@ module KG {
         constructor(definition:DroplineDefinition, modelPath?: string) {
 
             definition.coordinates = KG.getCoordinates(definition.coordinates);
+
+            definition.interaction = definition.interaction || {};
+
+            if(definition.interaction.hasOwnProperty('draggable')) {
+                if(definition.horizontal) {
+                    definition.interaction.yDrag = definition.interaction.draggable;
+                    definition.interaction.yDragParam = definition.coordinates.y;
+                } else {
+                    definition.interaction.xDrag = definition.interaction.draggable;
+                    definition.interaction.xDragParam = definition.coordinates.x;
+                }
+            } else {
+                if(definition.horizontal) {
+                    definition.interaction.xDrag = false;
+                } else {
+                    definition.interaction.yDrag = false;
+                }
+            }
+
             definition = _.defaults(definition,{
                 horizontal: false,
-                draggable: false,
                 axisLabel: ''
             });
+
             super(definition,modelPath);
 
             if(definition.axisLabel.length > 0) {
                 var labelDef:GraphDivDefinition = {
                     name: definition.name + '_label',
-                    className: definition.className,
+                    className: definition.className + ' axisLabel',
                     text: definition.axisLabel,
                     dimensions: {width: 25, height:20},
-                    backgroundColor: 'white',
                     show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction
                 };
 
                 if(definition.horizontal) {
@@ -52,15 +69,11 @@ module KG {
                         x: KG.GraphDiv.AXIS_COORDINATE_INDICATOR,
                         y: definition.coordinates.y
                     };
-                    labelDef.yDrag = definition.draggable;
-                    labelDef.yDragParam = definition.yDragParam;
                 } else {
                     labelDef.coordinates = {
                         x: definition.coordinates.x,
                         y: KG.GraphDiv.AXIS_COORDINATE_INDICATOR
                     };
-                    labelDef.xDrag = definition.draggable;
-                    labelDef.xDragParam = definition.xDragParam;
                 }
 
                 this.labelDiv = new GraphDiv(labelDef);
@@ -68,15 +81,12 @@ module KG {
 
             this.viewObjectSVGtype = 'line';
             this.viewObjectClass = 'dropline';
-
-            console.log('dropline:');
-            console.log(this);
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
             var p = this;
             if(p.labelDiv) {
-                view.addObject(p.labelDiv.update(scope));
+                view.addObject(p.labelDiv);
             }
             return view;
         }
@@ -97,6 +107,7 @@ module KG {
             var group:D3.Selection = view.objectGroup(dropline.name, dropline.initGroupFn(), false);
 
             var droplineSelection:D3.Selection = group.select('.'+ dropline.viewObjectClass);
+            var droplineHandle:D3.Selection = group.select('.'+ dropline.viewObjectClass + 'Handle');
 
             droplineSelection
                 .attr({
@@ -107,7 +118,17 @@ module KG {
                     'class': dropline.classAndVisibility()
                 });
 
-            dropline.setHighlightBehavior(view);
+            droplineHandle
+                .attr({
+                    'x1': anchorX,
+                    'y1': anchorY,
+                    'x2': pointX,
+                    'y2': pointY,
+                    'class': dropline.classAndVisibility('Handle')
+                });
+
+            dropline.interactionHandler.setBehavior(view, droplineSelection);
+            dropline.interactionHandler.setBehavior(view, droplineHandle);
 
             return view;
         }
@@ -117,7 +138,9 @@ module KG {
     export class VerticalDropline extends Dropline {
 
         constructor(definition, modelPath?: string) {
-            definition.name += '_vDropline';
+            if(definition.name.indexOf('_vDropline') == -1) {
+                definition.name += '_vDropline';
+            }
             definition.horizontal = false;
             super(definition, modelPath);
         }
@@ -126,7 +149,9 @@ module KG {
     export class HorizontalDropline extends Dropline {
 
         constructor(definition, modelPath?: string) {
-            definition.name += '_hDropline';
+            if(definition.name.indexOf('_hDropline') == -1) {
+                definition.name += '_hDropline';
+            }
             definition.horizontal = true;
             super(definition, modelPath);
         }

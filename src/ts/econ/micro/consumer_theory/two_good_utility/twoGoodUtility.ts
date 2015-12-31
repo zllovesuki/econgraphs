@@ -75,6 +75,7 @@ module EconGraphs {
             u.utilityFunction.update(scope);
             u.muxFunction.update(scope);
             u.muyFunction.update(scope);
+            console.log('updated utility function to ',u);
             return u;
         }
 
@@ -121,67 +122,19 @@ module EconGraphs {
         mrs(bundle:TwoGoodBundle) {
             return this.mux(bundle) / this.muy(bundle);
         }
-
-        mrsLine(bundle, params) {
-            var u = this;
-            return new KG.Line({
-                name: 'mrsLine',
-                className: 'utility dotted',
-                lineDef: {
-                    point: bundle,
-                    slope: -1 * u.mrs(bundle)
-                },
-                params: params
-            })
-        }
-
-        bundlePoint(bundle, params) {
-            return new KG.Point({
-                coordinates: {x: bundle.x, y: bundle.y},
-                name: 'bundlePoint',
-                className: 'utility',
-                params: params
-            })
-        }
-
         /* Indifference curves */
 
-        indifferenceCurveAtUtility(utility:number, params: KG.CurveParamsDefinition, map?:boolean) {
-            var u = this,
-                originalLevel = u.utilityFunction.level;
+        indifferenceCurveAtUtilityFn(utility:number) {
+            var u = this;
             var clone = _.clone(u.utilityFunction);
-            var indifferenceCurve = new KG.FunctionPlot({
-                name: 'indifferenceCurve',
-                fn: clone.setLevel(utility),
-                className: map ? 'dataPathFamily' : 'utility',
-                params: params
-            });
-            u.utilityFunction.setLevel(originalLevel);
-            return indifferenceCurve;
+            clone.setLevel(utility);
+            return clone;
         }
 
-        indifferenceCurveThroughBundle(bundle:TwoGoodBundle, params: KG.CurveParamsDefinition) {
+        indifferenceCurveThroughBundleFn(bundle:TwoGoodBundle) {
             var u = this,
                 utility = u.utility(bundle);
-            return u.indifferenceCurveAtUtility(utility,params);
-        }
-
-        indifferenceCurveFamily(levels:number[], params: KG.CurveParamsDefinition) {
-            var u = this;
-
-            var indifferenceCurves = [];
-
-            params = _.defaults(params,{
-                name: 'map'
-            });
-
-            levels.forEach(function(level) {
-                params.objectName = "U" + level;
-                indifferenceCurves.push(u.modelProperty("indifferenceCurveAtUtility("+level+","+JSON.stringify(params)+",true)"));
-            });
-
-            return new KG.ViewObjectGroup({name: 'indifferenceCurve_'+params.name, viewObjects: indifferenceCurves});
-
+            return u.indifferenceCurveAtUtilityFn(utility);
         }
 
         /* Utility maximization subject to a budget constraint */

@@ -54,6 +54,7 @@ module EconGraphs {
                     y: d.budget.yValue(d.x)
                 }
             }
+            console.log('updated bundle to (',d.bundle.x,',',d.bundle.y,')');
             return d;
         }
 
@@ -112,7 +113,7 @@ module EconGraphs {
                 curveData = [];
 
             var initialPrice = d.budget['p' + pccParams.good];
-            console.log('setting initial price to ',initialPrice);
+            //console.log('setting initial price to ',initialPrice);
 
             samplePoints.forEach(function(price) {
                 d.budget.setPrice(price,pccParams.good)

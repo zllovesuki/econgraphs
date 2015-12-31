@@ -21,8 +21,8 @@ module KG {
 
         constructor(definition:ArrowDefinition, modelPath?: string) {
 
-            definition.a = definition.begin;
-            definition.b = definition.end;
+            definition.a = {x: definition.begin.x, y: definition.begin.y};
+            definition.b = {x: definition.end.x, y: definition.end.y};
             definition.arrows = Curve.END_ARROW_STRING;
 
             super(definition, modelPath);

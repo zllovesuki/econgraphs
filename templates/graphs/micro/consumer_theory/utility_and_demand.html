@@ -17,9 +17,7 @@
                         name: 'demandCurveX',
                         className: 'demand',
                         data: 'model.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
-                        params: {
-                            label: 'D_x'
-                        }
+                        label: {text: 'D_x'}
                     }
                 },
                 quantityDemandedAtPriceX = {
@@ -31,9 +29,11 @@
                             x: 'model.bundle.x',
                             y: 'params.px'
                         },
-                        params: {
-                            yDragParam: 'px',
-                            xAxisLabel: 'x^*'
+                        interaction: {
+                            highlight: 'x',
+                        },
+                        droplines: {
+                            vertical: 'x^*'
                         }
                     }
                 },
@@ -43,10 +43,11 @@
                         name: 'priceLineX',
                         className: 'price',
                         y: 'params.px',
-                        yDrag: 'params.px',
-                        params: {
-                            yInterceptLabel: 'P_x'
-                        }
+                        interaction: {
+                            yDrag: 'params.px',
+                            highlight: 'px'
+                        },
+                        yInterceptLabel: 'P_x'
                     }
                 };
 
@@ -57,7 +58,7 @@
                 topGraph: {
                     xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
                     yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
-                    objects: [budgetLine, bundlePoint, indifferenceCurve]
+                    objects: [budgetLine, budgetXIntercept, budgetYIntercept,bundleOptimalY, bundleOptimalX, indifferenceCurve]
                 },
                 bottomGraph: {
                     xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_x'},

@@ -98,6 +98,9 @@
                                     linear: 'model.demandFunction',
                                     label: {
                                         text: 'D'
+                                    },
+                                    interaction: {
+                                        highlight: 'demandCurve'
                                     }
                                 }
                             },
@@ -107,7 +110,10 @@
                                     name: 'demandPriceIntercept',
                                     coordinates: {x: 0, y: 'params.demandPriceIntercept'},
                                     className: 'demand',
-                                    yDrag: 'params.demandPriceIntercept'
+                                    interaction: {
+                                        yDrag: 'params.demandPriceIntercept',
+                                        highlight: 'demandCurve'
+                                    }
                                 }
                             },
                             {
@@ -116,7 +122,11 @@
                                     name: 'demandQuantityIntercept',
                                     coordinates: {x: 'params.demandQuantityIntercept', y: 0},
                                     className: 'demand',
-                                    xDrag: 'params.demandQuantityIntercept'
+                                    interaction: {
+                                        xDrag: 'params.demandQuantityIntercept',
+                                        highlight: 'demandCurve'
+                                    }
+
                                 }
                             },
                             {
@@ -125,10 +135,11 @@
                                     name: 'priceLine',
                                     className: 'price',
                                     type: 'HorizontalLine',
-                                    yDrag: 'price',
                                     y: 'params.price',
-                                    params: {
-                                        yInterceptLabel: 'P'
+                                    yInterceptLabel: 'P',
+                                    interaction: {
+                                        yDrag: 'price',
+                                        highlight: 'priceLine'
                                     }
                                 }
                             },
@@ -138,7 +149,9 @@
                                     name: 'quantityDemandedAtPrice',
                                     className: 'demand',
                                     coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
-                                    yDrag: true,
+                                    interaction: {
+                                        yDrag: 'price'
+                                    },
                                     droplines: {
                                         vertical: 'Q^D(P)'
                                     }

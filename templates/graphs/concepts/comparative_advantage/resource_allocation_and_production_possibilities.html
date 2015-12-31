@@ -1,54 +1,279 @@
-{% extends 'layouts/six_graph_layout.html' %}
+{% extends 'layouts/econgraphs.html' %}
 
-{% block controller %}ProductionPossibilitiesController{% endblock %}
-
-{% block left_title %}Resource Allocation{% endblock %}
-
-{% block right_title %}Production Choice{% endblock %}
-
-{% block left_2_title %}<div ng-if="displayOptions.show_prod_function">Wine Production Function</div>{% endblock %}
-
-{% block right_2_title %}
-    <div ng-if="displayOptions.show_prod_function">Cloth Production Function</div>{% endblock %}
-
-{% block controls %}
-
+{% block body %}
     {% raw %}
-
-    <p>{{ resources.name }}: {{ resources.quantity }} {{ resources.units }}<input type="range" min="0" max="200"
-                                                                                  step="1" ng-model="resources.quantity"></p>
-    <p>% Employed: {{ allocation.percent_resources_used }}<input type="range" min="0" max="100"
-                                                                step="1" ng-model="allocation.percent_resources_used"></p>
-    <p>% Producing {{ good_x.name }}: {{ allocation.percent_resources_x }}<input type="range" min="0" max="100"
-                                                                                       step="1"
-                                                                                       ng-model="allocation.percent_resources_x">
-    </p>
-
-    <hr/>
-
-    <p>{{ good_x.name }} Productivity: {{ good_x.productivity }}<input type="range" min="0.1" max="4"
-                                                                                  step="0.1"
-                                                                                  ng-model="good_x.productivity"></p>
-
-    <p>{{ good_y.name }} Productivity: {{ good_y.productivity }}<input type="range"
-                                                                                                          min="0.1"
-                                                                                                          max="4"
-                                                                                                          step="0.1"
-                                                                                                          ng-model="good_y.productivity">
-    </p>
-
-    <p>Diminishing marginal returns:<input type="range"
-                                           min="0"
-                                           max="0.002"
-                                           step="0.0001"
-                                           ng-model="resources.diminishing_marginal_returns"></p>
-
-
-
-    <hr/>
-    <p><input type="checkbox" ng-model="displayOptions.show_prod_function"> Show production function</p>
+    <div class="row"  ng-controller="KineticGraphCtrl">
+        <div class=col-md-8>
+            <div id="title">
+                <h1>Resource Allocation and Production Possibilities</h1>
+                <hr/>
+                <p>Suppose you have <span highlight="laborForce">{{ params.workers }} workers</span> in your economy. Each worker can make <span highlight="wine">{{ params.wineProductivity }} barrels of wine</span>, or <span highlight="cloth">{{ params.clothProductivity }} yards of cloth</span>.</p>
+                <p>Drag the dot in the left-hand graph to allocate workers; the right-hand graph will show the resulting production choice.</p>
+                <hr/>
+            </div>
+            <div id="main" class="row">
+                <div class="col-md-6">
+                    <div id="resourceAllocationGraph"></div>
+                </div>
+                <div class="col-md-6">
+                    <div id="productionPossibilitiesGraph"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="well">
+                <p class="subtitle">Resource and Technology Parameters</p>
+                <hr/>
+                <p highlight="laborForce">Labor Force: {{params.workers}} workers</p>
+                <div id="workerSlider"></div>
+                <hr/>
+                <p highlight="wine">Wine Productivity : {{params.wineProductivity}} barrels per worker</p>
+                <div id="wineProductivitySlider"></div>
+                <hr/>
+                <p highlight="cloth">Cloth Productivity: {{params.clothProductivity}} yards per worker</p>
+                <div id="clothProductivitySlider"></div>
+            </div>
+            <div class="well">
+                <p class="subtitle">Production Choice (drag resource dot to change)</p>
+                <hr/>
+                <div class="math displayMath" highlight="wine">W = {{ params.wineWorkers }} \text{ workers} \times {{ params.wineProductivity }} \text{ } \frac{\text{barrels}}{\text{worker}} = {{ params.wineWorkers*params.wineProductivity }} \text{ barrels}</div>
+                <hr/>
+                <div class="math displayMath" highlight="cloth">C = {{ params.clothWorkers }} \text{ workers} \times {{ params.clothProductivity }} \text{ } \frac{\text{yards}}{\text{worker}} = {{ params.clothWorkers*params.clothProductivity }} \text{ yards}</div>
+            </div>
+        </div>
+        </div>
+    </div>
 
     {% endraw %}
-
 {% endblock %}
 
+
+{% block model %}
+    <script>
+        var scopeDefinition = {
+            params: {
+                workers: 150,
+                wineProductivity: 3,
+                clothProductivity: 2,
+                wineWorkers: 50,
+                clothWorkers: 100,
+                showRF: true,
+                showPPF: true,
+                showRFarea: false,
+                showPPFarea: false
+            },
+            restrictions: [{
+                expression: 'params.wineWorkers',
+                restrictionType: 'range',
+                min: 0,
+                max: 200,
+                precision: 10
+            },
+            {
+                expression: 'params.clothWorkers',
+                restrictionType: 'range',
+                min: 0,
+                max: 200,
+                precision: 10
+            }],
+            views:[
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'resourceAllocationGraph',
+                        square: true,
+                        xAxisDef: {min: 0, max: 200, title: '\\text{Workers Allocated to Wine }(L_W)'},
+                        yAxisDef: {min: 0, max: 200, title: '\\text{Workers Allocated to Cloth }(L_C)'},
+                        objects: [
+                            {
+                                type: 'KG.VerticalDropline',
+                                definition: {
+                                    name: 'productionPoint',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 'params.wineWorkers',
+                                        y: 'params.clothWorkers'
+                                    },
+                                    interaction: {
+                                        highlight: 'wine'
+                                    },
+                                    axisLabel: 'params.wineWorkers'
+                                }
+                            },
+                            {
+                                type: 'KG.HorizontalDropline',
+                                definition: {
+                                    name: 'productionPoint',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 'params.wineWorkers',
+                                        y: 'params.clothWorkers'
+                                    },
+                                    interaction: {
+                                        highlight: 'cloth'
+                                    },
+                                    axisLabel: 'params.clothWorkers'
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'point',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 'params.wineWorkers',
+                                        y: 'params.clothWorkers'
+                                    },
+                                    interaction: {
+                                        draggable: true,
+                                        highlight: 'productionChoice'
+                                    }
+
+                                }
+                            },
+                            {
+                                type: 'KG.Line',
+                                definition: {
+                                    name: 'boundary',
+                                    show: 'params.showRF',
+                                    className: 'green',
+                                    lineDef: {
+                                        intercept: 'params.workers',
+                                        slope: -1
+                                    },
+                                    label: {
+                                        text: ['L_W + L_C = ','params.workers']
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.GraphDiv',
+                                definition: {
+                                    name: 'efficiency',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 150,
+                                        y: 150
+                                    },
+                                    math: false,
+                                    text: '(params.wineWorkers + params.clothWorkers > params.workers) ? "Not enough workers" : (params.wineWorkers + params.clothWorkers == params.workers) ? "Full employment" : "Unemployment"'
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'productionPossibilitiesGraph',
+                        square: true,
+                        xAxisDef: {min: 0, max: 1000, title: '\\text{Barrels of Wine Produced }(W)'},
+                        yAxisDef: {min: 0, max: 1000, title: '\\text{Yards of Cloth Produced }(C)'},
+                        objects: [
+                            {
+                                type: 'KG.VerticalDropline',
+                                definition: {
+                                    name: 'productionPoint',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 'params.wineWorkers*params.wineProductivity',
+                                        y: 'params.clothWorkers*params.clothProductivity'
+                                    },
+                                    interaction: {
+                                        highlight: 'wine'
+                                    },
+                                    axisLabel: 'params.wineWorkers * params.wineProductivity'
+                                }
+                            },
+                            {
+                                type: 'KG.HorizontalDropline',
+                                definition: {
+                                    name: 'productionPoint',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 'params.wineWorkers*params.wineProductivity',
+                                        y: 'params.clothWorkers*params.clothProductivity'
+                                    },
+                                    interaction: {
+                                        highlight: 'cloth'
+                                    },
+                                    axisLabel: 'params.clothWorkers * params.clothProductivity'
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'productionPoint',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 'params.wineWorkers*params.wineProductivity',
+                                        y: 'params.clothWorkers*params.clothProductivity'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Line',
+                                definition: {
+                                    name: 'PPF',
+                                    show: 'params.showRF',
+                                    className: 'green',
+                                    lineDef: {
+                                        intercept: 'params.workers*params.clothProductivity',
+                                        slope: '-params.clothProductivity/params.wineProductivity'
+                                    },
+                                    label: {
+                                        text: 'PPF'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.GraphDiv',
+                                definition: {
+                                    name: 'efficiency',
+                                    className: '(params.wineWorkers + params.clothWorkers > params.workers) ? "red" : (params.wineWorkers + params.clothWorkers == params.workers) ? "green" : "orange"',
+                                    coordinates: {
+                                        x: 750,
+                                        y: 750
+                                    },
+                                    math: false,
+                                    text: '(params.wineWorkers + params.clothWorkers > params.workers) ? "Impossible to produce" : (params.wineWorkers + params.clothWorkers == params.workers) ? "Efficient" : "Inefficient"'
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'workerSlider',
+                        param: 'workers',
+                        precision: '10',
+                        axisDef: {min: 0, max: 200}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'wineProductivitySlider',
+                        param: 'wineProductivity',
+                        precision: '1',
+                        axisDef: {min: 1, max: 5}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'clothProductivitySlider',
+                        param: 'clothProductivity',
+                        precision: '1',
+                        axisDef: {min: 1, max: 5}
+                    }
+                }
+            ]
+        };
+    </script>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+{% endblock %}

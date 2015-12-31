@@ -21,6 +21,8 @@ module KG
     export interface IView extends IModel
     {
 
+        scope: IScope;
+
         show: boolean;
         square: boolean;
 
@@ -40,20 +42,18 @@ module KG
         nearRight: (p:ICoordinates) => boolean;
 
         // render given current scope
-        render: (scope:IScope, redraw:boolean) => void;
-        redraw: (scope:IScope) => void;
-        drawObjects: (scope:IScope) => void;
+        render: (redraw:boolean) => void;
+        redraw: () => void;
+        drawObjects: () => void;
 
         // view objects
         objects: ViewObject[];
-
-        // method to bubble model changes to the controller from user interaction with the view
-        updateParams: (any) => void;
 
     }
 
     export class View extends Model implements IView
     {
+        public scope;
         public show;
         public square;
         public element_id;
@@ -77,49 +77,52 @@ module KG
                 square: false
             });
             super(definition, modelPath);
+            var view = this;
             if(definition.hasOwnProperty('xAxisDef')){
                 this.xAxis = new XAxis(definition.xAxisDef);
             }
             if(definition.hasOwnProperty('yAxisDef')){
                 this.yAxis = new YAxis(definition.yAxisDef);
             }
-            /*this.objects = definition.objects.map(function(objectDefinition){
-                if(objectDefinition.hasOwnProperty('type') && objectDefinition.hasOwnProperty('definition')) {
-                    return createInstance(objectDefinition);
-                } else {
-                    return objectDefinition;
-                }
-            })*/
+            //console.log('initialized view with objects', view.objects);
+            if(view.hasOwnProperty('objects')) {
+                view.objects.forEach(function(viewObj,index) {
+                    if (viewObj.hasOwnProperty('type') && viewObj.hasOwnProperty('definition')) {
+                        view.objects[index] = createInstance(viewObj, '');
+                    }
+                });
+                view.objects.forEach(function(viewObj) {
+                    if (viewObj instanceof ViewObject) {
+                        viewObj.createSubObjects(view);
+                    }
+                });
+                //console.log('added additional objects to view', view.objects);
+            }
+
         }
 
         _update(scope) {
             var view = this;
-            view.objects.forEach(function(object) {
-                if(object instanceof Model) {
-                    object.update(scope).createSubObjects(view,scope)
-                }
+            view.scope = scope;
+            //console.log('updating objects ',view.objects);
+            view.objects.forEach(function(viewObj) {
+                viewObj.view = view;
+                viewObj.update(scope);
             });
             return view;
         }
 
-        render(scope, redraw) {
+        render(redraw) {
             var view = this;
             //console.log('calling update');
-            view.update(scope, function(){
-                //console.log('starting update');
-                view.updateParams = function(params){
-                    scope.updateParams(params)
-                };
-                if(redraw){
-                    view.redraw(scope);
-                } else {
-                    view.drawObjects(scope);
-                }
-                //console.log('finished update')
-            });
+            if(redraw){
+                view.redraw();
+            } else {
+                view.drawObjects();
+            }
         }
 
-        redraw(scope) {
+        redraw() {
             var view = this;
 
 
@@ -163,6 +166,14 @@ module KG
             var svg = frame.append('svg')
                 .attr('width', view.dimensions.width)
                 .attr('height', view.dimensions.height);
+
+            function removeHighlight(){
+                if(view.scope.params.highlight != null) {
+                    view.scope.updateParams({highlight: null});
+                }
+            }
+
+
 
             // Establish marker style for arrow
             var markerParameters = [
@@ -214,10 +225,15 @@ module KG
 
                 var maskBorder = 5;
 
-                mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill:view.background}); // top
-                mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill:view.background}); // bottom
-                mask.append('rect').attr({x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill:view.background}); // left
-                mask.append('rect').attr({x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill:view.background}); // right
+                var topMask = mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill:view.background});
+                var bottomMask = mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill:view.background});
+                var leftMask = mask.append('rect').attr({x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill:view.background});
+                var rightMask = mask.append('rect').attr({x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill:view.background});
+
+                topMask.on('mouseover',removeHighlight);
+                bottomMask.on('mouseover',removeHighlight);
+                leftMask.on('mouseover',removeHighlight);
+                rightMask.on('mouseover',removeHighlight);
 
             }
 
@@ -234,10 +250,10 @@ module KG
 
                 // draw axes
                 if(view.xAxis) {
-                    view.xAxis.update(scope).draw(axes, view.divs, axisDimensions, view.margins);
+                    view.xAxis.update(view.scope).draw(axes, view.divs, axisDimensions, view.margins);
                 }
                 if(view.yAxis) {
-                    view.yAxis.update(scope).draw(axes, view.divs, axisDimensions, view.margins);
+                    view.yAxis.update(view.scope).draw(axes, view.divs, axisDimensions, view.margins);
                 }
 
             }
@@ -245,11 +261,12 @@ module KG
             // Establish SVG group for objects that lie above the axes (e.g., points and labels)
             view.unmasked = svg.append('g').attr('transform', visTranslation);
 
-            return view.drawObjects(scope);
+            return view.drawObjects();
         }
 
-        drawObjects(scope) {
+        drawObjects() {
             var view = this;
+            //console.log('drawing objects');
             view.objects.forEach(function(object) {
                 if(object instanceof ViewObject) {
                     object.render(view)
@@ -259,11 +276,20 @@ module KG
         }
 
         addObject(newObj) {
-            this.objects.push(newObj);
-        }
-
-        updateParams(params) {
-            console.log('updateParams called before scope applied');
+            //console.log('evaluating ',newObj)
+            var view = this;
+            if(newObj instanceof ViewObject) {
+                view.objects.push(newObj);
+            } else if(typeof newObj == 'string') {
+                newObj = view.scope.$eval(newObj);
+                if(newObj instanceof ViewObject) {
+                    view.objects.push(newObj);
+                } else {
+                    console.log ("tried to add something that wasn't a view object!")
+                }
+            }
+            //console.log(newObj);
+            newObj.createSubObjects(view);
         }
 
         objectGroup(name, init, unmasked) {
@@ -309,58 +335,6 @@ module KG
 
         nearLeft(point:ICoordinates) {
             return KG.isAlmostTo(point.x, this.xAxis.domain.min, 0.05, this.xAxis.domain.max - this.xAxis.domain.min)
-        }
-
-        drag(dragParams) {
-
-            var view = this;
-            var xAxis = view.xAxis;
-            var yAxis = view.yAxis;
-
-            var xParam = dragParams.xDragParam,
-                yParam = dragParams.yDragParam,
-                xDelta = dragParams.xDragDelta,
-                yDelta = dragParams.yDragDelta;
-
-            return d3.behavior.drag()
-                .on('drag', function () {
-                    d3.event.sourceEvent.preventDefault();
-                    var dragUpdate = {}, newX, newY;
-                    if(dragParams instanceof ViewObject) {
-                        dragUpdate[dragParams.highlightParam] = true;
-                    }
-                    var relativeElement = view.unmasked[0][0],
-                        mouseX = d3.mouse(relativeElement)[0],
-                        mouseY = d3.mouse(relativeElement)[1];
-                    if(xAxis && xParam !== null) {
-                        newX = xAxis.scale.invert(mouseX + xDelta);
-                        if(newX < xAxis.domain.min) {
-                            dragUpdate[xParam] = xAxis.domain.min;
-                        } else if(newX > xAxis.domain.max) {
-                            dragUpdate[xParam] = xAxis.domain.max;
-                        } else {
-                            dragUpdate[xParam] = newX;
-                        }
-                    }
-                    if(yAxis && yParam !== null) {
-                        newY = yAxis.scale.invert(mouseY + yDelta);
-                        if(newY < yAxis.domain.min) {
-                            dragUpdate[yParam] = yAxis.domain.min;
-                        } else if(newY > yAxis.domain.max) {
-                            dragUpdate[yParam] = yAxis.domain.max;
-                        } else {
-                            dragUpdate[yParam] = newY;
-                        }
-                    }
-                    view.updateParams(dragUpdate)
-                })
-            .on('dragend', function() {
-                var dragUpdate = {};
-                if(dragParams instanceof ViewObject) {
-                        dragUpdate[dragParams.highlightParam] = false;
-                    }
-                view.updateParams(dragUpdate);
-            })
         }
 
     }

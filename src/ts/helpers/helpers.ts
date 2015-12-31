@@ -102,6 +102,23 @@ module KG
 
     }
 
+    export function listMatch(s1: string, s2: string) {
+        if(!s1 || !s2 || s1.length == 0 || s2.length ==0) {return false;}
+
+        var match = false,
+            s1words = s1.split(' '),
+            s2words = s2.split(' ');
+
+        s1words.forEach(function(word){
+            if(s2words.indexOf(word) > -1) {
+                match = true;
+            }
+        })
+
+        return match;
+
+    }
+
     export function averageTwoObjects(o1: any, o2: any) {
 
         if(typeof o1 == 'number' && typeof o2 == 'number') {

@@ -26,6 +26,14 @@ module KG
         }
     }
 
+    export function getParameterName(str) {
+        if(typeof str == 'string') {
+            return str.replace('params.','')
+        } else {
+            return str;
+        }
+    }
+
     export function binaryFunction(def1,def2,fn) {
         if(typeof def1 == 'number' && typeof def2 == 'number') {
             switch(fn) {

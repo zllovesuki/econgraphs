@@ -8,6 +8,7 @@ module KG
 {
 
     export interface GraphDivDefinition extends ViewObjectDefinition {
+        coordinates?: ICoordinates;
         dimensions?: IDimensions;
         textArray?: any[];
         text?: any;
@@ -19,7 +20,6 @@ module KG
 
     export interface IGraphDiv extends IViewObject {
 
-        // GraphDiv-specific attributes
         coordinates: ICoordinates; // pixel coordinates, not model coordinates
         dimensions: IDimensions;
         text: string;
@@ -53,7 +53,8 @@ module KG
                 dimensions: {width: 30, height: 20},
                 text: '',
                 color: KG.colorForClassName(definition.className),
-                unmasked: true
+                unmasked: true,
+                math: true
             });
 
             super(definition, modelPath);
@@ -68,13 +69,11 @@ module KG
 
             var divObj = this;
 
-            console.log(divObj);
-
             if(divObj.text instanceof Array) {
                 divObj.text = divObj.text.join('')
             }
 
-            if(!divObj.hasOwnProperty('coordinates') || divObj.text.length == 0) {
+            if(!divObj.hasOwnProperty('coordinates') || !divObj.hasOwnProperty('text') || divObj.text.length == 0) {
                 return view;
             }
 
@@ -102,14 +101,18 @@ module KG
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
 
-            var width = divObj.dimensions.width,
-                height = divObj.dimensions.height,
-                text = divObj.text,
-                draggable = (divObj.xDrag || divObj.yDrag);
-
             var div = divObj.d3selection(view);
 
-            console.log('drawing div with text', text);
+            if(divObj.math){
+                katex.render(divObj.text.toString(),div[0][0]);
+            } else {
+                div[0][0].innerHTML = "<div>"+divObj.text+"</div>"
+            }
+
+            var width = div[0][0].children[0].offsetWidth || divObj.dimensions.width,
+                height = divObj.dimensions.height;
+
+            div.style('width',+'px');
 
             div
                 .style('cursor','default')
@@ -118,6 +121,7 @@ module KG
                 .style('width',width + 'px')
                 .style('height',height + 'px')
                 .style('line-height',height + 'px')
+                .style('background-color',divObj.backgroundColor)
                 .attr('class',divObj.classAndVisibility());
 
             // Set left pixel margin; default to centered on x coordinate
@@ -132,7 +136,6 @@ module KG
             }
             div.style('left',(x - alignDelta) + 'px');
 
-
             // Set top pixel margin; default to centered on y coordinate
             var vAlignDelta = height*0.5;
             // Default to centered on x coordinate
@@ -143,14 +146,9 @@ module KG
             }
             div.style('top',(y - vAlignDelta) + 'px');
 
-            katex.render(text.toString(),div[0][0]);
+            divObj.interactionHandler.setBehavior(view,div);
 
-            if(draggable){
-                return divObj.setHighlightBehavior(view).setDragBehavior(view,div);
-            } else {
-                divObj.setHighlightBehavior(view);
-                return view;
-            }
+            return view;
 
         }
     }

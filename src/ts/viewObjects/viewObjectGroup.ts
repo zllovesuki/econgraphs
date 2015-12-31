@@ -21,10 +21,9 @@ module KG {
             super(definition, modelPath);
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
             this.viewObjects.forEach(function(viewObject){
-                view.addObject(viewObject.update(scope));
-                viewObject.createSubObjects(view,scope);
+                view.addObject(viewObject);
             });
             return view;
         }

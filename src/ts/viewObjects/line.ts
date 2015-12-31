@@ -4,14 +4,6 @@
 
 module KG {
 
-    export interface LineParamsDefinition extends ViewObjectParamsDefinition {
-        label?: string;
-        yInterceptLabel?: string;
-        xInterceptLabel?: string;
-        areaUnderLabel?: string;
-        areaOverLabel?: string;
-    }
-
     export interface LineDefinition extends ViewObjectDefinition {
         lineDef?: KGMath.Functions.LinearDefinition;
         linear?: any;
@@ -21,7 +13,6 @@ module KG {
         yInterceptLabel?: string;
         x?: any;
         y?: any;
-        params?: LineParamsDefinition;
         areaUnderDef?: AreaDefinition;
         areaOverDef?: AreaDefinition;
     }
@@ -52,46 +43,6 @@ module KG {
 
         constructor(definition:LineDefinition, modelPath?: string) {
 
-            if(definition.hasOwnProperty('params')) {
-
-                var p = definition.params;
-
-                if(p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    }
-                }
-
-                if(p.hasOwnProperty('areaUnderLabel')) {
-                    definition.areaUnderDef = {
-                        name: definition.name + '_areaUnder',
-                        className: definition.className,
-                        label: {
-                            text: p.areaUnderLabel
-                        }
-                    }
-                }
-
-                if(p.hasOwnProperty('areaOverLabel')) {
-                    definition.areaOverDef = {
-                        name: definition.name + 'areaOver',
-                        className: definition.className,
-                        label: {
-                            text: p.areaOverLabel
-                        }
-                    }
-                }
-
-                if(p.hasOwnProperty('xInterceptLabel')) {
-                    definition.xInterceptLabel = p.xInterceptLabel;
-                }
-
-                if(p.hasOwnProperty('yInterceptLabel')) {
-                    definition.yInterceptLabel = p.yInterceptLabel;
-                }
-
-            }
-
             super(definition, modelPath);
 
             var line = this;
@@ -110,14 +61,8 @@ module KG {
                 var labelDef:GraphDivDefinition = _.defaults(definition.label, {
                     name: definition.name + '_label',
                     className: definition.className,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    xDragParam: definition.xDragParam,
-                    yDragParam: definition.yDragParam,
-                    color: definition.color,
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction,
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 line.labelDiv = new GraphDiv(labelDef);
@@ -137,12 +82,9 @@ module KG {
                     className: definition.className,
                     text: definition.xInterceptLabel,
                     dimensions: {width: 25, height:20},
-                    xDrag: definition.xDrag,
-                    xDragParam: definition.xDragParam,
+                    interaction: definition.interaction,
                     backgroundColor: 'white',
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
             }
@@ -153,12 +95,9 @@ module KG {
                     className: definition.className,
                     text: definition.yInterceptLabel,
                     dimensions: {width: 25, height:20},
-                    yDrag: definition.yDrag,
-                    yDragParam: definition.yDragParam,
+                    interaction: definition.interaction,
                     backgroundColor: 'white',
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
             }
@@ -168,39 +107,28 @@ module KG {
         _update(scope) {
             var line = this;
             line.linear.update(scope);
-            if(line.xInterceptLabelDiv) {
-                line.xInterceptLabelDiv.update(scope)
-            }
-
-            if(line.yInterceptLabelDiv) {
-                line.yInterceptLabelDiv.update(scope)
-            }
-
-            if(line.labelDiv) {
-                line.labelDiv.update(scope)
-            }
             return line;
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
 
             var line = this;
 
             if(line.xInterceptLabelDiv) {
-                view.addObject(line.xInterceptLabelDiv.update(scope))
+                view.addObject(line.xInterceptLabelDiv)
             }
 
             if(line.yInterceptLabelDiv) {
-                view.addObject(line.yInterceptLabelDiv.update(scope))
+                view.addObject(line.yInterceptLabelDiv)
             }
 
             if(line.labelDiv) {
-                view.addObject(line.labelDiv.update(scope))
+                view.addObject(line.labelDiv)
             }
 
             if(line.areaUnder) {
-                view.addObject(line.areaUnder.update(scope));
-                view.addObject(line.areaUnder.labelDiv.update(scope));
+                view.addObject(line.areaUnder);
+                view.addObject(line.areaUnder.labelDiv);
             }
 
             return view;
@@ -213,8 +141,7 @@ module KG {
                 OPEN_ARROW_STRING = 'OPEN';
 
             var line = this,
-                linear = this.linear,
-                draggable = (line.xDrag || line.yDrag);
+                linear = this.linear;
 
             var group:D3.Selection = view.objectGroup(line.name, line.initGroupFn(), false);
 
@@ -273,26 +200,6 @@ module KG {
                     line.labelDiv.align = labelAlign;
                     line.labelDiv.valign = labelValign;
 
-                    /* OLD LOGIC
-                    // If one end of the line is open, label that point
-                    if(endIsOpen || startIsOpen) {
-                        line.labelDiv.coordinates = endIsOpen ? _.clone(endPoint) : _.clone(startPoint);
-                        if(line.labelDiv.coordinates.x == view.xAxis.max) {
-                            line.labelDiv.align = 'left';
-                            line.labelDiv.valign = 'middle';
-                        } else {
-                            line.labelDiv.align = 'center';
-                            line.labelDiv.valign = 'bottom';
-                        }
-                    } else {
-                        var yLevel = view.yAxis.min + (view.yAxis.max - view.yAxis.min)*0.05;
-                        line.labelDiv.coordinates = {
-                            x: linear.xValue(yLevel),
-                            y: yLevel
-                        };
-                        line.labelDiv.valign = 'bottom';
-                        line.labelDiv.align = (linear.slope > 0) ? 'right' : 'left';
-                    } */
                 }
 
                 if(line.areaUnder) {
@@ -381,9 +288,6 @@ module KG {
 
                 if(line.xInterceptLabelDiv) {
                     line.xInterceptLabelDiv.coordinates = {x: line.linear.xValue(view.yAxis.min), y: 'AXIS'};
-                    if(line.xInterceptLabelDiv.definition.text == 'foo') {
-                        line.xInterceptLabelDiv.text = line.linear.xValue(view.yAxis.min);
-                    }
                 }
 
                 if(line.yInterceptLabelDiv) {
@@ -395,22 +299,23 @@ module KG {
                     .y(function (d) { return view.yAxis.scale(d.y) });
 
                 var lineSelection:D3.Selection = group.select('.'+ line.viewObjectClass);
+                var lineHandle:D3.Selection = group.select('.'+ line.viewObjectClass + 'Handle');
 
                 lineSelection
                     .attr({
                         'class': line.classAndVisibility(),
-                        'd': dataLine([startPoint,endPoint]),
-                        'stroke': line.color,
+                        'd': dataLine([startPoint,endPoint])
                     });
 
-                line.setHighlightBehavior(view);
+                lineHandle
+                    .attr({
+                        'class': line.classAndVisibility('Handle'),
+                        'd': dataLine([startPoint,endPoint])
+                    });
 
-                if(draggable){
-                    return line.setDragBehavior(view,lineSelection);
-                } else {
-                    lineSelection.style('cursor','auto');
-                    return view;
-                }
+                line.interactionHandler.setBehavior(view,lineSelection);
+                line.interactionHandler.setBehavior(view,lineHandle);
+                return view;
             }
 
         }

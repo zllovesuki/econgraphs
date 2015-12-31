@@ -247,6 +247,10 @@ a {
   shape-rendering: crispEdges;
 }
 
+.axisLabel {
+  background-color: white;
+}
+
 button {
   background-color: transparent;
   border: none;
@@ -259,7 +263,6 @@ button:hover {
 .dropline {
   stroke-dasharray: 10, 10;
   stroke-width: 2;
-  stroke: grey;
 }
 
 .invisible {
@@ -271,11 +274,7 @@ button:hover {
   fill: none;
 }
 
-.highlight {
-  font-weight:bold;
-  stroke-width: 5;
-  background-color: yellow;
-}
+
 
 .pointSymbol {
   stroke-width: 3;
@@ -390,4 +389,26 @@ button:hover {
   stroke: @purple-dark;
   fill: @purple-dark;
   color: @purple-dark;
+}
+
+.highlight {
+  font-weight:bold;
+  stroke-width: 5;
+  background-color: yellow;
+  color: black;
+}
+
+.highlight.dotted {
+  stroke-dasharray: 5,5;
+}
+
+.highlight.dashed {
+  stroke-dasharray: 15,15;
+}
+
+.drawHandle, .segmentHandle, .dataPathHandle, .lineHandle, .curveHandle, .droplineHandle {
+  stroke-width: 40;
+  stroke-dasharray: none;
+  fill: none;
+  stroke: transparent;
 }

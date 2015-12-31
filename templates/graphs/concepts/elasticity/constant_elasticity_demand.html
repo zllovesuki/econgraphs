@@ -14,7 +14,11 @@
             <div class="col-md-4">
                 <div class="well">
                     <p style="float:right;color:red">{{error}}</p>
-
+                    <div class="row">
+                        <div class="subtitle col-xs-6">demand parameters</div>
+                        <div class="col-xs-6 math displayMath">Q^D(P) = aP^{-b}</div>
+                    </div>
+                    <hr/>
                     <div class="row">
                         <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">a = {{
                             params.a | number : 0}}
@@ -27,16 +31,12 @@
                         </div>
                         <div class="col-xs-8" id="sliderB"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">P = {{
-                            params.price | number : 0}}
-                        </div>
-                        <div class="col-xs-8" id="sliderPrice"></div>
-                    </div>
                 </div>
-                <equation class="demand">Q^D(P) = aP^{-b} = {{ model.quantityAtPrice(params.price) | number:2 }}</equation>
+                <div class="math displayMath big" highlight="price">P = {{ params.price }}</div>
                 <hr/>
-                <equation class="green">\frac{dQ^D}{dP} = -abP^{-b-1} = {{ model.slopeAtPrice(params.price) | number:2 }}</equation>
+                <div class="demand math displayMath big" highlight="QD">Q^D(P) = aP^{-b} = {{ model.quantityAtPrice(params.price) | number:2 }}</div>
+                <hr/>
+                <div class="green math displayMath big" highlight="MRS">\frac{dQ^D}{dP} = -abP^{-b-1} = {{ model.slopeAtPrice(params.price) | number:2 }}</div>
                 <hr/>
                 <equation>\epsilon_{Q^D,P} = \color{ {{ color('green') }} }{ \frac{dQ^D}{dP} } \times \frac{P}{\color{
                     {{color('demand')}} }{Q^D(P)}} || = \color{ {{ color('green') }} }{ {{
@@ -128,11 +128,12 @@
                                     name: 'priceLine',
                                     className: 'price',
                                     type: 'HorizontalLine',
-                                    yDrag: 'price',
+                                    interaction: {
+                                        yDrag: 'price',
+                                        highlight: 'price'
+                                    },
                                     y: 'params.price',
-                                    params: {
-                                        yInterceptLabel: 'P'
-                                    }
+                                    yInterceptLabel: 'P'
                                 }
                             },
                             {
@@ -141,7 +142,9 @@
                                     name: 'quantityDemandedAtPrice',
                                     className: 'demand',
                                     coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
-                                    yDrag: true,
+                                    interaction: {
+                                        highlight: 'QD'
+                                    },
                                     droplines: {
                                         vertical: 'Q^D(P)'
                                     }
@@ -162,6 +165,9 @@
                                             min: '0.5*params.price',
                                             max: '1.5*params.price'
                                         }
+                                    },
+                                    interaction: {
+                                        highlight: 'MRS'
                                     },
                                     label: {
                                         text: 'model.slopeAtPriceWords(params.price)',

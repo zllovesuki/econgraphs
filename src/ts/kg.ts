@@ -12,7 +12,9 @@
 
 /// <reference path="math/math.ts" />
 
+/// <reference path="viewObjects/interactionHandler.ts"/>
 /// <reference path="viewObjects/viewObject.ts"/>
+/// <reference path="viewObjects/viewObjectWithDomain.ts"/>
 /// <reference path="viewObjects/viewObjectGroup.ts"/>
 /// <reference path="viewObjects/point.ts"/>
 /// <reference path="viewObjects/dropline.ts"/>
@@ -96,4 +98,36 @@ angular.module('KineticGraphs', [])
             transclude: true,
             template: "<button ng-click='toggle()' style='width: 100%'>{{ showHide() }} <span ng-transclude/></button>"
         };
-    });
+    }).directive('highlight', function() {
+
+        function link(scope, el, attrs) {
+
+            el.on('mouseover', function(){
+                scope.updateParams({highlight: attrs.highlight});
+            });
+
+            el.on('mouseout', function(){
+                scope.updateParams({highlight:null});
+            });
+
+            scope.$watch('params.highlight',function(){
+                console.log('scope highlight = ',scope.params.highlight);
+                console.log('this highlight = ',attrs.highlight);
+                console.log('match? ',KG.listMatch(scope.params.highlight,attrs.highlight));
+                if(KG.listMatch(scope.params.highlight, attrs.highlight)) {
+                    el.addClass('highlight')
+                }
+                else {
+                    el.removeClass('highlight')
+                }
+            })
+
+        }
+
+        return {
+            link: link,
+            restrict: 'A',
+            replace: false,
+            scope: true
+        }
+    })

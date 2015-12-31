@@ -6,8 +6,6 @@ module EconGraphs {
     {
         type?: string;
         def?: KGMath.Functions.BaseDefinition;
-        className?: string;
-        curveLabel?: string;
     }
 
     export interface IUtility extends KG.IModel

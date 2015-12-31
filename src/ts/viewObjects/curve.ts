@@ -4,21 +4,15 @@
 
 module KG {
 
-    export interface CurveParamsDefinition extends ViewObjectParamsDefinition {
-        label?: string;
-        labelPrefix?: string;
-    }
-
-    export interface CurveDefinition extends ViewObjectDefinition {
+    export interface CurveDefinition extends ViewObjectWithDomainDefinition {
         data?: any;
         interpolation?: string;
         label?: GraphDivDefinition;
         labelPosition?: string;
         arrows?: string;
-        params?: CurveParamsDefinition;
     }
 
-    export interface ICurve extends IViewObject {
+    export interface ICurve extends IViewObjectWithDomain {
 
         data: ICoordinates[];
         interpolation: string;
@@ -42,7 +36,7 @@ module KG {
         BOTH_ARROW_STRING: string;
     }
 
-    export class Curve extends ViewObject implements ICurve {
+    export class Curve extends ViewObjectWithDomain implements ICurve {
 
         public data;
         public startPoint;
@@ -72,26 +66,6 @@ module KG {
 
         constructor(definition:CurveDefinition, modelPath?: string) {
 
-            if(definition.hasOwnProperty('params')) {
-
-                var p = definition.params;
-
-                if (p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    }
-                }
-
-                if (p.hasOwnProperty('labelPrefix')) {
-                    definition.label.text = p.labelPrefix + definition.label.text;
-                }
-
-                if (p.hasOwnProperty('areaUnderLabel')) {
-                    
-                }
-
-            }
-
             definition = _.defaults(definition, {data: [], interpolation: 'linear'});
 
             super(definition, modelPath);
@@ -103,12 +77,8 @@ module KG {
                     name: definition.name + '_label',
                     objectName: definition.objectName,
                     className: definition.className,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    color: definition.color,
-                    show: definition.show,
-                    highlightParam: definition.highlightParam,
-                    highlight: definition.highlight
+                    interaction: definition.interaction,
+                    show: definition.show
                 });
                 //console.log(labelDef);
                 curve.labelDiv = new GraphDiv(labelDef);
@@ -121,10 +91,10 @@ module KG {
             curve.viewObjectClass = 'curve';
         }
 
-        createSubObjects(view,scope) {
+        createSubObjects(view) {
             var labelDiv = this.labelDiv;
             if(labelDiv) {
-                return view.addObject(labelDiv.update(scope));
+                return view.addObject(labelDiv);
             } else {
                 return view;
             }
@@ -201,7 +171,7 @@ module KG {
 
             var group:D3.Selection = view.objectGroup(curve.name, curve.initGroupFn(), false);
 
-            curve.addArrows(group);
+
             curve.positionLabel(view);
 
             var dataLine = d3.svg.line()
@@ -213,6 +183,7 @@ module KG {
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
 
             var dataPath:D3.Selection = group.select(selector);
+            var dragHandle:D3.Selection = group.select(selector+'Handle');
 
             if(!curve.show) {
                 var element_name = curve.name+'_label';
@@ -226,7 +197,16 @@ module KG {
                     'd': dataLine(dataCoordinates)
                 });
 
-            curve.setHighlightBehavior(view);
+            curve.addArrows(dataPath);
+
+            dragHandle
+                .attr({
+                    'class': 'curveHandle',
+                    'd': dataLine(dataCoordinates)
+                });
+
+            curve.interactionHandler.setBehavior(view,dataPath);
+            curve.interactionHandler.setBehavior(view,dragHandle);
 
             return view;
         }
