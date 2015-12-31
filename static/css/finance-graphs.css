@@ -394,6 +394,7 @@ button:hover {
   font-weight: bold;
   stroke-width: 5;
   background-color: yellow;
+  color: black;
 }
 .highlight.dotted {
   stroke-dasharray: 5,5;
