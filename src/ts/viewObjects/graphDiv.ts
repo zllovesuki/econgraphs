@@ -53,7 +53,8 @@ module KG
                 dimensions: {width: 30, height: 20},
                 text: '',
                 color: KG.colorForClassName(definition.className),
-                unmasked: true
+                unmasked: true,
+                math: true
             });
 
             super(definition, modelPath);
@@ -102,7 +103,11 @@ module KG
 
             var div = divObj.d3selection(view);
 
-            katex.render(divObj.text.toString(),div[0][0]);
+            if(divObj.math){
+                katex.render(divObj.text.toString(),div[0][0]);
+            } else {
+                div[0][0].innerHTML = "<div>"+divObj.text+"</div>"
+            }
 
             var width = div[0][0].children[0].offsetWidth || divObj.dimensions.width,
                 height = divObj.dimensions.height;
@@ -116,6 +121,7 @@ module KG
                 .style('width',width + 'px')
                 .style('height',height + 'px')
                 .style('line-height',height + 'px')
+                .style('background-color',divObj.backgroundColor)
                 .attr('class',divObj.classAndVisibility());
 
             // Set left pixel margin; default to centered on x coordinate

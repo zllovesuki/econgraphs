@@ -2502,10 +2502,9 @@ var KG;
             if (definition.axisLabel.length > 0) {
                 var labelDef = {
                     name: definition.name + '_label',
-                    className: definition.className,
+                    className: definition.className + ' axisLabel',
                     text: definition.axisLabel,
                     dimensions: { width: 25, height: 20 },
-                    backgroundColor: 'white',
                     show: definition.show,
                     interaction: definition.interaction
                 };
@@ -3146,7 +3145,8 @@ var KG;
                 dimensions: { width: 30, height: 20 },
                 text: '',
                 color: KG.colorForClassName(definition.className),
-                unmasked: true
+                unmasked: true,
+                math: true
             });
             _super.call(this, definition, modelPath);
         }
@@ -3185,7 +3185,12 @@ var KG;
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
             var div = divObj.d3selection(view);
-            katex.render(divObj.text.toString(), div[0][0]);
+            if (divObj.math) {
+                katex.render(divObj.text.toString(), div[0][0]);
+            }
+            else {
+                div[0][0].innerHTML = "<div>" + divObj.text + "</div>";
+            }
             var width = div[0][0].children[0].offsetWidth || divObj.dimensions.width, height = divObj.dimensions.height;
             div.style('width', +'px');
             div
@@ -3195,6 +3200,7 @@ var KG;
                 .style('width', width + 'px')
                 .style('height', height + 'px')
                 .style('line-height', height + 'px')
+                .style('background-color', divObj.backgroundColor)
                 .attr('class', divObj.classAndVisibility());
             // Set left pixel margin; default to centered on x coordinate
             var alignDelta = width * 0.5;

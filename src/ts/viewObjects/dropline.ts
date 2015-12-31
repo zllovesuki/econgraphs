@@ -57,10 +57,9 @@ module KG {
             if(definition.axisLabel.length > 0) {
                 var labelDef:GraphDivDefinition = {
                     name: definition.name + '_label',
-                    className: definition.className,
+                    className: definition.className + ' axisLabel',
                     text: definition.axisLabel,
                     dimensions: {width: 25, height:20},
-                    backgroundColor: 'white',
                     show: definition.show,
                     interaction: definition.interaction
                 };
