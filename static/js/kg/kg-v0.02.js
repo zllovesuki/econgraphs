@@ -12,7 +12,8 @@ var KG;
         consumption: 'blue',
         asset: 'blue',
         'risk-free': 'green',
-        budget: 'red'
+        budget: 'red',
+        riskPremium: 'orange'
     };
     KG.COLORS = {
         blue: {

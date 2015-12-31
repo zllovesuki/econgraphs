@@ -1,36 +1,150 @@
-{% extends 'layouts/eg-layout.html' %}
+{% extends 'layouts/econgraphs.html' %}
 
 {% block body %}
-{% raw %}
-
-<div ng-controller="KineticGraphCtrl">
-    <h1>Risk Aversion and Certainty Equivalence</h1>
-    <hr/>
-    <div class="row">
-        <div class="col-md-8">
-            <div id="utility"></div>
-        </div>
-        <div class="col-md-4">
-            <div class="well">
-                <div class="row">
-                    <div class="col-xs-3" style="text-align:right;font-size:12pt;padding-top:10px">Risk Aversion:
-                    </div>
-                    <div class="col-xs-9" id="rraSlider"></div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-3" style="text-align:right;font-size:12pt;padding-top:10px">Probability of <span class="math">c_L</span>:
-                    </div>
-                    <div class="col-xs-9" id="pLowSlider"></div>
-                </div>
+    <div ng-controller="KineticGraphCtrl">
+        <h1>Risk Aversion and Certainty Equivalence</h1>
+        <hr/>
+        <div class="row">
+            <div class="col-md-8">
+                <div id="utility"></div>
             </div>
-            <toggle param="showCE" class="riskPremium"><span ng-if="params.showCE">Hide</span><span ng-if="!params.showCE">Show</span> certainty equivalent (CE)</toggle>
-            <toggle param="showRP" class="riskPremium"><span ng-if="params.showRP">Hide</span><span ng-if="!params.showRP">Show</span> risk premium (RP)</toggle>
+            <div class="col-md-4">
+                <div class="well">
+                    <div class="row">
+                        <div class="col-xs-4" style="text-align:right;font-size:12pt;padding-top:10px">Risk Aversion :
+                        </div>
+                        <div class="col-xs-8" id="rraSlider"></div>
+                    </div>
+                    <div class="row">
+        <div class="col-xs-3" style="text-align:right;font-size:12pt;padding-top:10px">Probability of <span class="math">c_L</span>:
+        </div>
+        <div class="col-xs-9" id="pLowSlider"></div>
+    </div>
+                </div>
+                <toggle param="showCE" class="riskPremium" show-hide="true">certainty equivalent (CE)</toggle>
+                <toggle param="showRP" class="riskPremium" show-hide="true" ng-if="params.showCE">risk premium (RP)</toggle>
+            </div>
         </div>
     </div>
-</div>
-<script>
 
-    var expectedUtilityPoint = {
+
+{% endblock %}
+
+{% block model %}
+    <script>
+        var scopeDefinition = {
+            params: {
+                rra: 0.8,
+                pLow: 0.5,
+                ca: 20,
+                cb: 80,
+                showCE: false,
+                showRP: false
+            },
+            graphParams: ['rra'],
+            restrictions: [
+                {
+                    expression: 'params.ca',
+                    restrictionType: 'range',
+                    min: 1,
+                    max: 'params.cb'
+                },
+                {
+                    expression: 'params.cb',
+                    restrictionType: 'range',
+                    min: 'params.ca',
+                    max: 100
+                }
+            ],
+            model: {
+                type: 'EconGraphs.RiskAversion',
+                definition: {
+                    ca: 'params.ca',
+                    cb: 'params.cb',
+                    pLow: 'params.pLow',
+                    utilityType: 'ConstantRRA',
+                    utilityDef: {
+                        rra: 'params.rra'
+                    },
+                    show: {
+                        ce: 'params.showCE',
+                        rp: 'params.showRP'
+                    }
+                }},
+            views: [
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'rraSlider',
+                        param: 'rra',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 2, tickValues: [0, 1, 2]}
+                    }
+                },
+                {
+                    type:
+                            'KG.Slider',
+                    definition: {
+                        element_id: 'pLowSlider',
+                        param: 'pLow',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1,
+                            tickValues: [0, 0.5, 1]}
+                    }
+                }
+            ]
+
+        }
+    </script>
+{% endblock %}
+
+{% block js %}
+    <script>
+
+        var utilityFunctionView = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'utilityFunction',
+                        className: 'utility',
+                        fn: 'model.utility.utilityFunction',
+                        interpolation: 'basis',
+                        label: {
+                            text: 'u(c)'
+                        },
+                        numSamplePoints: 201
+                    }
+                },
+                lowQuantityPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'lowQuantityPoint',
+                        className: 'utility',
+                        coordinates: {x: 'params.ca', y: 'model.utility.utilityAtQuantity(model.ca)'},
+                        droplines: {
+                            vertical: 'c_L',
+                            horizontal: "u(c_L)"
+                        },
+                        interaction: {
+                            xDrag: true,
+                            highlight: 'cl'
+                        }
+                    }
+                },highQuantityPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'highQuantityPoint',
+                        className: 'utility',
+                        coordinates: {x: 'params.cb', y: 'model.utility.utilityAtQuantity(model.cb)'},
+                        droplines: {
+                            vertical: 'c_H',
+                            horizontal: "u(c_H)"
+                        },
+                        interaction: {
+                            xDrag: true,
+                            highlight: 'ch'
+                        }
+                    }
+                },expectedUtilityPoint = {
                     type: 'KG.Point',
                     definition: {
                         name: 'expectedUtilityPoint',
@@ -41,6 +155,9 @@
                         },
                         droplines: {
                             horizontal: "\\mathbb{E}[u(c)]"
+                        },
+                        interaction: {
+                            highlight: 'euc'
                         }
                     }
                 },
@@ -56,6 +173,9 @@
                         droplines: {
                             vertical: "\\mathbb{E}[c]",
                             horizontal: "u(\\mathbb{E}[c])"
+                        },
+                        interaction: {
+                            highlight: 'ec'
                         }
                     }},
                 certaintyEquivalentPoint = {
@@ -63,20 +183,23 @@
                     definition: {
                         name: 'certaintyEquivalentPoint',
                         className: 'riskPremium',
-                        show: this.show.ce,
+                        show: 'params.showCE',
                         coordinates: {
                             x: 'model.certaintyEquivalent',
                             y: 'model.expectedU'
                         },
                         droplines: {
                             vertical: "CE"
+                        },
+                        interaction: {
+                            highlight: 'euc'
                         }
                     }},
                 expectationSegment = {
                     type: 'KG.Segment',
                     definition:{
                         name: 'expectationSegment',
-                        className: 'growth dotted',
+                        className: 'price dotted',
                         a: {
                             x: 'model.ca',
                             y: 'model.ua'
@@ -84,7 +207,7 @@
                         b: {
                             x: 'model.cb',
                             y: 'model.ub'
-                        },
+                        }
                     }},
 
                 riskPremiumSegment = {
@@ -92,101 +215,49 @@
                     definition:{
                         name: 'xDiffSegment',
                         className: 'riskPremium',
-                        show: this.show.rp,
+                        show: 'params.showRP && params.showCE',
+                        arrows: 'BOTH',
+                        trimPercent: 0.05,
                         a: {
                             x: 'model.expectedC',
-                            y: 'model.expectedU'
+                            y: 'model.expectedU*0.25'
                         },
                         b: {
                             x: 'model.certaintyEquivalent',
-                            y: 'model.expectedU'
+                            y: 'model.expectedU*0.25'
                         },
                         label: {
                             text: 'RP',
                             valign: 'top'
                         }
                     }};
-    var scopeDefinition = {
-        params: {
-            rra: 0.8,
-            pLow: 0.5,
-            ca: 20,
-            cb: 80,
-            showCE: false,
-            showRP: false
-        },
-        graphParams: ['rra'],
-        restrictions: [
-            {
-                expression: 'params.ca',
-                restrictionType: 'range',
-                min: 1,
-                max: 'params.cb'
-            },
-            {
-                expression: 'params.cb',
-                restrictionType: 'range',
-                min: 'params.ca',
-                max: 100
-            }
-        ],
-        model: {
-            type: 'EconGraphs.RiskAversion',
+
+        scopeDefinition.views.push({
+            type: 'KG.Graph',
             definition: {
-                ca: 'params.ca',
-                cb: 'params.cb',
-                pLow: 'params.pLow',
-                utilityType: 'ConstantRRA',
-                utilityDef: {
-                    rra: 'params.rra'
+                element_id: 'utility',
+                xAxisDef: {min: 0, max: 100, title: '\\text{Consumption (units)}', ticks: 0},
+                yAxisDef: {
+                    min: 0,
+                    max: 'model.utility.utilityAtQuantity(100)',
+                    title: '\\text{Total Utility (utils)}',
+                    ticks: 0
                 },
-                show: {
-                    ce: 'params.showCE',
-                    rp: 'params.showRP'
-                }
+                objects: [
+                    utilityFunctionView,
+                    lowQuantityPoint,
+                    highQuantityPoint,
+                    expectedUtilityPoint,
+                    certaintyEquivalentPoint,
+                    expectedConsumptionPoint,
+                    expectationSegment,
+                    riskPremiumSegment
+                ]
             }
+        })
 
-        },
-        views: [
-            {
-                type: 'KG.Graph',
-                definition: {
-                    element_id: 'utility',
-                    xAxisDef: {min: 0, max: 100, title: '\\text{Consumption (units)}', ticks: 0},
-                    yAxisDef: {min: 0, max: 'model.utility.utilityAtQuantity(100)', title: '\\text{Total Utility (utils)}', ticks: 0},
-                    objects: [
-                        'model.utility.utilityFunctionView',
-                        'model.utility.utilityAtQuantityPoint(params.ca, {name: "CL", xAxisLabel: "c_L", yAxisLabel: "u(c_L)", xDrag: "params.ca"})',
-                        'model.utility.utilityAtQuantityPoint(params.cb, {name: "CH", xAxisLabel: "c_H", yAxisLabel: "u(c_H)", xDrag: "params.cb"})',
-                        expectedUtilityPoint,
-                        model.certaintyEquivalentPoint,
-                        model.expectedConsumptionPoint,
-                        model.expectationSegment,
-                        model.riskPremiumSegment
-                    ]
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'rraSlider',
-                    param: 'rra',
-                    precision: '0.01',
-                    axisDef: {min: 0, max: 2, ticks: 0}
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'pLowSlider',
-                    param: 'pLow',
-                    precision: '0.01',
-                    axisDef: {min: 0, max: 1, tickValues: [0, 0.5, 1]}
-                }
-            }
 
-        ]
-    }
-</script>
-{% endraw %}
+    </script>
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
 {% endblock %}

@@ -80,14 +80,14 @@
   fill: #98df8a;
 }
 .riskPremium {
-  color: #9467bd;
-  stroke: #9467bd;
-  fill: #9467bd;
+  color: #ff7f0e;
+  stroke: #ff7f0e;
+  fill: #ffbb78;
 }
 .totalRevenue {
   color: #2ca02c;
   stroke: #2ca02c;
-  fill: #2ca02c;
+  fill: #98df8a;
 }
 .marginalRevenue {
   color: #bcbd22;
@@ -388,7 +388,6 @@ button:hover {
 .dropline {
   stroke-dasharray: 10, 10;
   stroke-width: 2;
-  stroke: grey;
 }
 .invisible {
   display: none;
