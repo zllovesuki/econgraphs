@@ -1,7 +1,7 @@
-{% extends 'layouts/eg-layout.html' %}
+{% extends 'layouts/econgraphs.html' %}
 
 {% block body %}
-{% raw %}
+    {% raw %}
 
     <div ng-controller="KineticGraphCtrl">
         <h1>Utility and Marginal Utility</h1>
@@ -32,64 +32,174 @@
             </div>
         </div>
     </div>
+
+    {% endraw %}
+{% endblock %}
+
+{% block model %}
     <script>
     var scopeDefinition = {
-        params: {
-            rra: 0.5,
-            c: 5
-        },
-        graphParams: ['rra'],
-        restrictions: [
-            {
-                expression: 'params.c',
-                restrictionType: 'range',
-                min: 1,
-                max: 10
-            }
-        ],
-        model: {
-            type: 'EconGraphs.ConstantRRA',
-            definition: {
-                rra: 'params.rra'
-            }
-
-        },
-        views: [
-            {
-                type: 'KG.TwoVerticalGraphs',
+            params: {
+                rra: 1.5,
+                c: 2
+            },
+            graphParams: ['rra'],
+            restrictions: [
+                {
+                    expression: 'params.c',
+                    restrictionType: 'range',
+                    min: 1,
+                    max: 10
+                }
+            ],
+            model: {
+                type: 'EconGraphs.ConstantRRA',
                 definition: {
-                    element_id: 'utility',
-                    xAxisDef: {min: 0, max: 10, title: '\\text{Consumption (units)}'},
-                    topGraph: {
-                        yAxisDef: {min: 0, max: 'model.utilityAtQuantity(10)', title: '\\text{Total Utility (utils)}'},
-                        objects: [
-                            'model.utilityFunctionView',
-                            'model.marginalUtilityAtQuantitySlope(params.c, {label: "slope = u\'(c_A)"})'
-                        ]
-                    },
-                    bottomGraph: {
-                        yAxisDef: {min: 0, max: 1, title: '\\text{Marginal Utility (utils/unit)}'},
-                        objects: [
-                            'model.marginalUtilityFunctionView',
-                            'model.marginalUtilityAtQuantityPoint(params.c,{yAxisLabel: "u\'(c_A)", xDrag:"params.c"})']
-                    },
-                    objects: [
-                        'model.utilityAtQuantityPoint(params.c, {xAxisLabel: "c_A", yAxisLabel: "u(c_A)", xDrag:"params.c"})'
-                    ]
+                    rra: 'params.rra'
                 }
             },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'rraSlider',
-                    param: 'rra',
-                    precision: '0.01',
-                    axisDef: {min: 0, max: 2, tickValues: [0, 1, 2]}
+            views: [
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'rraSlider',
+                        param: 'rra',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 2, tickValues: [0, 1, 2]}
+                    }
                 }
-            }
 
-        ]
-    }
-</script>
-{% endraw %}
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block js %}
+    <script>
+        
+        var utilityFunctionView = {
+                type: 'KG.FunctionPlot',
+                definition: {
+                    name: 'utilityFunction',
+                    className: 'utility',
+                    fn: 'model.utilityFunction',
+                    label: {
+                        text: 'u(c)'
+                    },
+                    numSamplePoints: 201
+                }
+            },
+            marginalUtilityFunctionView = {
+                type: 'KG.FunctionPlot',
+                definition: {
+                    name: 'utilityFunction',
+                    className: 'demand',
+                    fn: 'model.marginalUtilityFunction',
+                    label: {
+                        text: "u'(c)"
+                    },
+                    numSamplePoints: 201
+                }
+            },
+                utilityHorizontalLabel = {
+                    type: 'KG.HorizontalDropline',
+                    definition: {
+                        name: 'uLabel',
+                        className: 'utility',
+                        coordinates: {x: 'params.c', y: 'model.utilityAtQuantity(params.c)'},
+                        axisLabel: "u(c)"
+                    }
+                },
+            utilityPoint = {
+                type: 'KG.Point',
+                definition: {
+                    name: 'utilityAtQ',
+                    className: 'utility',
+                    coordinates: {x: 'params.c', y: 'model.utilityAtQuantity(params.c)'},
+                    droplines: {
+                        vertical: 'c'
+                    },
+                    interaction: {
+                        xDrag: 'params.c',
+                        highlight: 'c'
+                    }
+                }
+            },
+            marginalUtilitySlopeLine = {
+                type: 'KG.Line',
+                definition: {
+                    name: 'marginalUtilityAtQuantitySlope',
+                    className: 'demand dotted',
+                    lineDef: {
+                        point: {x: 'params.c', y: 'model.utilityAtQuantity(params.c)'},
+                        slope: 'model.marginalUtilityAtQuantity(params.c)',
+                        xDomainDef: {
+                            min: 'params.c - 1',
+                            max: 'params.c + 1'
+                        }
+                    },
+                    label: {
+                        text: "\\text{slope }=u'(c)",
+                        align: 'right'
+                    },
+                    interaction: {
+                        highlight: 'mu'
+                    }
+                }
+            },
+            marginalUtilityPoint = {
+                type: 'KG.Point',
+                definition: {
+                    name: 'marginalUtilityAtQ',
+                    className: 'demand',
+                    coordinates: {x: 'params.c', y: 'model.marginalUtilityAtQuantity(params.c)'},
+                    droplines: {
+                        vertical: 'c'
+                    },
+                    interaction: {
+                        xDrag: 'params.c',
+                        highlight: 'c',
+
+
+                    }
+                }
+            },
+                marginalUtilityHorizontalLabel = {
+                    type: 'KG.HorizontalDropline',
+                    definition: {
+                        name: 'muLabel',
+                        className: 'demand',
+                        coordinates: {x: 'params.c', y: 'model.marginalUtilityAtQuantity(params.c)'},
+                        interaction: {
+                            highlight: 'mu'
+                        },
+                        axisLabel: "u'(c)"
+                    }
+                }
+
+    </script>
+
+    {% block extends_crra_controls %}
+        <script>
+        scopeDefinition.views.push({
+                    type: 'KG.TwoVerticalGraphs',
+                    definition: {
+                        element_id: 'utility',
+                        xAxisDef: {min: 0, max: 10, title: '\\text{Consumption (units)}'},
+                        topGraph: {
+                            yAxisDef: {min: 0, max: 'model.utilityAtQuantity(10)', title: '\\text{Total Utility (utils)}'},
+                            objects: [utilityFunctionView, utilityHorizontalLabel, utilityPoint, marginalUtilitySlopeLine]
+                        },
+                        bottomGraph: {
+                            yAxisDef: {min: 0, max: 1, title: '\\text{Marginal Utility (utils/unit)}'},
+                            objects: [marginalUtilityFunctionView, marginalUtilityHorizontalLabel, marginalUtilityPoint]
+                        },
+                        objects: []
+                    }
+                })
+        </script>
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
 {% endblock %}

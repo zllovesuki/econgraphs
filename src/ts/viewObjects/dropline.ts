@@ -29,6 +29,8 @@ module KG {
 
             definition.coordinates = KG.getCoordinates(definition.coordinates);
 
+            definition.interaction = definition.interaction || {};
+
             if(definition.interaction.hasOwnProperty('draggable')) {
                 if(definition.horizontal) {
                     definition.interaction.yDrag = definition.interaction.draggable;

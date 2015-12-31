@@ -29,6 +29,83 @@
     </div>
 </div>
 <script>
+
+    var expectedUtilityPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'expectedUtilityPoint',
+                        className: 'riskPremium',
+                        coordinates: {
+                            x: 'model.expectedC',
+                            y: 'model.expectedU'
+                        },
+                        droplines: {
+                            horizontal: "\\mathbb{E}[u(c)]"
+                        }
+                    }
+                },
+                expectedConsumptionPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'expectedConsumptionPoint',
+                        className: 'expectedUtility',
+                        coordinates: {
+                            x: 'model.expectedC',
+                            y: 'model.utilityOfExpectedC'
+                        },
+                        droplines: {
+                            vertical: "\\mathbb{E}[c]",
+                            horizontal: "u(\\mathbb{E}[c])"
+                        }
+                    }},
+                certaintyEquivalentPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'certaintyEquivalentPoint',
+                        className: 'riskPremium',
+                        show: this.show.ce,
+                        coordinates: {
+                            x: 'model.certaintyEquivalent',
+                            y: 'model.expectedU'
+                        },
+                        droplines: {
+                            vertical: "CE"
+                        }
+                    }},
+                expectationSegment = {
+                    type: 'KG.Segment',
+                    definition:{
+                        name: 'expectationSegment',
+                        className: 'growth dotted',
+                        a: {
+                            x: 'model.ca',
+                            y: 'model.ua'
+                        },
+                        b: {
+                            x: 'model.cb',
+                            y: 'model.ub'
+                        },
+                    }},
+
+                riskPremiumSegment = {
+                    type: 'KG.Segment',
+                    definition:{
+                        name: 'xDiffSegment',
+                        className: 'riskPremium',
+                        show: this.show.rp,
+                        a: {
+                            x: 'model.expectedC',
+                            y: 'model.expectedU'
+                        },
+                        b: {
+                            x: 'model.certaintyEquivalent',
+                            y: 'model.expectedU'
+                        },
+                        label: {
+                            text: 'RP',
+                            valign: 'top'
+                        }
+                    }};
     var scopeDefinition = {
         params: {
             rra: 0.8,
@@ -81,11 +158,11 @@
                         'model.utility.utilityFunctionView',
                         'model.utility.utilityAtQuantityPoint(params.ca, {name: "CL", xAxisLabel: "c_L", yAxisLabel: "u(c_L)", xDrag: "params.ca"})',
                         'model.utility.utilityAtQuantityPoint(params.cb, {name: "CH", xAxisLabel: "c_H", yAxisLabel: "u(c_H)", xDrag: "params.cb"})',
-                        'model.expectedUtilityPoint',
-                        'model.certaintyEquivalentPoint',
-                        'model.expectedConsumptionPoint',
-                        'model.expectationSegment',
-                        'model.riskPremiumSegment'
+                        expectedUtilityPoint,
+                        model.certaintyEquivalentPoint,
+                        model.expectedConsumptionPoint,
+                        model.expectationSegment,
+                        model.riskPremiumSegment
                     ]
                 }
             },

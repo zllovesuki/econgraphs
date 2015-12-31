@@ -2474,6 +2474,7 @@ var KG;
         __extends(Dropline, _super);
         function Dropline(definition, modelPath) {
             definition.coordinates = KG.getCoordinates(definition.coordinates);
+            definition.interaction = definition.interaction || {};
             if (definition.interaction.hasOwnProperty('draggable')) {
                 if (definition.horizontal) {
                     definition.interaction.yDrag = definition.interaction.draggable;
@@ -5087,28 +5088,8 @@ var EconGraphs;
                 marginalCurveLabel: 'u\'(c)'
             });
             _super.call(this, definition, modelPath);
-            this.utilityFunctionView = new KG.FunctionPlot({
-                name: 'utilityFunction',
-                className: 'utility',
-                fn: this.modelProperty('utilityFunction'),
-                arrows: 'NONE',
-                label: {
-                    text: this.curveLabel
-                },
-                numSamplePoints: 501
-            });
             if (this.utilityFunction.derivative()) {
                 this.marginalUtilityFunction = this.utilityFunction.derivative();
-                this.marginalUtilityFunctionView = new KG.FunctionPlot({
-                    name: 'marginalUtilityFunction',
-                    className: 'demand',
-                    fn: this.modelProperty('marginalUtilityFunction'),
-                    arrows: 'NONE',
-                    label: {
-                        text: this.marginalCurveLabel
-                    },
-                    numSamplePoints: 501
-                });
             }
         }
         OneGoodUtility.prototype._update = function (scope) {
@@ -5124,33 +5105,6 @@ var EconGraphs;
         };
         OneGoodUtility.prototype.marginalUtilityAtQuantity = function (c) {
             return this.marginalUtilityFunction.yValue(c);
-        };
-        OneGoodUtility.prototype.marginalUtilityAtQuantitySlope = function (c, params) {
-            return new KG.Line({
-                name: 'marginalUtilityAtQuantitySlope',
-                className: 'demand dotted',
-                lineDef: {
-                    point: { x: c, y: this.utilityAtQuantity(c) },
-                    slope: this.marginalUtilityAtQuantity(c)
-                },
-                params: params
-            });
-        };
-        OneGoodUtility.prototype.utilityAtQuantityPoint = function (q, params) {
-            return new KG.Point({
-                coordinates: { x: q, y: this.utilityAtQuantity(q) },
-                name: 'utilityAtQ',
-                className: 'utility',
-                params: params
-            });
-        };
-        OneGoodUtility.prototype.marginalUtilityAtQuantityPoint = function (q, params) {
-            return new KG.Point({
-                name: 'marginalUtilityAtQ',
-                coordinates: { x: q, y: this.marginalUtilityFunction.yValue(q) },
-                className: 'demand',
-                params: params
-            });
         };
         OneGoodUtility.prototype.consumptionYieldingUtility = function (u) {
             return this.utilityFunction.xValue(u);
@@ -5213,70 +5167,6 @@ var EconGraphs;
             });
             _super.call(this, definition, modelPath);
             this.utility = new EconGraphs[definition.utilityType](definition.utilityDef, this.modelPath + '.utility');
-            this.expectedUtilityPoint = new KG.Point({
-                name: 'expectedUtilityPoint',
-                className: 'riskPremium',
-                coordinates: {
-                    x: this.modelProperty('expectedC'),
-                    y: this.modelProperty('expectedU')
-                },
-                droplines: {
-                    horizontal: "\\mathbb{E}[u(c)]"
-                }
-            });
-            this.expectedConsumptionPoint = new KG.Point({
-                name: 'expectedConsumptionPoint',
-                className: 'expectedUtility',
-                coordinates: {
-                    x: this.modelProperty('expectedC'),
-                    y: this.modelProperty('utilityOfExpectedC')
-                },
-                droplines: {
-                    vertical: "\\mathbb{E}[c]",
-                    horizontal: "u(\\mathbb{E}[c])"
-                }
-            });
-            this.certaintyEquivalentPoint = new KG.Point({
-                name: 'certaintyEquivalentPoint',
-                className: 'riskPremium',
-                show: this.show.ce,
-                coordinates: {
-                    x: this.modelProperty('certaintyEquivalent'),
-                    y: this.modelProperty('expectedU')
-                },
-                droplines: {
-                    vertical: "CE"
-                }
-            });
-            this.expectationSegment = new KG.Segment({
-                name: 'expectationSegment',
-                className: 'growth dotted',
-                a: {
-                    x: this.modelProperty('ca'),
-                    y: this.modelProperty('ua')
-                },
-                b: {
-                    x: this.modelProperty('cb'),
-                    y: this.modelProperty('ub')
-                }
-            });
-            this.riskPremiumSegment = new KG.Segment({
-                name: 'xDiffSegment',
-                className: 'riskPremium',
-                show: this.show.rp,
-                a: {
-                    x: this.modelProperty('expectedC'),
-                    y: this.modelProperty('expectedU')
-                },
-                b: {
-                    x: this.modelProperty('certaintyEquivalent'),
-                    y: this.modelProperty('expectedU')
-                },
-                label: {
-                    text: 'RP',
-                    valign: 'top'
-                }
-            });
         }
         RiskAversion.prototype._update = function (scope) {
             var ra = this;

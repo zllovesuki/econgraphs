@@ -71,74 +71,7 @@ module EconGraphs {
 
             this.utility = new EconGraphs[definition.utilityType](definition.utilityDef, this.modelPath + '.utility');
 
-            this.expectedUtilityPoint = new KG.Point({
-                name: 'expectedUtilityPoint',
-                className: 'riskPremium',
-                coordinates: {
-                    x: this.modelProperty('expectedC'),
-                    y: this.modelProperty('expectedU')
-                },
-                droplines: {
-                    horizontal: "\\mathbb{E}[u(c)]"
-                }
-            });
 
-            this.expectedConsumptionPoint = new KG.Point({
-                name: 'expectedConsumptionPoint',
-                className: 'expectedUtility',
-                coordinates: {
-                    x: this.modelProperty('expectedC'),
-                    y: this.modelProperty('utilityOfExpectedC')
-                },
-                droplines: {
-                    vertical: "\\mathbb{E}[c]",
-                    horizontal: "u(\\mathbb{E}[c])"
-                }
-            });
-
-            this.certaintyEquivalentPoint = new KG.Point({
-                name: 'certaintyEquivalentPoint',
-                className: 'riskPremium',
-                show: this.show.ce,
-                coordinates: {
-                    x: this.modelProperty('certaintyEquivalent'),
-                    y: this.modelProperty('expectedU')
-                },
-                droplines: {
-                    vertical: "CE"
-                }
-            });
-
-            this.expectationSegment = new KG.Segment({
-                name: 'expectationSegment',
-                className: 'growth dotted',
-                a: {
-                    x: this.modelProperty('ca'),
-                    y: this.modelProperty('ua')
-                },
-                b: {
-                    x: this.modelProperty('cb'),
-                    y: this.modelProperty('ub')
-                },
-            })
-
-            this.riskPremiumSegment = new KG.Segment({
-                name: 'xDiffSegment',
-                className: 'riskPremium',
-                show: this.show.rp,
-                a: {
-                    x: this.modelProperty('expectedC'),
-                    y: this.modelProperty('expectedU')
-                },
-                b: {
-                    x: this.modelProperty('certaintyEquivalent'),
-                    y: this.modelProperty('expectedU')
-                },
-                label: {
-                    text: 'RP',
-                    valign: 'top'
-                }
-            });
 
         }
 
