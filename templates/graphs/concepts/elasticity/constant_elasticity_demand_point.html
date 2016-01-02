@@ -2,12 +2,11 @@
 
 {% block body %}
 {% raw %}
-    <div ng-controller="KineticGraphCtrl" onclick="updateParams({highight:'foo'})">
+    <div ng-controller="KineticGraphCtrl">
         <div class="row">
             <div class="col-md-8">
                 <h1>Demand with Constant Price Elasticity</h1>
                 <hr/>
-                <p>Highlighted param: {{params.highlight}}</p>
                 <p>This diagram shows a demand curve with a constant elasticity of <span highlight="elasticity">{{ model.elasticity | number:2}}</span>, passing through <span highlight="A">point A</span>.</p>
                 <p>Drag the <span highlight="price">price</span> up and down to see how the <span highlight="QD">quantity demanded</span> changes,<br/>and to see how the elasticity calculations change (and don't!) as you move along the demand curve.</p>
                 <p>What happens to the diagram when you drag point A around? When you change the elasticity using the slider?</p>

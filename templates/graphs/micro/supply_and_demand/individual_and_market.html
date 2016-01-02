@@ -181,7 +181,7 @@
                         yIsIndependent: true,
                         yDomainDef: {min: 1, max: 38},
                         label: {
-                            text: "d",
+                            text: "s",
                             valign: 'bottom'
                         },
                         interaction: {
@@ -199,7 +199,7 @@
                             y: 'model.price'
                         },
                         droplines: {
-                            vertical: 'q^D'
+                            vertical: 'q^S'
                         },
                         interaction: {
                             highlight: 'individualQuantitySupplied'
@@ -215,7 +215,7 @@
                         yIsIndependent: true,
                         yDomainDef: {min: 2, max: 38},
                         label: {
-                            text: "D",
+                            text: "S",
                             valign: 'bottom'
                         },
                         interaction: {
@@ -234,7 +234,7 @@
                             y: 'model.price'
                         },
                         droplines: {
-                            vertical: 'Q^D'
+                            vertical: 'Q^S'
                         },
                         interaction: {
                             highlight: 'marketQuantitySupplied'
@@ -405,6 +405,6 @@
 
 {% block js %}
 
-    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
 
 {% endblock %}

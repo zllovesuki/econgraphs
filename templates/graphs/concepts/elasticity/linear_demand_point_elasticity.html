@@ -4,16 +4,17 @@
 {% raw %}
     <div ng-controller="KineticGraphCtrl">
         <h1>Demand Elasticity along a Linear Demand Curve (Point Method)</h1>
+        <hr/>
+        <p>Drag the endpoints of the demand curve to change its <span highlight="slope">slope</span>.</p>
+        <p>Drag the <span highlight="price">price</span> up and down to see how the <span highlight="QD">quantity demanded</span> changes,<br/>and to see how the elasticity calculations change as you move along the demand curve.</p>
 
-        <p>Drag the endpoints of the demand curve to change its slope. Drag the price up and down to see how the price
-            elasticity at point A changes.</p>
         <hr/>
         <div class="row">
             <div class="col-md-6">
                 <div id="graph"></div>
             </div>
             <div class="col-md-6">
-                <p class="math displayMath big">\color{ {{ color('green') }} }{\frac{dQ^D}{dP} = -\frac{ {{
+                <p class="math displayMath big" highlight="slope">\color{ {{ color('green') }} }{\frac{dQ^D}{dP} = -\frac{ {{
                     params.demandQuantityIntercept | number:0 }} }{ {{ params.demandPriceIntercept | number:0}} } = {{
                     model.priceQuantityRelationshipFunction.inverseSlope | number:2 }}}</p>
                 <hr/>
@@ -130,7 +131,7 @@
                                     yInterceptLabel: 'P',
                                     interaction: {
                                         yDrag: 'price',
-                                        highlight: 'priceLine'
+                                        highlight: 'price'
                                     }
                                 }
                             },
@@ -141,7 +142,7 @@
                                     className: 'demand',
                                     coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
                                     interaction: {
-                                        yDrag: 'price'
+                                        highlight: 'QD'
                                     },
                                     droplines: {
                                         vertical: 'Q^D(P)'
@@ -161,7 +162,9 @@
                                     align: 'left',
                                     valign: 'bottom',
                                     dimensions: {width: 100, height: 30},
-                                    backgroundColor: 'white'
+                                    interaction: {
+                                        highlight: 'slope'
+                                    }
                                 }
                             }]
                     }

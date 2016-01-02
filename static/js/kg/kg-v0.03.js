@@ -2446,7 +2446,6 @@ var KG;
             }
             // draw the symbol at the point
             var pointSymbol = group.select('.' + point.viewObjectClass);
-            var dragHandle = group.select('.' + point.viewObjectClass + 'Handle');
             var currentSize = point.interactionHandler.highlight ? point.size * 1.5 : point.size;
             try {
                 pointSymbol
@@ -2455,18 +2454,11 @@ var KG;
                     'd': d3.svg.symbol().type(point.symbol).size(currentSize),
                     'transform': subview.translateByCoordinates(point.coordinates)
                 });
-                dragHandle
-                    .attr({
-                    'class': point.classAndVisibility(),
-                    'd': d3.svg.symbol().type(point.symbol).size(currentSize * 2),
-                    'transform': subview.translateByCoordinates(point.coordinates)
-                });
             }
             catch (error) {
                 console.log(error);
             }
             point.interactionHandler.setBehavior(view, pointSymbol);
-            point.interactionHandler.setBehavior(view, dragHandle);
             return view;
         };
         return Point;
