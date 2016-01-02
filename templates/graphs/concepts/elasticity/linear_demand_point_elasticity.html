@@ -15,12 +15,12 @@
             <div class="col-md-6">
                 <p class="math displayMath big">\color{ {{ color('green') }} }{\frac{dQ^D}{dP} = -\frac{ {{
                     params.demandQuantityIntercept | number:0 }} }{ {{ params.demandPriceIntercept | number:0}} } = {{
-                    model.demandFunction.inverseSlope | number:2 }}}</p>
+                    model.priceQuantityRelationshipFunction.inverseSlope | number:2 }}}</p>
                 <hr/>
                 <equation>\epsilon_{Q^D,P} = \frac{P}{ \color{ {{ color('demand') }} }{Q^D(P)} } \times \color{ {{ color('green')
                     }} }{ \frac{dQ^D}{dP} } || = \frac{ {{ params.price | number:0 }} }{ \color { {{ color('demand') }}  } { {{
                     model.quantityAtPrice(params.price) | number:1 }}  } } \times \color{ {{ color('green') }} }{ {{
-                    model.priceResponseFunction.inverseSlope | number:2 }} } || = {{
+                    model.inverseSlope | number:2 }} } || = {{
                     model.priceElasticity(params.price).elasticityNumber() }}</equation>
                 <p class="math displayMath"></p>
                 <hr/>
@@ -65,7 +65,7 @@
                 }
             ],
             model: {
-                type: 'EconGraphs.LinearPriceResponse',
+                type: 'EconGraphs.LinearPriceQuantityRelationship',
                 definition: {
                     elasticityMethod: 'point',
                     price: 'params.price',
@@ -86,7 +86,7 @@
                                 definition: {
                                     name: 'demand',
                                     className: 'demand',
-                                    linear: 'model.priceResponseFunction',
+                                    linear: 'model.priceQuantityRelationshipFunction',
                                     label: {
                                         text: 'D'
                                     },
@@ -157,7 +157,7 @@
                                         x: 'model.quantityAtPrice(params.demandPriceIntercept/3) + 1',
                                         y: 'params.demandPriceIntercept/3 + 1'
                                     },
-                                    text: ["\\frac{dQ^D}{dP} =", 'model.priceResponseFunction.inverseSlope | number:2'],
+                                    text: ["\\frac{dQ^D}{dP} =", 'model.inverseSlope | number:2'],
                                     align: 'left',
                                     valign: 'bottom',
                                     dimensions: {width: 100, height: 30},

@@ -187,6 +187,7 @@ module KG
 
             // draw the symbol at the point
             var pointSymbol:D3.Selection = group.select('.'+ point.viewObjectClass);
+            var dragHandle:D3.Selection = group.select('.'+ point.viewObjectClass + 'Handle');
 
             var currentSize = point.interactionHandler.highlight ? point.size*1.5 : point.size;
             try {
@@ -196,11 +197,18 @@ module KG
                         'd': d3.svg.symbol().type(point.symbol).size(currentSize),
                         'transform': subview.translateByCoordinates(point.coordinates)
                     });
+                dragHandle
+                    .attr({
+                        'class': point.classAndVisibility(),
+                        'd': d3.svg.symbol().type(point.symbol).size(currentSize*2),
+                        'transform': subview.translateByCoordinates(point.coordinates)
+                    });
             } catch(error) {
                 console.log(error);
             }
 
             point.interactionHandler.setBehavior(view,pointSymbol);
+            point.interactionHandler.setBehavior(view,dragHandle);
 
             return view;
 

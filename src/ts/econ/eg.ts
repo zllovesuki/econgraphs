@@ -11,9 +11,9 @@
 
 /* Supply and Demand */
 
-/// <reference path="micro/supply_and_demand/priceResponse.ts"/>
-/// <reference path="micro/supply_and_demand/constantElasticityPriceResponse.ts"/>
-/// <reference path="micro/supply_and_demand/linearPriceResponse.ts"/>
+/// <reference path="micro/supply_and_demand/priceQuantityRelationship.ts"/>
+/// <reference path="micro/supply_and_demand/constantElasticityPriceQuantityRelationship.ts"/>
+/// <reference path="micro/supply_and_demand/linearPriceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/individual_and_market_supply_and_demand.ts"/>
 
 /* Consumer Theory */

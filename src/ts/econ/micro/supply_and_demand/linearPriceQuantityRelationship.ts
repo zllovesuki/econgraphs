@@ -2,41 +2,43 @@
 
 module EconGraphs {
 
-    export interface LinearPriceResponseDefinition extends PriceResponseDefinition
+    export interface LinearPriceQuantityRelationshipDefinition extends PriceQuantityRelationshipDefinition
     {
         quantityIntercept?: any;
         priceIntercept?: any;
-        slope?: any; //note the slope is dQ/dP, even though the linear function is defined as if Q were on the X axis.
+        slope?: any; //note the slope is dP/dQ
         referenceQuantity?: any;
         referencePrice?: any;
         referenceQuantity2?: any;
         referencePrice2?: any;
     }
 
-    export interface ILinearPriceResponse extends IPriceResponse
+    export interface ILinearPriceQuantityRelationship extends IPriceQuantityRelationship
     {
-        priceResponseFunction: KGMath.Functions.Linear;
+        priceQuantityRelationshipFunction: KGMath.Functions.Linear;
         marginalDollarAmount: KGMath.Functions.Linear;
         totalDollarAmount: KGMath.Functions.Quadratic;
         quantityIntercept: number;
         priceIntercept: number;
         slope: number;
+        inverseSlope: number;
         perfectlyElastic: boolean;
         perfectlyInelastic: boolean;
     }
 
-    export class LinearPriceResponse extends PriceResponse implements ILinearPriceResponse
+    export class LinearPriceQuantityRelationship extends PriceQuantityRelationship implements ILinearPriceQuantityRelationship
     {
 
         public quantityIntercept;
         public priceIntercept;
         public slope;
+        public inverseSlope;
         public totalDollarAmount;
         public marginalDollarAmount;
         public perfectlyElastic;
         public perfectlyInelastic;
 
-        constructor(definition:LinearPriceResponseDefinition, modelPath?:string) {
+        constructor(definition:LinearPriceQuantityRelationshipDefinition, modelPath?:string) {
 
             definition.type = 'Linear';
 
@@ -49,11 +51,9 @@ module EconGraphs {
                         x: definition.quantityIntercept,
                         y: 0
                     },
-                    slope: KG.divideDefs(1,definition.slope)
+                    slope: definition.slope
                 };
-                if(definition.slope !== 0) {
-                    definition.priceIntercept = KG.multiplyDefs(-1,KG.multiplyDefs(definition.quantityIntercept,definition.slope));
-                }
+                definition.priceIntercept = KG.multiplyDefs(-1,KG.multiplyDefs(definition.quantityIntercept,definition.slope));
 
             }
 
@@ -69,7 +69,7 @@ module EconGraphs {
                         y: definition.priceIntercept
                     }
                 };
-                definition.slope = KG.multiplyDefs(-1,KG.divideDefs(definition.quantityIntercept,definition.priceIntercept))
+                definition.slope = KG.multiplyDefs(-1,KG.divideDefs(definition.priceIntercept,definition.quantityIntercept))
             }
 
             // If the function is defined using an arbitrary point and price intercept, initiate using those two points and calculate the slope
@@ -85,7 +85,7 @@ module EconGraphs {
                     }
                 };
 
-                definition.slope = KG.divideDefs(definition.referenceQuantity,KG.subtractDefs(definition.referencePrice,definition.priceIntercept));
+                definition.slope = KG.divideDefs(KG.subtractDefs(definition.referencePrice,definition.priceIntercept),definition.referenceQuantity);
             }
 
             // If the function is defined using an arbitrary point and quantity intercept, initiate using those two points and calculate the slope
@@ -100,7 +100,7 @@ module EconGraphs {
                         y: 0
                     }
                 };
-                definition.slope = KG.divideDefs(KG.subtractDefs(definition.referenceQuantity,definition.quantityIntercept),definition.referencePrice);
+                definition.slope = KG.divideDefs(definition.referencePrice,KG.subtractDefs(definition.referenceQuantity,definition.quantityIntercept));
             }
 
             // If the function is defined using two arbitrary points initiate using those two points and calculate the slope
@@ -115,7 +115,7 @@ module EconGraphs {
                         y: definition.referencePrice2
                     }
                 };
-                definition.slope = KG.divideDefs(KG.subtractDefs(definition.referenceQuantity,definition.referenceQuantity2),KG.subtractDefs(definition.referencePrice,definition.referencePrice2));
+                definition.slope = KG.divideDefs(KG.subtractDefs(definition.referencePrice,definition.referencePrice2),KG.subtractDefs(definition.referenceQuantity,definition.referenceQuantity2));
                 definition.quantityIntercept = KG.multiplyDefs(-1,KG.multiplyDefs(definition.priceIntercept,definition.slope));
             }
 
@@ -126,43 +126,49 @@ module EconGraphs {
 
             super(definition, modelPath);
 
-            var priceResponse = this;
+            var priceQuantityRelationship = this;
 
-            priceResponse.marginalDollarAmount = new KGMath.Functions.Linear({
-                    intercept: definition.priceIntercept,
-                    slope: KG.multiplyDefs(2,definition.slope)
-                });
+            priceQuantityRelationship.marginalDollarAmount = new KGMath.Functions.Linear({
+                intercept: definition.priceIntercept,
+                slope: KG.multiplyDefs(2,definition.slope)
+            });
 
-                priceResponse.totalDollarAmount = new KGMath.Functions.Quadratic({
-                    coefficients: {
-                        a: definition.slope,
-                        b: definition.priceIntercept,
-                        c: 0
-                    }
-                })
+            priceQuantityRelationship.totalDollarAmount = new KGMath.Functions.Quadratic({
+                coefficients: {
+                    a: definition.slope,
+                    b: definition.priceIntercept,
+                    c: 0
+                }
+            })
 
         }
 
         _update(scope) {
-            var linearPriceResponse = this;
+            var linearPriceQuantityRelationship = this;
 
-            linearPriceResponse.perfectlyInelastic = (linearPriceResponse.slope == 0);
-            linearPriceResponse.perfectlyElastic = (linearPriceResponse.slope == Infinity || linearPriceResponse.slope == -Infinity);
+            linearPriceQuantityRelationship.inverseSlope = 1/linearPriceQuantityRelationship.slope;
 
-            if(!linearPriceResponse.perfectlyInelastic) {
-                linearPriceResponse.marginalDollarAmount.update(scope);
-                linearPriceResponse.totalDollarAmount.update(scope);
+            linearPriceQuantityRelationship.perfectlyElastic = (linearPriceQuantityRelationship.slope == 0);
+            linearPriceQuantityRelationship.perfectlyInelastic = (linearPriceQuantityRelationship.slope == Infinity || linearPriceQuantityRelationship.slope == -Infinity);
+
+            if(!linearPriceQuantityRelationship.perfectlyInelastic) {
+                linearPriceQuantityRelationship.marginalDollarAmount.update(scope);
+                linearPriceQuantityRelationship.totalDollarAmount.update(scope);
             } else {
-                linearPriceResponse.perfectlyInelastic = true;
+                linearPriceQuantityRelationship.perfectlyInelastic = true;
             }
 
             super._update(scope);
-            return linearPriceResponse;
+            return linearPriceQuantityRelationship;
         }
 
         // Since this is just a constant, we can save some time :)
         slopeAtPrice(price) {
             return this.slope;
+        }
+
+        inverseSlopeAtPrice(price) {
+            return this.inverseSlope;
         }
     }
 
