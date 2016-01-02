@@ -407,7 +407,8 @@ button:hover {
 .dataPathHandle,
 .lineHandle,
 .curveHandle,
-.droplineHandle {
+.droplineHandle,
+.pointHandle {
   stroke-width: 40;
   stroke-dasharray: none;
   fill: none;

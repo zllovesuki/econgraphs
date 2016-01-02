@@ -1,18 +1,17 @@
 /* 
- A quadratic function is a special polynomial defined either with two points or a point and a slope.
- This function takes either of those and returns a polynomial of the form ax + by + c.
- The params object is of the form: { definitionType: '', param1: foo, param2: bar }
+ A quadratic function is a special polynomial defined either with two points or three coefficients.
  */
 
 module KGMath.Functions {
 
+    //the quadratic function may either be defined by three coefficients directly, or by any point and the vertex.
     export interface QuadraticDefinition extends BaseDefinition {
         coefficients?: QuadraticCoefficients;
         vertex?: KG.ICoordinates;
         point?: KG.ICoordinates;
     }
 
-    // a line is defined by the equation ax + by + c = 0
+    // a quadratic function is defined by coefficients a,b,c such that f(x) = ax^2 + bx + c.
     export interface QuadraticCoefficients {
         a: any;
         b: any;
@@ -72,8 +71,6 @@ module KGMath.Functions {
                     y: vertexY
                 }
             }
-
-
 
         }
 

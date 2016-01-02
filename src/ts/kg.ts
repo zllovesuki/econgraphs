@@ -110,6 +110,8 @@ angular.module('KineticGraphs', [])
                 scope.updateParams({highlight:null});
             });
 
+            el.css("font-weight", "bold");
+
             scope.$watch('params.highlight',function(){
                 console.log('scope highlight = ',scope.params.highlight);
                 console.log('this highlight = ',attrs.highlight);

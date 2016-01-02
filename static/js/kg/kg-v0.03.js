@@ -1480,9 +1480,7 @@ var KGMath;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
 /*
- A quadratic function is a special polynomial defined either with two points or a point and a slope.
- This function takes either of those and returns a polynomial of the form ax + by + c.
- The params object is of the form: { definitionType: '', param1: foo, param2: bar }
+ A quadratic function is a special polynomial defined either with two points or three coefficients.
  */
 var KGMath;
 (function (KGMath) {
@@ -2815,11 +2813,10 @@ var KG;
             if (definition.hasOwnProperty('yInterceptLabel')) {
                 var yInterceptLabelDef = {
                     name: definition.name + 'y_intercept_label',
-                    className: definition.className,
+                    className: definition.className + ' axisLabel',
                     text: definition.yInterceptLabel,
                     dimensions: { width: 25, height: 20 },
                     interaction: definition.interaction,
-                    backgroundColor: 'white',
                     show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
@@ -3968,6 +3965,7 @@ var KG;
             this.$scope = $scope;
             this.$interpolate = $interpolate;
             $scope.updateVersion = 0;
+            $scope.Math = window.Math;
             $scope.interpolate = $interpolate;
             $scope.color = function (className) {
                 return KG.colorForClassName(className);
@@ -4499,6 +4497,239 @@ var EconGraphs;
 /// <reference path="../../eg.ts"/>
 var EconGraphs;
 (function (EconGraphs) {
+    var PriceQuantityRelationship = (function (_super) {
+        __extends(PriceQuantityRelationship, _super);
+        function PriceQuantityRelationship(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+            var priceQuantityRelationship = this;
+            priceQuantityRelationship.priceQuantityRelationshipFunction = new KGMath.Functions[definition.type](definition.def);
+            priceQuantityRelationship.elasticity = (definition.elasticityMethod == 'point') ? new EconGraphs.PointElasticity({}) : (definition.elasticityMethod = 'constant') ? new EconGraphs.ConstantElasticity({}) : new EconGraphs.MidpointElasticity({});
+        }
+        PriceQuantityRelationship.prototype._update = function (scope) {
+            var priceQuantityRelationship = this;
+            priceQuantityRelationship.priceQuantityRelationshipFunction.update(scope);
+            if (priceQuantityRelationship.price) {
+                priceQuantityRelationship.quantity = priceQuantityRelationship.quantityAtPrice(priceQuantityRelationship.price);
+            }
+            else if (priceQuantityRelationship.quantity) {
+                priceQuantityRelationship.price = priceQuantityRelationship.priceAtQuantity(priceQuantityRelationship.quantity);
+            }
+            return priceQuantityRelationship;
+        };
+        PriceQuantityRelationship.prototype.quantityAtPrice = function (price) {
+            price = (price > 0) ? price : 0;
+            var q = this.priceQuantityRelationshipFunction.xValue(price);
+            console.log('quantity at price ', price, ' is ', q);
+            return Math.max(0, q);
+        };
+        PriceQuantityRelationship.prototype.priceAtQuantity = function (quantity) {
+            quantity = (quantity > 0) ? quantity : 0;
+            var p = this.priceQuantityRelationshipFunction.yValue(quantity);
+            return Math.max(0, p);
+        };
+        PriceQuantityRelationship.prototype.priceElasticity = function (price) {
+            var priceQuantityRelationship = this;
+            if (priceQuantityRelationship.elasticity instanceof EconGraphs.MidpointElasticity) {
+                priceQuantityRelationship.elasticity = priceQuantityRelationship.elasticity.calculateElasticity({
+                    point1: {
+                        x: priceQuantityRelationship.quantityAtPrice(price * 0.99),
+                        y: price * 0.99
+                    },
+                    point2: {
+                        x: priceQuantityRelationship.quantityAtPrice(price * 1.01),
+                        y: price * 1.01
+                    } });
+            }
+            else if (priceQuantityRelationship.elasticity instanceof EconGraphs.PointElasticity) {
+                var point = {
+                    x: priceQuantityRelationship.quantityAtPrice(price),
+                    y: price
+                }, slope = priceQuantityRelationship.slopeAtPrice(price);
+                priceQuantityRelationship.elasticity = priceQuantityRelationship.elasticity.calculateElasticity({ point: point, slope: slope });
+            }
+            return priceQuantityRelationship.elasticity;
+        };
+        PriceQuantityRelationship.prototype.slopeAtPrice = function (price) {
+            var priceQuantityRelationship = this;
+            return priceQuantityRelationship.priceQuantityRelationshipFunction.slopeBetweenPoints({
+                x: priceQuantityRelationship.quantityAtPrice(price * 0.99),
+                y: price * 0.99
+            }, {
+                x: priceQuantityRelationship.quantityAtPrice(price * 1.01),
+                y: price * 1.01
+            }, true);
+        };
+        PriceQuantityRelationship.prototype.inverseSlopeAtPrice = function (price) {
+            return 1 / this.slopeAtPrice(price);
+        };
+        // total revenue and total expenditure are the same thing;, and can be called from either perspective
+        PriceQuantityRelationship.prototype.totalRevenueAtPrice = function (price) {
+            return price * this.quantityAtPrice(price);
+        };
+        PriceQuantityRelationship.prototype.totalExpenditureAtPrice = function (price) {
+            return this.totalRevenueAtPrice(price);
+        };
+        PriceQuantityRelationship.prototype.totalRevenueAtQuantity = function (quantity) {
+            return quantity * this.priceAtQuantity(quantity);
+        };
+        PriceQuantityRelationship.prototype.totalExpenditureAtQuantity = function (quantity) {
+            return this.totalRevenueAtQuantity(quantity);
+        };
+        return PriceQuantityRelationship;
+    })(KG.Model);
+    EconGraphs.PriceQuantityRelationship = PriceQuantityRelationship;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var ConstantElasticityPriceQuantityRelationship = (function (_super) {
+        __extends(ConstantElasticityPriceQuantityRelationship, _super);
+        function ConstantElasticityPriceQuantityRelationship(definition, modelPath) {
+            if (definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice')) {
+                definition.coefficient = KG.divideDefs(definition.referenceQuantity, KG.raiseDefToDef(definition.referencePrice, definition.elasticity));
+            }
+            definition.type = 'Monomial';
+            definition.def = {
+                level: definition.coefficient,
+                coefficient: 1,
+                powers: [1, KG.multiplyDefs(-1, definition.elasticity)]
+            };
+            _super.call(this, definition, modelPath);
+        }
+        ConstantElasticityPriceQuantityRelationship.prototype._update = function (scope) {
+            console.log(this);
+            return this;
+        };
+        // elasticity = inverseSlope * P/Q => inverseSlope = elasticity*Q/P
+        ConstantElasticityPriceQuantityRelationship.prototype.inverseSlopeAtPrice = function (price) {
+            var pqRelationship = this, quantity = pqRelationship.quantityAtPrice(price);
+            return pqRelationship.elasticity * quantity / price;
+        };
+        ConstantElasticityPriceQuantityRelationship.prototype.slopeAtPrice = function (price) {
+            return 1 / this.inverseSlopeAtPrice(price);
+        };
+        return ConstantElasticityPriceQuantityRelationship;
+    })(EconGraphs.PriceQuantityRelationship);
+    EconGraphs.ConstantElasticityPriceQuantityRelationship = ConstantElasticityPriceQuantityRelationship;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var LinearPriceQuantityRelationship = (function (_super) {
+        __extends(LinearPriceQuantityRelationship, _super);
+        function LinearPriceQuantityRelationship(definition, modelPath) {
+            definition.type = 'Linear';
+            /* The purpose of this initial section is to define the linear function, which can be done a number of ways, and to ensure definitions exist for price intercept, quantity intercept, and slope. */
+            // If the function is defined using a quantity intercept and slope, initiate using those and calculate price intercept (which may not exist for perfectly inelastic demand/supply)
+            if (definition.hasOwnProperty('quantityIntercept') && definition.hasOwnProperty('slope')) {
+                definition.def = {
+                    point: {
+                        x: definition.quantityIntercept,
+                        y: 0
+                    },
+                    slope: definition.slope
+                };
+                definition.priceIntercept = KG.multiplyDefs(-1, KG.multiplyDefs(definition.quantityIntercept, definition.slope));
+            }
+            else if (definition.hasOwnProperty('quantityIntercept') && definition.hasOwnProperty('priceIntercept')) {
+                definition.def = {
+                    point1: {
+                        x: definition.quantityIntercept,
+                        y: 0
+                    },
+                    point2: {
+                        x: 0,
+                        y: definition.priceIntercept
+                    }
+                };
+                definition.slope = KG.multiplyDefs(-1, KG.divideDefs(definition.priceIntercept, definition.quantityIntercept));
+            }
+            else if (definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice') && definition.hasOwnProperty('priceIntercept')) {
+                definition.def = {
+                    point1: {
+                        x: definition.referenceQuantity,
+                        y: definition.referencePrice
+                    },
+                    point2: {
+                        x: 0,
+                        y: definition.priceIntercept
+                    }
+                };
+                definition.slope = KG.divideDefs(KG.subtractDefs(definition.referencePrice, definition.priceIntercept), definition.referenceQuantity);
+            }
+            else if (definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice') && definition.hasOwnProperty('priceIntercept')) {
+                definition.def = {
+                    point1: {
+                        x: definition.referenceQuantity,
+                        y: definition.referencePrice
+                    },
+                    point2: {
+                        x: definition.quantityIntercept,
+                        y: 0
+                    }
+                };
+                definition.slope = KG.divideDefs(definition.referencePrice, KG.subtractDefs(definition.referenceQuantity, definition.quantityIntercept));
+            }
+            else if (definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice') && definition.hasOwnProperty('priceIntercept')) {
+                definition.def = {
+                    point1: {
+                        x: definition.referenceQuantity,
+                        y: definition.referencePrice
+                    },
+                    point2: {
+                        x: definition.referenceQuantity2,
+                        y: definition.referencePrice2
+                    }
+                };
+                definition.slope = KG.divideDefs(KG.subtractDefs(definition.referencePrice, definition.referencePrice2), KG.subtractDefs(definition.referenceQuantity, definition.referenceQuantity2));
+                definition.quantityIntercept = KG.multiplyDefs(-1, KG.multiplyDefs(definition.priceIntercept, definition.slope));
+            }
+            else {
+                console.log('invalid parameters!');
+            }
+            _super.call(this, definition, modelPath);
+            var priceQuantityRelationship = this;
+            priceQuantityRelationship.marginalDollarAmount = new KGMath.Functions.Linear({
+                intercept: definition.priceIntercept,
+                slope: KG.multiplyDefs(2, definition.slope)
+            });
+            priceQuantityRelationship.totalDollarAmount = new KGMath.Functions.Quadratic({
+                coefficients: {
+                    a: definition.slope,
+                    b: definition.priceIntercept,
+                    c: 0
+                }
+            });
+        }
+        LinearPriceQuantityRelationship.prototype._update = function (scope) {
+            var linearPriceQuantityRelationship = this;
+            linearPriceQuantityRelationship.inverseSlope = 1 / linearPriceQuantityRelationship.slope;
+            linearPriceQuantityRelationship.perfectlyElastic = (linearPriceQuantityRelationship.slope == 0);
+            linearPriceQuantityRelationship.perfectlyInelastic = (linearPriceQuantityRelationship.slope == Infinity || linearPriceQuantityRelationship.slope == -Infinity);
+            if (!linearPriceQuantityRelationship.perfectlyInelastic) {
+                linearPriceQuantityRelationship.marginalDollarAmount.update(scope);
+                linearPriceQuantityRelationship.totalDollarAmount.update(scope);
+            }
+            else {
+                linearPriceQuantityRelationship.perfectlyInelastic = true;
+            }
+            _super.prototype._update.call(this, scope);
+            return linearPriceQuantityRelationship;
+        };
+        // Since this is just a constant, we can save some time :)
+        LinearPriceQuantityRelationship.prototype.slopeAtPrice = function (price) {
+            return this.slope;
+        };
+        LinearPriceQuantityRelationship.prototype.inverseSlopeAtPrice = function (price) {
+            return this.inverseSlope;
+        };
+        return LinearPriceQuantityRelationship;
+    })(EconGraphs.PriceQuantityRelationship);
+    EconGraphs.LinearPriceQuantityRelationship = LinearPriceQuantityRelationship;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
     var IndividualAndMarketSandD = (function (_super) {
         __extends(IndividualAndMarketSandD, _super);
         function IndividualAndMarketSandD(definition, modelPath) {
@@ -4545,206 +4776,6 @@ var EconGraphs;
         return IndividualAndMarketSandD;
     })(KG.Model);
     EconGraphs.IndividualAndMarketSandD = IndividualAndMarketSandD;
-})(EconGraphs || (EconGraphs = {}));
-/// <reference path="../../../eg.ts"/>
-var EconGraphs;
-(function (EconGraphs) {
-    var Demand = (function (_super) {
-        __extends(Demand, _super);
-        function Demand(definition, modelPath) {
-            definition.className = definition.className || 'demand';
-            definition.curveLabel = definition.curveLabel || 'D';
-            _super.call(this, definition, modelPath);
-            var d = this;
-            d.demandFunction = new KGMath.Functions[definition.type](definition.def);
-            d.elasticity = (definition.elasticityMethod == 'point') ? new EconGraphs.PointElasticity({}) : (definition.elasticityMethod = 'constant') ? new EconGraphs.ConstantElasticity({}) : new EconGraphs.MidpointElasticity({});
-        }
-        Demand.prototype._update = function (scope) {
-            var d = this;
-            if (d.price) {
-                d.quantity = d.quantityAtPrice(d.price);
-            }
-            else if (d.quantity) {
-                d.price = d.priceAtQuantity(d.quantity);
-            }
-            return d;
-        };
-        Demand.prototype.quantityAtPrice = function (price) {
-            price = (price > 0) ? price : 0;
-            var qd = this.demandFunction.xValue(price);
-            return Math.max(0, qd);
-        };
-        Demand.prototype.priceAtQuantity = function (quantity) {
-            quantity = (quantity > 0) ? quantity : 0;
-            var pd = this.demandFunction.yValue(quantity);
-            return Math.max(0, pd);
-        };
-        Demand.prototype.priceElasticity = function (price) {
-            var d = this;
-            if (d.elasticity instanceof EconGraphs.MidpointElasticity) {
-                d.elasticity = d.elasticity.calculateElasticity({
-                    point1: {
-                        x: d.quantityAtPrice(price * 0.99),
-                        y: price * 0.99
-                    },
-                    point2: {
-                        x: d.quantityAtPrice(price * 1.01),
-                        y: price * 1.01
-                    } });
-            }
-            else if (d.elasticity instanceof EconGraphs.PointElasticity) {
-                var point = {
-                    x: d.quantityAtPrice(price),
-                    y: price
-                }, slope = d.demandFunction.hasOwnProperty('slope') ? d.demandFunction.slope : d.demandFunction.slopeBetweenPoints({
-                    x: d.quantityAtPrice(price * 0.99),
-                    y: price * 0.99
-                }, {
-                    x: d.quantityAtPrice(price * 1.01),
-                    y: price * 1.01
-                }, true);
-                d.elasticity = d.elasticity.calculateElasticity({ point: point, slope: slope });
-            }
-            return d.elasticity;
-        };
-        Demand.prototype.tr = function (q) {
-            return this.totalRevenueFunction.yValue(q);
-        };
-        Demand.prototype.mr = function (q) {
-            return this.marginalRevenueFunction.yValue(q);
-        };
-        Demand.prototype.priceAtQuantityPoint = function (q, def) {
-            return new KG.Point({
-                name: 'DemandPoint',
-                className: 'demand',
-                coordinates: {
-                    x: q,
-                    y: this.priceAtQuantity(q)
-                },
-                label: {
-                    text: def.label || ''
-                },
-                droplines: {
-                    vertical: def.vDropline,
-                    horizontal: def.hDropline
-                },
-                xDrag: def.xDrag
-            });
-        };
-        Demand.prototype.marginalRevenueAtQuantitySlope = function (q, label) {
-            var labelSubscript = label ? '_{' + label + '}' : '';
-            return new KG.Line({
-                name: 'MRslopeLine' + label,
-                className: 'marginalRevenue dotted',
-                lineDef: {
-                    point: { x: q, y: this.modelProperty('tr(' + q + ')') },
-                    slope: this.mr(q)
-                },
-                label: {
-                    text: '\\text{slope} = MR(q' + labelSubscript + ')'
-                }
-            });
-        };
-        Demand.prototype.totalRevenueAtQuantityPoint = function (q, label, dragParam) {
-            var labelSubscript = label ? '_{' + label + '}' : '';
-            return new KG.Point({
-                name: 'totalRevenueAtQ' + label,
-                coordinates: { x: q, y: this.tr(q) },
-                className: 'totalRevenue',
-                xDrag: dragParam,
-                label: {
-                    text: label
-                },
-                droplines: {
-                    vertical: 'q' + labelSubscript,
-                    horizontal: 'TR(q' + labelSubscript + ')'
-                }
-            });
-        };
-        return Demand;
-    })(KG.Model);
-    EconGraphs.Demand = Demand;
-})(EconGraphs || (EconGraphs = {}));
-/// <reference path="../../../eg.ts"/>
-var EconGraphs;
-(function (EconGraphs) {
-    var LinearDemand = (function (_super) {
-        __extends(LinearDemand, _super);
-        function LinearDemand(definition, modelPath) {
-            _super.call(this, definition, modelPath);
-            var demand = this;
-            demand.consumerSurplus = new KG.Area({
-                name: 'consumerSurplus',
-                className: 'demand',
-                data: [
-                    { x: demand.modelProperty('quantity'), y: definition.price },
-                    { x: 0, y: definition.price },
-                    { x: 0, y: demand.modelProperty('quantityIntercept') }
-                ],
-                label: {
-                    text: "CS"
-                }
-            });
-            demand.marginalRevenueFunction = new KGMath.Functions.Linear({
-                intercept: demand.modelProperty('demandFunction.yIntercept'),
-                slope: KG.multiplyDefs(demand.modelProperty('demandFunction.slope'), 2)
-            });
-            demand.marginalRevenueCurve = new KG.Line({
-                name: 'marginalRevenue',
-                className: 'marginalRevenue',
-                linear: demand.modelProperty('marginalRevenueFunction'),
-                label: {
-                    text: 'MR'
-                }
-            });
-            demand.totalRevenueFunction = demand.marginalRevenueFunction.integral(0, 0, demand.modelProperty('totalRevenueFunction'));
-            demand.totalRevenueCurve = new KG.FunctionPlot({
-                name: 'totalRevenue',
-                className: 'totalRevenue',
-                fn: demand.modelProperty('totalRevenueFunction'),
-                label: {
-                    text: 'TR'
-                }
-            });
-        }
-        LinearDemand.prototype._update = function (scope) {
-            var d = this;
-            d.demandFunction.update(scope);
-            d.marginalRevenueFunction.update(scope);
-            d.totalRevenueFunction.update(scope);
-            if (d.price) {
-                d.quantity = d.quantityAtPrice(d.price);
-            }
-            else if (d.quantity) {
-                d.price = d.priceAtQuantity(d.quantity);
-            }
-            d.priceIntercept = d.demandFunction.yValue(0);
-            d.quantityIntercept = d.demandFunction.xValue(0);
-            return d;
-        };
-        return LinearDemand;
-    })(EconGraphs.Demand);
-    EconGraphs.LinearDemand = LinearDemand;
-})(EconGraphs || (EconGraphs = {}));
-/// <reference path="../../../eg.ts"/>
-var EconGraphs;
-(function (EconGraphs) {
-    var ConstantElasticityDemand = (function (_super) {
-        __extends(ConstantElasticityDemand, _super);
-        function ConstantElasticityDemand(definition, modelPath) {
-            _super.call(this, definition, modelPath);
-            this.elasticity.elasticity = definition.def.powers[1];
-        }
-        ConstantElasticityDemand.prototype.slopeAtPrice = function (price) {
-            var d = this, a = d.demandFunction.level, b = d.demandFunction.powers[1];
-            return (-1) * a * b * Math.pow(price, -(1 + b));
-        };
-        ConstantElasticityDemand.prototype.slopeAtPriceWords = function (price) {
-            return "\\frac { dQ^D }{ dP } = " + this.slopeAtPrice(price).toFixed(2);
-        };
-        return ConstantElasticityDemand;
-    })(EconGraphs.Demand);
-    EconGraphs.ConstantElasticityDemand = ConstantElasticityDemand;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 var EconGraphs;
@@ -6340,7 +6371,7 @@ var EconGraphs;
             m.demandFunction.update(scope);
             m.costFunction.update(scope);
             m.showACandProfit = (m.showProfit && m.costFunction.showAC);
-            if (m.snapToOptimalQuantity && m.demandFunction instanceof EconGraphs.LinearDemand && (m.costFunction instanceof EconGraphs.LinearMarginalCost || m.costFunction instanceof EconGraphs.ConstantMarginalCost)) {
+            if (m.snapToOptimalQuantity && m.demandFunction instanceof LinearDemand && (m.costFunction instanceof EconGraphs.LinearMarginalCost || m.costFunction instanceof EconGraphs.ConstantMarginalCost)) {
                 m.quantity = Math.max(0, m.demandFunction.marginalRevenueFunction.linearIntersection(m.costFunction.marginalCostFunction).x);
             }
             if (m.choosePrice) {
@@ -6367,7 +6398,7 @@ var EconGraphs;
         function CournotDuopoly(definition, modelPath) {
             _super.call(this, definition, modelPath);
             var cournot = this;
-            cournot.marketDemand = new EconGraphs.LinearDemand({
+            cournot.marketDemand = new LinearDemand({
                 type: 'Linear',
                 quantity: KG.addDefs(definition.q1, definition.q2),
                 def: {
@@ -6649,10 +6680,10 @@ var EconGraphs;
 /// <reference path="basic_concepts/elasticity/constant.ts"/>
 /* MICRO */
 /* Supply and Demand */
+/// <reference path="micro/supply_and_demand/priceQuantityRelationship.ts"/>
+/// <reference path="micro/supply_and_demand/constantElasticityPriceQuantityRelationship.ts"/>
+/// <reference path="micro/supply_and_demand/linearPriceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/individual_and_market_supply_and_demand.ts"/>
-/// <reference path="micro/supply_and_demand/market_demand/demand.ts"/>
-/// <reference path="micro/supply_and_demand/market_demand/linearDemand.ts"/>
-/// <reference path="micro/supply_and_demand/market_demand/constantElasticityDemand.ts"/>
 /* Consumer Theory */
 /// <reference path="micro/consumer_theory/constraints/budgetConstraint.ts"/>
 /// <reference path="micro/consumer_theory/constraints/budgetSegment.ts"/>
@@ -6859,6 +6890,7 @@ angular.module('KineticGraphs', [])
         el.on('mouseout', function () {
             scope.updateParams({ highlight: null });
         });
+        el.css("font-weight", "bold");
         scope.$watch('params.highlight', function () {
             console.log('scope highlight = ', scope.params.highlight);
             console.log('this highlight = ', attrs.highlight);
@@ -6878,3 +6910,4 @@ angular.module('KineticGraphs', [])
         scope: true
     };
 });
+//# sourceMappingURL=kg-v0.03.js.map

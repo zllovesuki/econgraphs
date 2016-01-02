@@ -6,8 +6,10 @@
         <div class="row">
             <div class="col-md-8">
                 <h1>Demand with Constant Price Elasticity</h1>
-
-                <p>Drag the price up and down to see how the price elasticity at point A changes...or doesn't...</p>
+                <hr/>
+                <p>This diagram shows a demand curve with a constant elasticity of <span highlight="elasticity">{{ model.elasticity | number:2}}</span>, passing through <span highlight="A">point A</span>.</p>
+                <p>Drag the <span highlight="price">price</span> up and down to see how the <span highlight="QD">quantity demanded</span> changes,<br/>and to see how the elasticity calculations change (and don't!) as you move along the demand curve.</p>
+                <p>What happens to the diagram when you drag point A around? When you change the elasticity using the slider?</p>
                 <hr/>
                 <div id="graph"></div>
             </div>
@@ -15,34 +17,25 @@
                 <div class="well">
                     <p style="float:right;color:red">{{error}}</p>
                     <div class="row">
-                        <div class="subtitle col-xs-6">demand parameters</div>
-                        <div class="col-xs-6 math displayMath">Q^D(P) = aP^{-b}</div>
+                        <div class="subtitle col-xs-6">elasticity</div>
                     </div>
                     <hr/>
                     <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">a = {{
-                            params.a | number : 0}}
-                        </div>
-                        <div class="col-xs-8" id="sliderA"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">b = {{
-                            params.b | number : 2}}
-                        </div>
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px" highlight="elasticity">|\epsilon_{Q^D,P}| = {{ params.elasticity | number:2 }}</div>
                         <div class="col-xs-8" id="sliderB"></div>
                     </div>
                 </div>
                 <div class="math displayMath big" highlight="price">P = {{ params.price }}</div>
                 <hr/>
-                <div class="demand math displayMath big" highlight="QD">Q^D(P) = aP^{-b} = {{ model.quantityAtPrice(params.price) | number:2 }}</div>
+                <div class="demand math displayMath big" highlight="QD">Q^D(P) = {{ model.quantityAtPrice(params.price) | number:2 }}</div>
                 <hr/>
-                <div class="green math displayMath big" highlight="MRS">\frac{dQ^D}{dP} = -abP^{-b-1} = {{ model.inverseSlopeAtPrice(params.price) | number:2 }}</div>
+                <div class="green math displayMath big" highlight="slope">\frac{\Delta Q^D}{\Delta P} = {{ model.inverseSlopeAtPrice(params.price) | number:2 }}</div>
                 <hr/>
                 <equation>\epsilon_{Q^D,P} = \color{ {{ color('green') }} }{ \frac{dQ^D}{dP} } \times \frac{P}{\color{
                     {{color('demand')}} }{Q^D(P)}} || = \color{ {{ color('green') }} }{ {{
                     model.inverseSlopeAtPrice(params.price) | number:2 }} } \times \frac{ {{ params.price | number:0 }} }{
-                    \color{ {{color('demand')}} }{ {{ model.quantityAtPrice(params.price) | number:2 }} } }|| = -{{
-                    params.b | number: 2 }}
+                    \color{ {{color('demand')}} }{ {{ model.quantityAtPrice(params.price) | number:2 }} } }|| = {{
+                    model.elasticity | number: 2 }}
                 </equation>
             </div>
         </div>
@@ -55,9 +48,10 @@
     <script>
         var scopeDefinition = {
             params: {
-                price: 30,
-                a: 120,
-                b: 1
+                price: 40,
+                elasticity: 1,
+                referencePrice: 20,
+                referenceQuantity: 20
             },
             restrictions: [
                 {
@@ -93,8 +87,9 @@
                 type: 'EconGraphs.ConstantElasticityPriceQuantityRelationship',
                 definition: {
                     elasticityMethod: 'constant',
-                    elasticity: '-params.b',
-                    coefficient: 'params.a'
+                    elasticity: '-params.elasticity',
+                    referencePrice: 'params.referencePrice',
+                    referenceQuantity: 'params.referenceQuantity'
                 }
             },
             views: [
@@ -114,6 +109,9 @@
                                     fn: 'model.priceQuantityRelationshipFunction',
                                     label: {
                                         text: 'D'
+                                    },
+                                    interaction: {
+                                        highlight: 'demandCurve'
                                     }
                                 }
                             },
@@ -149,6 +147,24 @@
                                 }
                             },
                             {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'referencePoint',
+                                    className: 'demand',
+                                    coordinates: {
+                                        x: 'params.referenceQuantity',
+                                        y: 'params.referencePrice'
+                                    },
+                                    interaction: {
+                                        draggable: true,
+                                        highlight: 'demandCurve A'
+                                    },
+                                    label: {
+                                        text: 'A'
+                                    }
+                                }
+                            },
+                            {
                                 type: 'KG.Line',
                                 definition: {
                                     name: 'slopeLine',
@@ -165,10 +181,10 @@
                                         }
                                     },
                                     interaction: {
-                                        highlight: 'MRS'
+                                        highlight: 'slope'
                                     },
                                     label: {
-                                        text: ["\\frac{dQ}{dP}=",'model.inverseSlopeAtPrice(params.price) | number:2'],
+                                        text: ["\\frac{\\Delta Q}{\\Delta P}=",'model.inverseSlopeAtPrice(params.price) | number:2'],
                                         align: 'center',
                                         valign: 'top',
                                         dimensions: {width: 100, height: 30}
@@ -181,25 +197,9 @@
                 {
                     type: 'KG.Slider',
                     definition: {
-                        element_id: 'sliderA',
-                        param: 'a',
-                        axisDef: {min: 100, max: 400}
-                    }
-                },
-                {
-                    type: 'KG.Slider',
-                    definition: {
                         element_id: 'sliderB',
-                        param: 'b',
+                        param: 'elasticity',
                         axisDef: {min: 0, max: 2}
-                    }
-                },
-                {
-                    type: 'KG.Slider',
-                    definition: {
-                        element_id: 'sliderPrice',
-                        param: 'price',
-                        axisDef: {min: 0, max: 60}
                     }
                 }
             ]

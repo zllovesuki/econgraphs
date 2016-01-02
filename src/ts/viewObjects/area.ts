@@ -4,16 +4,11 @@
 
 module KG {
 
-    export interface AreaParamsDefinition extends ViewObjectParamsDefinition {
-        label?: string;
-    }
-
     export interface AreaDefinition extends ViewObjectDefinition {
         data?: any;
         interpolation?: string;
         label?: GraphDivDefinition;
         labelPosition?: string;
-        params?: AreaParamsDefinition;
     }
 
     export interface IArea extends IViewObject {
@@ -38,18 +33,6 @@ module KG {
 
         constructor(definition:AreaDefinition, modelPath?: string) {
 
-            if(definition.hasOwnProperty('params')) {
-
-                var p = definition.params;
-
-                if(p.hasOwnProperty('label')) {
-                    definition.label = {
-                        text: p.label
-                    }
-                }
-
-            }
-
             definition = _.defaults(definition, {interpolation: 'linear'});
 
             super(definition, modelPath);
@@ -58,9 +41,7 @@ module KG {
                 var labelDef = _.defaults(definition.label, {
                     name: definition.name + '_label',
                     className: definition.className,
-                    xDrag: definition.xDrag,
-                    yDrag: definition.yDrag,
-                    color: definition.color,
+                    interaction: definition.interaction,
                     show: definition.show
                 });
                 //console.log(labelDef);
@@ -71,10 +52,10 @@ module KG {
             this.viewObjectClass = 'area';
         }
 
-        createSubObjects(view, scope) {
+        createSubObjects(view) {
             var labelDiv = this.labelDiv;
             if(labelDiv) {
-                return view.addObject(labelDiv.update(scope));
+                return view.addObject(labelDiv);
             } else {
                 return view;
             }

@@ -28,6 +28,7 @@ module KG
         interpolate: any;
         color: (className:string) => string;
         updateVersion: number;
+        Math: any;
     }
 
     export class Controller
@@ -37,6 +38,8 @@ module KG
         {
 
             $scope.updateVersion = 0;
+
+            $scope.Math = window.Math;
 
             $scope.interpolate = $interpolate;
 

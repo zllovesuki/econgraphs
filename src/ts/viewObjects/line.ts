@@ -92,11 +92,10 @@ module KG {
             if(definition.hasOwnProperty('yInterceptLabel')) {
                 var yInterceptLabelDef:GraphDivDefinition = {
                     name: definition.name + 'y_intercept_label',
-                    className: definition.className,
+                    className: definition.className + ' axisLabel',
                     text: definition.yInterceptLabel,
                     dimensions: {width: 25, height:20},
                     interaction: definition.interaction,
-                    backgroundColor: 'white',
                     show: definition.show
                 };
                 line.yInterceptLabelDiv = new KG.GraphDiv(yInterceptLabelDef);
