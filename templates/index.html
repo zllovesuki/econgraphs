@@ -3,6 +3,13 @@
 {% block content %}
 
     <div class="container-fluid mainPage">
+        <div class="jumbotron info" align="center">
+            <h1>Welcome to EconGraphs</h1>
+            <hr/>
+            <p>Intuitive interactive visualizations of key concepts in economics</p>
+        </div>
+        <div class="alert alert-warning visible-xs visible-sm">Note: you appear to be on a mobile device. These are optimized for displaying as slides in a lecture hall; they "sort of" work on mobile, but also please check them out on a laptop when you get a chance. ;)</div>
+
         <h1>Basic Concepts</h1>
         <hr/>
         <div class="row" style="padding-top: 25px">
@@ -137,6 +144,27 @@
                 <p class="subtitle">The Neoclassical Growth Model</p>
                 <ul>
                     <li><a href="{{ url_for('graphs', subject='macro', topic='growth', graphname='ramsey_cass_koopmans') }}">The Ramsey-Cass-Koopmans Model</a></li>
+                </ul>
+            </div>
+        </div>
+    <hr/>
+        <h1>Finance</h1>
+        <hr/>
+        <div class="row" style="padding-top: 25px">
+            <div class="col-md-4">
+                <h3>The CAPM Model</h3>
+                <hr/>
+                <p class="subtitle">Market Model</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='finance', topic='capm', graphname='market_model') }}">Market Model</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Diversification</h3>
+                <hr/>
+                <p class="subtitle">Mean-Variance Model</p>
+                <ul>
+                    <li><a href="{{ url_for('graphs', subject='finance', topic='diversification', graphname='mean_variance_model') }}">Mean-Variance Portfolio Analysis</a></li>
                 </ul>
             </div>
         </div>

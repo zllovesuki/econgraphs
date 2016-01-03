@@ -3,14 +3,13 @@
 {% block body %}
 {% raw %}
     <div ng-controller="KineticGraphCtrl">
-        <h1>Demand Elasticity along a Linear Demand Curve (Point Method)</h1>
-        <hr/>
-        <p>Drag the endpoints of the demand curve to change its <span highlight="slope">slope</span>.</p>
-        <p>Drag the <span highlight="price">price</span> up and down to see how the <span highlight="QD">quantity demanded</span> changes,<br/>and to see how the elasticity calculations change as you move along the demand curve.</p>
-
-        <hr/>
         <div class="row">
             <div class="col-md-6">
+                <h1>Demand Elasticity along a Linear Demand Curve (Point Method)</h1>
+                <hr/>
+                <p>Drag the endpoints of the demand curve to change its <span highlight="slope">slope</span>.</p>
+                <p>Drag the <span highlight="price">price</span> up and down to see how the <span highlight="QD">quantity demanded</span> changes,<br/>and to see how the elasticity calculations change as you move along the demand curve.</p>
+                <hr/>
                 <div id="graph"></div>
             </div>
             <div class="col-md-6">
@@ -79,6 +78,7 @@
                     type: 'KG.Graph',
                     definition: {
                         element_id: 'graph',
+                        square: true,
                         xAxisDef: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
                         yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
                         objects: [
