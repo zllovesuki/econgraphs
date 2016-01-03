@@ -133,8 +133,8 @@ module KG
                 return view;
             }
 
-            var width = Math.min(view.maxDimensions.width, element.clientWidth),
-                height = Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
+            var width = Math.min(400, view.maxDimensions.width, element.clientWidth),
+                height = Math.min(400, view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
 
             if(view.square) {
                 var side = Math.min(width,height);

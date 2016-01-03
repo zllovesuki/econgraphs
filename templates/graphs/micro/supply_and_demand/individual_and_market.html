@@ -268,11 +268,11 @@
                                     show: '(params.showShortageSurplus && !model.inEquilibrium)',
                                     a: {
                                         x: 'model.marketQuantitySupplied',
-                                        y: 2
+                                        y: 4
                                     },
                                     b: {
                                         x: 'model.marketQuantityDemanded',
-                                        y: 2
+                                        y: 4
                                     },
                                     trimPercent: 0.05,
                                     label: {
@@ -326,6 +326,7 @@
                     type: 'KG.Graph',
                     definition: {
                         element_id: 'individualDemandGraph',
+                        maxDimensions: {width: 400, height: 400},
                         xAxisDef: {min: 0, max: 10, title: '\\text{Individual Quantity Demanded}'},
                         yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
                         square: true,
@@ -336,6 +337,7 @@
                     type: 'KG.Graph',
                     definition: {
                         element_id: 'marketGraph',
+                        maxDimensions: {width: 400, height: 400},
                         xAxisDef: {min: 0, max: 500, title: '\\text{Market Quantity Supplied and Demanded}'},
                         yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
                         square: true,
@@ -354,6 +356,7 @@
                     type: 'KG.Graph',
                     definition: {
                         element_id: 'individualSupplyGraph',
+                        maxDimensions: {width: 400, height: 400},
                         xAxisDef: {min: 0, max: 10, title: '\\text{Individual Quantity Supplied}'},
                         yAxisDef: {min: 0, max: 40, title: '\\text{Price}'},
                         square: true,
