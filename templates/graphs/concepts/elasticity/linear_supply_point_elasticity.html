@@ -7,18 +7,19 @@
             <div class="col-md-6">
                 <h1>Supply Elasticity along a Linear Supply Curve (Point Method)</h1>
                 <hr/>
-                <p>Drag the endpoints of the supply curve to change its <span highlight="slope">slope</span> and <span highlight="intercept">intercept</span>.</p>
+                <p>Drag the <span highlight="controls">control points</span> of the supply curve to change its <span highlight="slope">slope</span>.</p>
                 <p>Drag the <span highlight="price">price</span> up and down to see how the <span highlight="QS">quantity supplied</span> changes,<br/>and to see how the elasticity calculations change as you move along the supply curve.</p>
                 <hr/>
                 <div id="graph"></div>
             </div>
             <div class="col-md-6">
-                <p class="math displayMath big" highlight="slope">\color{ {{ color('green') }} }{\frac{dQ^S}{dP} = \frac{ {{
-                    params.supplyQuantityIntercept | number:0 }} }{ {{ 100 - params.supplyPriceIntercept | number:0}} } = {{
-                    model.priceQuantityRelationshipFunction.inverseSlope | number:2 }}}</p>
+                <p class="math displayMath big" highlight="slope">\color{ {{ color('green') }} }{\frac{\Delta Q^S}{\Delta P} = \frac{ {{
+                    params.supplyCurveQ2 | number:0 }} - {{ params.supplyCurveQ1 | number:0 }} }{ {{ params.supplyCurveP2 | number: 0 }} -  {{params.supplyCurveP1 | number:0}} } =\frac{ {{
+                    params.supplyCurveQ2 - params.supplyCurveQ1 | number:0 }} }{ {{ params.supplyCurveP2 - params.supplyCurveP1 | number:0}} } = {{
+                    model.priceQuantityRelationshipFunction.inverseSlope | extendedReal:2 }}}</p>
                 <hr/>
                 <equation>\epsilon_{Q^S,P} = \frac{P}{ \color{ {{ color('supply') }} }{Q^S(P)} } \times \color{ {{ color('green')
-                    }} }{ \frac{dQ^S}{dP} } || = \frac{ {{ params.price | number:0 }} }{ \color { {{ color('supply') }}  } { {{
+                    }} }{ \frac{\Delta Q^S}{\Delta P} } || = \frac{ {{ params.price | number:0 }} }{ \color { {{ color('supply') }}  } { {{
                     model.quantityAtPrice(params.price) | number:1 }}  } } \times \color{ {{ color('green') }} }{ {{
                     model.inverseSlope | number:2 }} } || = {{
                     model.priceElasticity(params.price).elasticityNumber() }}</equation>
@@ -37,30 +38,46 @@
     <script>
         var scopeDefinition = {
             params: {
-                price: 30,
-                supplyPriceIntercept: 20,
-                supplyQuantityIntercept: 80
+                price: 40,
+                supplyCurveQ1: 0,
+                supplyCurveP1: 20,
+                supplyCurveQ2: 75,
+                supplyCurveP2: 95
             },
             restrictions: [
                 {
                     expression: 'params.price',
                     restrictionType: 'range',
-                    min: 'Math.round(params.supplyPriceIntercept)',
+                    min: 0,
                     max: 100,
                     precision: 1
                 },
                 {
-                    expression: 'params.supplyPriceIntercept',
+                    expression: 'params.supplyCurveP1',
                     restrictionType: 'range',
-                    max: 100,
-                    min: 5,
+                    max: 'params.supplyCurveP2',
+                    min: 0,
                     precision: 5
                 },
                 {
-                    expression: 'params.supplyQuantityIntercept',
+                    expression: 'params.supplyCurveQ1',
                     restrictionType: 'range',
+                    max: 'params.supplyCurveQ2',
+                    min: 0,
+                    precision: 5
+                },
+                    {
+                    expression: 'params.supplyCurveP2',
+                    restrictionType: 'range',
+                    min: 'params.supplyCurveP1',
                     max: 100,
-                    min: 5,
+                    precision: 5
+                },
+                {
+                    expression: 'params.supplyCurveQ2',
+                    restrictionType: 'range',
+                    min: 'params.supplyCurveQ1',
+                    max: 100,
                     precision: 5
                 }
             ],
@@ -69,9 +86,10 @@
                 definition: {
                     elasticityMethod: 'point',
                     price: 'params.price',
-                    priceIntercept: 'params.supplyPriceIntercept',
-                    referenceQuantity: 'params.supplyQuantityIntercept',
-                    referencePrice: 100
+                    referenceQuantity: 'params.supplyCurveQ1',
+                    referencePrice: 'params.supplyCurveP1',
+                    referenceQuantity2: 'params.supplyCurveQ2',
+                    referencePrice2: 'params.supplyCurveP2'
                 }
             },
             views: [
@@ -98,26 +116,45 @@
                                 }
                             },
                             {
-                                type: 'KG.Point',
+                                type: 'KG.Segment',
                                 definition: {
-                                    name: 'supplyPriceIntercept',
-                                    coordinates: {x: 0, y: 'params.supplyPriceIntercept'},
+                                    name: 'supplyZeroSegment',
                                     className: 'supply',
+                                    show: 'model.priceQuantityRelationshipFunction.yIntercept > 0',
+                                    a: {
+                                        x: 0,
+                                        y: 0
+                                    },
+                                    b: {
+                                        x: 0,
+                                        y: 'model.priceQuantityRelationshipFunction.yIntercept'
+                                    },
                                     interaction: {
-                                        yDrag: 'params.supplyPriceIntercept',
-                                        highlight: 'intercept'
+                                        highlight: 'supplyCurve'
                                     }
                                 }
                             },
                             {
                                 type: 'KG.Point',
                                 definition: {
-                                    name: 'supplyQuantityIntercept',
-                                    coordinates: {x: 'params.supplyQuantityIntercept', y: 100},
+                                    name: 'controlPoint1',
+                                    coordinates: {x: 'params.supplyCurveQ1', y: 'params.supplyCurveP1'},
                                     className: 'supply',
                                     interaction: {
-                                        xDrag: 'params.supplyQuantityIntercept',
-                                        highlight: 'supplyCurve'
+                                        draggable: true,
+                                        highlight: 'controls'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'controlPoint2',
+                                    coordinates: {x: 'params.supplyCurveQ2', y: 'params.supplyCurveP2'},
+                                    className: 'supply',
+                                    interaction: {
+                                        draggable: true,
+                                        highlight: 'controls'
                                     }
 
                                 }
@@ -142,6 +179,7 @@
                                     name: 'quantityDemandedAtPrice',
                                     className: 'supply',
                                     coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
+                                    size: 20,
                                     interaction: {
                                         highlight: 'QS'
                                     },
@@ -156,10 +194,10 @@
                                     name: 'slopeLabel',
                                     className: 'green',
                                     coordinates: {
-                                        x: 'model.quantityAtPrice(100)/3',
-                                        y: 'params.supplyPriceIntercept*2/3 + 33'
+                                        x: '0.5*(params.supplyCurveQ1 + params.supplyCurveQ2)',
+                                        y: '0.5*(params.supplyCurveP1 + params.supplyCurveP2)'
                                     },
-                                    text: ["\\frac{dQ^S}{dP} =", 'model.inverseSlope | number:2'],
+                                    text: ["\\frac{\\Delta Q^S}{\\Delta P} =", 'model.priceQuantityRelationshipFunction.inverseSlope | extendedReal:2'],
                                     align: 'left',
                                     valign: 'top',
                                     dimensions: {width: 100, height: 30},

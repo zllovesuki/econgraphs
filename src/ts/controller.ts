@@ -29,6 +29,7 @@ module KG
         color: (className:string) => string;
         updateVersion: number;
         Math: any;
+        isHighlighted: (str:string) => boolean;
     }
 
     export class Controller
@@ -42,6 +43,10 @@ module KG
             $scope.Math = window.Math;
 
             $scope.interpolate = $interpolate;
+
+            $scope.isHighlighted = function(str) {
+                return KG.listMatch($scope.params.highlight,str);
+            };
 
             $scope.color = function(className) {
                 return KG.colorForClassName(className);
