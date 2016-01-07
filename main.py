@@ -96,7 +96,7 @@ def courses(path=None):
 
             # if it's an HTML file, use render_template
             if extension is 'html':
-                return render_template('courses/'+path)
+                return render_template('courses/'+path, args=request.args)
 
             # otherwise just send the raw file
             else:
@@ -105,7 +105,7 @@ def courses(path=None):
 
         # if the requested path doesn't include a period, see if an HTML template by that name exists
         else:
-            return render_template('courses/'+path+'.html')
+            return render_template('courses/'+path+'.html', args=request.args)
 
     # next try to send the index file from a directory
     except:
