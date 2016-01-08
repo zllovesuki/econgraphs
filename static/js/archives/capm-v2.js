@@ -233,13 +233,13 @@ app.controller('Controller', function ($scope) {
     $scope.params = {
         beta: 1,
         rf: 0.01,
-        T: 7,
+        T: 20,
         sigma: 0.17,  // historic volatility of US market
         MRP: 0.06,
         S0: 1,
-        numDraws: 10,
+        numDraws: 500,
         showDraws: false,
-        max: 3
+        max: 6
     };
 
     function debounce(fn,time) {
