@@ -127,8 +127,8 @@ module KG
 
         highlightObject(view) {
 
-            if(!view || !view.scope || !view.scope.params) { return false; }
-            return KG.listMatch(view.scope.params.highlight, this.highlight);
+            if(!view || !view.scope) { return false; }
+            return view.scope.isHighlighted(this.highlight);
 
         }
 

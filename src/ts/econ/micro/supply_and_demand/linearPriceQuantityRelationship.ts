@@ -104,7 +104,7 @@ module EconGraphs {
             }
 
             // If the function is defined using two arbitrary points initiate using those two points and calculate the slope
-            else if(definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice') && definition.hasOwnProperty('priceIntercept')) {
+            else if(definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice') && definition.hasOwnProperty('referenceQuantity2') && definition.hasOwnProperty('referencePrice2')) {
                 definition.def = {
                     point1: {
                         x: definition.referenceQuantity,

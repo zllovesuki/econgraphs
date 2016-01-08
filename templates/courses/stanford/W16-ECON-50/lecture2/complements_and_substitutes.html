@@ -1,0 +1,321 @@
+{% extends 'layouts/econ50/title-body-right.html' %}
+
+{% block title %}{% raw %}Demand Curves for {{ params.selectedUtility | camelToSpace }}{% endraw %}{% endblock %}
+
+{% block main %}
+
+    <div class="row">
+                <div class="col-xs-6">
+                    <div id="xDemand"></div>
+                </div>
+                <div class="col-xs-6">
+                    <div id="yDemand"></div>
+                </div>
+            </div>
+
+{% endblock %}
+
+{% block right %}
+
+<div>
+    {% raw %}
+    <div class="well">
+                <div class="row">
+                    <div class="subtitle col-xs-3">parameters</div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
+                    </div>
+                    <div class="col-xs-9" id="incomeSlider"></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px" highlight="px">P_X = {{params.px | number: 2}}:
+                    </div>
+                    <div class="col-xs-9" id="pxSlider"></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px" highlight="py">P_Y = {{params.py | number: 2}}:
+                    </div>
+                    <div class="col-xs-9" id="pySlider"></div>
+                </div>
+            </div>
+            <hr/>
+            <p>Relationship:&nbsp;&nbsp;<select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
+                <option value="Independent">Independent</option>
+                <option value="Complements">Complements</option>
+                <option value="Substitutes">Substitutes</option>
+                <option value="PerfectSubstitutes">Perfect Substitutes</option>
+            </select></p>
+            <hr/>
+            <p>Note: the demand curves here illustrate extreme examples of these four relationships; not all relationships between goods follow this exact pattern.</p>
+            <p>(Can you figure out the pattern in each relationship? Except for 'Substitutes,' they each follow a simple rule...)</p>
+    {% endraw %}
+</div>
+
+{% endblock %}
+
+{% block model %}
+
+<script>
+
+    var independentDefinition = {
+            type: 'EconGraphs.CobbDouglasUtility',
+            definition: {
+                xPower: 0.5
+            }
+        },
+        complementsDefinition = {
+            type: 'EconGraphs.ComplementsUtility',
+            definition: {
+                bundle: {x: 1, y: 1}
+            }
+        },
+        substitutesDefinition = {
+            type: 'EconGraphs.CESUtility',
+            definition: {
+                alpha: 0.5,
+                sub: 0.5
+            }
+        },
+        perfectSubstitutesDefinition = {
+            type: 'EconGraphs.SubstitutesUtility',
+            definition: {
+                xCoefficient: 0.5
+            }
+        },
+
+        selectorDefinition = {
+            type: 'KG.Selector',
+            definition: {
+                selected: 'params.selectedUtility',
+                options: [
+                    {
+                        name: 'Independent',
+                        label: 'Independent Goods',
+                        selection: independentDefinition
+                    },
+                    {
+                        name: 'Complements',
+                        label: 'Complements',
+                        selection: complementsDefinition
+                    },
+                    {
+                        name: 'Substitutes',
+                        label: 'Substitutes',
+                        selection: substitutesDefinition
+                    },
+                    {
+                        name: 'PerfectSubstitutes',
+                        label: 'Perfect Substitutes',
+                        selection: perfectSubstitutesDefinition
+                    }
+                ]
+            }
+        };
+
+
+    var scopeDefinition = {
+        params: {
+            income: 80,
+            px: 4,
+            py: 3,
+            selectedUtility: 'Complements'
+        },
+        graphParams: ['selectedUtility'],
+        restrictions: [],
+        model: {
+            type: 'EconGraphs.MarshallianDemand',
+            definition: {
+                snapToOptimalBundle: true,
+                budget:{
+                    type: 'EconGraphs.SimpleBudgetConstraint',
+                    definition: {
+                        income: 'params.income',
+                        px: 'params.px',
+                        py: 'params.py'
+                    }
+                },
+                utility: selectorDefinition
+            }
+        },
+        views: [
+            {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'xDemand',
+                    square: true,
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_X'},
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good X}'},
+                    objects: [
+                        {
+                            type: 'KG.Curve',
+                            definition: {
+                                name: 'xDemandCurve',
+                                data: 'model.demandCurveData({min: 0.01, max: 10, good: "x"})',
+                                params: {
+                                    label: 'D_X'
+                                },
+                                className: 'demand'
+                            }
+                        },
+                        {
+                            type: 'KG.HorizontalLine',
+                            definition: {
+                                name: 'priceLineX',
+                                className: 'price',
+                                y: 'params.px',
+                                yInterceptLabel: 'P_X',
+                                interaction: {
+                                    yDrag: 'params.px',
+                                    highlight: 'px'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'xQuantityDemanded',
+                                className: 'demand',
+                                coordinates: {
+                                    x: 'model.quantityAtPrice(params.px)',
+                                    y: 'params.px'
+                                },
+                                interaction: {
+                                    highlight: 'qx'
+                                },
+                                droplines: {
+                                    vertical:"q^D_X(P_X)"
+                                }
+
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'yDemand',
+                    square: true,
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of Y at }P_Y'},
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good Y}'},
+                    objects: [
+                        {
+                            type: 'KG.Curve',
+                            definition: {
+                                name: 'yDemandCurve',
+                                data: 'model.demandCurveData({min: 0.01, max: 10, good: "y"})',
+                                className: 'demand',
+                                params: {
+                                    label: 'D_Y'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.HorizontalLine',
+                            definition: {
+                                name: 'priceLineY',
+                                className: 'price',
+                                y: 'params.py',
+                                yInterceptLabel: 'P_Y',
+                                interaction: {
+                                    yDrag: 'params.py',
+                                    highlight: 'py'
+                                }
+                            }
+                        },
+                        {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'yQuantityDemanded',
+                                className: 'demand',
+                                coordinates: {
+                                    x: 'model.quantityAtPrice(params.py,"y")',
+                                    y: 'params.py'
+                                },
+                                interaction: {
+                                    highlight: 'qy'
+                                },
+                                droplines: {
+                                    vertical:"q^D_Y(P_Y)"
+                                }
+
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'incomeSlider',
+                    param: 'income',
+                    precision: '1',
+                    axisDef: {min: 0, max: 120}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'pxSlider',
+                    param: 'px',
+                    precision: '0.25',
+                    axisDef: {min: 0, max: 10}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'pySlider',
+                    param: 'py',
+                    precision: '0.25',
+                    axisDef: {min: 0, max: 10}
+                }
+            }
+        ]
+    }
+
+    function relationshipName(selectedUtility) {
+        if(selectedUtility == 'PerfectSubstitutes') {
+            return 'Perfect Substitutes'
+        } else {
+            return selectedUtility
+        }
+    }
+</script>
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script>
+
+        var selectedUtility = '{{ args.relationship }}';
+
+        if(selectedUtility == 'CobbDouglas') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = independentDefinition;
+        }
+
+        if(selectedUtility == 'Complements') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = complementsDefinition;
+        }
+
+        if(selectedUtility == 'Substitutes') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = substitutesDefinition;
+        }
+
+    if(selectedUtility == 'PerfectSubstitutes') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = perfectSubstitutesDefinition;
+        }
+
+    </script>
+
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
+
+{% endblock %}

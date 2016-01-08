@@ -2165,10 +2165,10 @@ var KG;
             return view;
         };
         InteractionHandler.prototype.highlightObject = function (view) {
-            if (!view || !view.scope || !view.scope.params) {
+            if (!view || !view.scope) {
                 return false;
             }
-            return KG.listMatch(view.scope.params.highlight, this.highlight);
+            return view.scope.isHighlighted(this.highlight);
         };
         return InteractionHandler;
     })(KG.Model);
@@ -3967,6 +3967,9 @@ var KG;
             $scope.updateVersion = 0;
             $scope.Math = window.Math;
             $scope.interpolate = $interpolate;
+            $scope.isHighlighted = function (str) {
+                return KG.listMatch($scope.params.highlight, str);
+            };
             $scope.color = function (className) {
                 return KG.colorForClassName(className);
             };
@@ -4670,7 +4673,7 @@ var EconGraphs;
                 };
                 definition.slope = KG.divideDefs(definition.referencePrice, KG.subtractDefs(definition.referenceQuantity, definition.quantityIntercept));
             }
-            else if (definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice') && definition.hasOwnProperty('priceIntercept')) {
+            else if (definition.hasOwnProperty('referenceQuantity') && definition.hasOwnProperty('referencePrice') && definition.hasOwnProperty('referenceQuantity2') && definition.hasOwnProperty('referencePrice2')) {
                 definition.def = {
                     point1: {
                         x: definition.referenceQuantity,
@@ -6892,10 +6895,7 @@ angular.module('KineticGraphs', [])
         });
         el.css("font-weight", "bold");
         scope.$watch('params.highlight', function () {
-            console.log('scope highlight = ', scope.params.highlight);
-            console.log('this highlight = ', attrs.highlight);
-            console.log('match? ', KG.listMatch(scope.params.highlight, attrs.highlight));
-            if (KG.listMatch(scope.params.highlight, attrs.highlight)) {
+            if (scope.isHighlighted(attrs.highlight)) {
                 el.addClass('highlight');
             }
             else {

@@ -1,0 +1,220 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+{% raw %}
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Supply Elasticity along a Linear Supply Curve (Point Method)</h1>
+                <hr/>
+                <p>Drag the <span highlight="controls">control points</span> of the supply curve to change its <span highlight="slope">slope</span>.</p>
+                <p>Drag the <span highlight="price">price</span> up and down to see how the <span highlight="QS">quantity supplied</span> changes,<br/>and to see how the elasticity calculations change as you move along the supply curve.</p>
+                <hr/>
+                <div id="graph"></div>
+            </div>
+            <div class="col-md-6">
+                <p class="math displayMath big" highlight="slope">\color{ {{ color('green') }} }{\frac{\Delta Q^S}{\Delta P} = \frac{ {{
+                    params.supplyCurveQ2 | number:0 }} - {{ params.supplyCurveQ1 | number:0 }} }{ {{ params.supplyCurveP2 | number: 0 }} -  {{params.supplyCurveP1 | number:0}} } =\frac{ {{
+                    params.supplyCurveQ2 - params.supplyCurveQ1 | number:0 }} }{ {{ params.supplyCurveP2 - params.supplyCurveP1 | number:0}} } = {{
+                    model.priceQuantityRelationshipFunction.inverseSlope | extendedReal:2 }}}</p>
+                <hr/>
+                <equation>\epsilon_{Q^S,P} = \frac{P}{ \color{ {{ color('supply') }} }{Q^S(P)} } \times \color{ {{ color('green')
+                    }} }{ \frac{\Delta Q^S}{\Delta P} } || = \frac{ {{ params.price | number:0 }} }{ \color { {{ color('supply') }}  } { {{
+                    model.quantityAtPrice(params.price) | number:1 }}  } } \times \color{ {{ color('green') }} }{ {{
+                    model.inverseSlope | number:2 }} } || = {{
+                    model.priceElasticity(params.price).elasticityNumber() }}</equation>
+                <p class="math displayMath"></p>
+                <hr/>
+                <p class="math displayMath big">\left| \epsilon_{Q^S,P} \right| = {{
+                    model.priceElasticity(params.price).elasticityComparator}} \Rightarrow \text{ {{
+                    model.priceElasticity(params.price).elasticityWord }}}</p>
+            </div>
+        </div>
+    </div>
+    {% endraw %}
+{% endblock %}
+
+{% block model %}
+    <script>
+        var scopeDefinition = {
+            params: {
+                price: 40,
+                supplyCurveQ1: 0,
+                supplyCurveP1: 20,
+                supplyCurveQ2: 75,
+                supplyCurveP2: 95
+            },
+            restrictions: [
+                {
+                    expression: 'params.price',
+                    restrictionType: 'range',
+                    min: 0,
+                    max: 100,
+                    precision: 1
+                },
+                {
+                    expression: 'params.supplyCurveP1',
+                    restrictionType: 'range',
+                    max: 'params.supplyCurveP2',
+                    min: 0,
+                    precision: 5
+                },
+                {
+                    expression: 'params.supplyCurveQ1',
+                    restrictionType: 'range',
+                    max: 'params.supplyCurveQ2',
+                    min: 0,
+                    precision: 5
+                },
+                    {
+                    expression: 'params.supplyCurveP2',
+                    restrictionType: 'range',
+                    min: 'params.supplyCurveP1',
+                    max: 100,
+                    precision: 5
+                },
+                {
+                    expression: 'params.supplyCurveQ2',
+                    restrictionType: 'range',
+                    min: 'params.supplyCurveQ1',
+                    max: 100,
+                    precision: 5
+                }
+            ],
+            model: {
+                type: 'EconGraphs.LinearPriceQuantityRelationship',
+                definition: {
+                    elasticityMethod: 'point',
+                    price: 'params.price',
+                    referenceQuantity: 'params.supplyCurveQ1',
+                    referencePrice: 'params.supplyCurveP1',
+                    referenceQuantity2: 'params.supplyCurveQ2',
+                    referencePrice2: 'params.supplyCurveP2'
+                }
+            },
+            views: [
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'graph',
+                        square: true,
+                        xAxisDef: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
+                        yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
+                        objects: [
+                            {
+                                type: 'KG.Line',
+                                definition: {
+                                    name: 'supply',
+                                    className: 'supply',
+                                    linear: 'model.priceQuantityRelationshipFunction',
+                                    label: {
+                                        text: 'S'
+                                    },
+                                    interaction: {
+                                        highlight: 'supplyCurve'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Segment',
+                                definition: {
+                                    name: 'supplyZeroSegment',
+                                    className: 'supply',
+                                    show: 'model.priceQuantityRelationshipFunction.yIntercept > 0',
+                                    a: {
+                                        x: 0,
+                                        y: 0
+                                    },
+                                    b: {
+                                        x: 0,
+                                        y: 'model.priceQuantityRelationshipFunction.yIntercept'
+                                    },
+                                    interaction: {
+                                        highlight: 'supplyCurve'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'controlPoint1',
+                                    coordinates: {x: 'params.supplyCurveQ1', y: 'params.supplyCurveP1'},
+                                    className: 'supply',
+                                    interaction: {
+                                        draggable: true,
+                                        highlight: 'controls'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'controlPoint2',
+                                    coordinates: {x: 'params.supplyCurveQ2', y: 'params.supplyCurveP2'},
+                                    className: 'supply',
+                                    interaction: {
+                                        draggable: true,
+                                        highlight: 'controls'
+                                    }
+
+                                }
+                            },
+                            {
+                                type: 'KG.HorizontalLine',
+                                definition: {
+                                    name: 'priceLine',
+                                    className: 'price',
+                                    type: 'HorizontalLine',
+                                    y: 'params.price',
+                                    yInterceptLabel: 'P',
+                                    interaction: {
+                                        yDrag: 'price',
+                                        highlight: 'price'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'quantityDemandedAtPrice',
+                                    className: 'supply',
+                                    coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
+                                    size: 20,
+                                    interaction: {
+                                        highlight: 'QS'
+                                    },
+                                    droplines: {
+                                        vertical: 'Q^S(P)'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.GraphDiv',
+                                definition: {
+                                    name: 'slopeLabel',
+                                    className: 'green',
+                                    coordinates: {
+                                        x: '0.5*(params.supplyCurveQ1 + params.supplyCurveQ2)',
+                                        y: '0.5*(params.supplyCurveP1 + params.supplyCurveP2)'
+                                    },
+                                    text: ["\\frac{\\Delta Q^S}{\\Delta P} =", 'model.priceQuantityRelationshipFunction.inverseSlope | extendedReal:2'],
+                                    align: 'left',
+                                    valign: 'top',
+                                    dimensions: {width: 100, height: 30},
+                                    interaction: {
+                                        highlight: 'slope'
+                                    }
+                                }
+                            }]
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
+
+{% endblock %}
