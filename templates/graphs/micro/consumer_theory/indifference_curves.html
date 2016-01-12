@@ -184,6 +184,22 @@
                     }
 
                 }),
+                indifferenceCurvePoints = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                        type: 'KG.Point',
+                        definition: {
+                            name: 'indifference_curve_point'+level,
+                            className: 'dataPathFamily',
+                            coordinates: {x: level, y:level},
+                            size: 10,
+                            interaction: {
+                                highlight: 'indifferenceMap' + level
+                            },
+                            show: 'params.showMap',
+                        }
+                    }
+
+                }),
                 MRSline = {
                     type: 'KG.Line',
                     definition: {
@@ -264,6 +280,14 @@
                     indifferenceCurveMap[6],
                     indifferenceCurveMap[7],
                     indifferenceCurveMap[8],
+                    indifferenceCurvePoints[1],
+                    indifferenceCurvePoints[2],
+                    indifferenceCurvePoints[3],
+                    indifferenceCurvePoints[4],
+                    indifferenceCurvePoints[5],
+                    indifferenceCurvePoints[6],
+                    indifferenceCurvePoints[7],
+                    indifferenceCurvePoints[8],
 
                     bundlePoint,
                     indifferenceCurve,

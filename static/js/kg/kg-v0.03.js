@@ -2864,8 +2864,6 @@ var KG;
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
             var dataPath = group.select(selector);
             var dragHandle = group.select(selector + 'Handle');
-            var leftFill = group.select(selector + 'Left');
-            var rightFill = group.select(selector + 'Right');
             if (!curve.show) {
                 var element_name = curve.name + '_label';
                 //console.log('removing element ',element_name);
@@ -2882,22 +2880,24 @@ var KG;
                 'class': curve.classAndVisibility('Handle'),
                 'd': dataLine(dataCoordinates)
             });
-            leftFill
-                .attr({
-                'class': curve.classAndVisibility('Left'),
-                'd': dataLine([
-                    { x: view.xAxis.scale(view.xAxis.min), y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) },
-                    { x: KG.arrayMinCoordinate(dataCoordinates) + 1, y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) }
-                ])
-            });
-            rightFill
-                .attr({
-                'class': curve.classAndVisibility('Right'),
-                'd': dataLine([
-                    { x: view.xAxis.scale(view.xAxis.max), y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) },
-                    { x: KG.arrayMaxCoordinate(dataCoordinates) - 1, y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) }
-                ])
-            });
+            if (area.left) {
+                group.select(selector + 'Left').attr({
+                    'class': curve.classAndVisibility('Left'),
+                    'd': dataLine([
+                        { x: view.xAxis.scale(view.xAxis.min), y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) },
+                        { x: KG.arrayMinCoordinate(dataCoordinates) + 1, y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) }
+                    ])
+                });
+            }
+            if (area.right) {
+                group.select(selector + 'Right').attr({
+                    'class': curve.classAndVisibility('Right'),
+                    'd': dataLine([
+                        { x: view.xAxis.scale(view.xAxis.max), y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) },
+                        { x: KG.arrayMaxCoordinate(dataCoordinates) - 1, y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) }
+                    ])
+                });
+            }
             curve.interactionHandler.setBehavior(view, dataPath);
             curve.interactionHandler.setBehavior(view, dragHandle);
             return view;
