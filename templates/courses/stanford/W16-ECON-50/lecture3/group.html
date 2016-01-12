@@ -1,0 +1,117 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+<p ng-controller="KineticGraphCtrl" class="container">
+    {% raw %}
+    <div class="subtitle">January 12</div>
+    <h2>Group Work: Elasticity</h2>
+    <hr/>
+    <p><b>Cheat sheet:</b> If Y is a function of X, then the "X elasticity of Y" <span class="math">\left(\epsilon_{Y,X}\right)</span> may be calculated using one of the following three formulas:</p>
+    <div class="row">
+        <div class="col-md-4">
+            <p class="subtitle" align="center">midpoint method</p>
+            <p class="math displayMath">\epsilon_{Y,X} = \frac{\Delta Y/Y_M}{\Delta X/X_M}</p>
+            <p align="center">where <span class="math">\Delta X</span> and <span class="math">\Delta Y</span> are the difference<br/>between two <span class="math">X</span> and <span class="math">Y</span> values, and <span class="math">X_M</span> and <span class="math">Y_M</span> <br/> are the midpoints between those values</p>
+        </div>
+        <div class="col-md-4">
+            <p class="subtitle" align="center">point method</p>
+            <p class="math displayMath">\epsilon_{Y,X} = \frac{dY/Y}{dX/X} = \frac{dY}{dX} \times \frac{X}{Y}</p>
+        </div>
+        <div class="col-md-4">
+            <p class="subtitle" align="center">log-log method</p>
+            <p class="math displayMath">\epsilon_{Y,X} = \frac{d \ln Y}{d \ln X}</p>
+        </div>
+    </div>
+    <hr/>
+    <ol>
+        <li style="padding-top:20px">
+            <p><b>Calculating Elasticity for a Specific Linear Demand Curve</b></p>
+            <p>Use the point method to find the price elasticity of demand if <span class="math">Q^D(P) = 12 - 2P</span>.</p>
+            <ol style="list-style: lower-alpha">
+                <li>When is <span class="math">\epsilon</span> perfectly inelastic?</li>
+                <li>When is <span class="math">\epsilon</span> perfectly elastic?</li>
+                <li>When is <span class="math">\epsilon</span> unit inelastic?</li>
+            </ol>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Calculating Elasticity for a General Linear Demand Curve</b></p>
+            <p>Repeat question 1 for a general linear demand function <span class="math">Q^D(P) = a - bP</span>.</p>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Calculating Elasticity for a Constant Elasticity Supply Curve</b></p>
+            <p>Consider the supply function <span class="math">Q^S(P) = P^2</span>.</p>
+            <ol style="list-style: lower-alpha">
+                <li>Use the midpoint method to calculate the price elasticity of supply between <span class="math">P = 99</span> and <span class="math">P = 101</span>.</li>
+                <li>Use the point method to calculate the price elasticity of supply  at <span class="math">P = 100</span>.</li>
+                <li>Use the log-log method to calculate the price elasticity of supply at <span class="math">P = 100</span>.</li>
+            </ol>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Deriving the linear relationship between log data</b></p>
+            <p>Yule for You, Inc. has a popular brand of “Natural Yule Logs” which burn with 50% less smoke than real wood. Ella Sticetti, the owner of Yule for You, decided to experiment a bit with pricing on her web site, randomly choosing different prices for different customers to see how responsive demand was to changes in price. The data she found is shown in the table below.</p>
+            <table class="table table-striped table-hover" width="60%" align="center" border="default">
+                <thead>
+                <tr class="info">
+                    <td width="25%" align="center">Price <span class="math">(P)</span></td>
+                    <td width="25%" align="center">Quantity Demanded <span class="math">(Q^D)</span></td>
+                    <td width="25%" align="center"><span class="math">\ln P</span></td>
+                    <td width="25%" align="center"><span class="math">\ln Q^D</span></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td align="center">$2.56</td>
+                    <td align="center">50</td>
+                    <td style="color:red" align="center">0.94</td>
+                    <td style="color:red" align="center">3.91</td>
+                </tr>
+                <tr>
+                    <td align="center">$4.00</td>
+                    <td align="center">40</td>
+                    <td/>
+                    <td/>
+                </tr>
+                <tr>
+                    <td align="center">$6.25</td>
+                    <td align="center">32</td>
+                    <td/>
+                    <td/>
+                </tr>
+                <tr>
+                    <td align="center">$10.24</td>
+                    <td align="center">25</td>
+                    <td/>
+                    <td/>
+                </tr>
+                <tr>
+                    <td align="center">$16.00</td>
+                    <td align="center">20</td>
+                    <td/>
+                    <td/>
+                </tr>
+                </tbody>
+            </table>
+            <ol style="list-style: lower-alpha">
+                <li>Using this data, sketch this demand curve in a diagram with <span class="math">Q^D</span> on the horizontal axis and <span class="math">P</span> on the vertical axis.</li>
+                <li>Now fill out the rest of the table by calculating <span class="math">\ln P</span> and <span class="math">\ln Q^D</span> for each line of the table, using a calculator or spreadsheet. (The first line has been done for you.) Plot these points on a new graph with <span class="math">\ln Q^D</span> on the horizontal axis and <span class="math">\ln P</span> on the vertical axis.</li>
+                <li>All of the dots should appear in a line; find the slope, and use the point-slope formula to calculate the equation of that line and use the result to write <span class="math">\ln Q^D</span> as a function of <span class="math">\ln P</span>. (Be sure to remember that the dependent variable is on the horizontal axis!)</li>
+                <li>Write down the demand curve that Yule for You faces for their Natural Yule Logs, <span class="math">Q^D(P)</span>. (Hint: what's the inverse function of a natural log...?)</li>
+                <li>What is Yule for You's price elasticity of demand for Natural Yule Logs at <span class="math">P = \$4.00</span>? What about at <span class="math">P = \$6.25</span>?</li>
+            </ol>
+        </li>
+
+    </ol>
+
+    {% endraw %}
+</div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

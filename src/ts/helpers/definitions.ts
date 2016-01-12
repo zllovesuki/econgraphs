@@ -79,6 +79,10 @@ module KG
         return binaryFunction(def,def,'*');
     }
 
+    export function sqrtDef(def) {
+        return 'Math.sqrt('+def+')';
+    }
+
     export function raiseDefToDef(def1, def2) {
         return binaryFunction(def1,def2,'^');
     }

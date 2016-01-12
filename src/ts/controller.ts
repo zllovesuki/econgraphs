@@ -7,7 +7,7 @@ declare var scopeDefinition:KG.ScopeDefinition;
 module KG
 {
     export interface ScopeDefinition {
-        params: {};
+        params: {highlight:string};
         graphParams: string[];
         restrictions: RestrictionDefinition[];
         model: ModelDefinition;
@@ -16,7 +16,7 @@ module KG
 
     export interface IScope extends ng.IScope
     {
-        params: {};                     // parameters of the model (may change through user actions)
+        params: {highlight:string};                     // parameters of the model (may change through user actions)
         graphParams: {};          // list of parameter names that should trigger graph redraw
         restrictions: Restriction[];    // restrictions on parameters or any expression
         model: Model;                   // the base model (constant)
@@ -40,7 +40,7 @@ module KG
 
             $scope.updateVersion = 0;
 
-            $scope.Math = window.Math;
+            $scope.Math = window['Math'];
 
             $scope.interpolate = $interpolate;
 
@@ -55,7 +55,7 @@ module KG
             $scope.init = function(definition:ScopeDefinition) {
 
                 definition = _.defaults(definition,{
-                    params: {},
+                    params: {highlight:''},
                     graphParams: [],
                     restrictions: [],
                     model: {type: 'KG.Model', definition: {}},
