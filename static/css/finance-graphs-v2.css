@@ -317,6 +317,9 @@ button:hover {
   stroke-width: 3;
   fill: none;
 }
+.curveArea {
+  stroke-width: 3;
+}
 .pointSymbol {
   stroke-width: 3;
 }

@@ -140,13 +140,18 @@ module KG
             return view; // overridden by child class
         }
 
-        initGroupFn() {
+        initGroupFn(additionalObjects?:string[]) {
             var viewObject = this,
                 viewObjectSVGtype = viewObject.viewObjectSVGtype,
                 viewObjectClass = viewObject.viewObjectClass;
             return function(newGroup:D3.Selection) {
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass);
-                newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass + 'Handle')
+                newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass + 'Handle');
+                if(additionalObjects) {
+                    additionalObjects.forEach(function(name){
+                        newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass + name);
+                    })
+                }
                 return newGroup;
             }
         }

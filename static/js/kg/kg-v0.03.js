@@ -140,6 +140,16 @@ var KG;
         }
     }
     KG.arrayAverage = arrayAverage;
+    function arrayMinCoordinate(o, xOrY) {
+        xOrY = xOrY || 'x';
+        return d3.min(o, function (p) { return p[xOrY]; });
+    }
+    KG.arrayMinCoordinate = arrayMinCoordinate;
+    function arrayMaxCoordinate(o, xOrY) {
+        xOrY = xOrY || 'x';
+        return d3.max(o, function (p) { return p[xOrY]; });
+    }
+    KG.arrayMaxCoordinate = arrayMaxCoordinate;
     function listMatch(s1, s2) {
         if (!s1 || !s2 || s1.length == 0 || s2.length == 0) {
             return false;
@@ -2345,11 +2355,16 @@ var KG;
         ViewObject.prototype.createSubObjects = function (view, scope) {
             return view; // overridden by child class
         };
-        ViewObject.prototype.initGroupFn = function () {
+        ViewObject.prototype.initGroupFn = function (additionalObjects) {
             var viewObject = this, viewObjectSVGtype = viewObject.viewObjectSVGtype, viewObjectClass = viewObject.viewObjectClass;
             return function (newGroup) {
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass);
                 newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass + 'Handle');
+                if (additionalObjects) {
+                    additionalObjects.forEach(function (name) {
+                        newGroup.append(viewObjectSVGtype).attr('class', viewObjectClass + name);
+                    });
+                }
                 return newGroup;
             };
         };
@@ -2711,7 +2726,7 @@ var KG;
             curve.startArrow = (definition.arrows == Curve.START_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
             curve.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
             curve.viewObjectSVGtype = 'path';
-            curve.viewObjectClass = 'curve';
+            curve.viewObjectClass = curve.hasOwnProperty('area') ? 'curveArea' : 'curve';
         }
         Curve.prototype.createSubObjects = function (view) {
             var labelDiv = this.labelDiv;
@@ -2773,22 +2788,84 @@ var KG;
             }
         };
         Curve.prototype.render = function (view) {
-            var curve = this;
+            var curve = this, area = { draw: false, left: false, right: false, above: false, below: false };
+            if (curve.hasOwnProperty('area')) {
+                area.draw = true;
+                area.left = (curve.area.indexOf('LEFT') > -1);
+                area.right = (curve.area.indexOf('RIGHT') > -1);
+                area.above = (curve.area.indexOf('ABOVE') > -1);
+                area.below = (curve.area.indexOf('BELOW') > -1);
+            }
+            console.log(area);
             curve.updateDataForView(view);
             var dataCoordinates = view.dataCoordinates(curve.data);
             var dataLength = dataCoordinates.length;
             curve.startPoint = dataCoordinates[0];
             curve.endPoint = dataCoordinates[dataLength - 1];
             curve.midPoint = KG.medianDataPoint(dataCoordinates);
-            var group = view.objectGroup(curve.name, curve.initGroupFn(), false);
+            var additionalObjects = [];
+            if (area.left) {
+                additionalObjects.push('Left');
+            }
+            if (area.right) {
+                additionalObjects.push('Right');
+            }
+            var group = view.objectGroup(curve.name, curve.initGroupFn(additionalObjects), false);
             curve.positionLabel(view);
-            var dataLine = d3.svg.line()
-                .interpolate(curve.interpolation)
-                .x(function (d) { return d.x; })
-                .y(function (d) { return d.y; });
+            var dataLine;
+            if (curve.hasOwnProperty('area')) {
+                if (curve.area.indexOf('ABOVE') > -1) {
+                    dataLine = d3.svg.area()
+                        .interpolate(curve.interpolation)
+                        .x(function (d) { return d.x; })
+                        .y0(function (d) { return d.y; })
+                        .y1(view.yAxis.scale(view.yAxis.max) - 10);
+                }
+                else if (curve.area.indexOf('BELOW') > -1) {
+                    dataLine = d3.svg.area()
+                        .interpolate(curve.interpolation)
+                        .x(function (d) { return d.x; })
+                        .y0(function (d) { return d.y; })
+                        .y1(view.yAxis.scale(view.yAxis.min));
+                }
+                else {
+                    dataLine = d3.svg.line()
+                        .interpolate(curve.interpolation)
+                        .x(function (d) { return d.x; })
+                        .y(function (d) { return d.y; });
+                }
+            }
+            else {
+                dataLine = d3.svg.line()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x; })
+                    .y(function (d) { return d.y; });
+            }
+            if (curve.hasOwnProperty('area') && curve.area.indexOf('ABOVE') > -1) {
+                dataLine = d3.svg.area()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x; })
+                    .y0(function (d) { return d.y; })
+                    .y1(view.yAxis.scale(view.yAxis.max) - 10);
+            }
+            else if (curve.hasOwnProperty('area') && curve.area.indexOf('BELOW') > -1) {
+                dataLine = d3.svg.area()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x; })
+                    .y0(function (d) { return d.y; })
+                    .y1(view.yAxis.scale(view.yAxis.min));
+            }
+            else {
+                dataLine = d3.svg.line()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x; })
+                    .y(function (d) { return d.y; });
+            }
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
             var dataPath = group.select(selector);
             var dragHandle = group.select(selector + 'Handle');
+            var leftFill = group.select(selector + 'Left');
+            var rightFill = group.select(selector + 'Right');
             if (!curve.show) {
                 var element_name = curve.name + '_label';
                 //console.log('removing element ',element_name);
@@ -2802,8 +2879,24 @@ var KG;
             curve.addArrows(dataPath);
             dragHandle
                 .attr({
-                'class': 'curveHandle',
+                'class': curve.classAndVisibility('Handle'),
                 'd': dataLine(dataCoordinates)
+            });
+            leftFill
+                .attr({
+                'class': curve.classAndVisibility('Left'),
+                'd': dataLine([
+                    { x: view.xAxis.scale(view.xAxis.min), y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) },
+                    { x: KG.arrayMinCoordinate(dataCoordinates) + 1, y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) }
+                ])
+            });
+            rightFill
+                .attr({
+                'class': curve.classAndVisibility('Right'),
+                'd': dataLine([
+                    { x: view.xAxis.scale(view.xAxis.max), y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) },
+                    { x: KG.arrayMaxCoordinate(dataCoordinates) - 1, y: area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min) }
+                ])
             });
             curve.interactionHandler.setBehavior(view, dataPath);
             curve.interactionHandler.setBehavior(view, dragHandle);
@@ -3637,11 +3730,11 @@ var KG;
                 view.masked = svg.append('g').attr('transform', visTranslation);
                 var mask = svg.append('g').attr('class', 'mask');
                 // Put mask around vis to clip objects that extend beyond the desired viewable area
-                var maskBorder = 5;
-                var topMask = mask.append('rect').attr({ x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill: view.background });
-                var bottomMask = mask.append('rect').attr({ x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill: view.background });
-                var leftMask = mask.append('rect').attr({ x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill: view.background });
-                var rightMask = mask.append('rect').attr({ x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill: view.background });
+                var axisMaskBorder = 5, openMaskBorder = 0;
+                var topMask = mask.append('rect').attr({ x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - openMaskBorder, fill: view.background });
+                var bottomMask = mask.append('rect').attr({ x: 0, y: view.dimensions.height - view.margins.bottom + axisMaskBorder, width: view.dimensions.width, height: view.margins.bottom - axisMaskBorder, fill: view.background });
+                var leftMask = mask.append('rect').attr({ x: 0, y: 0, width: view.margins.left - axisMaskBorder, height: view.dimensions.height, fill: view.background });
+                var rightMask = mask.append('rect').attr({ x: view.dimensions.width - view.margins.right + openMaskBorder, y: 0, width: view.margins.right - openMaskBorder, height: view.dimensions.height, fill: view.background });
                 topMask.on('mouseover', removeHighlight);
                 bottomMask.on('mouseover', removeHighlight);
                 leftMask.on('mouseover', removeHighlight);
