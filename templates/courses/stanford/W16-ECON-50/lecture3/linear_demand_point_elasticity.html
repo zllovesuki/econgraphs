@@ -1,0 +1,178 @@
+{% extends 'layouts/econ50/base.html' %}
+
+{% block body %}
+{% raw %}
+    <div>
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Demand Elasticity along a Linear Demand Curve (Point Method)</h1>
+                <hr/>
+                <div id="graph"></div>
+            </div>
+            <div class="col-md-6">
+                <p class="math displayMath big" highlight="slope">\color{ {{ color('green') }} }{\frac{dQ^D}{dP} = -\frac{ {{
+                    params.demandQuantityIntercept | number:0 }} }{ {{ params.demandPriceIntercept | number:0}} } = {{
+                    model.priceQuantityRelationshipFunction.inverseSlope | number:2 }}}</p>
+                <hr/>
+                <equation>\epsilon_{Q^D,P} = \frac{P}{ \color{ {{ color('demand') }} }{Q^D(P)} } \times \color{ {{ color('green')
+                    }} }{ \frac{dQ^D}{dP} } || = \frac{ {{ params.price | number:0 }} }{ \color { {{ color('demand') }}  } { {{
+                    model.quantityAtPrice(params.price) | number:1 }}  } } \times \color{ {{ color('green') }} }{ {{
+                    model.inverseSlope | number:2 }} } || = {{
+                    model.priceElasticity(params.price).elasticityNumber() }}</equation>
+                <p class="math displayMath"></p>
+                <hr/>
+                <p class="math displayMath big">\left| \epsilon_{Q^D,P} \right| = {{
+                    model.priceElasticity(params.price).elasticityComparator}} \Rightarrow \text{ {{
+                    model.priceElasticity(params.price).elasticityWord }}}</p>
+            </div>
+        </div>
+    </div>
+    {% endraw %}
+{% endblock %}
+
+{% block model %}
+    <script>
+        var scopeDefinition = {
+            params: {
+                price: 30,
+                demandPriceIntercept: 40,
+                demandQuantityIntercept: 80
+            },
+            restrictions: [
+                {
+                    expression: 'params.price',
+                    restrictionType: 'range',
+                    max: 'params.demandPriceIntercept',
+                    min: 0,
+                    precision: 1
+                },
+                {
+                    expression: 'params.demandPriceIntercept',
+                    restrictionType: 'range',
+                    max: 100,
+                    min: 5,
+                    precision: 5
+                },
+                {
+                    expression: 'params.demandQuantityIntercept',
+                    restrictionType: 'range',
+                    max: 100,
+                    min: 5,
+                    precision: 5
+                }
+            ],
+            model: {
+                type: 'EconGraphs.LinearPriceQuantityRelationship',
+                definition: {
+                    elasticityMethod: 'point',
+                    price: 'params.price',
+                    priceIntercept: 'params.demandPriceIntercept',
+                    quantityIntercept: 'params.demandQuantityIntercept'
+                }
+            },
+            views: [
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'graph',
+                        square: true,
+                        xAxisDef: {min: 0, max: 100, title: '\\text{Quantity }(Q)'},
+                        yAxisDef: {min: 0, max: 100, title: '\\text{Price }(P)'},
+                        objects: [
+                            {
+                                type: 'KG.Line',
+                                definition: {
+                                    name: 'demand',
+                                    className: 'demand',
+                                    linear: 'model.priceQuantityRelationshipFunction',
+                                    label: {
+                                        text: 'D'
+                                    },
+                                    interaction: {
+                                        highlight: 'demandCurve'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'demandPriceIntercept',
+                                    coordinates: {x: 0, y: 'params.demandPriceIntercept'},
+                                    className: 'demand',
+                                    interaction: {
+                                        yDrag: 'params.demandPriceIntercept',
+                                        highlight: 'demandCurve'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'demandQuantityIntercept',
+                                    coordinates: {x: 'params.demandQuantityIntercept', y: 0},
+                                    className: 'demand',
+                                    interaction: {
+                                        xDrag: 'params.demandQuantityIntercept',
+                                        highlight: 'demandCurve'
+                                    }
+
+                                }
+                            },
+                            {
+                                type: 'KG.HorizontalLine',
+                                definition: {
+                                    name: 'priceLine',
+                                    className: 'price',
+                                    type: 'HorizontalLine',
+                                    y: 'params.price',
+                                    yInterceptLabel: 'P',
+                                    interaction: {
+                                        yDrag: 'price',
+                                        highlight: 'price'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'quantityDemandedAtPrice',
+                                    className: 'demand',
+                                    coordinates: {x: 'model.quantityAtPrice(params.price)', y: 'params.price'},
+                                    interaction: {
+                                        highlight: 'QD'
+                                    },
+                                    droplines: {
+                                        vertical: 'Q^D(P)'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.GraphDiv',
+                                definition: {
+                                    name: 'slopeLabel',
+                                    className: 'green',
+                                    coordinates: {
+                                        x: 'model.quantityAtPrice(params.demandPriceIntercept/3) + 1',
+                                        y: 'params.demandPriceIntercept/3 + 1'
+                                    },
+                                    text: ["\\frac{dQ^D}{dP} =", 'model.inverseSlope | number:2'],
+                                    align: 'left',
+                                    valign: 'bottom',
+                                    dimensions: {width: 100, height: 30},
+                                    interaction: {
+                                        highlight: 'slope'
+                                    }
+                                }
+                            }]
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
+
+{% endblock %}

@@ -54,31 +54,6 @@ module EconGraphs {
 
             var b = this;
 
-            var pointParams:KG.PointParamsDefinition = {};
-            if(definition.hasOwnProperty('xLabel')) {
-                pointParams.xAxisLabel = definition.xLabel;
-            }
-            if(definition.hasOwnProperty('yLabel')) {
-                pointParams.yAxisLabel = definition.yLabel;
-            }
-
-            b.endowmentPoint = new KG.Point({
-                name: 'endowmentPoint',
-                coordinates: definition.endowment,
-                xDrag: definition.endowment.x,
-                yDrag: definition.endowment.y,
-                className: 'budget',
-                params: pointParams
-            });
-
-            var lineParams:KG.LineParamsDefinition = {};
-            if(definition.hasOwnProperty('budgetConstraintLabel')) {
-                lineParams.label = definition.budgetConstraintLabel;
-            }
-            if(definition.hasOwnProperty('budgetSetLabel')) {
-                lineParams.areaUnderLabel = definition.budgetSetLabel;
-            }
-
             if(definition.hasOwnProperty('px') && definition.hasOwnProperty('py')) {
                 b.budgetSegments = [
                     new BudgetSegment({
@@ -86,17 +61,8 @@ module EconGraphs {
                         px: definition.px,
                         py: definition.py
                     }, b.modelProperty('budgetSegments[0]'))
-                ];
-                b.budgetLine = new KG.Line({
-                    name: 'BL',
-                    className: 'budget',
-                    linear: b.modelProperty('budgetSegments[0].linear'),
-                    xInterceptLabel: definition.xInterceptLabel,
-                    yInterceptLabel: definition.yInterceptLabel,
-                    params: lineParams
-                }, b.modelProperty('budgetLine'));
+                ]
             } else {
-
                 b.budgetSegments = [
                     new BudgetSegment({
                         endowment: definition.endowment,
@@ -115,16 +81,6 @@ module EconGraphs {
                         xMin: definition.endowment.x
                     }, b.modelProperty('budgetSegments[1]'))
                 ];
-
-                b.budgetLine = new KG.PiecewiseLinear({
-                    name: 'BL',
-                    className: 'budget',
-                    sections: b.modelProperty('budgetSegments'),
-                    xInterceptLabel: definition.xInterceptLabel,
-                    yInterceptLabel: definition.yInterceptLabel,
-                    params: lineParams
-                }, b.modelProperty('budgetLine'));
-
             }
 
 

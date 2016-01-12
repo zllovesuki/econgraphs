@@ -3567,7 +3567,7 @@ var KG;
             if (element == undefined) {
                 return view;
             }
-            var width = Math.min(400, view.maxDimensions.width, element.clientWidth), height = Math.min(400, view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()));
+            var width = Math.min(600, view.maxDimensions.width, element.clientWidth), height = Math.min(600, view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()));
             if (view.square) {
                 var side = Math.min(width, height);
                 view.dimensions = {
@@ -5026,13 +5026,6 @@ var EconGraphs;
         function SimpleBudgetConstraint(definition, modelPath) {
             _super.call(this, definition, modelPath);
             var b = this;
-            var params = {};
-            if (definition.hasOwnProperty('budgetConstraintLabel')) {
-                params.label = definition.budgetConstraintLabel;
-            }
-            if (definition.hasOwnProperty('budgetSetLabel')) {
-                params.areaUnderLabel = definition.budgetSetLabel;
-            }
             b.budgetSegments = [
                 new EconGraphs.BudgetSegment({
                     income: definition.income,
@@ -5040,14 +5033,6 @@ var EconGraphs;
                     py: definition.py
                 }, b.modelProperty('budgetSegments[0]'))
             ];
-            b.budgetLine = new KG.Line({
-                name: 'BL',
-                className: 'budget',
-                linear: b.modelProperty('budgetSegments[0].linear'),
-                xInterceptLabel: definition.xInterceptLabel,
-                yInterceptLabel: definition.yInterceptLabel,
-                params: params
-            }, b.modelProperty('budgetLine'));
         }
         SimpleBudgetConstraint.prototype.setPrice = function (price, good) {
             var b = this;
@@ -5088,28 +5073,6 @@ var EconGraphs;
             }
             _super.call(this, definition, modelPath);
             var b = this;
-            var pointParams = {};
-            if (definition.hasOwnProperty('xLabel')) {
-                pointParams.xAxisLabel = definition.xLabel;
-            }
-            if (definition.hasOwnProperty('yLabel')) {
-                pointParams.yAxisLabel = definition.yLabel;
-            }
-            b.endowmentPoint = new KG.Point({
-                name: 'endowmentPoint',
-                coordinates: definition.endowment,
-                xDrag: definition.endowment.x,
-                yDrag: definition.endowment.y,
-                className: 'budget',
-                params: pointParams
-            });
-            var lineParams = {};
-            if (definition.hasOwnProperty('budgetConstraintLabel')) {
-                lineParams.label = definition.budgetConstraintLabel;
-            }
-            if (definition.hasOwnProperty('budgetSetLabel')) {
-                lineParams.areaUnderLabel = definition.budgetSetLabel;
-            }
             if (definition.hasOwnProperty('px') && definition.hasOwnProperty('py')) {
                 b.budgetSegments = [
                     new EconGraphs.BudgetSegment({
@@ -5118,14 +5081,6 @@ var EconGraphs;
                         py: definition.py
                     }, b.modelProperty('budgetSegments[0]'))
                 ];
-                b.budgetLine = new KG.Line({
-                    name: 'BL',
-                    className: 'budget',
-                    linear: b.modelProperty('budgetSegments[0].linear'),
-                    xInterceptLabel: definition.xInterceptLabel,
-                    yInterceptLabel: definition.yInterceptLabel,
-                    params: lineParams
-                }, b.modelProperty('budgetLine'));
             }
             else {
                 b.budgetSegments = [
@@ -5146,14 +5101,6 @@ var EconGraphs;
                         xMin: definition.endowment.x
                     }, b.modelProperty('budgetSegments[1]'))
                 ];
-                b.budgetLine = new KG.PiecewiseLinear({
-                    name: 'BL',
-                    className: 'budget',
-                    sections: b.modelProperty('budgetSegments'),
-                    xInterceptLabel: definition.xInterceptLabel,
-                    yInterceptLabel: definition.yInterceptLabel,
-                    params: lineParams
-                }, b.modelProperty('budgetLine'));
             }
         }
         EndowmentBudgetConstraint.prototype.formula = function (values) {
@@ -5479,15 +5426,6 @@ var EconGraphs;
             constrainedX = budgetSegment.xDomain.closestValueTo(unconstrainedX);
             return { x: constrainedX, y: budgetSegment.linear.yValue(constrainedX) };
         };
-        TwoGoodUtility.prototype.optimalBundlePoint = function (budget, params) {
-            var optimalBundle = this.optimalBundle(budget);
-            params.name = params.name || 'optimal';
-            return this.bundlePoint(optimalBundle, params);
-        };
-        TwoGoodUtility.prototype.optimalIndifferenceCurve = function (budget, params) {
-            var optimalBundle = this.optimalBundle(budget);
-            return this.indifferenceCurveThroughBundle(optimalBundle, params);
-        };
         TwoGoodUtility.prototype.indirectUtility = function (budget) {
             var u = this;
             return u.utility(u.optimalBundle(budget));
@@ -5495,10 +5433,6 @@ var EconGraphs;
         /* Cost minimization */
         TwoGoodUtility.prototype.lowestCostBundle = function (utility) {
             return { x: null, y: null }; // based on specific utility function; overridden by subclass
-        };
-        TwoGoodUtility.prototype.lowestCostBundlePoint = function (utility, params) {
-            var lowestCostBundle = this.lowestCostBundle(utility);
-            return this.bundlePoint(lowestCostBundle, params);
         };
         TwoGoodUtility.prototype.expenditure = function (utility) {
             var lowestCostBundle = this.lowestCostBundle(utility);
@@ -5510,6 +5444,14 @@ var EconGraphs;
         return TwoGoodUtility;
     })(EconGraphs.Utility);
     EconGraphs.TwoGoodUtility = TwoGoodUtility;
+    var SelectableTwoGoodUtility = (function (_super) {
+        __extends(SelectableTwoGoodUtility, _super);
+        function SelectableTwoGoodUtility(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+        }
+        return SelectableTwoGoodUtility;
+    })(KG.Model);
+    EconGraphs.SelectableTwoGoodUtility = SelectableTwoGoodUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 'use strict';

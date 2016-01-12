@@ -1,0 +1,227 @@
+{% extends 'layouts/econ50/base.html' %}
+
+{% block body %}
+{% raw %}
+    <div>
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Supply with Constant Price Elasticity</h1>
+                <hr/>
+                <div id="graph"></div>
+            </div>
+            <div class="col-md-4">
+                <div class="well">
+                    <p style="float:right;color:red">{{error}}</p>
+                    <div class="row">
+                        <div class="subtitle col-xs-6">elasticity</div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-xs-4 math" style="text-align:right;font-size:12pt;padding-top:10px" highlight="elasticity">|\epsilon_{Q^D,P}| = {{ params.elasticity | number:2 }}</div>
+                        <div class="col-xs-8" id="sliderB"></div>
+                    </div>
+                </div>
+                <div class="math displayMath big" highlight="price">P = {{ params.price }}</div>
+                <hr/>
+                <div class="supply math displayMath big" highlight="QS">Q^D(P) = {{ model.quantityAtPrice(params.price) | number:2 }}</div>
+                <hr/>
+                <div class="green math displayMath big" highlight="slope">\frac{d Q^D}{d P} = {{ model.inverseSlopeAtPrice(params.price) | number:2 }}</div>
+                <hr/>
+                <equation>\epsilon_{Q^D,P} = \color{ {{ color('green') }} }{ \frac{dQ^D}{dP} } \times \frac{P}{\color{
+                    {{color('supply')}} }{Q^D(P)}} || = \color{ {{ color('green') }} }{ {{
+                    model.inverseSlopeAtPrice(params.price) | number:2 }} } \times \frac{ {{ params.price | number:0 }} }{
+                    \color{ {{color('supply')}} }{ {{ model.quantityAtPrice(params.price) | number:2 }} } }|| = {{
+                    model.elasticity | number: 2 }}
+                </equation>
+            </div>
+        </div>
+    </div>
+    {% endraw %}
+{% endblock %}
+
+{% block model %}
+
+    <script>
+        var scopeDefinition = {
+            params: {
+                price: 40,
+                elasticity: 1,
+                referencePrice: 20,
+                referenceQuantity: 20
+            },
+            restrictions: [
+                {
+                    expression: 'params.price',
+                    restrictionType: 'range',
+                    max: 60,
+                    min: 2,
+                    precision: 1
+                },
+                {
+                    expression: 'params.a',
+                    restrictionType: 'range',
+                    max: 400,
+                    min: 100,
+                    precision: 10
+                },
+                {
+                    expression: 'model.quantityAtPrice(params.price)',
+                    restrictionType: 'range',
+                    max: 60,
+                    min: 1
+                },
+                {
+                    expression: 'params.b',
+                    restrictionType: 'range',
+                    max: 2,
+                    min: 0.1,
+                    precision: 0.01
+                }
+
+            ],
+            model: {
+                type: 'EconGraphs.ConstantElasticityPriceQuantityRelationship',
+                definition: {
+                    elasticityMethod: 'constant',
+                    elasticity: 'params.elasticity',
+                    referencePrice: 'params.referencePrice',
+                    referenceQuantity: 'params.referenceQuantity'
+                }
+            },
+            views: [
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'graph',
+                        xAxisDef: {min: 0, max: 60, title: '\\text{Quantity Demanded}'},
+                        yAxisDef: {min: 0, max: 60, title: '\\text{Price}'},
+                        square: true,
+                        objects: [
+                            {
+                                type: 'KG.FunctionPlot',
+                                definition: {
+                                    name: 'supply',
+                                    className: 'supply',
+                                    fn: 'model.priceQuantityRelationshipFunction',
+                                    label: {
+                                        text: 'S'
+                                    },
+                                    interaction: {
+                                        highlight: 'supplyCurve'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.HorizontalLine',
+                                definition: {
+                                    name: 'priceLine',
+                                    className: 'price',
+                                    type: 'HorizontalLine',
+                                    interaction: {
+                                        yDrag: 'price',
+                                        highlight: 'price'
+                                    },
+                                    y: 'params.price',
+                                    yInterceptLabel: 'P'
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'quantityDemandedAtPrice',
+                                    className: 'supply',
+                                    coordinates: {
+                                        x: 'model.quantityAtPrice(params.price)',
+                                        y: 'params.price'
+                                    },
+                                    size: 20,
+                                    interaction: {
+                                        highlight: 'QS'
+                                    },
+                                    droplines: {
+                                        vertical: 'Q^S(P)'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Point',
+                                definition: {
+                                    name: 'referencePoint',
+                                    className: 'supply',
+                                    coordinates: {
+                                        x: 'params.referenceQuantity',
+                                        y: 'params.referencePrice'
+                                    },
+                                    interaction: {
+                                        draggable: true,
+                                        highlight: 'supplyCurve A'
+                                    },
+                                    label: {
+                                        text: 'A'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.GraphDiv',
+                                definition: {
+                                    name: 'slopeLabel',
+                                    className: 'supply',
+                                    coordinates: {
+                                        x: 'model.quantityAtPrice(params.price)',
+                                        y: 'params.price'
+                                    },
+                                    text: ["\\frac{d Q}{d P}=",'model.inverseSlopeAtPrice(params.price) | number:2'],
+                                    align: 'right',
+                                    valign: 'bottom',
+                                    dimensions: {width: 100, height: 30},
+                                    interaction: {
+                                        highlight: 'slope'
+                                    }
+                                }
+                            },
+                            {
+                                type: 'KG.Line',
+                                definition: {
+                                    name: 'slopeLine',
+                                    className: 'supply dotted',
+                                    lineDef: {
+                                        point: {
+                                            x: 'model.quantityAtPrice(params.price)',
+                                            y: 'params.price'
+                                        },
+                                        slope: 'model.slopeAtPrice(params.price)',
+                                        xDomainDef: {
+                                            min: '0.5*model.quantityAtPrice(params.price)',
+                                            max: '1.5*model.quantityAtPrice(params.price)'
+                                        },
+                                        yDomainDef: {
+                                            min: '0.5params.price',
+                                            max: '1.5*params.price'
+                                        }
+                                    },
+                                    interaction: {
+                                        highlight: 'slope'
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'sliderB',
+                        param: 'elasticity',
+                        axisDef: {min: 0, max: 2}
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
+
+{% endblock %}
