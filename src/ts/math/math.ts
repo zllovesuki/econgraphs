@@ -13,6 +13,11 @@
 /// <reference path="functions/ces.ts"/>
 /// <reference path="functions/quasilinear.ts"/>
 
+/// <reference path="distributions/base"/>
+/// <reference path="distributions/normal"/>
+
+/// <reference path="simulations/base"/>
+
 
 module KGMath {
 

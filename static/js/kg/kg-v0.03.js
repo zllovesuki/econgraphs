@@ -331,6 +331,10 @@ var KG;
         return binaryFunction(def, def, '*');
     }
     KG.squareDef = squareDef;
+    function sqrtDef(def) {
+        return 'Math.sqrt(' + def + ')';
+    }
+    KG.sqrtDef = sqrtDef;
     function raiseDefToDef(def1, def2) {
         return binaryFunction(def1, def2, '^');
     }
@@ -2077,6 +2081,99 @@ var KGMath;
         Functions.Quasilinear = Quasilinear;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
+var KGMath;
+(function (KGMath) {
+    var Distributions;
+    (function (Distributions) {
+        var Base = (function (_super) {
+            __extends(Base, _super);
+            function Base(definition, modelPath) {
+                _super.call(this, definition, modelPath);
+            }
+            Base.prototype.randomDraw = function () {
+                return 0; //overridden by subclass
+            };
+            Base.prototype.frequency = function (x) {
+                return 0; //overridden by subclass
+            };
+            Base.prototype.cumulative = function (x) {
+                return 0; //overridden by subclass
+            };
+            return Base;
+        })(KG.Model);
+        Distributions.Base = Base;
+    })(Distributions = KGMath.Distributions || (KGMath.Distributions = {}));
+})(KGMath || (KGMath = {}));
+var KGMath;
+(function (KGMath) {
+    var Distributions;
+    (function (Distributions) {
+        var Normal = (function (_super) {
+            __extends(Normal, _super);
+            function Normal(definition, modelPath) {
+                definition = _.defaults(definition, {
+                    mean: 0,
+                    sd: 1
+                });
+                if (definition.hasOwnProperty('sd')) {
+                    definition.variance = KG.squareDef(definition.sd);
+                }
+                else if (definition.hasOwnProperty('variance')) {
+                    definition.sd = KG.sqrtDef(definition.variance);
+                }
+                _super.call(this, definition, modelPath);
+            }
+            Normal.prototype.randomDraw = function () {
+                return d3.random.normal(this.mean, this.sd)();
+            };
+            return Normal;
+        })(Distributions.Base);
+        Distributions.Normal = Normal;
+    })(Distributions = KGMath.Distributions || (KGMath.Distributions = {}));
+})(KGMath || (KGMath = {}));
+var KGMath;
+(function (KGMath) {
+    var Simulations;
+    (function (Simulations) {
+        var Base = (function (_super) {
+            __extends(Base, _super);
+            function Base(definition, modelPath) {
+                definition = _.defaults(definition, {
+                    numDraws: 1,
+                    distribution: { type: 'KGMath.Distributions.Normal', definition: {} }
+                });
+                _super.call(this, definition, modelPath);
+                this.newDraw(definition.numDraws);
+            }
+            Base.prototype.newDraw = function (numDraws, returnSum) {
+                var sim = this;
+                returnSum = !!returnSum;
+                // establish the number of draws
+                if (numDraws) {
+                    sim.numDraws = numDraws;
+                }
+                // initialize draws
+                var sum = 0;
+                sim.draws = [];
+                sim.sumDraws = [];
+                var currentDraw;
+                for (var i = 0; i < sim.numDraws; i++) {
+                    currentDraw = sim.distribution.draw();
+                    sim.draws.push(currentDraw);
+                    sum += currentDraw;
+                    sim.sumDraws.push(sum);
+                }
+                return returnSum ? sim.sumDraws : sim.draws;
+            };
+            Base.prototype.subDraw = function (numDraws, returnSum) {
+                returnSum = !!returnSum;
+                return returnSum ? this.draws.slice(0, numDraws) : this.sumDraws.slice(0, numDraws);
+            };
+            return Base;
+        })(KG.Model);
+        Simulations.Base = Base;
+    })(Simulations = KGMath.Simulations || (KGMath.Simulations = {}));
+})(KGMath || (KGMath = {}));
 /// <reference path="../kg.ts"/>
 /// <reference path="functions/base.ts"/>
 /// <reference path="functions/implicit.ts"/>
@@ -2091,6 +2188,9 @@ var KGMath;
 /// <reference path="functions/crra.ts"/>
 /// <reference path="functions/ces.ts"/>
 /// <reference path="functions/quasilinear.ts"/>
+/// <reference path="distributions/base"/>
+/// <reference path="distributions/normal"/>
+/// <reference path="simulations/base"/>
 /// <reference path="../kg.ts"/>
 'use strict';
 var KG;
@@ -3965,7 +4065,7 @@ var KG;
             this.$scope = $scope;
             this.$interpolate = $interpolate;
             $scope.updateVersion = 0;
-            $scope.Math = window.Math;
+            $scope.Math = window['Math'];
             $scope.interpolate = $interpolate;
             $scope.isHighlighted = function (str) {
                 return KG.listMatch($scope.params.highlight, str);
@@ -3975,7 +4075,7 @@ var KG;
             };
             $scope.init = function (definition) {
                 definition = _.defaults(definition, {
-                    params: {},
+                    params: { highlight: '' },
                     graphParams: [],
                     restrictions: [],
                     model: { type: 'KG.Model', definition: {} },
