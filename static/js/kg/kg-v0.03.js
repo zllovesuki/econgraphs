@@ -1278,38 +1278,40 @@ var KGMath;
                     }).updateLine(), x = diffLine.xIntercept, y = thisLine.yValue(x);
                     return { x: x, y: y };
                 };
-                definition.coefficients = definition.coefficients || { a: 0, b: -1, c: 0 };
                 var l = this;
-                if (definition.hasOwnProperty('point1') && definition.hasOwnProperty('point2')) {
-                    var p1 = KG.getCoordinates(definition.point1), p2 = KG.getCoordinates(definition.point2), rise = KG.subtractDefs(p2.y, p1.y), run = KG.subtractDefs(p2.x, p1.x);
-                    definition.slope = KG.divideDefs(rise, run);
-                    definition.point = p1;
-                }
-                if (definition.hasOwnProperty('slope') && definition.slope != undefined) {
-                    definition.coefficients.a = definition.slope;
-                    if (definition.hasOwnProperty('intercept')) {
-                        definition.coefficients.c = definition.intercept;
-                        l.interceptDef = definition.intercept;
+                if (!definition.hasOwnProperty('coefficients')) {
+                    definition.coefficients = { a: 0, b: -1, c: 0 };
+                    if (definition.hasOwnProperty('point1') && definition.hasOwnProperty('point2')) {
+                        var p1 = KG.getCoordinates(definition.point1), p2 = KG.getCoordinates(definition.point2), rise = KG.subtractDefs(p2.y, p1.y), run = KG.subtractDefs(p2.x, p1.x);
+                        definition.slope = KG.divideDefs(rise, run);
+                        definition.point = p1;
                     }
-                    else if (definition.hasOwnProperty('point') && definition.point != undefined) {
-                        if (definition.slope === Infinity || definition.slope === -Infinity) {
-                            definition.coefficients = {
-                                a: -1,
-                                b: 0,
-                                c: definition.point.x
-                            };
+                    if (definition.hasOwnProperty('slope') && definition.slope != undefined) {
+                        definition.coefficients.a = definition.slope;
+                        if (definition.hasOwnProperty('intercept')) {
+                            definition.coefficients.c = definition.intercept;
+                            l.interceptDef = definition.intercept;
                         }
-                        else {
-                            var mx = KG.multiplyDefs(definition.slope, definition.point.x);
-                            definition.coefficients.c = KG.subtractDefs(definition.point.y, mx);
+                        else if (definition.hasOwnProperty('point') && definition.point != undefined) {
+                            if (definition.slope === Infinity || definition.slope === -Infinity) {
+                                definition.coefficients = {
+                                    a: -1,
+                                    b: 0,
+                                    c: definition.point.x
+                                };
+                            }
+                            else {
+                                var mx = KG.multiplyDefs(definition.slope, definition.point.x);
+                                definition.coefficients.c = KG.subtractDefs(definition.point.y, mx);
+                            }
                         }
                     }
+                    else {
+                        definition.slope = KG.multiplyDefs(-1, KG.divideDefs(definition.coefficients.a, definition.coefficients.b));
+                    }
+                    l.slopeDef = definition.slope;
+                    l.interceptDef = l.interceptDef || KG.multiplyDefs(-1, KG.divideDefs(definition.coefficients.c, definition.coefficients.b));
                 }
-                else {
-                    definition.slope = KG.multiplyDefs(-1, KG.divideDefs(definition.coefficients.a, definition.coefficients.b));
-                }
-                l.slopeDef = definition.slope;
-                l.interceptDef = l.interceptDef || KG.multiplyDefs(-1, KG.divideDefs(definition.coefficients.c, definition.coefficients.b));
             }
             Linear.prototype._update = function (scope) {
                 var l = this;
@@ -1418,6 +1420,7 @@ var KGMath;
             };
             Linear.prototype.points = function (view) {
                 var l = this;
+                l = l.updateLine();
                 var xDomain = view.xAxis.domain.intersection(l.xDomain), yDomain = view.yAxis.domain.intersection(l.yDomain);
                 var points = [];
                 if (l.isVertical) {
