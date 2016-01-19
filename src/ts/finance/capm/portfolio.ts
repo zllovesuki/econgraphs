@@ -13,10 +13,10 @@ module FinanceGraphs
         asset2: any;
         asset3: any;
         riskFree: any;
-        rho12: number;
-        rho23: number;
-        rho13: number;
-        maxLeverage: number;
+        rho12: any;
+        rho23: any;
+        rho13: any;
+        maxLeverage: any;
     }
 
     export interface IPortfolio extends KG.IModel
@@ -24,14 +24,21 @@ module FinanceGraphs
         asset1: Asset;
         asset2: Asset;
         asset3: Asset;
+        riskFree: any;
+        rho12: number;
+        rho23: number;
+        rho13: number;
+        maxLeverage: number;
+        twoAssetData: KG.ICoordinates[][];
+        threeAssetData: KG.ICoordinates[][];
         correlationMatrix: number[][];
         covarianceMatrix: number[][];
-        twoAssetPortfolios: KG.PathFamily;
-        threeAssetPortfolios: KG.PathFamily;
-        riskFreeAsset: KG.Point;
-        optimalPortfolio: KG.Point;
-        riskReturnLine: KG.Segment;
         positiveDefinite: boolean;
+        optimalPortfolioMean: number;
+        optimalPortfolioStDev: number;
+        optimalPortfolioWeightArray;
+        riskFreeReturn: number;
+        riskReturnSlope: number;
     }
 
     export class Portfolio extends KG.Model implements IPortfolio {
@@ -39,73 +46,28 @@ module FinanceGraphs
         public asset1;
         public asset2;
         public asset3;
+        public rho12;
+        public rho23;
+        public rho13;
+        public riskFree;
         private assets;
-        private maxLeverage;
+        public maxLeverage;
         public correlationMatrix;
         public covarianceMatrix;
-        public twoAssetPortfolios;
         public twoAssetData;
-        public threeAssetPortfolios;
         public threeAssetData;
         public riskFreeAsset;
-        public optimalPortfolio;
         public optimalPortfolioMean;
         public optimalPortfolioStDev;
         public optimalPortfolioWeightArray;
         public riskFreeReturn;
         public riskReturnSlope;
-        public riskReturnLine;
         public positiveDefinite;
 
         constructor(definition:PortfolioDefinition, modelPath?: string) {
             super(definition, modelPath);
             var p = this;
             p.assets = [p.asset1, p.asset2, p.asset3];
-            p.threeAssetPortfolios = new KG.PathFamily({
-                name: 'threeAssetData',
-                data: 'model.threeAssetData',
-                interpolation: 'basis'
-            });
-            p.twoAssetPortfolios = new KG.PathFamily({
-                name: 'twoAssetData',
-                className: 'asset',
-                data: 'model.twoAssetData',
-                interpolation: 'basis'
-            });
-            p.riskFreeAsset = new KG.Point({
-                name: 'riskFreeAsset',
-                coordinates: {x: 0, y:'params.riskFreeReturn'},
-                className: 'risk-free',
-                size: 500,
-                xDrag: false,
-                yDrag: true,
-                label: {
-                    text: 'RF'
-                }
-            });
-            p.optimalPortfolio = new KG.Point({
-                name: 'optimalPortfolio',
-                coordinates: {x: 'params.optimalPortfolioStDev', y:'params.optimalPortfolioMean'},
-                className: 'risk-free',
-                symbol: 'cross',
-                size: 100,
-                xDrag: false,
-                yDrag: false,
-                label: {
-                    text: 'P',
-                    align: 'right',
-                    valign: 'bottom'
-                }
-            });
-            p.riskReturnLine = new KG.Line({
-                name: 'twoPointSegment',
-                className: 'risk-free',
-                arrows: 'OPEN',
-                lineDef: {
-                    point1: p.riskFreeAsset,
-                    point2: p.optimalPortfolio,
-                }
-            });
             p.optimalPortfolioMean = 0;
             p.optimalPortfolioStDev = 0.5;
             p.riskReturnSlope = 0;
@@ -123,8 +85,6 @@ module FinanceGraphs
                     return p['rho' + (i + 1) + (j + 1)]
                 }
             }
-
-
 
             function calculateCorrelationMatrix() {
                 var matrix = [];
@@ -159,11 +119,6 @@ module FinanceGraphs
             if(checkPositiveDefinite()){
                 p.twoAssetData = p.data2();
                 p.threeAssetData = p.data3();
-
-                if(p.optimalPortfolio != undefined) {
-                    scope.params.optimalPortfolioMean = p.optimalPortfolioMean;
-                    scope.params.optimalPortfolioStDev = p.optimalPortfolioStDev;
-                }
             }
 
             return p;
@@ -206,7 +161,7 @@ module FinanceGraphs
             var portfolio = this, maxLeverage = portfolio.maxLeverage, d = [], w;
             portfolio.riskReturnSlope = 0;
             var min = -maxLeverage*0.01, max = 1 + maxLeverage*0.01, dataPoints = 10 + maxLeverage*0.2;
-            for(var i=0; i<dataPoints + 1; i++) //w1 is weight of asset 1;
+            for(var i=0; i<dataPoints + 2; i++) //w1 is weight of asset 1;
             {
                 w = min + i*(max - min)/dataPoints;
                 d.push(portfolio.twoAssetPortfolio(1,2,[w,0,0]));

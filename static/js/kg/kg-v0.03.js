@@ -4380,51 +4380,6 @@ var FinanceGraphs;
             _super.call(this, definition, modelPath);
             var p = this;
             p.assets = [p.asset1, p.asset2, p.asset3];
-            p.threeAssetPortfolios = new KG.PathFamily({
-                name: 'threeAssetData',
-                data: 'model.threeAssetData',
-                interpolation: 'basis'
-            });
-            p.twoAssetPortfolios = new KG.PathFamily({
-                name: 'twoAssetData',
-                className: 'asset',
-                data: 'model.twoAssetData',
-                interpolation: 'basis'
-            });
-            p.riskFreeAsset = new KG.Point({
-                name: 'riskFreeAsset',
-                coordinates: { x: 0, y: 'params.riskFreeReturn' },
-                className: 'risk-free',
-                size: 500,
-                xDrag: false,
-                yDrag: true,
-                label: {
-                    text: 'RF'
-                }
-            });
-            p.optimalPortfolio = new KG.Point({
-                name: 'optimalPortfolio',
-                coordinates: { x: 'params.optimalPortfolioStDev', y: 'params.optimalPortfolioMean' },
-                className: 'risk-free',
-                symbol: 'cross',
-                size: 100,
-                xDrag: false,
-                yDrag: false,
-                label: {
-                    text: 'P',
-                    align: 'right',
-                    valign: 'bottom'
-                }
-            });
-            p.riskReturnLine = new KG.Line({
-                name: 'twoPointSegment',
-                className: 'risk-free',
-                arrows: 'OPEN',
-                lineDef: {
-                    point1: p.riskFreeAsset,
-                    point2: p.optimalPortfolio
-                }
-            });
             p.optimalPortfolioMean = 0;
             p.optimalPortfolioStDev = 0.5;
             p.riskReturnSlope = 0;
@@ -4474,10 +4429,6 @@ var FinanceGraphs;
             if (checkPositiveDefinite()) {
                 p.twoAssetData = p.data2();
                 p.threeAssetData = p.data3();
-                if (p.optimalPortfolio != undefined) {
-                    scope.params.optimalPortfolioMean = p.optimalPortfolioMean;
-                    scope.params.optimalPortfolioStDev = p.optimalPortfolioStDev;
-                }
             }
             return p;
         };
@@ -4513,7 +4464,7 @@ var FinanceGraphs;
             var portfolio = this, maxLeverage = portfolio.maxLeverage, d = [], w;
             portfolio.riskReturnSlope = 0;
             var min = -maxLeverage * 0.01, max = 1 + maxLeverage * 0.01, dataPoints = 10 + maxLeverage * 0.2;
-            for (var i = 0; i < dataPoints + 1; i++) {
+            for (var i = 0; i < dataPoints + 2; i++) {
                 w = min + i * (max - min) / dataPoints;
                 d.push(portfolio.twoAssetPortfolio(1, 2, [w, 0, 0]));
                 d.push(portfolio.twoAssetPortfolio(0, 2, [0, w, 0]));
@@ -7005,6 +6956,7 @@ angular.module('KineticGraphs', [])
     function link(scope, el, attrs) {
         scope.toggle = function () {
             scope.params[attrs.param] = !scope.params[attrs.param];
+            //setTimeout(function(){ scope.renderMath(); }, 1);
         };
         scope.showHide = function () {
             if (attrs.showHide == 'true') {
