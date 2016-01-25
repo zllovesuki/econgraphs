@@ -32,7 +32,7 @@ module KG
         classAndVisibility: (suffix?:string) => string;
 
         // Creation and rendering
-        initGroupFn: (svgType:string, className: string) => any;
+        initGroupFn: (additionalObjects?:string[]) => any;
         render: (view: View) => View;
         addArrow: (group:D3.Selection, startOrEnd: string) => void;
         removeArrow: (group:D3.Selection, startOrEnd: string) => void;

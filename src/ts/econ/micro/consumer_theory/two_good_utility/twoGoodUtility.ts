@@ -12,6 +12,10 @@ module EconGraphs {
 
     }
 
+    export interface MRSPlotParams extends KG.DomainSamplePointsDef {
+
+    }
+
     export interface ITwoGoodUtility extends IUtility {
 
         title: string;
@@ -24,6 +28,8 @@ module EconGraphs {
         mux:(bundle?:TwoGoodBundle) => number;
         muy:(bundle?:TwoGoodBundle) => number;
         mrs:(bundle?:TwoGoodBundle) => number;
+
+        mrsPlotFn: (budget:BudgetConstraint, mrsPlotParams:MRSPlotParams) => KG.ICoordinates[];
 
         indifferenceCurveAtUtilityFn: (utility:number) => KGMath.Functions.Base;
         indifferenceCurveThroughBundleFn: (bundle:TwoGoodBundle) => KGMath.Functions.Base;
@@ -109,6 +115,10 @@ module EconGraphs {
         mrs(bundle:TwoGoodBundle) {
             return this.mux(bundle) / this.muy(bundle);
         }
+
+        mrsAlongBudget(x: number, budget:BudgetConstraint) {
+            return this.mrs({x: x, y: budget.yValue(x)});
+        }
         /* Indifference curves */
 
         indifferenceCurveAtUtilityFn(utility:number) {
@@ -168,6 +178,30 @@ module EconGraphs {
 
         formula(values) {
             return ''; // overridden by subclass
+        }
+
+        /* MRS Plot */
+        mrsPlotFn(budget, mrsPlotParams) {
+
+            mrsPlotParams = _.defaults(mrsPlotParams || {}, {
+                good: 'x',
+                min: 1,
+                max: 50,
+                numSamplePoints: 101
+            });
+
+            var u = this,
+                curveData = [],
+                samplePoints = KG.samplePointsForDomain(mrsPlotParams);
+
+            samplePoints.forEach(function(x) {
+                if(u.mrsAlongBudget(x,budget) != Infinity)
+                {curveData.push({x: x, y: u.mrsAlongBudget(x,budget)});}
+
+            });
+
+            return curveData.sort(KG.sortObjects('x'));
+
         }
 
 

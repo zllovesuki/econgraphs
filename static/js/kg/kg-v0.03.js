@@ -2551,7 +2551,10 @@ var KG;
                 return view;
             }
             if (isNaN(point.coordinates.x) || isNaN(point.coordinates.y) || point.coordinates.x == Infinity || point.coordinates.y == Infinity) {
-                return view;
+                point.show = false;
+                if (point.hasOwnProperty('labelDiv')) {
+                    point.labelDiv.show = false;
+                }
             }
             var subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
             var group = subview.objectGroup(point.name, point.initGroupFn(), true);
@@ -2560,7 +2563,9 @@ var KG;
             }
             if (point.symbol === 'none') {
                 point.show = false;
-                point.labelDiv.show = false;
+                if (point.hasOwnProperty('labelDiv')) {
+                    point.labelDiv.show = false;
+                }
             }
             // draw the symbol at the point
             var pointSymbol = group.select('.' + point.viewObjectClass);
@@ -2651,8 +2656,11 @@ var KG;
         Dropline.prototype.render = function (view) {
             var dropline = this;
             var pointX = view.xAxis.scale(dropline.coordinates.x), pointY = view.yAxis.scale(dropline.coordinates.y), anchorX = dropline.horizontal ? view.xAxis.scale(view.xAxis.min) : pointX, anchorY = dropline.horizontal ? pointY : view.yAxis.scale(view.yAxis.min);
-            if (isNaN(pointX) || isNaN(pointY)) {
-                return view;
+            if (isNaN(pointX) || isNaN(pointY) || pointX == Infinity || pointY == Infinity) {
+                dropline.show = false;
+                if (dropline.hasOwnProperty('labelDiv')) {
+                    dropline.labelDiv.show = false;
+                }
             }
             var group = view.objectGroup(dropline.name, dropline.initGroupFn(), false);
             var droplineSelection = group.select('.' + dropline.viewObjectClass);
@@ -2965,13 +2973,22 @@ var KG;
     var Line = (function (_super) {
         __extends(Line, _super);
         function Line(definition, modelPath) {
+            definition.lineDef = definition.lineDef || {};
+            if (definition.hasOwnProperty('xDomainDef')) {
+                definition.lineDef.xDomainDef = definition.xDomainDef;
+            }
+            if (definition.hasOwnProperty('yDomainDef')) {
+                definition.lineDef.xDomainDef = definition.yDomainDef;
+            }
             _super.call(this, definition, modelPath);
             var line = this;
             if (line instanceof HorizontalLine) {
-                line.linear = new KGMath.Functions.HorizontalLine({ y: definition.y });
+                definition.lineDef.y = definition.y;
+                line.linear = new KGMath.Functions.HorizontalLine(definition.lineDef);
             }
             else if (line instanceof VerticalLine) {
-                line.linear = new KGMath.Functions.VerticalLine({ x: definition.x });
+                definition.lineDef.x = definition.x;
+                line.linear = new KGMath.Functions.VerticalLine(definition.lineDef);
             }
             else if (definition.hasOwnProperty('lineDef')) {
                 line.linear = new KGMath.Functions.Linear(definition.lineDef);
@@ -3217,7 +3234,7 @@ var KG;
             }
         };
         return Line;
-    })(KG.ViewObject);
+    })(KG.ViewObjectWithDomain);
     KG.Line = Line;
     var VerticalLine = (function (_super) {
         __extends(VerticalLine, _super);
@@ -4934,9 +4951,6 @@ var EconGraphs;
         __extends(BudgetConstraint, _super);
         function BudgetConstraint(definition, modelPath) {
             _super.call(this, definition, modelPath);
-            var b = this;
-            b.maxX = b.modelProperty('budgetLine.xIntercept.toFixed(2)');
-            b.maxY = b.modelProperty('budgetLine.yIntercept.toFixed(2)');
         }
         BudgetConstraint.prototype._update = function (scope) {
             var b = this;
@@ -4973,6 +4987,14 @@ var EconGraphs;
         };
         BudgetConstraint.prototype.formula = function (values) {
             return ''; // overridden by subclass
+        };
+        BudgetConstraint.prototype.maxX = function () {
+            var segments = this.budgetSegments;
+            return Math.max(segments.map(function (segment) { return segment.xDomain.max; }));
+        };
+        BudgetConstraint.prototype.maxY = function () {
+            var segments = this.budgetSegments;
+            return Math.max(segments.map(function (segment) { return segment.yDomain.max; }));
         };
         return BudgetConstraint;
     })(KG.Model);
@@ -5440,6 +5462,9 @@ var EconGraphs;
         TwoGoodUtility.prototype.mrs = function (bundle) {
             return this.mux(bundle) / this.muy(bundle);
         };
+        TwoGoodUtility.prototype.mrsAlongBudget = function (x, budget) {
+            return this.mrs({ x: x, y: budget.yValue(x) });
+        };
         /* Indifference curves */
         TwoGoodUtility.prototype.indifferenceCurveAtUtilityFn = function (utility) {
             var u = this;
@@ -5487,6 +5512,22 @@ var EconGraphs;
         };
         TwoGoodUtility.prototype.formula = function (values) {
             return ''; // overridden by subclass
+        };
+        /* MRS Plot */
+        TwoGoodUtility.prototype.mrsPlotFn = function (budget, mrsPlotParams) {
+            mrsPlotParams = _.defaults(mrsPlotParams || {}, {
+                good: 'x',
+                min: 1,
+                max: 50,
+                numSamplePoints: 101
+            });
+            var u = this, curveData = [], samplePoints = KG.samplePointsForDomain(mrsPlotParams);
+            samplePoints.forEach(function (x) {
+                if (u.mrsAlongBudget(x, budget) != Infinity) {
+                    curveData.push({ x: x, y: u.mrsAlongBudget(x, budget) });
+                }
+            });
+            return curveData.sort(KG.sortObjects('x'));
         };
         return TwoGoodUtility;
     })(EconGraphs.Utility);
