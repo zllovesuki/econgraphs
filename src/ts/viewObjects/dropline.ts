@@ -100,8 +100,11 @@ module KG {
                 anchorX = dropline.horizontal ? view.xAxis.scale(view.xAxis.min) : pointX,
                 anchorY = dropline.horizontal ? pointY : view.yAxis.scale(view.yAxis.min);
 
-            if(isNaN(pointX) || isNaN(pointY)) {
-                return view;
+            if(isNaN(pointX) || isNaN(pointY) || pointX == Infinity || pointY == Infinity) {
+                dropline.show = false;
+                if(dropline.hasOwnProperty('labelDiv')) {
+                    dropline.labelDiv.show = false;
+                }
             }
 
             var group:D3.Selection = view.objectGroup(dropline.name, dropline.initGroupFn(), false);

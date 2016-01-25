@@ -1,0 +1,54 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+    {% raw %}
+        <div class="subtitle">January 21</div>
+        <h2>Group Work: Budget Constraints and Optimal Choice</h2>
+        <hr/>
+        <ol>
+        <li style="padding-top:20px">
+            <p><b>Changes in a simple budget constraint</b></p>
+            <p>Consider a simple budget constraint of the form <span class="math">P_xx+P_yy = I</span>. Each member of the team should draw a diagram illustrating one of the following phenomena, and explain the reasoning to the rest of the team.</p>
+            <ol style="list-style: lower-alpha">
+                <li>An increase or decrease in income.</li>
+                <li>An increase or decrease in the price of good X.</li>
+                <li>An increase or decrease in the price of good Y.</li>
+            </ol>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Comparing MRS and the price ratio (Winter 2015 Midterm Question)</b></p>
+            <ol style="list-style: lower-alpha">
+                <li>What does it mean if <span class="math">MRS_{x,y} < \frac{P_x}{P_y}</span> at a point along a consumer's budget constraint?</li>
+                <li>If a consumer is in a position where that is true, can they always improve their utility by changing their consumption bundle? Why or why not? Illustrate your answer with one or two carefully drawn budget-line/indifference-curve diagrams.</li>
+                <li>If they could improve their utility by changing their consumption bundle, would it involve consuming more X and less Y, more Y and less X, or would it depend upon the exact form of the utility function in question? Carefully state the assumptions underlying your answer.</li>
+            </ol>
+        </li>
+            <li style="padding-top:20px">
+            <p><b>The Canonical Econ 50 Problem</b></p>
+                <p>Maximize the Cobb-Douglas utility function <span class="math">u(x,y) = \alpha \ln x + (1-\alpha) \ln y</span> subject to the simple budget constraint <span class="math">P_xx+P_yy = I</span>.</p>
+            <ol style="list-style: lower-alpha">
+                <li>Find the demand functions <span class="math">q^D_x(P_x,P_y,I)</span> and <span class="math">q^D_y(P_x,P_y,I)</span></li>
+                <li>Verbally describe the behavior these demand functions represent.</li>
+                <li>Do Cobb-Douglas preferences represent consumers choosing between goods they view as complements, substitutes, or neither?</li>
+            </ol>
+        </li>
+
+
+
+
+    </ol>
+        {% endraw %}
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

@@ -12,6 +12,10 @@ module EconGraphs {
 
     }
 
+    export interface MRSPlotParams extends KG.DomainSamplePointsDef {
+
+    }
+
     export interface ITwoGoodUtility extends IUtility {
 
         title: string;
@@ -25,28 +29,17 @@ module EconGraphs {
         muy:(bundle?:TwoGoodBundle) => number;
         mrs:(bundle?:TwoGoodBundle) => number;
 
-        bundlePoint: (bundle: TwoGoodBundle, params?: KG.PointParamsDefinition) => KG.Point;
+        mrsPlotFn: (budget:BudgetConstraint, mrsPlotParams:MRSPlotParams) => KG.ICoordinates[];
 
-        indifferenceCurveAtUtility: (utility:number, params?: KG.ViewObjectParamsDefinition) => KG.ViewObject;
-        indifferenceCurveThroughBundle: (bundle:TwoGoodBundle, params?: KG.ViewObjectParamsDefinition) => KG.ViewObject;
-        indifferenceCurveFamily: (levels: number[], params?: KG.ViewObjectParamsDefinition) => KG.ViewObjectGroup;
-
-        mrsLine: (bundle:TwoGoodBundle, params?: KG.LineParamsDefinition) => KG.Line;
-
-        //preferredToBundleArea: (bundle:TwoGoodBundle) => KG.Area;
-        //dispreferredToBundleArea: (bundle:TwoGoodBundle) => KG.Area;
-        //higherUtilityArea: (utility:number) => KG.Area;
-        //lowerUtilityArea: (utility:number) => KG.Area;
+        indifferenceCurveAtUtilityFn: (utility:number) => KGMath.Functions.Base;
+        indifferenceCurveThroughBundleFn: (bundle:TwoGoodBundle) => KGMath.Functions.Base;
 
         _unconstrainedOptimalX:(budgetSegment:BudgetSegment) => number;
         optimalBundle:(budget:BudgetConstraint) => KG.ICoordinates;
         optimalBundleAlongSegment:(budgetSegment:BudgetSegment) => KG.ICoordinates;
-        optimalBundlePoint: (budget: BudgetConstraint, params?: KG.PointParamsDefinition) => KG.Point;
-        optimalIndifferenceCurve: (budget: BudgetConstraint, params?: KG.ViewObjectParamsDefinition) => KG.ViewObject;
         indirectUtility: (budget: BudgetConstraint) => number;
 
         lowestCostBundle: (utility:UtilityConstraint) => KG.ICoordinates;
-        lowestCostBundlePoint: (utility:UtilityConstraint, params?: KG.PointParamsDefinition) => KG.Point;
         expenditure: (utility:UtilityConstraint) => number;
 
     }
@@ -122,6 +115,10 @@ module EconGraphs {
         mrs(bundle:TwoGoodBundle) {
             return this.mux(bundle) / this.muy(bundle);
         }
+
+        mrsAlongBudget(x: number, budget:BudgetConstraint) {
+            return this.mrs({x: x, y: budget.yValue(x)});
+        }
         /* Indifference curves */
 
         indifferenceCurveAtUtilityFn(utility:number) {
@@ -163,17 +160,6 @@ module EconGraphs {
             return {x: constrainedX, y: budgetSegment.linear.yValue(constrainedX)};
         }
 
-        optimalBundlePoint(budget:BudgetConstraint, params:KG.PointParamsDefinition) {
-            var optimalBundle = this.optimalBundle(budget);
-            params.name = params.name || 'optimal';
-            return this.bundlePoint(optimalBundle,params)
-        }
-
-        optimalIndifferenceCurve(budget:BudgetConstraint, params:KG.CurveParamsDefinition) {
-            var optimalBundle = this.optimalBundle(budget);
-            return this.indifferenceCurveThroughBundle(optimalBundle,params);
-        }
-
         indirectUtility(budget:BudgetConstraint) {
             var u = this;
             return u.utility(u.optimalBundle(budget));
@@ -185,11 +171,6 @@ module EconGraphs {
             return {x: null, y: null}; // based on specific utility function; overridden by subclass
         }
 
-        lowestCostBundlePoint(utility:UtilityConstraint, params:KG.PointParamsDefinition) {
-            var lowestCostBundle = this.lowestCostBundle(utility);
-            return this.bundlePoint(lowestCostBundle,params)
-        }
-
         expenditure(utility:UtilityConstraint) {
             var lowestCostBundle = this.lowestCostBundle(utility);
             return utility.px*lowestCostBundle.x + utility.py*lowestCostBundle.y
@@ -199,8 +180,41 @@ module EconGraphs {
             return ''; // overridden by subclass
         }
 
+        /* MRS Plot */
+        mrsPlotFn(budget, mrsPlotParams) {
+
+            mrsPlotParams = _.defaults(mrsPlotParams || {}, {
+                good: 'x',
+                min: 1,
+                max: 50,
+                numSamplePoints: 101
+            });
+
+            var u = this,
+                curveData = [],
+                samplePoints = KG.samplePointsForDomain(mrsPlotParams);
+
+            samplePoints.forEach(function(x) {
+                if(u.mrsAlongBudget(x,budget) != Infinity)
+                {curveData.push({x: x, y: u.mrsAlongBudget(x,budget)});}
+
+            });
+
+            return curveData.sort(KG.sortObjects('x'));
+
+        }
 
 
+
+    }
+
+    export class SelectableTwoGoodUtility extends KG.Model {
+
+        public utility: TwoGoodUtility;
+
+        constructor(definition,modelPath?) {
+            super(definition,modelPath);
+        }
     }
 }
 

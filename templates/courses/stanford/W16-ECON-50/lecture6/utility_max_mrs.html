@@ -1,0 +1,132 @@
+{% extends 'graphs/micro/consumer_theory/utility_budget_controls.html' %}
+
+{% block graphs %}
+    {% raw %}
+    <h1>MRS and the Price Ratio: {{ model.utility.title }}</h1>
+    <hr/>
+    <div id="utility"></div>
+    {% endraw %}
+{% endblock %}
+
+{% block belowControls %}
+    {% raw %}
+    <hr/>
+    <toggle param="snapToOptimal" class="utility"><span ng-if="params.snapToOptimal">Make bundle draggable</span><span ng-if="!params.snapToOptimal">Snap to optimal bundle</span></toggle>
+    <hr/>
+    <equation ng-if="Math.round(100*params.px/params.py) == Math.round(100*model.utility.mrs({x:params.x, y:model.bundle.y}))" ng-init="renderMath()">MRS_{x,y} = {{ params.px/params.py | number:2 }} = \frac{P_x}{P_y}</equation>
+        <equation ng-if="(!params.snapToOptimal && Math.round(100*params.px/params.py) > Math.round(100*model.utility.mrs({x:params.x, y:model.bundle.y}))) || (params.snapToOptimal && Math.round(100*params.px/params.py) > Math.round(100*model.utility.mrs({x:model.bundle.x, y:model.bundle.y})))" ng-init="renderMath()">MRS_{x,y} = {{ model.utility.mrs({x:params.x, y:model.bundle.y}) | extendedReal:2 }} < {{ params.px/params.py | number:2 }} = \frac{P_x}{P_y}</equation>
+        <equation ng-if="(!params.snapToOptimal && Math.round(100*params.px/params.py) < Math.round(100*model.utility.mrs({x:params.x, y:model.bundle.y}))) || (params.snapToOptimal && Math.round(100*params.px/params.py) < Math.round(100*model.utility.mrs({x:model.bundle.x, y:model.bundle.y})))" ng-init="renderMath()">MRS_{x,y} = {{ model.utility.mrs({x:params.x, y:model.bundle.y}) | extendedReal:2 }} > {{ params.px/params.py | number:2 }} =  \frac{P_x}{P_y}</equation>
+    {% endraw %}
+{% endblock %}
+
+{% block jsadjustments %}
+    <script>
+        scopeDefinition.params.snapToOptimal = false;
+        scopeDefinition.params.showMRS = true;
+
+        var priceRatio = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'priceRatioLine',
+                        className: 'budget',
+                        y: 'params.px/params.py',
+                        xDomainDef: {min: 0, max: 'model.budget.maxX()'},
+                        yInterceptLabel: ["\\frac{P_x}{P_y} =",'params.px/params.py | number: 2'],
+                        interaction: {
+                            highlight: 'budget px py'
+                        }
+                    }
+                },
+                lowerGraphDropline = {
+                    type: 'KG.VerticalDropline',
+                    definition: {
+                        name: 'lowerGraphDropline',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'params.snapToOptimal ? model.bundle.x : params.x',
+                            y: 10
+                        },
+                        interaction: {
+                            xDrag: '!params.snapToOptimal',
+                            xDragParam: 'x',
+                            highlight: 'bundle'
+                        },
+                        axisLabel: 'x'
+                    }
+                },
+                priceRatioPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'priceRatioPoint',
+                        className: 'budget',
+                        coordinates: {
+                            x: 'params.snapToOptimal ? model.bundle.x : params.x',
+                            y: 'params.px/params.py'
+                        },
+                        interaction: {
+                            xDrag: '!params.snapToOptimal',
+                            xDragParam: 'x',
+                            highlight: 'bundle px py'
+                        }
+                    }
+                },
+                complementsMRSverticalPortion = {
+                    type: 'KG.VerticalLine',
+                    definition: {
+                        name: 'complementsMRSverticalPortion',
+                        className: 'demand dotted',
+                        x: 'model.utility.optimalBundle(model.budget).x',
+                        show: 'params.selectedUtility == "Complements"'
+                    }
+                },
+                mrsPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundle',
+                        className: 'demand',
+                        show: '!params.snapToOptimal && model.utility.mrs({x:params.x, y:model.bundle.y}) < 10',
+                        coordinates: {
+                            x: 'params.snapToOptimal ? model.bundle.x : params.x',
+                            y: 'model.utility.mrs({x:params.x, y:model.bundle.y})'
+                        },
+                        interaction: {
+                            xDrag: '!params.snapToOptimal',
+                            xDragParam: 'x',
+                            highlight: 'MRS'
+                        },
+                        droplines: {
+                            horizontal: ["\\frac{P_x}{P_y} =",'model.utility.mrs({x:params.x, y:model.bundle.y}) | number:2']
+                        }
+
+                    }
+                },
+                MRSplot = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'mrsAlongBudget',
+                        className: 'demand',
+                        data: 'model.utility.mrsPlotFn(model.budget,{min: 0.1, max: model.budget.maxX(), numSamplePoints: 201})',
+                        label: {text: 'MRS_{x,y}'}
+                    }
+                };
+
+        scopeDefinition.views.push({
+            type: 'KG.TwoVerticalGraphs',
+            definition: {
+                element_id: 'utility',
+                topGraph: {
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
+                    yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
+                    objects: [preferred, dispreferred, budgetLine, budgetLineSlopeLabel, budgetXIntercept, budgetYIntercept,bundlePoint, bundleOptimalY, bundleOptimalX, indifferenceCurve, MRSline]
+                },
+                bottomGraph: {
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Units of Y per Unit of X}'},
+                    objects: [priceRatio, MRSplot,complementsMRSverticalPortion, priceRatioPoint, mrsPoint, lowerGraphDropline]
+                },
+                objects: []
+            }
+        });
+
+    </script>
+{% endblock %}

@@ -15,7 +15,7 @@
             <toggle param="showPCCY" class="demand" show-hide="true" ng-if="params.snapToOptimal"><span class="math">PCC_Y</span></toggle>
             <toggle param="showICC" class="engel" show-hide="true" ng-if="params.snapToOptimal"><span class="math">ICC</span></toggle>
             <toggle param="showMRS" class="utility" show-hide="true" ng-if="!params.snapToOptimal">MRS line</toggle>
-            <toggle param="showMap" class="utility"><span ng-if="params.showMap">Hide</span><span ng-if="!params.showMap">Show</span> indifference curve map</toggle>
+            <toggle param="showMap" class="utility" show-hide="true">indifference curve map</toggle>
 {% endblock %}
 
     {% block jsadjustments %}

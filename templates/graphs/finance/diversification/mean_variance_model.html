@@ -5,7 +5,7 @@
     <title>Mean-Variance Model</title>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/finance-graphs.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/finance-graphs-v2.css') }}" rel="stylesheet"/>
 </head>
 <body>
 {% raw %}
@@ -23,25 +23,29 @@
             <h4>Parameters</h4>
 
             <div class="row">
-                <div class="col-xs-4 math" style="text-align:right;font-size:12pt;padding-top:10px">\rho_{12}:</div>
+                <div class="col-xs-4 math" style="text-align:right;font-size:12pt;padding-top:10px" highlight="rho12">\rho_{12}:</div>
                 <div class="col-xs-8" id="slider12"></div>
             </div>
             <div class="row">
-                <div class="col-xs-4 math" style="text-align:right;font-size:12pt;padding-top:10px">\rho_{13}:</div>
+                <div class="col-xs-4 math" style="text-align:right;font-size:12pt;padding-top:10px" highlight="rho13">\rho_{13}:</div>
                 <div class="col-xs-8" id="slider13"></div>
             </div>
             <div class="row">
-                <div class="col-xs-4 math" style="text-align:right;font-size:12pt;padding-top:10px">\rho_{23}:</div>
+                <div class="col-xs-4 math" style="text-align:right;font-size:12pt;padding-top:10px" highlight="rho23">\rho_{23}:</div>
                 <div class="col-xs-8" id="slider23"></div>
             </div>
             <div class="row">
                 <div class="col-xs-4" style="text-align:right;font-size:12pt;padding-top:10px">Max Leverage:</div>
                 <div class="col-xs-8" id="leverageSlider"></div>
             </div>
-            <hr/>
-            <h4> Correlation Matrix</h4>
-
             <div class="row">
+                <div class="col-xs-4" style="text-align:right;font-size:12pt;padding-top:10px" highlight="riskFreeReturn">Risk-Free:</div>
+                <div class="col-xs-8" id="riskFreeSlider"></div>
+            </div>
+            <hr/>
+            <toggle param="showCorrelationMatrix"><b>Correlation Matrix</b> (click to {{ params.showCorrelationMatrix ? 'hide' : 'show' }})</toggle>
+
+            <div class="row" ng-if="params.showCorrelationMatrix" ng-init="renderMath()">
                 <div class="col-xs-1">
                     <br/><br/>
                 </div>
@@ -49,17 +53,17 @@
                     <table align="right" class="matrix">
                         <tr style="height:40px">
                             <td style="width:50px; text-align:center" class="math">1</td>
-                            <td style="width:50px; text-align:center" class="math">\rho_{12}</td>
-                            <td style="width:50px; text-align:center" class="math">\rho_{13}</td>
+                            <td style="width:50px; text-align:center" class="math" highlight="rho12">\rho_{12}</td>
+                            <td style="width:50px; text-align:center" class="math" highlight="rho13">\rho_{13}</td>
                         </tr>
                         <tr style="height:40px">
-                            <td style="width:50px; text-align:center" class="math">\rho_{12}</td>
+                            <td style="width:50px; text-align:center" class="math" highlight="rho12">\rho_{12}</td>
                             <td style="width:50px; text-align:center" class="math">1</td>
-                            <td style="width:50px; text-align:center" class="math">\rho_{23}</td>
+                            <td style="width:50px; text-align:center" class="math" highlight="rho23">\rho_{23}</td>
                         </tr>
                         <tr style="height:40px">
-                            <td style="width:50px; text-align:center" class="math">\rho_{13}</td>
-                            <td style="width:50px; text-align:center" class="math">\rho_{23}</td>
+                            <td style="width:50px; text-align:center" class="math" highlight="rho13">\rho_{13}</td>
+                            <td style="width:50px; text-align:center" class="math" highlight="rho23">\rho_{23}</td>
                             <td style="width:50px; text-align:center" class="math">1</td>
                         </tr>
                     </table>
@@ -70,7 +74,7 @@
                 <div class="col-xs-5">
                     <table class="matrix">
                         <tr ng-repeat="row in model.correlationMatrix" style="height:40px">
-                            <td ng-repeat="c in row track by $index" style="width:50px;text-align:center" class="math">
+                            <td ng-repeat="c in row track by $index" style="width:50px;text-align:center" class="math" highlight="{{model.correlationMatrix.indexOf(row) != $index ? 'rho' + (Math.min(model.correlationMatrix.indexOf(row),$index)+1).toString() + (Math.max(model.correlationMatrix.indexOf(row),$index)+1).toString() : ''}}">
                                 {{c | number:1}}
                             </td>
                         </tr>
@@ -79,9 +83,8 @@
             </div>
 
             <hr/>
-            <h4> Covariance Matrix</h4>
-
-            <div class="row">
+            <toggle param="showCovarianceMatrix"><b>Covariance Matrix</b> (click to {{ params.showCovarianceMatrix ? 'hide' : 'show' }})</toggle>
+            <div class="row" ng-if="params.showCovarianceMatrix" ng-init="renderMath()">
                 <div class="col-xs-1">
                     <br/><br/>
                 </div>
@@ -118,8 +121,8 @@
                 </div>
             </div>
             <hr/>
-            <h4> Optimal Portfolio</h4>
-            <table align="center">
+            <toggle param="showOptimalPortfolio"><b>Optimal Portfolio</b> (click to {{ params.showOptimalPortfolio ? 'hide' : 'show' }})</toggle>
+            <table align="center" ng-if="params.showOptimalPortfolio" ng-init="renderMath()">
                 <tr>
                     <td/>
                     <td width="80px" align="center">Weight</td>
@@ -127,28 +130,28 @@
                     <td width="80px" align="center">Std Dev. <span class="math">(\sigma_i)</span></td>
                 </tr>
                 <tr>
-                    <td align="right">Asset <span class="math">A_1</span>:</td>
-                    <td align="center">{{model.optimalPortfolioWeightArray[0]*100 | number:0}}%</td>
-                    <td align="center">{{params.mean1 | number:2}}</td>
-                    <td align="center">{{params.stDev1 | number:2}}</td>
+                    <td align="right">Asset 1:</td>
+                    <td align="center" highlight="optimalPortfolio">{{model.optimalPortfolioWeightArray[0]*100 | number:0}}%</td>
+                    <td align="center" highlight="asset1">{{params.mean1 | number:3}}</td>
+                    <td align="center" highlight="asset1">{{params.stDev1 | number:3}}</td>
                 </tr>
                 <tr>
-                    <td align="right">Asset <span class="math">A_2</span>:</td>
-                    <td align="center">{{model.optimalPortfolioWeightArray[1]*100 | number:0}}%</td>
-                    <td align="center">{{params.mean2 | number:2}}</td>
-                    <td align="center">{{params.stDev2 | number:2}}</td>
+                    <td align="right">Asset 2:</td>
+                    <td align="center" highlight="optimalPortfolio">{{model.optimalPortfolioWeightArray[1]*100 | number:0}}%</td>
+                    <td align="center" highlight="asset2">{{params.mean2 | number:3}}</td>
+                    <td align="center" highlight="asset2">{{params.stDev2 | number:3}}</td>
                 </tr>
                 <tr>
-                    <td align="right">Asset <span class="math">A_3</span>:</td>
-                    <td align="center">{{model.optimalPortfolioWeightArray[2]*100 | number:0}}%</td>
-                    <td align="center">{{params.mean3 | number:2}}</td>
-                    <td align="center">{{params.stDev3 | number:2}}</td>
+                    <td align="right">Asset 3:</td>
+                    <td align="center" highlight="optimalPortfolio">{{model.optimalPortfolioWeightArray[2]*100 | number:0}}%</td>
+                    <td align="center" highlight="asset3">{{params.mean3 | number:3}}</td>
+                    <td align="center" highlight="asset3">{{params.stDev3 | number:3}}</td>
                 </tr>
                 <tr>
                     <td align="right">Portfolio<span class="math">(P)</span>:</td>
                     <td/>
-                    <td align="center">{{model.optimalPortfolioMean | number:2}}</td>
-                    <td align="center">{{model.optimalPortfolioStDev | number:2}}</td>
+                    <td align="center" highlight="optimalPortfolio">{{model.optimalPortfolioMean | number:2}}</td>
+                    <td align="center" highlight="optimalPortfolio">{{model.optimalPortfolioStDev | number:2}}</td>
                 </tr>
             </table>
         </div>
@@ -157,6 +160,132 @@
 
 </div>
 <script>
+
+    var optimalPortfolio = {
+        type: 'KG.Point',
+        definition: {
+                name: 'optimalPortfolio',
+                coordinates: {x: 'model.optimalPortfolioStDev', y:'model.optimalPortfolioMean'},
+                className: 'riskfree',
+                symbol: 'cross',
+                size: 20,
+                interaction: {
+                    highlight: 'optimalPortfolio'
+                },
+                label: {
+                    text: 'P',
+                    align: 'right',
+                    valign: 'bottom'
+                }
+            }
+    }, asset1 = {
+        type: 'KG.Point',
+        definition: {
+                name: 'asset1point',
+                coordinates: {x: 'params.stDev1', y: 'params.mean1'},
+                className: 'asset',
+                interaction: {
+                    draggable: true,
+                    highlight: 'asset1'
+                },
+                label: {
+                    text: 'A_1'
+                }
+            }
+    }, asset2 = {type: 'KG.Point',
+        definition: {
+                name: 'asset2point',
+                coordinates: {x: 'params.stDev2', y: 'params.mean2'},
+                className: 'asset',
+                interaction: {
+                    draggable: true,
+                    highlight: 'asset2'
+                },
+                label: {
+                    text: 'A_2'
+                }
+     }}, asset3 = {
+        type: 'KG.Point',
+        definition: {
+                name: 'asset3point',
+                coordinates: {x: 'params.stDev3', y: 'params.mean3'},
+                className: 'asset',
+                interaction: {
+                    draggable: true,
+                    highlight: 'asset3'
+                },
+                label: {
+                    text: 'A_3'
+                }
+            }
+    }, portfolios12 = {
+        type: 'KG.Curve',
+        definition: {
+            name: 'portfolios12',
+            className: 'asset',
+            data: 'model.twoAssetData[2]',
+            interaction: {
+                highlight: 'rho12'
+            }
+
+        }
+    }, portfolios23 = {
+        type: 'KG.Curve',
+        definition: {
+            name: 'portfolios23',
+            className: 'asset',
+            data: 'model.twoAssetData[0]',
+            interaction: {
+                highlight: 'rho23'
+            }
+
+        }
+    }, portfolios13 = {
+        type: 'KG.Curve',
+        definition: {
+            name: 'portfolios13',
+            className: 'asset',
+            data: 'model.twoAssetData[1]',
+            interaction: {
+                highlight: 'rho13'
+            }
+
+        }
+    }
+            ,riskFreeAsset = {
+        type: 'KG.Point',
+        definition: {
+                name: 'riskFreeAsset',
+                coordinates: {x: 0, y:'params.riskFreeReturn'},
+                className: 'riskfree',
+                interaction: {
+                    yDrag: true,
+                    highlight: 'riskFreeReturn'
+                },
+                droplines: {
+                    horizontal: ['RF =','params.riskFreeReturn | number: 3']
+                }
+            }
+    }, riskReturnLine = {
+        type: 'KG.Line',
+        definition: {
+                name: 'twoPointSegment',
+                className: 'green',
+                arrows: 'OPEN',
+                lineDef: {
+                    point1: {x: 0, y:'params.riskFreeReturn'},
+                    point2: {x: 'model.optimalPortfolioStDev', y:'model.optimalPortfolioMean'}
+                }
+            }
+    }, threeAssetPortfolios = {
+        type: 'KG.PathFamily',
+        definition: {
+                name: 'threeAssetData',
+                data: 'model.threeAssetData',
+                interpolation: 'basis'
+            }
+    };
+
     var scopeDefinition = {
         params: {
             mean1: 0.2,
@@ -169,44 +298,15 @@
             rho23: 0,
             rho13: 0,
             maxLeverage: 0,
-            riskFreeReturn: 0.05
+            riskFreeReturn: 0.05,
+            xMax: 1,
+            yMax: 0.5,
+            maxRF: 0.2,
+            showCorrelationMatrix: false,
+            showCovarianceMatrix: false,
+            showOptimalPortfolio: true
         },
         restrictions: [
-            {
-                expression: 'params.maxLeverage',
-                restrictionType: 'range',
-                max: 100,
-                min: 0,
-                precision: 10
-            },
-            {
-                expression: 'params.rho12',
-                restrictionType: 'range',
-                max: 1,
-                min: -1,
-                precision: 0.1
-            },
-            {
-                expression: 'params.rho23',
-                restrictionType: 'range',
-                max: 1,
-                min: -1,
-                precision: 0.1
-            },
-            {
-                expression: 'params.rho13',
-                restrictionType: 'range',
-                max: 1,
-                min: -1,
-                precision: 0.1
-            },
-            {
-                expression: 'params.riskFreeReturn',
-                restrictionType: 'range',
-                max: 0.2,
-                min: 0,
-                error: "'risk free return should be between 0 and 0.2'"
-            },
             {
                 expression: 'model.positiveDefinite',
                 restrictionType: 'boolean',
@@ -253,9 +353,9 @@
                 definition: {
                     element_id: 'graph',
                     dimensions: {width: 700, height: 700},
-                    xAxisDef: {min: 0, max: 1, title: "\\text{Standard Deviation }(\\sigma)"},
-                    yAxisDef: {min: 0, max: 0.5, title: "\\text{Mean }(\\mu)"},
-                    objects: ['model.optimalPortfolio', 'model.asset1.point', 'model.asset2.point', 'model.asset3.point', 'model.riskFreeAsset', 'model.riskReturnLine', 'model.threeAssetPortfolios', 'model.twoAssetPortfolios']
+                    xAxisDef: {min: 0, max: 'params.xMax', title: "\\text{Standard Deviation }(\\sigma)"},
+                    yAxisDef: {min: 0, max: 'params.yMax', title: "\\text{Mean }(\\mu)"},
+                    objects: [optimalPortfolio, asset1, asset2, asset3, riskFreeAsset, riskReturnLine,threeAssetPortfolios, portfolios12, portfolios23, portfolios13]
                 }
             },
             {
@@ -290,12 +390,33 @@
                     param: 'rho13',
                     axisDef: {min: -1, max: 1, tickValues: [-1, 0, 1]}
                 }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'riskFreeSlider',
+                    param: 'riskFreeReturn',
+                    precision: '0.001',
+                    axisDef: {min: 0, max: 'params.maxRF'}
+                }
             }
         ]
     }
-</script>
+
 {% endraw %}
-<script src="{{ url_for('static', filename='js/archives/kg-head.js') }}"></script>
+
+{% for key in args %}
+
+            if(scopeDefinition.params.hasOwnProperty('{{ key }}')) {
+                var val = '{{ args[key] }}';
+                var typedVal = isNaN(+val) ? val : +val;
+                scopeDefinition.params['{{ key }}'] = typedVal;
+            }
+
+        {% endfor %}
+    </script>
+<script src="{{ url_for('static', filename='js/lib/libraries.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
 <script src="{{ url_for('static', filename='js/lib/numeric.js') }}"></script>
 
 </body>

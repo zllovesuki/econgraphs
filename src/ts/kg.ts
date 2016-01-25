@@ -78,6 +78,8 @@ angular.module('KineticGraphs', [])
 
             scope.toggle = function() {
                 scope.params[attrs.param] = !scope.params[attrs.param];
+                //setTimeout(function(){ scope.renderMath(); }, 1);
+
             };
 
             scope.showHide = function() {

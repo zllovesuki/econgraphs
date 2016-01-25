@@ -1,0 +1,78 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+    {% raw %}
+        <div class="subtitle">January 19</div>
+        <h2>Group Work: Utility Functions</h2>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <p>For each of the following function types, have each member of your team find the <span class="math">MU_x</span>, <span class="math">MU_y</span>, and <span class="math">MRS_{x,y}</span> for one. Compare your answers and then answer the following questions:</p>
+                <ol style="list-style: lower-alpha">
+                    <li>Do the first five utility functions have the same <span class="math">MU_x</span> and <span class="math">MU_y</span>?</li>
+                    <li>Do the first five utility functions have the same <span class="math">MRS_{x,y}</span>?</li>
+                    <li>Confirm that the first five utility functions represent the same set of preferences by choosing two random (strictly positive) bundles <span class="math">(x_1,y_1)</span> and <span class="math">(x_2,y_2)</span> and confirming that all five rank those bundles the same way.</li>
+                    <li>Find the value of <span class="math">\alpha</span> such that the sixth utility function represents the same set of preferences as the first five utility functions.</li>
+                    <li>Draw the indifference curve for this utility function [i.e., the sixth function, with the value of <span class="math">\alpha</span> you found in part (d)] passing through the point (27,27). Draw the tangent line to the indifference curve at that point, and indicate its slope.</li>
+                    <li>In each type of utility function, there is a sense in which the consumer likes good Y "twice as much" as good X. Can you find a way to verbalize what that means for each of these types of utility functions?</li>
+                </ol>
+            </div>
+            <div class="col-md-6 well">
+                <p align="center"><b>1. Cobb Douglas Utility Functions</b></p>
+                <table class="table">
+                    <tr>
+                        <td class="math" align="center">u(x,y) = xy^2</td>
+                        <td class="math" align="center">u(x,y) = 100xy^2</td>
+                        <td class="math" align="center">u(x,y) = \frac{1}{2}\ln x + \ln y</td>
+                    </tr>
+                    <tr>
+                        <td class="math" align="center">u(x,y) = x^{1/10}y^{1/5}</td>
+                        <td class="math" align="center">u(x,y) = \ln x + 2\ln y</td>
+                        <td class="math" align="center">u(x,y) = x^\alpha y^{1-\alpha}</td>
+                    </tr>
+                </table>
+                <hr/>
+                <p align="center"><b>2. Perfect Substitute Utility Functions</b></p>
+                <table class="table">
+                    <tr>
+                        <td class="math" align="center">u(x,y) = x + 2y</td>
+                        <td class="math" align="center">u(x,y) = 100x + 200y</td>
+                        <td class="math" align="center">u(x,y) = \frac{1}{2}x + y</td>
+                    </tr>
+                    <tr>
+                        <td class="math" align="center">u(x,y) = \frac{1}{10}x + \frac{1}{5}y</td>
+                        <td class="math" align="center">u(x,y) = 8x + 16y</td>
+                        <td class="math" align="center">u(x,y) = \alpha x + (1-\alpha) y</td>
+                    </tr>
+                </table>
+                <hr/>
+                <p align="center"><b>3. Perfect Complement Utility Functions</b></p>
+                <table class="table">
+                    <tr>
+                        <td class="math" align="center">u(x,y) = \min\{2x, y\}</td>
+                        <td class="math" align="center">u(x,y) = \min\{200x, 100y\}</td>
+                        <td class="math" align="center">u(x,y) = \min\{x, \frac{1}{2}y\}</td>
+                    </tr>
+                    <tr>
+                        <td class="math" align="center">u(x,y) = \min\{\frac{x}{5},\frac{y}{10}\}</td>
+                        <td class="math" align="center">u(x,y) = \min\{\frac{x}{8},\frac{y}{16}\}</td>
+                        <td class="math" align="center">u(x,y) = \min\{\frac{x}{\alpha},\frac{y}{1-\alpha}\}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endraw %}
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+<p ng-controller="KineticGraphCtrl" class="container">
+    {% raw %}
+    <div class="subtitle">January 14</div>
+    <h2>Group Work: Preferences</h2>
+    <hr/>
+    <ol>
+        <li style="padding-top:20px">
+            <p><b>Completeness and transitivity (Varian Ch. 3, Review Question 2)</b></p>
+            <p>Consider a group of people A, B, C and the relation "at least as tall as," as in "A is at least as tall as B." Is this relation transitive? Is it complete?</p>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Drawing indifference maps</b></p>
+            <p>Draw an indifference map for each of the following pairs of goods.</p>
+            <ol style="list-style: lower-alpha">
+                <li>Kittens and terrorist attacks (assuming kittens are good and terrorist attacks are bad)</li>
+                <li>Ebola cases and terrorist attacks (assuming both of these things are bad)</li>
+                <li>Nickels and dimes</li>
+                <li>Nickels and quarters</li>
+                <li>Hamburgers per day and french fries per day (make each axis go to 20.)</li>
+                <li>Kale and bacon, for a vegetarian who just throws away any bacon they get</li>
+            </ol>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Indifference curve facts</b></p>
+            <p>Can two indifference curves cross? Why or why not?</p>
+            <p>Can indifference curves be "thick"? That is, can a whole region be considered indifferent? Why or why not?</p>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Marginal Rate of Substitution</b></p>
+            <p>What is the MRS of the indifference curves in question 2(c) and 2(d)?</p>
+            <p>Suppose that "good Y" is "money spent on all other goods except good X." In this interpretation, what is the value of the MRS?</p>
+        </li>
+
+
+
+    </ol>
+
+    {% endraw %}
+</div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

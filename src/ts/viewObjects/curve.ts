@@ -7,6 +7,7 @@ module KG {
     export interface CurveDefinition extends ViewObjectWithDomainDefinition {
         data?: any;
         interpolation?: string;
+        area?: any;
         label?: GraphDivDefinition;
         labelPosition?: string;
         arrows?: string;
@@ -15,6 +16,7 @@ module KG {
     export interface ICurve extends IViewObjectWithDomain {
 
         data: ICoordinates[];
+        area: string;
         interpolation: string;
 
         labelDiv: IGraphDiv;
@@ -39,6 +41,7 @@ module KG {
     export class Curve extends ViewObjectWithDomain implements ICurve {
 
         public data;
+        public area;
         public startPoint;
         public midPoint;
         public endPoint;
@@ -88,7 +91,7 @@ module KG {
             curve.endArrow = (definition.arrows == Curve.END_ARROW_STRING || definition.arrows == Curve.BOTH_ARROW_STRING);
 
             curve.viewObjectSVGtype = 'path';
-            curve.viewObjectClass = 'curve';
+            curve.viewObjectClass = curve.hasOwnProperty('area') ? 'curveArea' : 'curve';
         }
 
         createSubObjects(view) {
@@ -157,7 +160,18 @@ module KG {
 
         render(view) {
 
-            var curve = this;
+            var curve = this,
+                area = {draw: false, left: false, right: false, above: false, below: false};
+
+            if(curve.hasOwnProperty('area')) {
+                area.draw = true;
+                area.left = (curve.area.indexOf('LEFT') > -1);
+                area.right = (curve.area.indexOf('RIGHT') > -1);
+                area.above = (curve.area.indexOf('ABOVE') > -1);
+                area.below = (curve.area.indexOf('BELOW') > -1);
+            }
+
+            console.log(area);
 
             curve.updateDataForView(view);
 
@@ -169,15 +183,60 @@ module KG {
             curve.endPoint = dataCoordinates[dataLength - 1];
             curve.midPoint = medianDataPoint(dataCoordinates);
 
-            var group:D3.Selection = view.objectGroup(curve.name, curve.initGroupFn(), false);
+            var additionalObjects = [];
+            if(area.left) {additionalObjects.push('Left')}
+            if(area.right) {additionalObjects.push('Right')}
 
+            var group:D3.Selection = view.objectGroup(curve.name, curve.initGroupFn(additionalObjects), false);
 
             curve.positionLabel(view);
 
-            var dataLine = d3.svg.line()
+            var dataLine;
+
+            if(curve.hasOwnProperty('area')) {
+                if(curve.area.indexOf('ABOVE') > -1) {
+                dataLine = d3.svg.area()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x })
+                    .y0(function (d) { return d.y })
+                    .y1(view.yAxis.scale(view.yAxis.max) - 10);
+            } else if (curve.area.indexOf('BELOW') > -1) {
+                dataLine = d3.svg.area()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x })
+                    .y0(function (d) { return d.y })
+                    .y1(view.yAxis.scale(view.yAxis.min));
+            } else {
+                dataLine = d3.svg.line()
                 .interpolate(curve.interpolation)
                 .x(function (d) { return d.x })
-                .y(function (d) { return d.y })
+                .y(function (d) { return d.y });
+            }
+            } else {
+                    dataLine = d3.svg.line()
+                .interpolate(curve.interpolation)
+                .x(function (d) { return d.x })
+                .y(function (d) { return d.y });
+                }
+
+            if(curve.hasOwnProperty('area') && curve.area.indexOf('ABOVE') > -1) {
+                dataLine = d3.svg.area()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x })
+                    .y0(function (d) { return d.y })
+                    .y1(view.yAxis.scale(view.yAxis.max) - 10);
+            } else if (curve.hasOwnProperty('area') && curve.area.indexOf('BELOW') > -1) {
+                dataLine = d3.svg.area()
+                    .interpolate(curve.interpolation)
+                    .x(function (d) { return d.x })
+                    .y0(function (d) { return d.y })
+                    .y1(view.yAxis.scale(view.yAxis.min));
+            } else {
+                dataLine = d3.svg.line()
+                .interpolate(curve.interpolation)
+                .x(function (d) { return d.x })
+                .y(function (d) { return d.y });
+            }
 
 
             var selector = curve.hasOwnProperty('objectName') ? 'path.' + curve.objectName : 'path.' + curve.viewObjectClass;
@@ -201,9 +260,30 @@ module KG {
 
             dragHandle
                 .attr({
-                    'class': 'curveHandle',
+                    'class': curve.classAndVisibility('Handle'),
                     'd': dataLine(dataCoordinates)
                 });
+
+            if(area.left){
+                group.select(selector+'Left').attr({
+                    'class': curve.classAndVisibility('Left'),
+                    'd': dataLine([
+                        {x: view.xAxis.scale(view.xAxis.min), y:area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min)},
+                        {x: KG.arrayMinCoordinate(dataCoordinates)+1, y:area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min)}
+                    ])
+                });
+            }
+
+            if(area.right) {
+                group.select(selector+'Right').attr({
+                    'class': curve.classAndVisibility('Right'),
+                    'd': dataLine([
+                        {x: view.xAxis.scale(view.xAxis.max), y:area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min)},
+                        {x: KG.arrayMaxCoordinate(dataCoordinates)-1, y:area.below ? view.yAxis.scale(view.yAxis.max) : view.yAxis.scale(view.yAxis.min)}
+                    ])
+                });
+            }
+
 
             curve.interactionHandler.setBehavior(view,dataPath);
             curve.interactionHandler.setBehavior(view,dragHandle);

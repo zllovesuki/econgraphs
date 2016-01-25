@@ -133,8 +133,8 @@ module KG
                 return view;
             }
 
-            var width = Math.min(400, view.maxDimensions.width, element.clientWidth),
-                height = Math.min(400, view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
+            var width = Math.min(600, view.maxDimensions.width, element.clientWidth),
+                height = Math.min(600, view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))
 
             if(view.square) {
                 var side = Math.min(width,height);
@@ -223,12 +223,13 @@ module KG
 
                 // Put mask around vis to clip objects that extend beyond the desired viewable area
 
-                var maskBorder = 5;
+                var axisMaskBorder = 5,
+                    openMaskBorder = 0;
 
-                var topMask = mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - maskBorder, fill:view.background});
-                var bottomMask = mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom + maskBorder, width: view.dimensions.width, height: view.margins.bottom - maskBorder, fill:view.background});
-                var leftMask = mask.append('rect').attr({x: 0, y: 0, width: view.margins.left - maskBorder, height: view.dimensions.height, fill:view.background});
-                var rightMask = mask.append('rect').attr({x: view.dimensions.width - view.margins.right + maskBorder, y: 0, width: view.margins.right - maskBorder, height: view.dimensions.height, fill:view.background});
+                var topMask = mask.append('rect').attr({x: 0, y: 0, width: view.dimensions.width, height: view.margins.top - openMaskBorder, fill:view.background});
+                var bottomMask = mask.append('rect').attr({x: 0, y: view.dimensions.height - view.margins.bottom + axisMaskBorder, width: view.dimensions.width, height: view.margins.bottom - axisMaskBorder, fill:view.background});
+                var leftMask = mask.append('rect').attr({x: 0, y: 0, width: view.margins.left - axisMaskBorder, height: view.dimensions.height, fill:view.background});
+                var rightMask = mask.append('rect').attr({x: view.dimensions.width - view.margins.right + openMaskBorder, y: 0, width: view.margins.right - openMaskBorder, height: view.dimensions.height, fill:view.background});
 
                 topMask.on('mouseover',removeHighlight);
                 bottomMask.on('mouseover',removeHighlight);

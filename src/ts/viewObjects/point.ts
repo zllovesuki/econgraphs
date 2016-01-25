@@ -169,7 +169,10 @@ module KG
             }
 
             if(isNaN(point.coordinates.x) || isNaN(point.coordinates.y) || point.coordinates.x == Infinity || point.coordinates.y == Infinity) {
-                return view;
+                point.show = false;
+                if(point.hasOwnProperty('labelDiv')) {
+                    point.labelDiv.show = false;
+                }
             }
 
             var subview = (view instanceof KG.TwoVerticalGraphs) ? view.topGraph : view;
@@ -182,7 +185,9 @@ module KG
 
             if (point.symbol === 'none') {
                 point.show = false;
-                point.labelDiv.show = false;
+                if(point.hasOwnProperty('labelDiv')) {
+                    point.labelDiv.show = false;
+                }
             }
 
             // draw the symbol at the point

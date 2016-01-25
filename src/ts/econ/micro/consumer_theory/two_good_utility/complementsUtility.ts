@@ -22,7 +22,6 @@ module EconGraphs {
         coefficient: number;
         xCoefficient: number;
         yCoefficient: number;
-        indifferenceCurveAtUtility: (utility:number, curveParams?:KG.CurveParamsDefinition) => KG.Curve
     }
 
     export class ComplementsUtility extends TwoGoodUtility implements IComplementsUtility {

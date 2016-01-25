@@ -6,106 +6,260 @@
 <div ng-controller="KineticGraphCtrl">
     <div class="row">
         <div class="col-md-8">
-            <h1>Utility Maximization: {{ model.utility.title }}</h1>
+            <h1>Indifference Curves{{ params.hasOwnProperty('selectedUtility') ? ': ' + model.utility.title : '' }}</h1>
             <hr/>
             <div id="utility"></div>
         </div>
         <div class="col-md-4">
             <div class="well">
-                <div class="row">
-                    <div class="subtitle col-xs-6">utility parameters</div>
-                    <div class="col-xs-6">
-                        <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
-                            <option value="CobbDouglas">Cobb-Douglas</option>
-                            <option value="Complements">Complements</option>
-                        </select>
-                    </div>
-                </div>
-                <hr/>
-                <div class="math displayMath">u(x,y) = {{ model.utility.formula(false) }} = {{ model.utility.formula(true)}}</div>
+                <p class="subtitle">preference parameter</p>
                 <hr/>
                 <div class="row">
-                    <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                    <div class="col-xs-2 math" style="text-align:right;font-size:12pt;padding-top:10px">Y
                     </div>
-                    <div class="col-xs-9" id="alphaSlider"></div>
+                    <div class="col-xs-8" id="alphaSlider"></div>
+                    <div class="col-xs-2 math" style="text-align:right;font-size:12pt;padding-top:10px">X
+                    </div>
                 </div>
             </div>
             <hr/>
-            <toggle param="showMap" class="utility"><span ng-if="params.showMap">Hide</span><span ng-if="!params.showMap">Show</span> indifference curve map</toggle>
+                <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
+                    <option value="CobbDouglas">Cobb-Douglas</option>
+                    <option value="Complements">Complements</option>
+                    <option value="Substitutes">Substitutes</option>
+                </select>{% endraw %}
+                {% block belowControls %}
+                    <toggle param="showMRS" class="utility" show-hide="true">MRS line</toggle>
+                    <toggle param="showMap" class="utility" show-hide="true">indifference curve map</toggle>
+                    <toggle param="showPreferred" class="preferred" show-hide="true">preferred set</toggle>
+                    <toggle param="showDispreferred" class="dispreferred" show-hide="true">dispreferred set</toggle>
+
+                {% endblock %}
         </div>
     </div>
 </div>
 
-    {% endraw %}
+
 {% endblock %}
 
 {% block model %}
 {% raw %}
 <script>
 
-    var cobbDouglasDefinition = {
-            type: 'EconGraphs.CobbDouglasUtility',
-            definition: {
-                xPower: 'params.alpha'
-            }
-        },
-        complementsDefinition = {
-            type: 'EconGraphs.ComplementsUtility',
-            definition: {
-                bundle: {x: 'params.alpha', y: '1-params.alpha'}
-            }
-        },
-        selectorDefinition = {
-            type: 'KG.Selector',
-            definition: {
-                selected: 'params.selectedUtility',
-                options: [
-                    {
-                        name: 'CobbDouglas',
-                        label: 'Cobb-Douglas',
-                        selection: cobbDouglasDefinition
-                    },
-                    {
-                        name: 'Complements',
-                        label: 'Perfect Complements',
-                        selection: complementsDefinition
+    var         cobbDouglasDefinition = {
+                    type: 'EconGraphs.CobbDouglasUtility',
+                    definition: {
+                        xPower: 'params.alpha'
                     }
-                ]
-            }
-        };
+                },
+                complementsDefinition = {
+                    type: 'EconGraphs.ComplementsUtility',
+                    definition: {
+                        bundle: {x: 'params.alpha', y: '1-params.alpha'}
+                    }
+                },
+                substitutesDefinition = {
+                    type: 'EconGraphs.SubstitutesUtility',
+                    definition: {
+                        xCoefficient: 'params.alpha'
+                    }
+                },
+                cesDefinition = {
+                    type: 'EconGraphs.CESUtility',
+                    definition: {
+                        alpha: 'params.alpha',
+                        sub: 'params.sub'
+                    }
+                },
+                quasilinearDefinition = {
+                    type: 'EconGraphs.QuasilinearUtility',
+                    definition: {
+                        alpha: 'params.alpha'
+                    }
+                },
+                selectorDefinition = {
+                    type: 'KG.Selector',
+                    definition: {
+                        selected: 'params.selectedUtility',
+                        options: [
+                            {
+                                name: 'CobbDouglas',
+                                label: 'Cobb\-Douglas',
+                                selection: cobbDouglasDefinition
+                            },
+                            {
+                                name: 'Complements',
+                                label: 'Perfect Complements',
+                                selection: complementsDefinition
+                            },
+                            {
+                                name: 'Substitutes',
+                                label: 'Perfect Substitutes',
+                                selection: substitutesDefinition
+                            },
+                            {
+                                name: 'CES',
+                                label: 'CES',
+                                selection: cesDefinition
+                            },
+                            {
+                                name: 'Quasilinear',
+                                label: 'Quasilinear',
+                                selection: quasilinearDefinition
+                            }
+                        ]
+                    }
+                },
+
+            bundlePoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundle',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'params.x',
+                            y: 'params.y'
+                        },
+                        interaction: {
+                            draggable: true,
+                            highlight: 'bundle'
+                        },
+                        droplines: {
+                            vertical: 'params.x',
+                            horizontal: 'params.y'
+                        }
+
+                    }
+                },
+                preferred = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'preferredSet',
+                        className: 'preferred',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.x, y: params.y})",
+                        area: 'ABOVE RIGHT',
+                        show: 'params.showPreferred'
+                    }
+                },
+                dispreferred = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'dispreferredSet',
+                        className: 'dispreferred',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.x, y: params.y})",
+                        area: 'BELOW LEFT',
+                        show: 'params.showDispreferred'
+                    }
+                },
+                indifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'indifference_curve',
+                        className: 'utility',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.x, y: params.y})",
+                        interaction: {
+                            highlight: 'utility'
+                        },
+                        label: {
+                            text: ['U = U(','params.x',',','params.y',')']
+                        }
+                    }
+                },
+                indifferenceCurveMap = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                        type: 'KG.FunctionPlot',
+                        definition: {
+                            name: 'indifference_curve_'+level,
+                            className: 'dataPathFamily',
+                            fn: "model.utility.indifferenceCurveThroughBundleFn({x:" + level + ",y:"+level+"})",
+                            interaction: {
+                                highlight: 'indifferenceMap' + level
+                            },
+                            show: 'params.showMap',
+                            label: {
+                                text: ['U = U(',level,',',level,')'],
+                                show: 'params.highlight.indifferenceMap' + level
+                            }
+                        }
+                    }
+
+                }),
+                indifferenceCurvePoints = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                        type: 'KG.Point',
+                        definition: {
+                            name: 'indifference_curve_point'+level,
+                            className: 'dataPathFamily',
+                            coordinates: {x: level, y:level},
+                            size: 10,
+                            interaction: {
+                                highlight: 'indifferenceMap' + level
+                            },
+                            show: 'params.showMap',
+                        }
+                    }
+
+                }),
+                MRSline = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'MRS',
+                        className: 'demand dotted',
+                        lineDef: {
+                            point: {
+                                x: 'params.x',
+                                y: 'params.y'
+                            },
+                            slope: '-1*model.utility.mrs({x: params.x, y:params.y})',
+                            xDomainDef: {
+                                min: '0.5*params.x',
+                                max: '1.5*params.x'
+                            }
+                        },
+                        show: 'params.showMRS',
+                        interaction: {
+                            highlight: 'MRS'
+                        },
+                        label: {
+                            text: 'MRS_{x,y}',
+                            valign: 'top',
+                            align: 'center'
+                        }
+                    }
+                };
 
 
     var scopeDefinition = {
         params: {
+            x: 20,
+            y: 20,
             alpha: 0.5,
-            income: 120,
-            xE: 20,
-            yE: 20,
-            px: 4,
-            py: 3,
-            pxSell: 2,
-            pySell: 1,
             showMap: false,
+            showMRS: true,
+            showPreferred: false,
+            showDispreferred: false,
             selectedUtility: 'CobbDouglas'
         },
         graphParams: ['selectedBudget'],
-        restrictions: [],
-        model: {
-            type: 'EconGraphs.MarshallianDemand',
-            definition: {
-                budget:{
-                    type: 'EconGraphs.SimpleBudgetConstraint',
-                    definition: {
-                        income: 'params.income',
-                        px: 'params.px',
-                        py: 'params.py',
-                        budgetConstraintLabel: 'BL',
-                        xInterceptLabel: "\\frac{I}{P_x}",
-                        yInterceptLabel: "\\frac{I}{P_y}"
-                    }
+        restrictions: [
+            {
+                    expression: 'params.x',
+                    restrictionType: 'range',
+                    min: 1,
+                    max: 50,
+                    precision: 1
                 },
-                utility: selectorDefinition
-            }
+                {
+                    expression: 'params.y',
+                    restrictionType: 'range',
+                    min: 1,
+                    max: 50,
+                    precision: 1
+                }
+        ],
+        model: {
+            type: 'EconGraphs.SelectableTwoGoodUtility',
+            definition: {utility: selectorDefinition}
         },
         views: [
             {
@@ -115,51 +269,40 @@
                     xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
                     yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
                     objects: [
-                        "model.utility.indifferenceCurveFamily([5,10,15,20,25,30,35,40,45],{show: params.showMap})",
-                        "model.budget.budgetLine",
-                        'model.utility.optimalBundlePoint(model.budget,{xAxisLabel:"x^*", yAxisLabel: "y^*"})',
-                        'model.utility.optimalIndifferenceCurve(model.budget,{label: "U^*"})',
-                        'model.budget.endowmentPoint'
+                        preferred,
+                            dispreferred,
+                        indifferenceCurveMap[0],
+                    indifferenceCurveMap[1],
+                    indifferenceCurveMap[2],
+                    indifferenceCurveMap[3],
+                    indifferenceCurveMap[4],
+                    indifferenceCurveMap[5],
+                    indifferenceCurveMap[6],
+                    indifferenceCurveMap[7],
+                    indifferenceCurveMap[8],
+                    indifferenceCurvePoints[1],
+                    indifferenceCurvePoints[2],
+                    indifferenceCurvePoints[3],
+                    indifferenceCurvePoints[4],
+                    indifferenceCurvePoints[5],
+                    indifferenceCurvePoints[6],
+                    indifferenceCurvePoints[7],
+                    indifferenceCurvePoints[8],
 
-                    ]
+                    bundlePoint,
+                    indifferenceCurve,
+                    MRSline]
                 }
             },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'alphaSlider',
-                    param: 'alpha',
-                    precision: '0.01',
-                    axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.1',
+                        axisDef: {min: 0, max: 1, ticks: 0}
+                    }
                 }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'incomeSlider',
-                    param: 'income',
-                    precision: '1',
-                    axisDef: {min: 0, max: 200}
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'pxSlider',
-                    param: 'px',
-                    precision: '0.25',
-                    axisDef: {min: 0, max: 10}
-                }
-            },
-            {
-                type: 'KG.Slider',
-                definition: {
-                    element_id: 'pySlider',
-                    param: 'py',
-                    precision: '0.25',
-                    axisDef: {min: 0, max: 10}
-                }
-            }
         ]
     }
 </script>
@@ -167,10 +310,37 @@
 {% endblock %}
 
 {% block js %}
-
     <script>
-        var utilityFunction = '{{ args.utilityFunction }}'
+
+        var selectedUtility = '{{ args.utilityFunction }}';
+
+        if(selectedUtility == 'CobbDouglas') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = cobbDouglasDefinition;
+        }
+
+        if(selectedUtility == 'Leontief' || selectedUtility == 'PerfectComplements' || selectedUtility == 'Complements') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = complementsDefinition;
+        }
+
+        if(selectedUtility == 'Substitutes' || selectedUtility == 'PerfectSubstitutes') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = substitutesDefinition;
+        }
+
+        if(selectedUtility == 'Quasilinear') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = quasilinearDefinition;
+        }
+
+
+
     </script>
 
-<script src="{{ url_for('static', filename='js/kg/kg-v0.01.js') }}"></script>
+    {% block jsadjustments %}
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
+
 {% endblock %}

@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-xs-9" id="alphaSlider"></div>
                     </div>
-                    <div class="row" ng-show="params.selectedUtility == 'CES'">
+                    <div class="row" ng-if="params.selectedUtility == 'CES'" ng-init="render(true)">
                         <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
                         </div>
                         <div class="col-xs-9" id="subSlider"></div>
@@ -60,6 +60,7 @@
                     <option value="Quasilinear">Quasilinear</option>
                 </select>
                 {% block belowControls %}
+
                 {% endblock %}
             </div>
         </div>
@@ -152,10 +153,17 @@
                 showICC: false,
                 highlightBudget: false,
                 highlightUtility: false,
-                highlightBundle: false
+                highlightBundle: false,
+                showPreferred: false,
+                showDispreferred: false
             },
             graphParams: ['selectedUtility'],
-            restrictions: [],
+            restrictions: [{
+                    expression: 'params.x',
+                    restrictionType: 'range',
+                    min: 0,
+                    max: 'model.budget.maxX()'
+                }],
             model: {
                 type: 'EconGraphs.MarshallianDemand',
                 definition: {
@@ -263,12 +271,30 @@
                         }
                     }
                 },
+                budgetLineSlopeLabel = {
+                                type: 'KG.GraphDiv',
+                                definition: {
+                                    name: 'budgetLineSlopeLabel',
+                                    className: 'budget',
+                                    coordinates: {
+                                        x: 'model.budget.maxX()/2 + 1',
+                                        y: 'model.budget.maxY()/2 + 1'
+                                    },
+                                    text: ["\\frac{P_x}{P_y} =", 'params.px/params.py | number:2'],
+                                    align: 'left',
+                                    valign: 'bottom',
+                                    dimensions: {width: 100, height: 30},
+                                    interaction: {
+                                        highlight: 'px py'
+                                    }
+                                }
+                },
                 budgetXIntercept = {
                     type: 'KG.GraphDiv',
                     definition: {
                         name: 'budgetXIntercept',
                         className: 'budget',
-                        text: "\\frac{I}{P_x}",
+                        text: ["\\frac{I}{P_x} =",'params.income/params.px | number:0'],
                         coordinates: {
                             x: 'params.income/params.px',
                             y: 'AXIS'
@@ -283,7 +309,7 @@
                     definition: {
                         name: 'budgetYIntercept',
                         className: 'budget',
-                        text: "\\frac{I}{P_y}",
+                        text: ["\\frac{I}{P_y} =",'params.income/params.py | number:0'],
                         coordinates: {
                             x: 'AXIS',
                             y: 'params.income/params.py'
@@ -405,7 +431,7 @@
                             highlight: 'MRS'
                         },
                         label: {
-                            text: 'MRS_{x,y}',
+                            text: ['MRS_{x,y} = ','model.utility.mrs({x: params.x, y: model.bundle.y}) | extendedReal:2'],
                             valign: 'top',
                             align: 'center'
                         }
@@ -451,13 +477,34 @@
                             text: 'ICC'
                         }
                     }
+                },
+                preferred = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'preferredSet',
+                        className: 'preferred',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.snapToOptimal ? model.bundle.x : params.x, y: model.bundle.y})",
+                        area: 'ABOVE RIGHT',
+                        show: 'params.showPreferred'
+                    }
+                },
+                dispreferred = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'dispreferredSet',
+                        className: 'dispreferred',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.snapToOptimal ? model.bundle.x : params.x, y: model.bundle.y})",
+                        area: 'BELOW LEFT',
+                        show: 'params.showDispreferred'
+                    }
                 }
+
 
     </script>
 
     {% block jsadjustments %}
     {% endblock %}
 
-    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
 
 {% endblock %}

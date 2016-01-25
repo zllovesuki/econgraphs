@@ -13,7 +13,6 @@ module EconGraphs {
         income: number;
         px: number;
         py: number;
-        budgetLine: KG.Line;
         setPrice: (price:number, good?:string) => void;
     }
 
@@ -31,14 +30,6 @@ module EconGraphs {
 
             var b = this;
 
-            var params:KG.LineParamsDefinition = {};
-            if(definition.hasOwnProperty('budgetConstraintLabel')) {
-                params.label = definition.budgetConstraintLabel;
-            }
-            if(definition.hasOwnProperty('budgetSetLabel')) {
-                params.areaUnderLabel = definition.budgetSetLabel;
-            }
-
             b.budgetSegments = [
                 new BudgetSegment({
                     income: definition.income,
@@ -46,16 +37,6 @@ module EconGraphs {
                     py: definition.py
                 }, b.modelProperty('budgetSegments[0]'))
             ];
-
-            b.budgetLine = new KG.Line({
-                name: 'BL',
-                className: 'budget',
-                linear: b.modelProperty('budgetSegments[0].linear'),
-                xInterceptLabel: definition.xInterceptLabel,
-                yInterceptLabel: definition.yInterceptLabel,
-                params: params
-            }, b.modelProperty('budgetLine'));
-
         }
 
         setPrice(price,good) {

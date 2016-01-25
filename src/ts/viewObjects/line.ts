@@ -4,8 +4,8 @@
 
 module KG {
 
-    export interface LineDefinition extends ViewObjectDefinition {
-        lineDef?: KGMath.Functions.LinearDefinition;
+    export interface LineDefinition extends ViewObjectWithDomainDefinition {
+        lineDef?: any;
         linear?: any;
         arrows?: string;
         label?: GraphDivDefinition;
@@ -17,7 +17,7 @@ module KG {
         areaOverDef?: AreaDefinition;
     }
 
-    export interface ILine extends IViewObject {
+    export interface ILine extends IViewObjectWithDomain {
 
         definition: LineDefinition;
         linear: KGMath.Functions.Linear;
@@ -29,7 +29,7 @@ module KG {
         areaOver: Area;
     }
 
-    export class Line extends ViewObject implements ILine {
+    export class Line extends ViewObjectWithDomain implements ILine {
 
         public definition;
         public linear;
@@ -43,14 +43,26 @@ module KG {
 
         constructor(definition:LineDefinition, modelPath?: string) {
 
+            definition.lineDef = definition.lineDef || {};
+
+            if(definition.hasOwnProperty('xDomainDef')) {
+                definition.lineDef.xDomainDef = definition.xDomainDef;
+            }
+
+            if(definition.hasOwnProperty('yDomainDef')) {
+                definition.lineDef.xDomainDef = definition.yDomainDef;
+            }
+
             super(definition, modelPath);
 
             var line = this;
 
             if(line instanceof HorizontalLine) {
-                line.linear = new KGMath.Functions.HorizontalLine({y: definition.y});
+                definition.lineDef.y = definition.y;
+                line.linear = new KGMath.Functions.HorizontalLine(definition.lineDef);
             } else if(line instanceof VerticalLine) {
-                line.linear = new KGMath.Functions.VerticalLine({x: definition.x});
+                definition.lineDef.x = definition.x;
+                line.linear = new KGMath.Functions.VerticalLine(definition.lineDef);
             } else if(definition.hasOwnProperty('lineDef')) {
                 line.linear = new KGMath.Functions.Linear(definition.lineDef);}
 

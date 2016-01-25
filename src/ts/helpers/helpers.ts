@@ -102,6 +102,16 @@ module KG
 
     }
 
+    export function arrayMinCoordinate(o: ICoordinates[], xOrY?:string) {
+        xOrY = xOrY || 'x';
+        return d3.min(o,function(p){return p[xOrY]});
+    }
+
+    export function arrayMaxCoordinate(o: ICoordinates[], xOrY?:string) {
+        xOrY = xOrY || 'x';
+        return d3.max(o,function(p){return p[xOrY]});
+    }
+
     export function listMatch(s1: string, s2: string) {
         if(!s1 || !s2 || s1.length == 0 || s2.length ==0) {return false;}
 

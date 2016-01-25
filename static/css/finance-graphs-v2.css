@@ -1,4 +1,27 @@
 /* Note: these colors are chosen to match the ordinal scales in D3 */
+.asset {
+  color: #1f77b4;
+  stroke: #1f77b4;
+  fill: #aec7e8;
+  stroke-width: 2;
+}
+.riskfree {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  fill: #98df8a;
+  stroke-width: 2;
+}
+.dataPathFamily.asset {
+  color: #1f77b4;
+  fill: none;
+  stroke: #1f77b4;
+  stroke-width: 2;
+}
+.max-portfolio {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  fill: #98df8a;
+}
 /* Note: these fonts can b */
 @font-face {
   font-family: 'Open Sans';
@@ -317,6 +340,9 @@ button:hover {
   stroke-width: 3;
   fill: none;
 }
+.curveArea {
+  stroke-width: 3;
+}
 .pointSymbol {
   stroke-width: 3;
 }
@@ -413,20 +439,4 @@ button:hover {
   stroke-dasharray: none;
   fill: none;
   stroke: transparent;
-}
-.asset {
-  color: #1f77b4;
-  stroke: #1f77b4;
-  fill: #1f77b4;
-  stroke-width: 2;
-}
-.dataPathFamily.asset {
-  color: #1f77b4;
-  fill: none;
-  stroke: #1f77b4;
-  stroke-width: 2;
-}
-.max-portfolio {
-  color: #2ca02c;
-  stroke: #2ca02c;
 }
