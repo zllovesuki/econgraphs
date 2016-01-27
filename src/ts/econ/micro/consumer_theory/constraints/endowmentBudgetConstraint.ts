@@ -3,27 +3,29 @@
 module EconGraphs {
 
     export interface EndowmentBudgetConstraintDefinition extends BudgetConstraintDefinition {
-        endowment: any;
+        endowment: KG.ICoordinates;
         px?: any;
         py?: any;
         pxBuy?: any;
         pyBuy?: any;
         pxSell?: any;
         pySell?: any;
-        xLabel?: string;
-        yLabel?: string;
+
+        //these are set programmatically
+        endowmentValueSellX: string;
+        endowmentValueSellY: string;
     }
 
     export interface IEndowmentBudgetConstraint extends IBudgetConstraint {
-        endowment: number;
+        endowment: KG.ICoordinates;
         px: number;
         py: number;
         pxBuy: number;
         pyBuy: number;
         pxSell: number;
         pySell: number;
-        budgetLine: KG.PiecewiseLinear;
-        endowmentPoint: KG.Point;
+        endowmentValueSellX: number;
+        endowmentValueSellY: number;
     }
 
     export class EndowmentBudgetConstraint extends BudgetConstraint implements IEndowmentBudgetConstraint {
@@ -35,8 +37,8 @@ module EconGraphs {
         public pyBuy;
         public pxSell;
         public pySell;
-        public budgetLine;
-        public endowmentPoint;
+        public endowmentValueSellX;
+        public endowmentValueSellY;
 
         constructor(definition: EndowmentBudgetConstraintDefinition, modelPath: string) {
 
@@ -49,6 +51,9 @@ module EconGraphs {
                 definition.pyBuy = definition.py;
                 definition.pySell = definition.py;
             }
+
+            definition.endowmentValueSellX = KG.multiplyDefs(definition.endowment.x, definition.pxSell);
+            definition.endowmentValueSellY = KG.multiplyDefs(definition.endowment.y, definition.pySell);
 
             super(definition,modelPath);
 
@@ -95,7 +100,7 @@ module EconGraphs {
                     return b.px.toFixed(2) + "x + " + b.py.toFixed(2) + "y = "
                         + b.px.toFixed(2) + " \\times " + b.endowment.x + " + " + b.py.toFixed(2) + " \\times " + b.endowment.y;
                 } else  {
-                    return "P_xx + P_yy = P_xx_E + P_yy_E";
+                    return "P_xx + P_yy = P_xx^E + P_yy^E";
                 }
             } else {
                 return '';

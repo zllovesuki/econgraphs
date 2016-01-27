@@ -22,6 +22,7 @@
 /// <reference path="micro/consumer_theory/constraints/budgetSegment.ts"/>
 /// <reference path="micro/consumer_theory/constraints/simpleBudgetConstraint.ts"/>
 /// <reference path="micro/consumer_theory/constraints/endowmentBudgetConstraint.ts"/>
+/// <reference path="micro/consumer_theory/constraints/intertemporalBudgetConstraint.ts"/>
 /// <reference path="micro/consumer_theory/constraints/utilityConstraint.ts"/>
 
 /// <reference path="micro/consumer_theory/utility/utility.ts"/>

@@ -1,0 +1,227 @@
+{% extends 'layouts/econ50/base.html' %}
+
+{% block body %}
+
+
+    <div>
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Group Work Calculator: Round 1 | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture7/group_work_calculator_round2') }}">Switch to Round 2</a></h1>
+                <hr/>
+                <p>Drag the purple dot to your team's current allocation of red and white chips; then use the slider to the right to evaluate a potential trade.</p>
+                <p>If you want to make the trade, click "make trade" button; your purple allocation will move to the new position, and the trade sliders will be reset to zero.</p>
+                <hr/>
+                <div id="utility"></div>
+            </div>{% raw %}
+            <div class="col-md-4">
+
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">potential trade</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\Delta W = {{params.tradeX | number: 0}}:
+                        </div>
+                        <div class="col-xs-9" id="tradeXSlider"></div>
+                    </div>
+                </div>
+                <hr/>
+                <div ng-if="params.tradeX != 0"><p>If you currently have {{ params.x }} white chips and {{ params.y }} red chips, then trading <span ng-if="params.tradeX < 0">{{ -params.tradeX }} white chips for {{ -params.tradeX }} red chips</span><span ng-if="params.tradeX > 0">{{ params.tradeX }} red chips for {{ params.tradeX }} white chips</span> will make you <span ng-class='(params.x + params.tradeX)*(params.y - params.tradeX) > (params.x * params.y) ? "green" : (params.x + params.tradeX)*(params.y - params.tradeX) == (params.x * params.y) ? "orange" : "red"'>{{ (params.x + params.tradeX)*(params.y - params.tradeX) > (params.x * params.y) ? "better off" : (params.x + params.tradeX)*(params.y - params.tradeX) == (params.x * params.y) ? "no better or worse off" : "worse off" }}.</span></p><div ng-if="(params.x + params.tradeX)*(params.y - params.tradeX) > (params.x * params.y)" align="center"><button class="alert-success" ng-click="updateParams({x: params.x + params.tradeX, y: params.y - params.tradeX, tradeX: 0})">Make trade!</button></div></div>
+            </div>
+        </div>
+    </div>
+    {% endraw %}
+
+
+    {% endblock %}
+
+    {% block model %}
+    {% raw %}
+    <script>
+
+        var bundlePoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundle',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'params.x',
+                            y: 'params.y'
+                        },
+                        interaction: {
+                            draggable: true,
+                            highlight: 'bundle'
+                        },
+                        droplines: {
+                            vertical: 'params.x',
+                            horizontal: 'params.y'
+                        }
+
+                    }
+                },
+                newBundlePoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'newbundle',
+                        className: '(params.x + params.tradeX)*(params.y - params.tradeX) > (params.x * params.y) ? "green" : (params.x + params.tradeX)*(params.y - params.tradeX) == (params.x * params.y) ? "orange" : "red"',
+                        show: 'params.tradeX != 0 || params.tradeY != 0',
+                        coordinates: {
+                            x: 'params.x + params.tradeX',
+                            y: 'params.y - params.tradeX'
+                        },
+                        interaction: {
+                            highlight: 'tradeX tradeY'
+                        },
+                        droplines: {
+                            vertical: 'params.x + params.tradeX',
+                            horizontal: 'params.y - params.tradeX'
+                        }
+
+                    }
+                },
+                preferred = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'preferredSet',
+                        className: 'preferred',
+                        fn: "model.indifferenceCurveThroughBundleFn({x: params.x, y: params.y})",
+                        area: 'ABOVE RIGHT',
+                        show: 'params.showPreferred'
+                    }
+                },
+                dispreferred = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'dispreferredSet',
+                        className: 'dispreferred',
+                        fn: "model.indifferenceCurveThroughBundleFn({x: params.x, y: params.y})",
+                        area: 'BELOW LEFT',
+                        show: 'params.showDispreferred'
+                    }
+                },
+                indifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'indifference_curve',
+                        className: 'utility',
+                        fn: "model.indifferenceCurveThroughBundleFn({x: params.x, y: params.y})",
+                        interaction: {
+                            highlight: 'utility'
+                        },
+                        label: {
+                            text: ['U = U(','params.x',',','params.y',')']
+                        }
+                    }
+                },
+                MRSline = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'MRS',
+                        className: 'demand dotted',
+                        lineDef: {
+                            point: {
+                                x: 'params.x',
+                                y: 'params.y'
+                            },
+                            slope: '-1*model.mrs({x: params.x, y:params.y})',
+                            xDomainDef: {
+                                min: '0.5*params.x',
+                                max: '1.5*params.x'
+                            }
+                        },
+                        show: 'params.showMRS',
+                        interaction: {
+                            highlight: 'MRS'
+                        },
+                        label: {
+                            text: ['MRS_{x,y}=','model.mrs({x: params.x, y: params.y}) | number: 2'],
+                            valign: 'top',
+                            align: 'center'
+                        }
+                    }
+                };
+
+
+        var scopeDefinition = {
+            params: {
+                x: 6,
+                y: 6,
+                tradeX: 0,
+                tradeY: 0,
+                alpha: 0.5,
+                showMap: false,
+                showMRS: true,
+                showPreferred: false,
+                showDispreferred: false
+            },
+            graphParams: [],
+            restrictions: [
+                {
+                    expression: 'params.x',
+                    restrictionType: 'range',
+                    min: 1,
+                    max: 50,
+                    precision: 1
+                },
+                {
+                    expression: 'params.y',
+                    restrictionType: 'range',
+                    min: 1,
+                    max: 50,
+                    precision: 1
+                }
+            ],
+            model: {
+                type: 'EconGraphs.CobbDouglasUtility',
+                definition: {
+                    xPower: 0.5
+                }},
+            views: [
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'utility',
+                        xAxisDef: {min: 0, max: 20, title: '\\text{White Chips}'},
+                        yAxisDef: {min: 0, max: 20, title: '\\text{Red Chips}'},
+                        objects: [
+                            preferred,
+                            dispreferred,
+                            bundlePoint,
+                                newBundlePoint,
+                            indifferenceCurve,
+                            MRSline]
+                    }
+                },
+                    {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'tradeXSlider',
+                        param: 'tradeX',
+                        precision: '1',
+                        axisDef: {min: -6, max: 6}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'tradeYSlider',
+                        param: 'tradeY',
+                        precision: '1',
+                        axisDef: {min: -6, max: 6}
+                    }
+                }
+
+            ]
+        }
+    </script>
+    {% endraw %}
+{% endblock %}
+
+{% block js %}
+
+    {% block jsadjustments %}
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js', update='true') }}"></script>
+
+{% endblock %}

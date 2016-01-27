@@ -95,7 +95,6 @@ module KG {
                     text: definition.xInterceptLabel,
                     dimensions: {width: 25, height:20},
                     interaction: definition.interaction,
-                    backgroundColor: 'white',
                     show: definition.show
                 };
                 line.xInterceptLabelDiv = new KG.GraphDiv(xInterceptLabelDef);
@@ -117,7 +116,9 @@ module KG {
 
         _update(scope) {
             var line = this;
-            line.linear.update(scope);
+            if(!!line.linear) {
+                line.linear.update(scope);
+            }
             return line;
         }
 
@@ -153,6 +154,10 @@ module KG {
 
             var line = this,
                 linear = this.linear;
+
+            if(!linear || linear == undefined) {
+                return view;
+            }
 
             var group:D3.Selection = view.objectGroup(line.name, line.initGroupFn(), false);
 

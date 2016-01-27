@@ -1,0 +1,434 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            <div class="col-md-8">
+                {% block graphs %}
+                {% endblock %}
+            </div>
+
+            <div class="col-md-4">
+                {% raw %}
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">utility</div>
+                        <div class="col-xs-9 math displayMath">u(x,y) = {{ model.utility.formula(false) }}<!-- = {{ model.utility.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="alphaSlider"></div>
+                    </div>
+                    <div class="row" ng-if="params.selectedUtility == 'CES'" ng-init="render(true)">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="subSlider"></div>
+                    </div>
+                </div>
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">budget</div>
+                        <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="px" style="text-align:right;font-size:12pt;padding-top:10px">P_x = {{params.px | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="pxSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="py" style="text-align:right;font-size:12pt;padding-top:10px">P_y = {{params.py | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="pySlider"></div>
+                    </div>
+                </div>
+                {% endraw %}
+
+                <hr/>
+
+                <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
+                    <option value="CobbDouglas">Cobb-Douglas</option>
+                    <option value="Complements">Complements</option>
+                    <option value="Substitutes">Substitutes</option>
+                    <option value="CES">CES</option>
+                    <option value="Quasilinear">Quasilinear</option>
+                </select>
+                {% block belowControls %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block model %}
+
+    <script>
+
+        var cobbDouglasDefinition = {
+                    type: 'EconGraphs.CobbDouglasUtility',
+                    definition: {
+                        xPower: 'params.alpha'
+                    }
+                },
+                complementsDefinition = {
+                    type: 'EconGraphs.ComplementsUtility',
+                    definition: {
+                        bundle: {x: 'params.alpha', y: '1-params.alpha'}
+                    }
+                },
+                substitutesDefinition = {
+                    type: 'EconGraphs.SubstitutesUtility',
+                    definition: {
+                        xCoefficient: 'params.alpha'
+                    }
+                },
+                cesDefinition = {
+                    type: 'EconGraphs.CESUtility',
+                    definition: {
+                        alpha: 'params.alpha',
+                        sub: 'params.sub'
+                    }
+                },
+                quasilinearDefinition = {
+                    type: 'EconGraphs.QuasilinearUtility',
+                    definition: {
+                        alpha: 'params.alpha'
+                    }
+                },
+                selectorDefinition = {
+                    type: 'KG.Selector',
+                    definition: {
+                        selected: 'params.selectedUtility',
+                        options: [
+                            {
+                                name: 'CobbDouglas',
+                                label: 'Cobb\-Douglas',
+                                selection: cobbDouglasDefinition
+                            },
+                            {
+                                name: 'Complements',
+                                label: 'Perfect Complements',
+                                selection: complementsDefinition
+                            },
+                            {
+                                name: 'Substitutes',
+                                label: 'Perfect Substitutes',
+                                selection: substitutesDefinition
+                            },
+                            {
+                                name: 'CES',
+                                label: 'CES',
+                                selection: cesDefinition
+                            },
+                            {
+                                name: 'Quasilinear',
+                                label: 'Quasilinear',
+                                selection: quasilinearDefinition
+                            }
+                        ]
+                    }
+                };
+
+
+
+
+        var scopeDefinition = {
+            params: {
+                x: 5,
+                alpha: 0.75,
+                xe: 12,
+                ye: 24,
+                px: 4,
+                py: 3,
+                sub: 0.5,
+                snapToOptimal: false,
+                selectedUtility: 'CobbDouglas',
+                showPreferred: false
+            },
+            graphParams: ['selectedUtility'],
+            restrictions: [{
+                    expression: 'params.xe',
+                    restrictionType: 'range',
+                    min: 0,
+                    max: 30,
+                precision: 1
+                },
+            {
+                    expression: 'params.ye',
+                    restrictionType: 'range',
+                    min: 0,
+                    max: 30,
+                precision: 1
+                },
+                {
+                    expression: 'params.x',
+                    restrictionType: 'range',
+                    min: 0,
+                    max: 'params.xe + params.ye*params.pySell/params.pxBuy',
+                    precision: 1
+                }],
+            model: {
+                type: 'EconGraphs.MarshallianDemand',
+                definition: {
+                    x: 'params.x',
+                    snapToOptimalBundle: true,
+                    budget: {
+                        type: 'EconGraphs.EndowmentBudgetConstraint',
+                        definition: {
+                            endowment: {x: 'params.xe', y: 'params.ye'},
+                            px: 'params.px',
+                            py: 'params.py'
+                        }},
+                    utility: selectorDefinition
+                }
+            },
+            views: [
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'subSlider',
+                        param: 'sub',
+                        axisDef: {min: -1, max: 1, ticks: 0}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'incomeSlider',
+                        param: 'income',
+                        precision: '1',
+                        axisDef: {min: 1, max: 200}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'pxSlider',
+                        param: 'px',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'pySlider',
+                        param: 'py',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+
+
+{% block js %}
+    <script>
+
+        var selectedUtility = '{{ args.utilityFunction }}';
+
+        if(selectedUtility == 'CobbDouglas') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = cobbDouglasDefinition;
+        }
+
+        if(selectedUtility == 'Leontief' || selectedUtility == 'PerfectComplements' || selectedUtility == 'Complements') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = complementsDefinition;
+        }
+
+        if(selectedUtility == 'Substitutes' || selectedUtility == 'PerfectSubstitutes') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = substitutesDefinition;
+        }
+
+        if(selectedUtility == 'Quasilinear') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = quasilinearDefinition;
+        }
+
+        var budgetSegmentSellX = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'budgetLineSellX',
+                        className: 'budget',
+                        linear: 'model.budget.budgetSegments[0].linear',
+                        yDomainDef: {min: 0, max: 'params.ye'},
+                        interaction: {
+                            highlight: 'budget'
+                        },
+                        xInterceptLabel: 'x^E + \\frac{P_yy^E}{P_x}'
+                    }
+                },
+                budgetSegmentsSellY = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'budgetLineSellY',
+                        className: 'budget dotted',
+                        linear: 'model.budget.budgetSegments[model.budget.budgetSegments.length - 1].linear',
+                        xDomainDef: {min: 0, max: 'params.xe'},
+                        interaction: {
+                            highlight: 'budget'
+                        },
+                        yInterceptLabel: 'y^E + \\frac{P_xx^E}{P_y}'
+                    }
+                },
+
+                budgetLineSlopeLabel = {
+                                type: 'KG.GraphDiv',
+                                definition: {
+                                    name: 'budgetLineSlopeLabel',
+                                    className: 'budget',
+                                    coordinates: {
+                                        x: 'model.budget.maxX()/2 + 1',
+                                        y: 'model.budget.maxY()/2 + 1'
+                                    },
+                                    text: ["\\frac{P_x}{P_y} =", 'params.px/params.py | number:2'],
+                                    align: 'left',
+                                    valign: 'bottom',
+                                    dimensions: {width: 100, height: 30},
+                                    interaction: {
+                                        highlight: 'px py'
+                                    }
+                                }
+                },
+                endowmentPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'endowment',
+                        className: 'budget',
+                        coordinates: {
+                            x: 'params.xe',
+                            y: 'params.ye'
+                        },
+                        interaction: {
+                            draggable: true,
+                            highlight: 'endowment'
+                        },
+                        droplines: {
+                            vertical: 'x^E',
+                            horizontal: 'y^E'
+                        }
+
+                    }
+                },
+                bundlePoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundle',
+                        className: 'utility',
+                        show: '!params.snapToOptimal',
+                        coordinates: {
+                            x: 'params.x',
+                            y: 'model.budget.yValue(params.x)'
+                        },
+                        interaction: {
+                            xDrag: true,
+                            highlight: 'bundle'
+                        },
+                        droplines: {
+                            vertical: 'x',
+                            horizontal: 'y'
+                        }
+
+                    }
+                },
+                bundleOptimalX = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleX',
+                        className: 'utility',
+                        show: 'params.snapToOptimal',
+                        coordinates: {
+                            x: 'model.bundle.x',
+                            y: 'model.bundle.y'
+                        },
+                        interaction: {
+                            highlight: 'x'
+                        },
+                        droplines: {
+                            vertical: 'x^*'
+                        }
+                    }
+                },
+                bundleOptimalY = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleY',
+                        className: 'utility',
+                        show: 'params.snapToOptimal',
+                        coordinates: {
+                            x: 'model.bundle.x',
+                            y: 'model.bundle.y'
+                        },
+                        interaction: {
+                            highlight: 'y'
+                        }
+                        , droplines: {
+                            horizontal: 'y^*'
+                        }
+
+                    }
+                },
+                indifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'indifference_curve',
+                        className: 'utility',
+                        fn: "model.utility.utilityFunction.setLevel(model.utility.utility(params.snapToOptimal ? model.bundle : {x: params.x, y: model.budget.yValue(params.x)}))",
+                        interaction: {
+                            highlight: 'utility'
+                        },
+                        label: {
+                            text: 'params.snapToOptimal ? "U^*" : "U"'
+                        }
+                    }
+                },offerCurve = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'offerCurve',
+                        show: 'params.showOffer',
+                        data: 'model.priceConsumptionCurveData({good:"x"})',
+                        className: 'demand',
+                        interpolation: 'basis',
+                        labelPosition: 'START',
+                        label: {
+                            text: 'PCC_x'
+                        }
+                    }
+                },
+                        preferred = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'preferredSet',
+                        className: 'preferred',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.snapToOptimal ? model.bundle.x : params.x, y: params.snapToOptimal ? model.bundle.y : model.budget.yValue(params.x)})",
+                        area: 'ABOVE RIGHT',
+                        show: 'params.showPreferred'
+                    }
+                }
+
+
+
+    </script>
+
+    {% block jsadjustments %}
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
+
+{% endblock %}

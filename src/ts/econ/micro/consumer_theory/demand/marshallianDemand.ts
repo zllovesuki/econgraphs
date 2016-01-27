@@ -82,6 +82,11 @@ module EconGraphs {
         }
 
         quantityAtIncome(income,good) {
+
+            if(this.budget instanceof EndowmentBudgetConstraint) {
+                return null;
+            }
+
             var d = this;
             good = good || 'x';
 
@@ -116,7 +121,7 @@ module EconGraphs {
             //console.log('setting initial price to ',initialPrice);
 
             samplePoints.forEach(function(price) {
-                d.budget.setPrice(price,pccParams.good)
+                d.budget.setPrice(price,pccParams.good);
                 var optimalBundle = d.utility.optimalBundle(d.budget)
                 if(!isNaN(optimalBundle.x) && !isNaN(optimalBundle.y)) {curveData.push(optimalBundle)};
             });
@@ -129,6 +134,10 @@ module EconGraphs {
         }
 
         incomeConsumptionCurveData(iccParams?) {
+
+            if(this.budget instanceof EndowmentBudgetConstraint) {
+                return [];
+            }
 
             iccParams = _.defaults(iccParams || {}, {
                 min: 1,
