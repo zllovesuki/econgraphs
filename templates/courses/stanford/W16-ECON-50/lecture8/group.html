@@ -1,0 +1,72 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+
+        <div class="subtitle">January 26</div>
+        <h2>Group Work: Comparative Statics for Quasilinear Utility</h2>
+        <hr/>
+        <p>Consider the utility function <span class="math">u(x,y) = 12 \ln x + y</span>, with the standard budget constraint <span class="math">P_xx + P_yy = I</span></p>
+        <hr/>
+        <ol>
+            <li style="padding-top:20px">
+                <p><b>Initial optimization</b></p>
+                <p>Since we didn't do a worked example of corner solutions last lecture, let's start by solving for one.</p>
+                <ul>
+                    <li>Find the values of <span class="math">(x^*,y^*)</span> that the Lagrange method would give you for general <span class="math">P_x</span>, <span class="math">P_y</span>, and <span class="math">I</span>.</li>
+                    <li>For what values of <span class="math">P_x</span>, <span class="math">P_y</span>, and <span class="math">I</span> does this approach produce an interior solution? For which values will they result in a corner solution?</li>
+                    <li>Write down the general formula (including corner solutions) for <span class="math">(x^*,y^*)</span> as a function of <span class="math">P_x</span>, <span class="math">P_y</span>, and <span class="math">I</span></li>
+                    <li>Find the optimal consumption point if <span class="math">P_x = 6</span>, <span class="math">P_y = 6</span>, and <span class="math">I = 120</span>.</li>
+                </ul>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Predict what the PCC and ICC curves will look like.</b></p>
+                <p>Based upon your intuition about this utility function (diminishing marginal utility for X, constant marginal utility for Y, sometimes corner solutions), what do you think the graphs of <span class="math">PCC_x</span>, <span class="math">PCC_y</span>, and <span class="math">ICC</span> that pass through the optimal consumption point if <span class="math">P_x = 6</span>, <span class="math">P_y = 6</span>, and <span class="math">I = 120</span>?</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Check your results.</b></p>
+                <p>Go to <a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='utility_max', course='econ50', utilityFunction='Quasilinear', alpha=12/13, px=6, py=6, snapToOptimal='true', showPCCX='true', showPCCY='true', showICC='true') }}">this site</a> and click on "snap to optimal" to see plots of the <span class="math">PCC_x</span>, <span class="math">PCC_y</span>, and <span class="math">ICC</span>. Do their shapes match your prediction? Do you understand why?</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Price-Consumption curves</b></p>
+                <p>Derive the mathematical formulas for the price-consumption curves, and plot them precisely. Specifically:</p>
+                <ul>
+                    <li>Holding <span class="math">P_y = 6</span> and <span class="math">I = 120</span> constant, derive and plot the price-consumption curve for good X <span class="math">(PCC_x)</span> by finding the optimal points <span class="math">(x^*,y^*)</span> as a function of <span class="math">P_x</span>.</li>
+                    <li>Holding <span class="math">P_x = 6</span> and <span class="math">I = 120</span> constant, derive and plot the price-consumption curve for good Y <span class="math">(PCC_y)</span> by finding the optimal points <span class="math">(x^*,y^*)</span> as a function of <span class="math">P_y</span>. (Hint: you might derive a general formula as a group, and then have individual team members find and evaluate <span class="math">(x^*,y^*)</span> for <span class="math">P_y = 1, 2, 3, 4, 8, 12</span>.)</li>
+                </ul>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Income-Consumption curve</b></p>
+                <p>Derive the mathematical formulas for the income-consumption curve, and plot it precisely. Specifically, holding <span class="math">P_x = 6</span> and <span class="math">P_y = 6</span> constant, derive and plot the income-consumption curve <span class="math">(ICC)</span> by finding the optimal points <span class="math">(x^*,y^*)</span> as a function of <span class="math">I</span>.</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Demand curves</b></p>
+                <p>Derive the mathematical formulas for the demand curves for X and Y, and plot them precisely. Specifically:</p>
+                <ul>
+                    <li>Holding <span class="math">P_y = 6</span> and <span class="math">I = 120</span> constant, derive and plot the demand curve for good X <span class="math">q^D_x(P_x)</span>.</li>
+                    <li>Holding <span class="math">P_x = 6</span> and <span class="math">I = 120</span> constant, derive and plot the demand curve for good Y <span class="math">q^D_y(P-y)</span>.</li>
+                </ul>
+                <p>(Hint: you can use the points you found while calculating the price-consumption curves...)</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Engel curves</b></p>
+                <p>Derive the mathematical formulas for the Engel curves for X and Y, and plot them precisely. Specifically, holding <span class="math">P_x = 6</span> and <span class="math">P_y = 6</span> constant, derive and plot the Engel curves for X and Y. (Hint: you can use the points you found while calculating the income-consumption curves...)</p>
+            </li>
+
+        </ol>
+        </li>
+        </ol>
+
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

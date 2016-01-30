@@ -8,7 +8,10 @@ module EconGraphs {
 
     export interface UtilityDemandDefinition extends KG.ModelDefinition
     {
+        x?: any;
+        y?: any;
         utility: {type: string; definition: TwoGoodUtilityDefinition};
+        snapToOptimalBundle?: any;
     }
 
     export interface IUtilityDemand extends KG.IModel
@@ -16,17 +19,26 @@ module EconGraphs {
         utility: TwoGoodUtility;
         utilitySelector: KG.Selector;
 
+        x: number;
+        y: number;
+        bundle: TwoGoodBundle;
+
         quantityAtPrice: (price:number, good?: string) => number;
         demandCurveData: (demandParams: UtilityDemandCurveParams) => KG.ICoordinates[];
 
         price: (good?: string) => number; // current price of good x or good y
+        snapToOptimalBundle: boolean;
     }
 
     export class UtilityDemand extends KG.Model implements IUtilityDemand
     {
         public utility;
         public utilitySelector;
+        public x;
+        public y;
+        public bundle;
         public optimalBundle;
+        public snapToOptimalBundle;
 
         constructor(definition:UtilityDemandDefinition,modelPath?:string) {
 

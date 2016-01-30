@@ -3,19 +3,12 @@
 module EconGraphs {
 
     export interface MarshallianDemandDefinition extends UtilityDemandDefinition{
-        x?: any;
-        y?: any;
         budget: {type: string; definition: BudgetConstraintDefinition}
-        snapToOptimalBundle?: any;
     }
 
     export interface IMarshallianDemand extends IUtilityDemand {
 
-        x: number;
-        y: number;
-        bundle: TwoGoodBundle;
         budget: BudgetConstraint | KG.Selector;
-        snapToOptimalBundle?: boolean;
 
         priceConsumptionCurveData: (pccParams?: UtilityDemandCurveParams) => KG.ICoordinates[];
         incomeConsumptionCurveData: (iccParams?: UtilityDemandCurveParams) => KG.ICoordinates[];
@@ -25,11 +18,7 @@ module EconGraphs {
 
     export class MarshallianDemand extends UtilityDemand implements IMarshallianDemand {
 
-        public x;
-        public y;
-        public bundle;
         public budget;
-        public snapToOptimalBundle;
 
         constructor(definition:MarshallianDemandDefinition, modelPath?:string) {
 

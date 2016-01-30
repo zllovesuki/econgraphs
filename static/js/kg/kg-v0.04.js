@@ -6050,21 +6050,40 @@ var EconGraphs;
     var HicksianDemand = (function (_super) {
         __extends(HicksianDemand, _super);
         function HicksianDemand(definition, modelPath) {
+            if (definition.hasOwnProperty('utilityConstraintDef')) {
+                definition.utilityConstraint = {
+                    type: 'KG.UtilityConstraint',
+                    definition: definition.utilityConstraintDef
+                };
+            }
             _super.call(this, definition, modelPath);
         }
-        HicksianDemand.prototype.price = function (good) {
-            return this['p' + good];
+        HicksianDemand.prototype._update = function (scope) {
+            var d = this;
+            d.utility = d.utility.update(scope);
+            d.utilityConstraint = d.utilityConstraint.update(scope);
+            if (d.snapToOptimalBundle) {
+                d.bundle = d.utility.lowestCostBundle(d.utilityConstraint);
+            }
+            else {
+                d.bundle = {
+                    x: d.x,
+                    y: d.utility.indifferenceCurveAtUtilityFn(d.utilityConstraint.u).yValue(d.x)
+                };
+            }
+            console.log('updated Hicksian bundle to (', d.bundle.x, ',', d.bundle.y, ')');
+            return d;
         };
         HicksianDemand.prototype.quantityAtPrice = function (price, good) {
             var d = this;
             good = good || 'x';
             // store original price in budget constraint
-            var originalPrice = d['p' + good];
+            var originalPrice = d.utilityConstraint['p' + good];
             // evaluate quantity demanded of this good at the given price
             d['p' + good] = price;
-            var quantity = d.utility.lowestCostBundle(d.u, d.px, d.py)[good];
+            var quantity = d.utility.lowestCostBundle(d.utilityConstraint)[good];
             // reset budget constraint to original price
-            d['p' + good] = originalPrice;
+            d.utilityConstraint['p' + good] = originalPrice;
             return quantity;
         };
         return HicksianDemand;
