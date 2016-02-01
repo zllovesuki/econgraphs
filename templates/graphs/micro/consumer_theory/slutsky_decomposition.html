@@ -9,11 +9,28 @@
                 <h1>Slutsky Decomposition: {{ model.utility.title }}</h1>
                 <hr/>
                 <div id="graph"></div>
-                {% endraw %}
+
             </div>
 
             <div class="col-md-4">
-                <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')">
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">utility</div>
+                        <div class="col-xs-9 math displayMath">u(x,y) = {{ model.utility.formula(false) }}<!-- = {{ model.utility.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="alphaSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="subSlider"></div>
+                    </div>
+                </div>
+                {% endraw %}
+                <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')" onchange="redraw()">
                     <option value="CobbDouglas">Cobb-Douglas</option>
                     <option value="Complements">Complements</option>
                     <option value="Substitutes">Substitutes</option>
@@ -103,12 +120,12 @@
                 x: 5,
                 alpha: 0.5,
                 xIntercept1: 20,
-                xIntercept2: 40,
-                yIntercept: 30,
+                xIntercept2: 45,
+                yIntercept: 45,
                 sub: 0.5,
                 showMap: false,
                 snapToOptimal: true,
-                selectedUtility: 'CobbDouglas',
+                selectedUtility: 'CES',
                 highlightBudget: false,
                 highlightUtility: false,
                 highlightBundle: false
@@ -126,6 +143,23 @@
                 }
             },
             views: [
+{
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'subSlider',
+                        param: 'sub',
+                        axisDef: {min: -1, max: 0.99, ticks: 0}
+                    }
+                }
 
             ]
         }
@@ -191,7 +225,7 @@
                     type: 'KG.Line',
                     definition: {
                         name: 'BL_D',
-                        className: 'budget old',
+                        className: 'budget dotted',
                         linear: 'model.decompositionBudget.budgetSegments[0].linear',
                         interaction: {
                             highlight: 'finalPrice'
@@ -219,7 +253,7 @@
                     type: 'KG.Point',
                     definition: {
                         name: 'xIntercept1',
-                        className: 'budget',
+                        className: 'budget old',
                         coordinates: {
                             x: 'params.xIntercept1',
                             y: 0
@@ -276,12 +310,12 @@
                             text: 'A'
                         },
                         interaction: {
-                            highlight: 'initialPrice initialUtility'
-                        }/*,
+                            highlight: 'initialPrice initialUtility initialIncome'
+                        },
                         droplines: {
-                            vertical: 'x_A',
+                            //vertical: 'x_A',
                             horizontal: 'y_A'
-                        }*/
+                        }
 
                     }
                 },
@@ -298,12 +332,12 @@
                             text: 'C'
                         },
                         interaction: {
-                            highlight: 'finalPrice finalUtility'
-                        }/*,
+                            highlight: 'finalPrice finalUtility initialIncome'
+                        },
                         droplines: {
-                            vertical: 'x_C',
+                            //vertical: 'x_C',
                             horizontal: 'y_C'
-                        }*/
+                        }
 
                     }
                 },
@@ -321,11 +355,11 @@
                         },
                         interaction: {
                             highlight: 'finalPrice initialUtility'
-                        }/*,
+                        },
                         droplines: {
-                            vertical: 'x_B',
+                            //vertical: 'x_B',
                             horizontal: 'y_B'
-                        }*/
+                        }
 
                     }
                 },
@@ -343,11 +377,11 @@
                         },
                         interaction: {
                             highlight: 'initialPrice finalUtility'
-                        }/*,
+                        },
                         droplines: {
-                            vertical: 'x_E',
+                            //vertical: 'x_E',
                             horizontal: 'y_E'
-                        }*/
+                        }
 
                     }
                 },
@@ -386,14 +420,17 @@
                         //show: 'params.showPCCX',
                         data: 'model.marshallianDemand1.priceConsumptionCurveData({good:"x"})',
                         className: 'demand',
-                        interpolation: 'basis',
+                        interpolation: 'params.selectedUtility == "Substitutes" ? "linear" : "basis"',
                         labelPosition: 'START',
                         label: {
                             text: 'PCC_x'
+                        },
+                        interaction: {
+                            highlight: 'initialIncome'
                         }
                     }
                 },
-                ICC = {
+                ICC2 = {
                     type: 'KG.Curve',
                     definition: {
                         name: 'ICC',
@@ -402,7 +439,54 @@
                         className: 'engel',
                         interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
                         label: {
-                            text: 'ICC'
+                            text: 'ICC_2'
+                        },
+                        interaction: {
+                            highlight: 'finalPrice'
+                        }
+                    }
+                },
+                substitutionEffectY = {
+                    type: 'KG.Arrow',
+                    definition: {
+                        name: 'substitutionEffectArrow',
+                        begin: {
+                            x: 3,
+                            y: 'model.initialBundle.y'
+                        },
+                        end: {
+                            x: 3,
+                            y: 'model.decompositionBundle.y'
+                        },
+                        className: 'blue',
+                        label: {
+                            text: '\\text{Substitution Effect}',
+                            align: 'right'
+                        },
+                        interaction: {
+                            highlight: 'initialUtility'
+                        }
+                    }
+                },
+                incomeEffectY = {
+                    type: 'KG.Arrow',
+                    definition: {
+                        name: 'incomeEffectArrow',
+                        begin: {
+                            x: 5,
+                            y: 'model.decompositionBundle.y'
+                        },
+                        end: {
+                            x: 5,
+                            y: 'model.finalBundle.y'
+                        },
+                        className: 'orange',
+                        label: {
+                            text: '\\text{Income Effect}',
+                            align: 'left'
+                        },
+                        interaction: {
+                            highlight: 'finalPrice'
                         }
                     }
                 }
@@ -412,8 +496,8 @@
             definition: {
                 element_id: 'graph',
                 square: true,
-                xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
-                yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
+                xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}', ticks:0},
+                yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}', ticks:0},
                 objects: [
                     budgetLine1,
                         budgetLine2,
@@ -429,7 +513,9 @@
                         initialIndifferenceCurve,
                         finalIndifferenceCurve,
                         PCCX,
-                        ICC
+                        ICC2,
+                        substitutionEffectY,
+                        incomeEffectY
                 ]
             }
         });
