@@ -40,6 +40,7 @@
 /// <reference path="micro/consumer_theory/demand/utilityDemand.ts"/>
 /// <reference path="micro/consumer_theory/demand/marshallianDemand.ts"/>
 /// <reference path="micro/consumer_theory/demand/hicksianDemand.ts"/>
+/// <reference path="micro/consumer_theory/demand/slutsky.ts"/>
 
 /* Producer Theory */
 

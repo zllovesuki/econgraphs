@@ -98,7 +98,7 @@ module EconGraphs {
             pccParams = _.defaults(pccParams || {}, {
                 good: 'x',
                 min: 0,
-                max: 10,
+                max: 100,
                 numSamplePoints: 101
             });
 

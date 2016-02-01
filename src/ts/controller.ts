@@ -24,6 +24,7 @@ module KG
         init: (definition: any) => void;
         updateParams: (params: any) => void;
         renderMath: () => void;
+        redraw: () => void;
         error: string;
         interpolate: any;
         color: (className:string) => string;
@@ -196,6 +197,10 @@ module KG
                 }
 
             };
+
+            $scope.redraw = function() {
+                render(true);
+            }
 
             $scope.init(scopeDefinition);
 

@@ -4298,6 +4298,9 @@ var KG;
                     $scope.$apply(redrawObjects);
                 }
             };
+            $scope.redraw = function () {
+                render(true);
+            };
             $scope.init(scopeDefinition);
         }
         return Controller;
@@ -5783,23 +5786,19 @@ var EconGraphs;
                 return n / (dx + dy);
             }
         };
-        /*lowestCostBundle(utilityConstraint:UtilityConstraint) {
-            var u = this;
-
-            var denominator = Math.pow(u.alpha, s) * Math.pow(px, 1 - s) + Math.pow(1 - u.alpha, u.s) * Math.pow(py, 1 - u.s),
-                x_coefficient = Math.pow(px / u.alpha, -s) / denominator,
-                y_coefficient = Math.pow(py / (1 - u.alpha), -s) / denominator,
-                scale_factor = u.alpha*Math.pow(x_coefficient, u.r) + (1- u.alpha)*Math.pow(y_coefficient, u.r),
-
-                c = Math.pow(utility/scale_factor, 1/ u.r);
-
-            return c;
-
-            return {
-                x: Math.pow(theta,u.yShare)*utilityConstraint.u,
-                y: Math.pow(1/theta,u.xShare)*utilityConstraint.u
-            };
-        }*/
+        CESUtility.prototype.expenditure = function (utilityConstraint) {
+            var u = this, s = u.r / (u.r - 1);
+        };
+        CESUtility.prototype.lowestCostBundle = function (utilityConstraint) {
+            var u = this, s = 1 / (1 - u.r);
+            var costMinimizingBudgetConstraint = new EconGraphs.SimpleBudgetConstraint({
+                income: Math.pow(Math.pow(u.alpha, s) * Math.pow(utilityConstraint.px, 1 - s) + Math.pow(1 - u.alpha, s) * Math.pow(utilityConstraint.py, 1 - s), 1 / (1 - s)) * utilityConstraint.u,
+                px: utilityConstraint.px,
+                py: utilityConstraint.py
+            });
+            console.log(costMinimizingBudgetConstraint);
+            return u.optimalBundle(costMinimizingBudgetConstraint);
+        };
         CESUtility.prototype.formula = function (values) {
             var u = this;
             if (values) {
@@ -5986,7 +5985,7 @@ var EconGraphs;
             pccParams = _.defaults(pccParams || {}, {
                 good: 'x',
                 min: 0,
-                max: 10,
+                max: 100,
                 numSamplePoints: 101
             });
             var d = this, samplePoints = KG.samplePointsForDomain(pccParams), curveData = [];
@@ -6052,7 +6051,7 @@ var EconGraphs;
         function HicksianDemand(definition, modelPath) {
             if (definition.hasOwnProperty('utilityConstraintDef')) {
                 definition.utilityConstraint = {
-                    type: 'KG.UtilityConstraint',
+                    type: 'EconGraphs.UtilityConstraint',
                     definition: definition.utilityConstraintDef
                 };
             }
@@ -6089,6 +6088,114 @@ var EconGraphs;
         return HicksianDemand;
     })(EconGraphs.UtilityDemand);
     EconGraphs.HicksianDemand = HicksianDemand;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var Slutsky = (function (_super) {
+        __extends(Slutsky, _super);
+        function Slutsky(definition, modelPath) {
+            definition.px2 = definition.px2 || definition.px;
+            definition.py2 = definition.py2 || definition.py;
+            definition.budget1 = {
+                type: 'EconGraphs.SimpleBudgetConstraint',
+                definition: {
+                    income: definition.income,
+                    px: definition.px,
+                    py: definition.py
+                }
+            };
+            definition.budget2 = {
+                type: 'EconGraphs.SimpleBudgetConstraint',
+                definition: {
+                    income: definition.income,
+                    px: definition.px2,
+                    py: definition.py2
+                }
+            };
+            definition.decompositionBudget = {
+                type: 'EconGraphs.SimpleBudgetConstraint',
+                definition: {
+                    px: definition.px2,
+                    py: definition.py2
+                }
+            };
+            definition.compensatedBudget = {
+                type: 'EconGraphs.SimpleBudgetConstraint',
+                definition: {
+                    income: 0,
+                    px: definition.px,
+                    py: definition.py
+                }
+            };
+            definition.marshallianDemand1 = {
+                type: 'EconGraphs.MarshallianDemand',
+                definition: {
+                    utility: definition.utility,
+                    budget: definition.budget1,
+                    snapToOptimalBundle: true
+                }
+            };
+            definition.marshallianDemand2 = {
+                type: 'EconGraphs.MarshallianDemand',
+                definition: {
+                    utility: definition.utility,
+                    budget: definition.budget2,
+                    snapToOptimalBundle: true
+                }
+            };
+            definition.hicksianDemand1 = {
+                type: 'EconGraphs.HicksianDemand',
+                definition: {
+                    utility: definition.utility,
+                    utilityConstraintDef: {
+                        px: definition.px2,
+                        py: definition.py2
+                    },
+                    snapToOptimalBundle: true
+                }
+            };
+            definition.hicksianDemand2 = {
+                type: 'EconGraphs.HicksianDemand',
+                definition: {
+                    utility: definition.utility,
+                    utilityConstraintDef: {
+                        px: definition.px,
+                        py: definition.py
+                    },
+                    snapToOptimalBundle: true
+                }
+            };
+            _super.call(this, definition, modelPath);
+        }
+        Slutsky.prototype._update = function (scope) {
+            var s = this;
+            s.marshallianDemand1.utility = s.utility;
+            s.marshallianDemand2.utility = s.utility;
+            s.hicksianDemand1.utility = s.utility;
+            s.hicksianDemand2.utility = s.utility;
+            s.marshallianDemand1.update(scope);
+            s.marshallianDemand2.update(scope);
+            s.initialBundle = s.marshallianDemand1.bundle;
+            s.finalBundle = s.marshallianDemand2.bundle;
+            console.log('initialBundle = ', s.initialBundle);
+            s.initialUtility = s.utility.utility(s.initialBundle);
+            s.finalUtility = s.utility.utility(s.finalBundle);
+            s.hicksianDemand1.utilityConstraint.u = s.initialUtility;
+            s.hicksianDemand2.utilityConstraint.u = s.finalUtility;
+            s.decompositionBundle = s.utility.lowestCostBundle(s.hicksianDemand1.utilityConstraint);
+            s.compensatedBundle = s.utility.lowestCostBundle(s.hicksianDemand2.utilityConstraint);
+            console.log('decompositionBundle = (', s.decompositionBundle.x, ',', s.decompositionBundle.y, ')');
+            s.decompositionBudget.setIncome(s.budget2.px * s.decompositionBundle.x + s.budget2.py * s.decompositionBundle.y);
+            s.compensatedBudget.setIncome(s.budget1.px * s.compensatedBundle.x + s.budget1.py * s.compensatedBundle.y);
+            s.initialIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.initialUtility);
+            s.finalIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.finalUtility);
+            console.log(s);
+            return s;
+        };
+        return Slutsky;
+    })(KG.Model);
+    EconGraphs.Slutsky = Slutsky;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 'use strict';
@@ -6870,6 +6977,7 @@ var EconGraphs;
 /// <reference path="micro/consumer_theory/demand/utilityDemand.ts"/>
 /// <reference path="micro/consumer_theory/demand/marshallianDemand.ts"/>
 /// <reference path="micro/consumer_theory/demand/hicksianDemand.ts"/>
+/// <reference path="micro/consumer_theory/demand/slutsky.ts"/>
 /* Producer Theory */
 /// <reference path="micro/producer_theory/costs/productionCost.ts"/>
 /// <reference path="micro/producer_theory/costs/linearMarginalCost.ts"/>

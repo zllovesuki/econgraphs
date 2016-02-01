@@ -3,13 +3,13 @@
 module EconGraphs {
 
     export interface UtilityConstraintDefinition extends KG.ModelDefinition {
-        u: any;
+        u?: any;
         px?: any;
         py?: any;
     }
 
     export interface IUtilityConstraint extends KG.IModel {
-        u: number;
+        u?: number;
         px?: number;
         py?: number;
     }

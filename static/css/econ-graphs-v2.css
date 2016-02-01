@@ -69,7 +69,7 @@
   stroke: #6C3082;
   fill: #c5b0d5;
 }
-.utility-old {
+.utilityOld {
   color: #c5b0d5;
   stroke: #c5b0d5;
   fill: #c5b0d5;
@@ -97,6 +97,11 @@
 .budget {
   color: #014421;
   stroke: #014421;
+  fill: #2ca02c;
+}
+.budgetOld {
+  color: #2ca02c;
+  stroke: #2ca02c;
   fill: #98df8a;
 }
 .engel {
@@ -521,6 +526,12 @@ button:hover {
 }
 .highlight.dashed {
   stroke-dasharray: 15,15;
+}
+.old {
+  stroke-width: 2;
+}
+.highlight.old {
+  stroke-width: 4;
 }
 .drawHandle,
 .segmentHandle,

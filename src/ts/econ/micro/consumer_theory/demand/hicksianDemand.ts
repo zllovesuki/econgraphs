@@ -19,7 +19,7 @@ module EconGraphs {
 
             if(definition.hasOwnProperty('utilityConstraintDef')) {
                 definition.utilityConstraint = {
-                    type: 'KG.UtilityConstraint',
+                    type: 'EconGraphs.UtilityConstraint',
                     definition: definition.utilityConstraintDef
                 };
             }

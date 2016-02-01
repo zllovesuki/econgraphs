@@ -77,7 +77,7 @@ module EconGraphs {
             definition.py2 = definition.py2 || definition.py;
 
             definition.budget1 = {
-                type: 'KG.SimpleBudgetConstraint',
+                type: 'EconGraphs.SimpleBudgetConstraint',
                 definition: {
                     income: definition.income,
                     px: definition.px,
@@ -86,7 +86,7 @@ module EconGraphs {
             };
 
             definition.budget2 = {
-                type: 'KG.SimpleBudgetConstraint',
+                type: 'EconGraphs.SimpleBudgetConstraint',
                 definition: {
                     income: definition.income,
                     px: definition.px2,
@@ -95,7 +95,7 @@ module EconGraphs {
             };
 
             definition.decompositionBudget = {
-                type: 'KG.SimpleBudgetConstraint',
+                type: 'EconGraphs.SimpleBudgetConstraint',
                 definition: {
                     px: definition.px2,
                     py: definition.py2
@@ -103,7 +103,7 @@ module EconGraphs {
             };
 
             definition.compensatedBudget = {
-                type: 'KG.SimpleBudgetConstraint',
+                type: 'EconGraphs.SimpleBudgetConstraint',
                 definition: {
                     income: 0,
                     px: definition.px,
@@ -112,7 +112,7 @@ module EconGraphs {
             };
 
             definition.marshallianDemand1 = {
-                type: 'KG.MarshallianDemand',
+                type: 'EconGraphs.MarshallianDemand',
                 definition: {
                     utility: definition.utility,
                     budget: definition.budget1,
@@ -121,7 +121,7 @@ module EconGraphs {
             };
 
             definition.marshallianDemand2 = {
-                type: 'KG.MarshallianDemand',
+                type: 'EconGraphs.MarshallianDemand',
                 definition: {
                     utility: definition.utility,
                     budget: definition.budget2,
@@ -130,7 +130,7 @@ module EconGraphs {
             };
 
             definition.hicksianDemand1 = {
-                type: 'KG.HicksianDemand',
+                type: 'EconGraphs.HicksianDemand',
                 definition: {
                     utility: definition.utility,
                     utilityConstraintDef: {
@@ -142,12 +142,12 @@ module EconGraphs {
             };
 
             definition.hicksianDemand2 = {
-                type: 'KG.HicksianDemand',
+                type: 'EconGraphs.HicksianDemand',
                 definition: {
                     utility: definition.utility,
                     utilityConstraintDef: {
-                        px: definition.px2,
-                        py: definition.py2
+                        px: definition.px,
+                        py: definition.py
                     },
                     snapToOptimalBundle: true
                 }
@@ -159,11 +159,19 @@ module EconGraphs {
         _update(scope) {
             var s = this;
 
+            s.marshallianDemand1.utility = s.utility;
+                s.marshallianDemand2.utility = s.utility;
+                s.hicksianDemand1.utility = s.utility;
+                s.hicksianDemand2.utility = s.utility;
+
+
             s.marshallianDemand1.update(scope);
             s.marshallianDemand2.update(scope);
 
             s.initialBundle = s.marshallianDemand1.bundle;
-            s.finalBundle = s.marshallianDemand1.bundle;
+            s.finalBundle = s.marshallianDemand2.bundle;
+
+            console.log('initialBundle = ',s.initialBundle);
 
             s.initialUtility = s.utility.utility(s.initialBundle);
             s.finalUtility = s.utility.utility(s.finalBundle);
@@ -171,15 +179,19 @@ module EconGraphs {
             s.hicksianDemand1.utilityConstraint.u = s.initialUtility;
             s.hicksianDemand2.utilityConstraint.u = s.finalUtility;
 
-            s.decompositionBundle = s.hicksianDemand1.update(scope).bundle;
-            s.compensatedBundle = s.hicksianDemand2.update(scope).bundle;
+            s.decompositionBundle = s.utility.lowestCostBundle(s.hicksianDemand1.utilityConstraint);
+            s.compensatedBundle = s.utility.lowestCostBundle(s.hicksianDemand2.utilityConstraint);
 
-            s.decompositionBudget.income = s.px2*s.decompositionBundle.x + s.py2*s.decompositionBundle.y;
-            s.compensatedBudget.income = s.px*s.compensatedBundle.x + s.py*s.compensatedBundle.y;
+            console.log('decompositionBundle = (',s.decompositionBundle.x,',',s.decompositionBundle.y,')')
+
+            s.decompositionBudget.setIncome(s.budget2.px*s.decompositionBundle.x + s.budget2.py*s.decompositionBundle.y);
+            s.compensatedBudget.setIncome(s.budget1.px*s.compensatedBundle.x + s.budget1.py*s.compensatedBundle.y);
 
             s.initialIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.initialUtility);
             s.finalIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.finalUtility);
-            
+
+            console.log(s);
+
             return s;
         }
 
