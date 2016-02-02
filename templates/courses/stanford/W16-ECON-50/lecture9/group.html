@@ -1,0 +1,52 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+
+        <div class="subtitle">February 2</div>
+        <h2>Group Work: Deriving the Slutsky Diagram for Cobb-Douglas</h2>
+        <hr/>
+        <p>Consider the "canonical" Cobb-Douglas utility function <span class="math">u(x,y) = xy</span>. Remember that the (Marshallian) demand functions for this utility function are <span class="math">x^*(P_x,P_y,I) = \frac{I}{2P_x}</span> and <span class="math">y^*(P_x,P_y,I) = \frac{I}{2P_y}</span>.</p>
+        <hr/>
+        <ol>
+            <li style="padding-top:20px">
+                <p><b>Derive the indirect utility function</b></p>
+                <p>Plug the optimal bundle <span class="math">(x^*(P_x,P_y,I),y^*(P_x,P_y,I))</span> into the utility function to find the indirect utility function <span class="math">V(P_x,P_y,I) = u(x^*(P_x,P_y,I),y^*(P_x,P_y,I))</span></p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Derive the expenditure function</b></p>
+                <p>Find the necessary income required to achieve utility <span class="math">U</span> by setting <span class="math">V(P_x,P_y,I) = U</span> and solving for <span class="math">U</span>. Call this the "expenditure function" <span class="math">E(P_x,P_y,U)</span>.</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Derive the Hicksian demand</b></p>
+                <p>Substitute this income into the Marshallian demand functions to find the Hicksian demand functions: <span class="math">x^*(P_x,P_y,E(P_x,P_y,U))</span> and <span class="math">y^*(P_x,P_y,E(P_x,P_y,U))</span>.</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Create the Slutsky diagram</b></p>
+                <p>In this part we'll use what you derived above to create the Slutsky decomposition diagram for the price change from <span class="math">P_{x_1} = 1</span> to <span class="math">P_{x_2} = 4</span>, holding <span class="math">P_y = 1</span> and <span class="math">I = 8</span>.</p>
+                <ul>
+                    <li>Draw the budget lines for <span class="math">(P_x = 1, P_y = 1,I = 8)</span> and <span class="math">(P_x = 4, P_y = 1,I = 8)</span>.</li>
+                    <li>Find the optimal consumption bundle (Marshallian demand) for those two budget constraints; add them to your diagram as points A and C.</li>
+                    <li>Plug <span class="math">(P_x = 1, P_y = 1,I = 8)</span> into the indirect utility function (or just evaluate the utility at bundle A!) to find the utility at the initial prices and income, <span class="math">U_1 = V(P_x,P_y,I) = V(1,1,8)</span>.</li>
+                    <li>Plug <span class="math">U_1</span> into the expenditure function to determine the income required to afford this initial utility at the new price; i.e., <span class="math">E_D = E(P_x, P_y, U) = E(4, 1, U_1)</span>; add the "decomposition budget line"  <span class="math">4x + y = E(4,1,U_1)</span> to your diagram.</li>
+                    <li>Plug <span class="math">U_1</span> into the Hicksian demand functions determine the decomposition bundle; add this point to your diagram as point B.</li>
+                    <li>Add the indifference curve for <span class="math">U_1</span> to your diagram.</li>
+                </ul>
+            </li>
+        </ol>
+        </li>
+        </ol>
+
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

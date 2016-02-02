@@ -38,7 +38,18 @@
                     <option value="Quasilinear">Quasilinear</option>
                 </select>
                 {% block belowControls %}
+                    <hr/>
+                    <toggle param="showA" class="demand" show-hide="true"><span class="math">\text{Initial State }(A)</span></toggle>
+                    <toggle param="showB" class="demand" show-hide="true"><span class="math">\text{Decomposition Bundle }(B)</span></toggle>
+                    <toggle param="showC" class="demand" show-hide="true"><span class="math">\text{Final State }(C)</span></toggle>
+                    <toggle param="showPCCX" class="demand" show-hide="true"><span class="math">PCC_X</span></toggle>
+                    <toggle param="showICC1" class="demand" show-hide="true"><span class="math">ICC_1</span></toggle>
+                    <toggle param="showICC2" class="demand" show-hide="true"><span class="math">ICC_2</span></toggle>
+                    <toggle param="showEffectsY" class="demand" show-hide="true"><span class="math">\text{Income and substitution effects}</span></toggle>
+                    <br/>
 
+                    <h4 highlight="initialUtility" ng-if="params.showEffectsY && params.showB && params.showA" ng-init="renderMath()"><span class="math displayMath">\text{Substitution effect: }A \rightarrow B</span></h4>
+                    <h4 highlight="finalPrice" ng-if="params.showEffectsY && params.showB && params.showC" ng-init="renderMath()"><span class="math displayMath">\text{Income effect: }B \rightarrow C</span></h4>
                 {% endblock %}
             </div>
         </div>
@@ -123,12 +134,14 @@
                 xIntercept2: 45,
                 yIntercept: 45,
                 sub: 0.5,
-                showMap: false,
-                snapToOptimal: true,
                 selectedUtility: 'CES',
-                highlightBudget: false,
-                highlightUtility: false,
-                highlightBundle: false
+                showA: true,
+                showB: true,
+                showC: true,
+                showPCCX: false,
+                showICC1: false,
+                showICC2: false,
+                showEffectsY: false
             },
             graphParams: ['selectedUtility'],
             restrictions: [],
@@ -198,9 +211,11 @@
                     definition: {
                         name: 'BL1',
                         className: 'budget old',
+                        show: 'params.showA',
                         linear: 'model.budget1.budgetSegments[0].linear',
                         interaction: {
-                            highlight: 'initialPrice'
+                            triggerHighlight: 'BL1',
+                            highlight: 'initialPrice BL1'
                         },
                         label: {
                             text: 'BL_1'
@@ -212,9 +227,11 @@
                     definition: {
                         name: 'BL2',
                         className: 'budget',
+                        show: 'params.showC',
                         linear: 'model.budget2.budgetSegments[0].linear',
                         interaction: {
-                            highlight: 'finalPrice'
+                            triggerHighlight: 'BL2',
+                            highlight: 'finalPrice BL2'
                         },
                         label: {
                             text: 'BL_2'
@@ -226,9 +243,11 @@
                     definition: {
                         name: 'BL_D',
                         className: 'budget dotted',
+                        show: 'params.showB',
                         linear: 'model.decompositionBudget.budgetSegments[0].linear',
                         interaction: {
-                            highlight: 'finalPrice'
+                            triggerHighlight: 'decomposition',
+                            highlight: 'decomposition finalPrice'
                         },
                         label: {
                             text: 'BL_D'
@@ -239,6 +258,7 @@
                     type: 'KG.Line',
                     definition: {
                         name: 'BL_C',
+                        show: 'params.showC',
                         className: 'budget',
                         linear: 'model.compensatedBudget.budgetSegments[0].linear',
                         interaction: {
@@ -254,6 +274,7 @@
                     definition: {
                         name: 'xIntercept1',
                         className: 'budget old',
+                        show: 'params.showA',
                         coordinates: {
                             x: 'params.xIntercept1',
                             y: 0
@@ -270,6 +291,7 @@
                     definition: {
                         name: 'xIntercept2',
                         className: 'budget',
+                        show: 'params.showC',
                         coordinates: {
                             x: 'params.xIntercept2',
                             y: 0
@@ -286,6 +308,7 @@
                     definition: {
                         name: 'yIntercept',
                         className: 'budget',
+                        show: '(params.showA || params.showB || params.showC)',
                         coordinates: {
                             x: 0,
                             y: 'params.yIntercept'
@@ -302,6 +325,7 @@
                     definition: {
                         name: 'bundleA',
                         className: 'utility',
+                        show: 'params.showA',
                         coordinates: {
                             x: 'model.initialBundle.x',
                             y: 'model.initialBundle.y'
@@ -310,7 +334,8 @@
                             text: 'A'
                         },
                         interaction: {
-                            highlight: 'initialPrice initialUtility initialIncome'
+                            triggerHighlight: '',
+                            highlight: 'initialPrice initialUtility initialIncome BL1'
                         },
                         droplines: {
                             //vertical: 'x_A',
@@ -323,6 +348,7 @@
                     type: 'KG.Point',
                     definition: {
                         name: 'bundleC',
+                        show: 'params.showC',
                         className: 'utility',
                         coordinates: {
                             x: 'model.finalBundle.x',
@@ -332,7 +358,8 @@
                             text: 'C'
                         },
                         interaction: {
-                            highlight: 'finalPrice finalUtility initialIncome'
+                            triggerHighlight: '',
+                            highlight: 'BL2 finalUtility finalPrice'
                         },
                         droplines: {
                             //vertical: 'x_C',
@@ -345,6 +372,7 @@
                     type: 'KG.Point',
                     definition: {
                         name: 'bundleB',
+                        show: 'params.showB',
                         className: 'utility',
                         coordinates: {
                             x: 'model.decompositionBundle.x',
@@ -354,7 +382,8 @@
                             text: 'B'
                         },
                         interaction: {
-                            highlight: 'finalPrice initialUtility'
+                            triggerHighlight: '',
+                            highlight: 'finalPrice initialUtility decomposition'
                         },
                         droplines: {
                             //vertical: 'x_B',
@@ -367,6 +396,7 @@
                     type: 'KG.Point',
                     definition: {
                         name: 'bundleE',
+                        show: 'params.showE',
                         className: 'utility',
                         coordinates: {
                             x: 'model.compensatedBundle.x',
@@ -390,6 +420,7 @@
                     definition: {
                         name: 'initialIndifferenceCurve',
                         className: 'utility old',
+                        show: 'params.showA || params.showB',
                         fn: "model.utility.indifferenceCurveThroughBundleFn(model.initialBundle)",
                         interaction: {
                             highlight: 'initialUtility'
@@ -403,6 +434,7 @@
                     type: 'KG.FunctionPlot',
                     definition: {
                         name: 'finalIndifferenceCurve',
+                        show: 'params.showC',
                         className: 'utility',
                         fn: "model.utility.indifferenceCurveThroughBundleFn(model.finalBundle)",
                         interaction: {
@@ -417,7 +449,7 @@
                     type: 'KG.Curve',
                     definition: {
                         name: 'PCCX',
-                        //show: 'params.showPCCX',
+                        show: 'params.showPCCX',
                         data: 'model.marshallianDemand1.priceConsumptionCurveData({good:"x"})',
                         className: 'demand',
                         interpolation: 'params.selectedUtility == "Substitutes" ? "linear" : "basis"',
@@ -430,11 +462,27 @@
                         }
                     }
                 },
+                ICC1 = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'ICC1',
+                        show: 'params.showICC1',
+                        data: 'model.marshallianDemand1.incomeConsumptionCurveData()',
+                        className: 'engel old',
+                        interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
+                        label: {
+                            text: 'ICC_1'
+                        },
+                        interaction: {
+                            highlight: 'initialPrice'
+                        }
+                    }
+                },
                 ICC2 = {
                     type: 'KG.Curve',
                     definition: {
-                        name: 'ICC',
-                        //show: 'params.showICC',
+                        name: 'ICC2',
+                        show: 'params.showICC2',
                         data: 'model.marshallianDemand2.incomeConsumptionCurveData()',
                         className: 'engel',
                         interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
@@ -450,6 +498,7 @@
                     type: 'KG.Arrow',
                     definition: {
                         name: 'substitutionEffectArrow',
+                        show: '(params.showEffectsY && params.showA && params.showB)',
                         begin: {
                             x: 3,
                             y: 'model.initialBundle.y'
@@ -472,6 +521,7 @@
                     type: 'KG.Arrow',
                     definition: {
                         name: 'incomeEffectArrow',
+                        show: '(params.showEffectsY && params.showC && params.showB)',
                         begin: {
                             x: 5,
                             y: 'model.decompositionBundle.y'
@@ -513,6 +563,7 @@
                         initialIndifferenceCurve,
                         finalIndifferenceCurve,
                         PCCX,
+                        ICC1,
                         ICC2,
                         substitutionEffectY,
                         incomeEffectY

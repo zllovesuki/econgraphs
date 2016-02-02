@@ -2270,7 +2270,12 @@ var KG;
             if (this.xDrag || this.yDrag) {
                 selection.call(drag());
             }
-            if (interactionHandler.hasOwnProperty('highlight')) {
+            if (interactionHandler.hasOwnProperty('triggerHighlight')) {
+                selection.on('mouseover', function () {
+                    view.scope.updateParams({ highlight: interactionHandler.triggerHighlight });
+                });
+            }
+            else if (interactionHandler.hasOwnProperty('highlight')) {
                 selection.on('mouseover', function () {
                     view.scope.updateParams({ highlight: interactionHandler.highlight });
                 });
