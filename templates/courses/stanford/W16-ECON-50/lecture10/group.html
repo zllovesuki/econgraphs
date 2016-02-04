@@ -1,0 +1,53 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+<div ng-controller="KineticGraphCtrl" class="container">
+    {% raw %}
+    <div class="subtitle">February 4</div>
+    <h2>Group Work: Hicksian and Marshallian Demand, CV, and EV</h2>
+    <hr/>
+    <p>Suppose your team has a utility function <span class="math">u(x,y) = x^\alpha y^{1 - \alpha}</span>. </p>
+
+    <ol>
+        <li style="padding-top:20px">
+            <p><b>Pick a random number for your team's value of <span class="math">\alpha</span>.</b></p>
+            <p>Don't make it 0, 0.5, or 1 please... :)</p>
+            <p>Once you've selected a value, go to <a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='slutsky_decomposition_math', course='econ50') }}">this graph</a> and drag the <span class="math">\alpha</span> slider to the value for your team. You'll use this diagram for the rest of the questions.</p>
+
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Draw your Hicksian and Marshallian Demand curves for X.</b></p>
+            <p>Draw your Marshallian demand curve, and indicate the points corresponding to bundles A (which is what you buy when <span class="math">P_x = 2</span>) and C (which is what you buy when <span class="math">P_x = 4</span>).</p>
+            <p>Add the two Hicksian demand curves to this diagram that pass through the two points you've indicated. Add the points that correspond to bundles B and E. (Hint: one of these has the same price as A and the same utility as C, and the other has the opposite...)</p>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>Calculate CV and EV</b></p>
+            <ol style="list-style: lower-alpha">
+                <li>Calculate the cost of the four bundles (A, B, C, and E) at the <b>relevant</b> prices.</li>
+                <li>Calculate your <b>Compensating Variation</b>, which is the difference in cost of bundles B and C.</li>
+                <li>Calculate your <b>Equivalent Variation</b>, which is the difference in cost of bundles A and E.</li>
+            </ol>
+        </li>
+        <li style="padding-top:20px">
+            <p><b>How much are you hurt?</b></p>
+            <p>The diagram shows a doubling of the price of X, from $2 to $4. How much would your team be willing to pay to avoid this price increase?</p>
+            <p>Suppose I want you to be as happy as you were before the price increase. How much would I have to pay you?</p>
+        </li>
+
+
+
+    </ol>
+
+    {% endraw %}
+</div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

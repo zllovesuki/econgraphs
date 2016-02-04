@@ -32,23 +32,30 @@
                         <div class="col-xs-9" id="subSlider"></div>
                     </div>
                 </div>
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">budget</div>
+                        <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="px" style="text-align:right;font-size:12pt;padding-top:10px">P_x^1 = {{params.px | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="pxSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="py" style="text-align:right;font-size:12pt;padding-top:10px">P_x^2 = {{params.px2 | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="px2Slider"></div>
+                    </div>
+                </div>
                 {% endraw %}
-                <select ng-model="params.selectedUtility" ng-if="params.hasOwnProperty('selectedUtility')" onchange="redraw()">
-                    <option value="CobbDouglas">Cobb-Douglas</option>
-                    <option value="Complements">Complements</option>
-                    <option value="Substitutes">Substitutes</option>
-                    <option value="CES">CES</option>
-                    <option value="Quasilinear">Quasilinear</option>
-                </select>
+
                 {% block belowControls %}
                     <hr/>
                     <toggle param="showA" class="demand" show-hide="true"><span class="math">\text{Initial State }(A)</span></toggle>
                     <toggle param="showB" class="demand" show-hide="true"><span class="math">\text{Decomposition Bundle }(B)</span></toggle>
                     <toggle param="showC" class="demand" show-hide="true"><span class="math">\text{Final State }(C)</span></toggle>
-                    <toggle param="showPCCX" class="demand" show-hide="true"><span class="math">PCC_X</span></toggle>
-                    <toggle param="showICC1" class="demand" show-hide="true"><span class="math">ICC_1</span></toggle>
-                    <toggle param="showICC2" class="demand" show-hide="true"><span class="math">ICC_2</span></toggle>
-                    <toggle param="showEffectsY" class="demand" show-hide="true"><span class="math">\text{Income and substitution effects}</span></toggle>
+                    <toggle param="showE" class="demand" show-hide="true"><span class="math">\text{Equivalent Bundle }(E)</span></toggle>
                     <br/>
 
                     <h4 highlight="initialUtility" ng-if="params.showEffectsY && params.showB && params.showA" ng-init="renderMath()"><span class="math displayMath">\text{Substitution effect: }A \rightarrow B</span></h4>
@@ -133,14 +140,14 @@
             params: {
                 x: 5,
                 alpha: 0.5,
-                xIntercept1: 20,
-                xIntercept2: 45,
-                yIntercept: 45,
+                px: 2,
+                px2: 4,
                 sub: 0.5,
-                selectedUtility: 'CES',
+                selectedUtility: 'CobbDouglas',
                 showA: true,
                 showB: true,
                 showC: true,
+                showE: true,
                 showPCCX: false,
                 showICC1: false,
                 showICC2: false,
@@ -152,9 +159,9 @@
                 type: 'EconGraphs.Slutsky',
                 definition: {
                     utility: selectorDefinition,
-                    px: '120/params.xIntercept1',
-                    px2: '120/params.xIntercept2',
-                    py: '120/params.yIntercept',
+                    px: 'params.px',
+                    px2: 'params.px2',
+                    py: 3,
                     income: 120
                 }
             },
@@ -174,6 +181,24 @@
                         element_id: 'subSlider',
                         param: 'sub',
                         axisDef: {min: -1, max: 0.99, ticks: 0}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'pxSlider',
+                        param: 'px',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'px2Slider',
+                        param: 'px2',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
                     }
                 }
 
@@ -261,68 +286,18 @@
                     type: 'KG.Line',
                     definition: {
                         name: 'BL_C',
-                        show: 'params.showC',
-                        className: 'budget',
+                        show: 'params.showE',
+                        className: 'budget dashed',
                         linear: 'model.compensatedBudget.budgetSegments[0].linear',
                         interaction: {
                             highlight: 'initialPrice'
                         },
                         label: {
-                            text: 'BL_C'
+                            text: 'BL_E'
                         }
                     }
                 },
-                xIntercept1 = {
-                    type: 'KG.Point',
-                    definition: {
-                        name: 'xIntercept1',
-                        className: 'budget old',
-                        show: 'params.showA',
-                        coordinates: {
-                            x: 'params.xIntercept1',
-                            y: 0
-                        },
-                        interaction: {
-                            xDrag: true,
-                            xDragParam: 'xIntercept1',
-                            highlight: 'initialPrice'
-                        }
-                    }
-                },
-                xIntercept2 = {
-                    type: 'KG.Point',
-                    definition: {
-                        name: 'xIntercept2',
-                        className: 'budget',
-                        show: 'params.showC',
-                        coordinates: {
-                            x: 'params.xIntercept2',
-                            y: 0
-                        },
-                        interaction: {
-                            xDrag: true,
-                            xDragParam: 'xIntercept2',
-                            highlight: 'finalPrice'
-                        }
-                    }
-                },
-                yIntercept = {
-                    type: 'KG.Point',
-                    definition: {
-                        name: 'yIntercept',
-                        className: 'budget',
-                        show: '(params.showA || params.showB || params.showC)',
-                        coordinates: {
-                            x: 0,
-                            y: 'params.yIntercept'
-                        },
-                        interaction: {
-                            yDrag: true,
-                            yDragParam: 'yIntercept',
-                            highlight: 'initialPrice finalPrice'
-                        }
-                    }
-                },
+
                 bundleA = {
                     type: 'KG.Point',
                     definition: {
@@ -341,8 +316,8 @@
                             highlight: 'initialPrice initialUtility initialIncome BL1'
                         },
                         droplines: {
-                            //vertical: 'x_A',
-                            horizontal: 'y_A'
+                            vertical: 'model.initialBundle.x | number:0',
+                            horizontal: 'model.initialBundle.y | number:0'
                         }
 
                     }
@@ -365,8 +340,8 @@
                             highlight: 'BL2 finalUtility finalPrice'
                         },
                         droplines: {
-                            //vertical: 'x_C',
-                            horizontal: 'y_C'
+                            vertical: 'model.finalBundle.x | number:0',
+                            horizontal: 'model.finalBundle.y | number:0'
                         }
 
                     }
@@ -389,8 +364,8 @@
                             highlight: 'finalPrice initialUtility decomposition'
                         },
                         droplines: {
-                            //vertical: 'x_B',
-                            horizontal: 'y_B'
+                            vertical: 'model.decompositionBundle.x | number:0',
+                            horizontal: 'model.decompositionBundle.y | number:0'
                         }
 
                     }
@@ -412,8 +387,8 @@
                             highlight: 'initialPrice finalUtility'
                         },
                         droplines: {
-                            //vertical: 'x_E',
-                            horizontal: 'y_E'
+                            vertical: 'model.compensatedBundle.x | number:0',
+                            horizontal: 'model.compensatedBundle.y | number:0'
                         }
 
                     }
@@ -561,15 +536,12 @@
                 objects: [
                     budgetLine1,
                         budgetLine2,
-                        xIntercept1,
-                        xIntercept2,
-                        yIntercept,
                         bundleA,
                         bundleC,
                         bundleB,
-                        //bundleE,
+                        bundleE,
                         decompositionBudgetLine,
-                        //compensatedBudgetLine,
+                        compensatedBudgetLine,
                         initialIndifferenceCurve,
                         finalIndifferenceCurve,
                         PCCX,

@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-xs-9" id="alphaSlider"></div>
                     </div>
-                    <div class="row" ng-if="params.selectedUtility == 'CES'" ng-init="render(true)">
+                    <div class="row" ng-show="params.selectedUtility == 'CES'" ng-init="render()">
                         <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
                         </div>
                         <div class="col-xs-9" id="subSlider"></div>
@@ -505,6 +505,6 @@
     {% block jsadjustments %}
     {% endblock %}
 
-    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
 
 {% endblock %}

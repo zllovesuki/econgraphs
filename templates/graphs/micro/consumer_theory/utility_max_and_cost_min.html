@@ -1,0 +1,271 @@
+{% extends 'graphs/micro/consumer_theory/slutsky_decomposition.html' %}
+
+{% block main %}
+{% raw %}
+<h1>Utility Max and Cost Min: {{ model.utility.title }}</h1>
+<hr/>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Utility Maximization</h3>
+            <hr/>
+            <div id="utilityMax"></div>
+            <hr/>
+            <equation>\text{Fix } \overline{I} \text{ and prices }P_x,P_y</equation>
+            <equation>\text{Maximum possible utility is } V(P_x,P_y,\overline{I})</equation>
+            <!--<equation>u(x,y) = {{ model.utility.utility({ x: params.x, y: model.marshallianDemand1.budget.yValue(params.x)}) | number:2 }} || u(x_A,y_A) = V(P_x,P_y,\overline{I}) = {{ model.utility.utility(model.marshallianDemand1.bundle) | number:2 }}</equation>-->
+        </div>
+         <div class="col-md-6">
+             <h3>Cost Minimization</h3>
+            <hr/>
+            <div id="costMin"></div>
+             <hr/>
+             <equation>\text{Fix } \overline{U} \text{ and prices }P_x,P_y</equation>
+             <equation>\text{Minimum possible cost is } E(P_x,P_y,\overline{U})</equation>
+            <!--<equation>C(x,y) = {{ model.px * params.x + model.py * model.utility.indifferenceCurveThroughBundleFn(model.finalBundle).yValue(params.x) | number:2 }} || C(x_A,y_A) = E(P_x,P_y,\overline{U}) = {{ model.income }}</equation>-->
+
+        </div>
+    </div>
+
+    {% endraw %}
+{% endblock %}
+
+{% block belowControls %}
+    <hr/>
+<toggle param="showMap" class="utility" show-hide="true">objective function maps</toggle>
+{% endblock %}
+
+
+{% block jsadjustments %}
+        <script>
+
+        scopeDefinition.params.x = 7;
+        scopeDefinition.params.xIntercept1 = 30;
+        scopeDefinition.params.yIntercept = 30;
+        scopeDefinition.params.xIntercept2 = 30;
+        scopeDefinition.params.showMap = false;
+        scopeDefinition.params.selectedUtility = "CobbDouglas";
+
+        bundleA.definition.interaction = {};
+        bundleA.definition.droplines = null;
+        initialIndifferenceCurve.definition.interaction = {};
+
+
+        initialIndifferenceCurve.definition.label.text = "u(x,y) = V(P_x,P_y,\\overline{I})";
+        finalIndifferenceCurve.definition.label.text = "u(x,y) = \\overline{U}";
+        budgetLine2.definition.label.text = "P_xx + P_yy = \\overline{I}";
+        budgetLine1.definition.label.text = "P_xx + P_yy = E(P_x, P_y, \\overline{U})";
+
+        var marshallianPointY = 'model.marshallianDemand1.budget.yValue(params.x)',
+                hicksianPointY = 'model.utility.indifferenceCurveThroughBundleFn(model.finalBundle).yValue(params.x)';
+
+        var marshallianPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundle',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'params.x',
+                            y: marshallianPointY
+                        },
+                        interaction: {
+                            xDrag: true,
+                        },
+                        droplines: {
+                            vertical: 'x',
+                            horizontal: 'y'
+                        }
+
+                    }
+        },
+
+                marshallianIndifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'indifference_curve',
+                        className: 'utility',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.x, y: " + marshallianPointY + "})",
+                        interaction: {
+                            highlight: 'utility'
+                        }
+                    }
+                },
+                indifferenceCurveMap = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                        type: 'KG.FunctionPlot',
+                        definition: {
+                            name: 'indifference_curve_'+level,
+                            className: 'dataPathFamily',
+                            fn: "model.utility.indifferenceCurveThroughBundleFn({x:" + level + ",y:"+level+"})",
+                            show: 'params.showMap'
+                        }
+                    }
+                }),
+                indifferenceCurveMapArrows = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                    type: 'KG.Arrow',
+                    definition: {
+                        name: 'indifferenceCurveMapArrow' + level,
+                        className: 'dataPathFamily',
+                        show: 'params.showMap',
+                        begin: {
+                            x: level,
+                            y: level
+                        },
+                        end: {
+                            x: level + 1.5,
+                            y: level + 1.5
+                        }
+                    }
+                }
+                }),
+                hicksianPoint = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'hicksianBundle',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'params.x',
+                            y: hicksianPointY
+                        },
+                        interaction: {
+                            xDrag: true,
+                        },
+                        droplines: {
+                            vertical: 'x',
+                            horizontal: 'y'
+                        }
+
+                    }
+                },
+                hicksianCostLine = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'hickisanCostLine',
+                        className: 'budget',
+                        lineDef: {
+                            point: {
+                                x: 'params.x',
+                                y: hicksianPointY
+                            },
+                            slope: -1
+                        }
+                    }
+                },
+                costMap = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'costMap' + level,
+                        className: 'dataPathFamily',
+                        show: 'params.showMap',
+                        lineDef: {
+                            point: {
+                                x: level,
+                                y: level
+                            },
+                            slope: -1
+                        }
+                    }
+                }
+                }),
+                costMapArrows = [5,10,15,20,25,30,35,40,45].map(function(level) {
+                    return {
+                    type: 'KG.Arrow',
+                    definition: {
+                        name: 'costMapArrow' + level,
+                        className: 'dataPathFamily',
+                        show: 'params.showMap',
+                        begin: {
+                            x: level,
+                            y: level
+                        },
+                        end: {
+                            x: level - 2,
+                            y: level - 2
+                        }
+                    }
+                }
+                });
+
+
+
+        scopeDefinition.views.push({
+            type: 'KG.Graph',
+            definition: {
+                element_id: 'utilityMax',
+                square: true,
+                xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}', ticks:0},
+                yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}', ticks:0},
+                objects: [
+                    indifferenceCurveMap[1],
+                    indifferenceCurveMap[2],
+                    indifferenceCurveMap[3],
+                    indifferenceCurveMap[4],
+                    indifferenceCurveMap[5],
+                    indifferenceCurveMap[6],
+                    indifferenceCurveMap[7],
+                    indifferenceCurveMap[8],
+                        indifferenceCurveMapArrows[1],
+                    indifferenceCurveMapArrows[2],
+                    indifferenceCurveMapArrows[3],
+                    indifferenceCurveMapArrows[4],
+                    indifferenceCurveMapArrows[5],
+                    indifferenceCurveMapArrows[6],
+                    indifferenceCurveMapArrows[7],
+                    indifferenceCurveMapArrows[8],
+                    budgetLine2,
+
+                        initialIndifferenceCurve,
+                        indifferenceCurveMap[0],
+
+                        marshallianIndifferenceCurve,
+                        marshallianPoint,
+                        bundleA
+                ]
+            }
+        });
+
+        scopeDefinition.views.push({
+            type: 'KG.Graph',
+            definition: {
+                element_id: 'costMin',
+                square: true,
+                xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}', ticks:0},
+                yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}', ticks:0},
+                objects: [
+costMap[1],
+                    costMap[2],
+                    costMap[3],
+                    costMap[4],
+                    costMap[5],
+                    costMap[6],
+                    costMap[7],
+                    costMap[8],
+                        costMapArrows[1],
+                    costMapArrows[2],
+                    costMapArrows[3],
+                    costMapArrows[4],
+                    costMapArrows[5],
+                    costMapArrows[6],
+                    costMapArrows[7],
+                    costMapArrows[8],
+                        budgetLine1,
+                        finalIndifferenceCurve,
+                        hicksianPoint,
+                        hicksianCostLine,
+                        bundleA
+                ]
+            }
+        });
+
+        scopeDefinition.restrictions.push(
+            {
+                    expression: 'params.x',
+                    restrictionType: 'range',
+                    min: 0,
+                    max: 30
+                }
+
+        )
+        </script>
+    {% endblock %}

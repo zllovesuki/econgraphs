@@ -39,7 +39,7 @@ module EconGraphs {
                     y: d.utility.indifferenceCurveAtUtilityFn(d.utilityConstraint.u).yValue(d.x)
                 }
             }
-            console.log('updated Hicksian bundle to (',d.bundle.x,',',d.bundle.y,')');
+            //console.log('updated Hicksian bundle to (',d.bundle.x,',',d.bundle.y,')');
             return d;
         }
 
@@ -52,7 +52,7 @@ module EconGraphs {
             var originalPrice = d.utilityConstraint['p' + good];
 
             // evaluate quantity demanded of this good at the given price
-            d['p' + good] = price;
+            d.utilityConstraint['p' + good] = price;
             var quantity = d.utility.lowestCostBundle(d.utilityConstraint)[good];
 
             // reset budget constraint to original price
