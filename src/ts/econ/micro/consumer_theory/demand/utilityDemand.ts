@@ -25,6 +25,7 @@ module EconGraphs {
 
         quantityAtPrice: (price:number, good?: string) => number;
         demandCurveData: (demandParams: UtilityDemandCurveParams) => KG.ICoordinates[];
+        changeInSurplus: (demandParams: UtilityDemandCurveParams) => KG.ICoordinates[];
 
         price: (good?: string) => number; // current price of good x or good y
         snapToOptimalBundle: boolean;
@@ -95,6 +96,24 @@ module EconGraphs {
             });
 
             return curveData.sort(KG.sortObjects('x'));
+
+        }
+
+        changeInSurplus(demandParams) {
+
+            if(demandParams.max < demandParams.min) {
+                var max = demandParams.min,
+                    min = demandParams.max;
+                demandParams.min = min;
+                demandParams.max = max;
+            }
+
+            var demandCurveData = this.demandCurveData(demandParams);
+
+            demandCurveData.push({x:0, y:demandParams.min});
+            demandCurveData.push({x:0, y:demandParams.max});
+
+            return demandCurveData;
 
         }
 

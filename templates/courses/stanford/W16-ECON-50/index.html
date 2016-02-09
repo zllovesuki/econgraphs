@@ -89,7 +89,7 @@
             <tr>
                 <td>Jan 14</td>
                 <td><b>Preferences and Indifference Curves</b><br/>
-                <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/slides.pdf') }}">Slides</a>  | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/lecture4annotatedSlides.pdf') }}">Annotated Slides</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/group') }}">Group work</a><br/>
+                <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/slides.pdf') }}">Slides</a>  | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/Lecture4AnnotatedSlides.pdf') }}">Annotated Slides</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/group') }}">Group work</a><br/>
                 Interactive graphs:
                     <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/indifference_curves') }}">Indifference curves</a><br/>Group work solutions: <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture4/GroupWork4Solutions.pdf') }}">Group work solutions</a></td>
                 <td align="center">Ch. 3</td>
@@ -177,22 +177,23 @@
             <tr>
                 <td>Feb 4</td>
                 <td><b>Welfare Analysis: Consumer Surplus, Compensating Variation, and Equivalent Variation</b><br/>
-                Slides | Group Work<br/>
+                <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture10/lecture10slides.pdf', updated=true) }}">Slides</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture10/Lecture10AnnotatedSlides.pdf') }}">Annotated Slides</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture10/group') }}">Group work</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture10/Lecture10GroupSolutions.pdf', updated=true) }}">Group work sample solutions</a><br/>
                 Interactive graphs: <a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='utility_max_and_cost_min', course='econ50') }}">Utiity maximization and cost minimization</a> | <a href="{{ url_for('graphs', subject='micro', topic='consumer_theory', graphname='marshallian_and_hicksian_demand', course='econ50') }}">Marshallian and Hicksian Demand</a></td>
                 <td align="center">5.3</td>
                 <td align="center">Ch. 14 (esp. 14.7 and 14.8)</td>
             </tr>
             <tr>
                 <td>Feb 5</td>
-                <td><i>Section 4</i></td>
+                <td><i>Section 4</i><br/>
+                <a href="{{ url_for('courses', path='stanford/W16-ECON-50/section4/Section4.pdf') }}">Section problems</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/section4/Section4_solutions.pdf') }}">Section solutions</a></td>
                 <td align="center">-</td>
                 <td align="center">-</td>
             </tr>
         <tr>
                 <td>Feb 9</td>
-                <td><b>Review of Consumer Theory</b>; <i><a href="https://coursework.stanford.edu/samigo-app/servlet/Login?id=68ef214d-487b-44bb-80f5-00733617f96c1454111677368">Homework 4</a> due</i></td>
-                <td align="center">-</td>
-                <td align="center">-</td>
+                <td><b>Review of Consumer Theory; Revealed Preference; Labor Supply; Units</b><br/><i><a href="https://coursework.stanford.edu/samigo-app/servlet/Login?id=68ef214d-487b-44bb-80f5-00733617f96c1454111677368">Homework 4</a> due</i></td>
+                <td align="center">4.4, 5.5</td>
+                <td align="center">Ch. 7; 9.8, 9.8</td>
             </tr>
         </tbody>
     </table>
@@ -202,18 +203,23 @@
     <table class="table table-striped table-hover">
         <tbody>
             <tr>
-                <td width="10%">Feb 9-10</td>
-                <td width="90%">TA Review Sessions - Details TBA</td>
+                <td width="10%">Feb 9</td>
+                <td><b>Mid-quarter evaluations:</b> <a href="https://vptleval.stanford.edu/auth/evaluation.php?id=10341">Makler</a> | <a href="https://vpueeval.stanford.edu/auth/evaluation.php?id=10281">TAs</a>. Please fill these out - we crave constructive feedback!</td>
+            </tr>
+            <tr>
+                <td width="10%">Feb 9</td>
+                <td width="90%"><b>TA Review Sessions</b> - 3:00-9:00pm in 200-305 (Joy 3-5, Danny 5-7, Sindy 7-9)</td>
             </tr>
             <tr>
                 <td width="10%">Feb 10</td>
-                <td width="90%">Makler Review Session - 7:30-9:00pm in 420-041</td>
+                <td width="90%"><b>Makler Review Session</b> - 7:30-9:00pm in 420-041</td>
             </tr>
             <tr>
                 <td>Feb 11</td>
                 <td><b>Midterm</b> - 11:30-1:20 in 320-105 (NOT IN CLASS)<br/>
                 Last year's midterm: <a href="{{ url_for('courses', path='stanford/W16-ECON-50/midterm/Econ50Winter15MidtermPart1.pdf') }}">Part I</a> | <a href="{{ url_for('courses', path='stanford/W16-ECON-50/midterm/Econ50Winter15MidtermPart2.pdf') }}">Part II</a><br/>
-                Previous midterms will be uploaded to Coursework (since they're for other professors, I don't want to post them on a non-password-protected site)</td>
+                Previous midterms are available on <a href="https://coursework.stanford.edu/portal/site/W16-ECON-50-01/page/b654c2a1-e8da-46ec-9bf3-6b11e8326051">Coursework</a> under the Materials tab (since they're for other professors, I don't want to post them on a non-password-protected site)<br/>
+                Student-suggested <a href="{{ url_for('courses', path='stanford/W16-ECON-50/midterm/IntuitionQuestionsForMidterm.pdf', updated=true) }}">intuition questions</a> (one will be on the exam)</td>
             </tr>
         </tbody>
     </table>

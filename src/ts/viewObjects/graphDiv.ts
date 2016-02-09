@@ -16,11 +16,15 @@ module KG
         align?: any;
         valign?: any;
         backgroundColor?: string;
+        xOffset?: any;
+        yOffset?: any;
     }
 
     export interface IGraphDiv extends IViewObject {
 
         coordinates: ICoordinates; // pixel coordinates, not model coordinates
+        xOffset: number;
+        yOffset: number;
         dimensions: IDimensions;
         text: string;
         math: boolean;
@@ -36,6 +40,8 @@ module KG
 
         // GraphDiv-specific attributes
         public coordinates;
+        public xOffset;
+        public yOffset;
         public dimensions;
         public text;
         public math;
@@ -54,7 +60,9 @@ module KG
                 text: '',
                 color: KG.colorForClassName(definition.className),
                 unmasked: true,
-                math: true
+                math: true,
+                xOffset: 0,
+                yOffset: 0
             });
 
             super(definition, modelPath);
@@ -100,6 +108,9 @@ module KG
             } else {
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
+
+            x += divObj.xOffset;
+            y += divObj.yOffset;
 
             var div = divObj.d3selection(view);
 
