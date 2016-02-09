@@ -428,6 +428,12 @@ button:hover {
 .highlight.dashed {
   stroke-dasharray: 15,15;
 }
+.old {
+  opacity: 0.5;
+}
+.highlight.old {
+  stroke-width: 4;
+}
 .drawHandle,
 .segmentHandle,
 .dataPathHandle,

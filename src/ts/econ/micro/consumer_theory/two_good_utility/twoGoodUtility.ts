@@ -142,7 +142,9 @@ module EconGraphs {
 
         optimalBundle(budget:BudgetConstraint) {
             var u = this;
-            var candidateBundles: TwoGoodBundle[] = budget.budgetSegments.map(function(segment) { return u.optimalBundleAlongSegment(segment)});
+            var candidateBundles: TwoGoodBundle[] = budget.budgetSegments.map(
+                function(segment) { return u.optimalBundleAlongSegment(segment)}
+            );
             var maxUtilityBundle = candidateBundles[0];
             candidateBundles.forEach(function(bundle) {
                 if(u.utility(bundle) > u.utility(maxUtilityBundle)) {

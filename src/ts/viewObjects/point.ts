@@ -63,10 +63,6 @@ module KG
                 if(definition.interaction.hasOwnProperty('yDrag') && !definition.interaction.hasOwnProperty('yDragParam')) {
                     definition.interaction.yDragParam = definition.coordinates.y;
                 }
-                if(definition.hasOwnProperty('label') && definition.hasOwnProperty('highlight')) {
-                    definition.highlight = definition.highlight || definition.interaction.highlight;
-                    definition.interaction.highlight = null;
-                }
             }
 
             super(definition, modelPath);

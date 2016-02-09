@@ -1,0 +1,560 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            <div class="col-md-8">
+                {% block main %}
+                {% raw %}
+                <h1>Slutsky Decomposition: {{ model.utility.title }}</h1>
+                <hr/>
+                <div id="graph"></div>
+                    {% endraw %}
+                {% endblock %}
+            </div>
+
+            <div class="col-md-4">
+                {% raw %}
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">utility</div>
+                        <div class="col-xs-9 math displayMath">u(x,y) = {{ model.utility.formula(false) }}<!-- = {{ model.utility.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="alphaSlider"></div>
+                    </div>
+                    <div class="row" ng-show="params.selectedUtility == 'CES'" ng-init="render()">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{model.utility.r | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="subSlider"></div>
+                    </div>
+                </div>
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">budget</div>
+                        <div class="col-xs-9 math displayMath">{{ model.budget.formula(false) }}<!-- \Rightarrow {{ model.budget.formula(true)}}--></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="px" style="text-align:right;font-size:12pt;padding-top:10px">P_x^1 = {{params.px | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="pxSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="py" style="text-align:right;font-size:12pt;padding-top:10px">P_x^2 = {{params.px2 | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="px2Slider"></div>
+                    </div>
+                </div>
+                {% endraw %}
+
+                {% block belowControls %}
+                    <hr/>
+                    <toggle param="showA" class="demand" show-hide="true"><span class="math">\text{Initial State }(A)</span></toggle>
+                    <toggle param="showB" class="demand" show-hide="true"><span class="math">\text{Decomposition Bundle }(B)</span></toggle>
+                    <toggle param="showC" class="demand" show-hide="true"><span class="math">\text{Final State }(C)</span></toggle>
+                    <toggle param="showE" class="demand" show-hide="true"><span class="math">\text{Equivalent Bundle }(E)</span></toggle>
+                    <br/>
+
+                    <h4 highlight="initialUtility" ng-if="params.showEffectsY && params.showB && params.showA" ng-init="renderMath()"><span class="math displayMath">\text{Substitution effect: }A \rightarrow B</span></h4>
+                    <h4 highlight="finalPrice" ng-if="params.showEffectsY && params.showB && params.showC" ng-init="renderMath()"><span class="math displayMath">\text{Income effect: }B \rightarrow C</span></h4>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block model %}
+
+    <script>
+
+        var cobbDouglasDefinition = {
+                    type: 'EconGraphs.CobbDouglasUtility',
+                    definition: {
+                        xPower: 'params.alpha'
+                    }
+                },
+                complementsDefinition = {
+                    type: 'EconGraphs.ComplementsUtility',
+                    definition: {
+                        bundle: {x: 'params.alpha', y: '1-params.alpha'}
+                    }
+                },
+                substitutesDefinition = {
+                    type: 'EconGraphs.SubstitutesUtility',
+                    definition: {
+                        xCoefficient: 'params.alpha'
+                    }
+                },
+                cesDefinition = {
+                    type: 'EconGraphs.CESUtility',
+                    definition: {
+                        alpha: 'params.alpha',
+                        sub: 'params.sub'
+                    }
+                },
+                quasilinearDefinition = {
+                    type: 'EconGraphs.QuasilinearUtility',
+                    definition: {
+                        alpha: 'params.alpha'
+                    }
+                },
+                selectorDefinition = {
+                    type: 'KG.Selector',
+                    definition: {
+                        selected: 'params.selectedUtility',
+                        options: [
+                            {
+                                name: 'CobbDouglas',
+                                label: 'Cobb\-Douglas',
+                                selection: cobbDouglasDefinition
+                            },
+                            {
+                                name: 'Complements',
+                                label: 'Perfect Complements',
+                                selection: complementsDefinition
+                            },
+                            {
+                                name: 'Substitutes',
+                                label: 'Perfect Substitutes',
+                                selection: substitutesDefinition
+                            },
+                            {
+                                name: 'CES',
+                                label: 'CES',
+                                selection: cesDefinition
+                            },
+                            {
+                                name: 'Quasilinear',
+                                label: 'Quasilinear',
+                                selection: quasilinearDefinition
+                            }
+                        ]
+                    }
+                };
+
+
+        var scopeDefinition = {
+            params: {
+                x: 5,
+                alpha: 0.5,
+                px: 2,
+                px2: 4,
+                sub: 0.5,
+                selectedUtility: 'CobbDouglas',
+                showA: true,
+                showB: true,
+                showC: true,
+                showE: true,
+                showPCCX: false,
+                showICC1: false,
+                showICC2: false,
+                showEffectsY: false
+            },
+            graphParams: ['selectedUtility'],
+            restrictions: [],
+            model: {
+                type: 'EconGraphs.Slutsky',
+                definition: {
+                    utility: selectorDefinition,
+                    px: 'params.px',
+                    px2: 'params.px2',
+                    py: 3,
+                    income: 120
+                }
+            },
+            views: [
+{
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'subSlider',
+                        param: 'sub',
+                        axisDef: {min: -1, max: 0.99, ticks: 0}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'pxSlider',
+                        param: 'px',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'px2Slider',
+                        param: 'px2',
+                        precision: '0.25',
+                        axisDef: {min: 0, max: 10}
+                    }
+                }
+
+            ]
+        }
+    </script>
+{% endblock %}
+
+
+
+{% block js %}
+    <script>
+
+        var selectedUtility = '{{ args.utilityFunction }}';
+
+        if(selectedUtility == 'CobbDouglas') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = cobbDouglasDefinition;
+        }
+
+        if(selectedUtility == 'Leontief' || selectedUtility == 'PerfectComplements' || selectedUtility == 'Complements') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = complementsDefinition;
+        }
+
+        if(selectedUtility == 'Substitutes' || selectedUtility == 'PerfectSubstitutes') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = substitutesDefinition;
+        }
+
+        if(selectedUtility == 'Quasilinear') {
+            delete scopeDefinition.params.selectedUtility;
+            scopeDefinition.model.definition.utility = quasilinearDefinition;
+        }
+
+        var budgetLine1 = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'BL1',
+                        className: 'budget old',
+                        show: 'params.showA',
+                        linear: 'model.budget1.budgetSegments[0].linear',
+                        interaction: {
+                            triggerHighlight: 'BL1',
+                            highlight: 'initialPrice BL1'
+                        },
+                        label: {
+                            text: 'BL_1'
+                        }
+                    }
+                },
+                budgetLine2 = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'BL2',
+                        className: 'budget',
+                        show: 'params.showC',
+                        linear: 'model.budget2.budgetSegments[0].linear',
+                        interaction: {
+                            triggerHighlight: 'BL2',
+                            highlight: 'finalPrice BL2'
+                        },
+                        label: {
+                            text: 'BL_2'
+                        }
+                    }
+                },
+                decompositionBudgetLine = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'BL_D',
+                        className: 'budget dotted',
+                        show: 'params.showB',
+                        linear: 'model.decompositionBudget.budgetSegments[0].linear',
+                        interaction: {
+                            triggerHighlight: 'decomposition',
+                            highlight: 'decomposition finalPrice'
+                        },
+                        label: {
+                            text: 'BL_D'
+                        }
+                    }
+                },
+                compensatedBudgetLine = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'BL_C',
+                        show: 'params.showE',
+                        className: 'budget dashed',
+                        linear: 'model.compensatedBudget.budgetSegments[0].linear',
+                        interaction: {
+                            highlight: 'initialPrice'
+                        },
+                        label: {
+                            text: 'BL_E'
+                        }
+                    }
+                },
+
+                bundleA = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleA',
+                        className: 'utility',
+                        show: 'params.showA',
+                        coordinates: {
+                            x: 'model.initialBundle.x',
+                            y: 'model.initialBundle.y'
+                        },
+                        label: {
+                            text: 'A'
+                        },
+                        interaction: {
+                            triggerHighlight: '',
+                            highlight: 'initialPrice initialUtility initialIncome BL1'
+                        },
+                        droplines: {
+                            vertical: 'model.initialBundle.x | number:0',
+                            horizontal: 'model.initialBundle.y | number:0'
+                        }
+
+                    }
+                },
+                bundleC = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleC',
+                        show: 'params.showC',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.finalBundle.x',
+                            y: 'model.finalBundle.y'
+                        },
+                        label: {
+                            text: 'C'
+                        },
+                        interaction: {
+                            triggerHighlight: '',
+                            highlight: 'BL2 finalUtility finalPrice'
+                        },
+                        droplines: {
+                            vertical: 'model.finalBundle.x | number:0',
+                            horizontal: 'model.finalBundle.y | number:0'
+                        }
+
+                    }
+                },
+                bundleB = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleB',
+                        show: 'params.showB',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.decompositionBundle.x',
+                            y: 'model.decompositionBundle.y'
+                        },
+                        label: {
+                            text: 'B'
+                        },
+                        interaction: {
+                            triggerHighlight: '',
+                            highlight: 'finalPrice initialUtility decomposition'
+                        },
+                        droplines: {
+                            vertical: 'model.decompositionBundle.x | number:0',
+                            horizontal: 'model.decompositionBundle.y | number:0'
+                        }
+
+                    }
+                },
+                bundleE = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleE',
+                        show: 'params.showE',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.compensatedBundle.x',
+                            y: 'model.compensatedBundle.y'
+                        },
+                        label: {
+                            text: 'E'
+                        },
+                        interaction: {
+                            highlight: 'initialPrice finalUtility'
+                        },
+                        droplines: {
+                            vertical: 'model.compensatedBundle.x | number:0',
+                            horizontal: 'model.compensatedBundle.y | number:0'
+                        }
+
+                    }
+                },
+                initialIndifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'initialIndifferenceCurve',
+                        className: 'utility old',
+                        show: 'params.showA || params.showB',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn(model.initialBundle)",
+                        interaction: {
+                            highlight: 'initialUtility'
+                        },
+                        label: {
+                            text: 'U_1'
+                        }
+                    }
+                },
+                finalIndifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'finalIndifferenceCurve',
+                        show: 'params.showC',
+                        className: 'utility',
+                        fn: "model.utility.indifferenceCurveThroughBundleFn(model.finalBundle)",
+                        interaction: {
+                            highlight: 'finalUtility'
+                        },
+                        label: {
+                            text: 'U_2'
+                        }
+                    }
+                },
+                PCCX = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'PCCX',
+                        show: 'params.showPCCX',
+                        data: 'model.marshallianDemand1.priceConsumptionCurveData({good:"x"})',
+                        className: 'demand',
+                        interpolation: 'params.selectedUtility == "Substitutes" ? "linear" : "basis"',
+                        labelPosition: 'START',
+                        label: {
+                            text: 'PCC_x'
+                        },
+                        interaction: {
+                            highlight: 'initialIncome'
+                        }
+                    }
+                },
+                ICC1 = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'ICC1',
+                        show: 'params.showICC1',
+                        data: 'model.marshallianDemand1.incomeConsumptionCurveData()',
+                        className: 'engel old',
+                        interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
+                        label: {
+                            text: 'ICC_1'
+                        },
+                        interaction: {
+                            highlight: 'initialPrice'
+                        }
+                    }
+                },
+                ICC2 = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'ICC2',
+                        show: 'params.showICC2',
+                        data: 'model.marshallianDemand2.incomeConsumptionCurveData()',
+                        className: 'engel',
+                        interpolation: "(params.selectedUtility == 'Substitutes') ? 'linear' : 'basis'",
+                        label: {
+                            text: 'ICC_2'
+                        },
+                        interaction: {
+                            highlight: 'finalPrice'
+                        }
+                    }
+                },
+                substitutionEffectY = {
+                    type: 'KG.Arrow',
+                    definition: {
+                        name: 'substitutionEffectArrow',
+                        show: '(params.showEffectsY && params.showA && params.showB)',
+                        begin: {
+                            x: 3,
+                            y: 'model.initialBundle.y'
+                        },
+                        end: {
+                            x: 3,
+                            y: 'model.decompositionBundle.y'
+                        },
+                        className: 'blue',
+                        label: {
+                            text: '\\text{Substitution Effect}',
+                            align: 'right'
+                        },
+                        interaction: {
+                            highlight: 'initialUtility'
+                        }
+                    }
+                },
+                incomeEffectY = {
+                    type: 'KG.Arrow',
+                    definition: {
+                        name: 'incomeEffectArrow',
+                        show: '(params.showEffectsY && params.showC && params.showB)',
+                        begin: {
+                            x: 5,
+                            y: 'model.decompositionBundle.y'
+                        },
+                        end: {
+                            x: 5,
+                            y: 'model.finalBundle.y'
+                        },
+                        className: 'orange',
+                        label: {
+                            text: '\\text{Income Effect}',
+                            align: 'left'
+                        },
+                        interaction: {
+                            highlight: 'finalPrice'
+                        }
+                    }
+                }
+
+
+
+
+    </script>
+
+    {% block jsadjustments %}
+        <script>
+        scopeDefinition.views.push({
+            type: 'KG.Graph',
+            definition: {
+                element_id: 'graph',
+                square: true,
+                xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}', ticks:0},
+                yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}', ticks:0},
+                objects: [
+                    budgetLine1,
+                        budgetLine2,
+                        bundleA,
+                        bundleC,
+                        bundleB,
+                        bundleE,
+                        decompositionBudgetLine,
+                        compensatedBudgetLine,
+                        initialIndifferenceCurve,
+                        finalIndifferenceCurve,
+                        PCCX,
+                        ICC1,
+                        ICC2,
+                        substitutionEffectY,
+                        incomeEffectY
+                ]
+            }
+        });
+        </script>
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
+
+{% endblock %}

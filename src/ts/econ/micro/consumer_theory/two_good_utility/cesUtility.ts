@@ -88,23 +88,28 @@ module EconGraphs {
 
         }
 
-        /*lowestCostBundle(utilityConstraint:UtilityConstraint) {
-            var u = this;
+        expenditure(utilityConstraint:UtilityConstraint) {
+            var u = this,
+                s= u.r/(u.r - 1);
 
-            var denominator = Math.pow(u.alpha, s) * Math.pow(px, 1 - s) + Math.pow(1 - u.alpha, u.s) * Math.pow(py, 1 - u.s),
-                x_coefficient = Math.pow(px / u.alpha, -s) / denominator,
-                y_coefficient = Math.pow(py / (1 - u.alpha), -s) / denominator,
-                scale_factor = u.alpha*Math.pow(x_coefficient, u.r) + (1- u.alpha)*Math.pow(y_coefficient, u.r),
 
-                c = Math.pow(utility/scale_factor, 1/ u.r);
 
-            return c;
+        }
 
-            return {
-                x: Math.pow(theta,u.yShare)*utilityConstraint.u,
-                y: Math.pow(1/theta,u.xShare)*utilityConstraint.u
-            };
-        }*/
+        lowestCostBundle(utilityConstraint:UtilityConstraint) {
+            var u = this,
+                s = 1/(1-u.r);
+
+            var costMinimizingBudgetConstraint = new SimpleBudgetConstraint({
+                income: Math.pow(Math.pow(u.alpha, s) * Math.pow(utilityConstraint.px, 1-s) + Math.pow(1 - u.alpha, s) * Math.pow(utilityConstraint.py, 1-s),1/(1-s))*utilityConstraint.u,
+                px: utilityConstraint.px,
+                py: utilityConstraint.py
+            });
+
+            console.log(costMinimizingBudgetConstraint);
+
+            return u.optimalBundle(costMinimizingBudgetConstraint);
+        }
 
         formula(values) {
             var u = this;

@@ -1,0 +1,174 @@
+{% extends 'graphs/micro/consumer_theory/slutsky_decomposition.html' %}
+
+{% block main %}
+{% raw %}
+<h1>Marshallian and Hicksian Demand: {{ model.utility.title }}</h1>
+<hr/>
+<div id="graph"></div>
+    {% endraw %}
+{% endblock %}
+
+{% block belowControls %}
+
+{% endblock %}
+
+
+{% block jsadjustments %}
+        <script>
+
+        var marshallianDemand = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'demandCurveX',
+                        className: 'demand',
+                        data: 'model.marshallianDemand1.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
+                        label: {text: 'D^M'}
+                    }
+                },
+                hicksianDemand1 = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'hicksDemand1',
+                        className: 'utility',
+                        data: 'model.hicksianDemand1.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
+                        label: {text: 'D^H_x(U_1)'}
+                    }
+                },
+                hicksianDemand2 = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'hicksDemand2',
+                        className: 'utility',
+                        data: 'model.hicksianDemand2.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
+                        label: {text: 'D^H_x(U_2)'}
+                    }
+                },
+                demandBundleA = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleA',
+                        className: 'demand',
+                        show: 'params.showA',
+                        coordinates: {
+                            x: 'model.initialBundle.x',
+                            y: 'model.px'
+                        },
+                        label: {
+                            text: 'A'
+                        },
+                        interaction: {
+                            triggerHighlight: '',
+                            highlight: 'initialPrice initialUtility initialIncome BL1'
+                        },
+                        droplines: {
+                            vertical: 'x_A'
+                        }
+
+                    }
+                },
+                demandBundleC = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleC',
+                        show: 'params.showC',
+                        className: 'demand',
+                        coordinates: {
+                            x: 'model.finalBundle.x',
+                            y: 'model.px2'
+                        },
+                        label: {
+                            text: 'C'
+                        },
+                        interaction: {
+                            triggerHighlight: '',
+                            highlight: 'BL2 finalUtility finalPrice'
+                        },
+                        droplines: {
+                            vertical: 'x_C'
+                        }
+
+                    }
+                },
+                demandBundleB = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleB',
+                        show: 'params.showB',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.decompositionBundle.x',
+                            y: 'model.px2'
+                        },
+                        label: {
+                            text: 'B'
+                        },
+                        interaction: {
+                            triggerHighlight: '',
+                            highlight: 'finalPrice initialUtility decomposition'
+                        },
+                        droplines: {
+                            vertical: 'x_B'
+                        }
+
+                    }
+                },
+                demandBundleE = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleE',
+                        show: 'params.showE',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.compensatedBundle.x',
+                            y: 'model.px'
+                        },
+                        label: {
+                            text: 'E'
+                        },
+                        interaction: {
+                            highlight: 'initialPrice finalUtility'
+                        },
+                        droplines: {
+                            vertical: 'x_E'
+                        }
+
+                    }
+                },
+                priceLineX1 = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'priceLineX1',
+                        className: 'price',
+                        y: 'model.px',
+                        yInterceptLabel: 'P_x^1'
+                    }
+                },
+                priceLineX2 = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'priceLineX2',
+                        className: 'price',
+                        y: 'model.px2',
+                        yInterceptLabel: 'P_x^2'
+                    }
+                };
+
+        scopeDefinition.views.push({
+            type: 'KG.TwoVerticalGraphs',
+            definition: {
+                element_id: 'graph',
+                topGraph: {
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
+                    yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
+                    objects: [budgetLine1, budgetLine2, compensatedBudgetLine, decompositionBudgetLine, xIntercept1, xIntercept2, yIntercept, bundleA, bundleC, bundleB, bundleE, initialIndifferenceCurve, finalIndifferenceCurve]
+                },
+                bottomGraph: {
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_x'},
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good X}'},
+                    objects: [marshallianDemand, hicksianDemand1, hicksianDemand2, demandBundleA, demandBundleB, demandBundleC, demandBundleE, priceLineX1, priceLineX2]
+                },
+                objects: []
+            }
+        });
+        </script>
+    {% endblock %}

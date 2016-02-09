@@ -4,14 +4,6 @@
 
 module KG {
 
-    export interface PiecewiseLinearParamsDefinition extends LineParamsDefinition {
-        label?: string;
-        yInterceptLabel?: string;
-        xInterceptLabel?: string;
-        areaUnderLabel?: string;
-        areaOverLabel?: string;
-    }
-
     export interface PiecewiseLinearDefinition extends ViewObjectDefinition {
         sectionDefs?: any;
         sections?: any;
@@ -19,7 +11,6 @@ module KG {
         label?: string;
         xInterceptLabel?: string;
         yInterceptLabel?: string;
-        params?: PiecewiseLinearParamsDefinition;
         areaUnderLabel?: string;
         areaOverLabel?: string;
     }
@@ -53,32 +44,6 @@ module KG {
 
         constructor(definition:PiecewiseLinearDefinition, modelPath?: string) {
 
-            if(definition.hasOwnProperty('params')) {
-
-                var p = definition.params;
-
-                if(p.hasOwnProperty('label')) {
-                    definition.label = p.label;
-                }
-
-                if(p.hasOwnProperty('areaUnderLabel')) {
-                    definition.areaUnderLabel = p.areaUnderLabel;
-                }
-
-                if(p.hasOwnProperty('areaOverLabel')) {
-                    definition.areaOverLabel = p.areaOverLabel;
-                }
-
-                if(p.hasOwnProperty('xInterceptLabel')) {
-                    definition.xInterceptLabel = p.xInterceptLabel;
-                }
-
-                if(p.hasOwnProperty('yInterceptLabel')) {
-                    definition.yInterceptLabel = p.yInterceptLabel;
-                }
-
-            }
-
             super(definition, modelPath);
 
             var piecewiseLinear = this;
@@ -94,15 +59,13 @@ module KG {
 
         }
 
-        _update(scope) {
-            var piecewiseLinear = this;
-            piecewiseLinear.sections.forEach(function(section){section.update(scope)});
-            return this;
-        }
-
-        createSubObjects(view) {
+        render(view) {
 
             var piecewiseLinear = this;
+
+            if(typeof piecewiseLinear.sections == 'string') {
+                piecewiseLinear.sections = view.scope.$eval(piecewiseLinear.sections);
+            }
 
             piecewiseLinear.sections.forEach(function(section, index){
                 if(index == 0){
@@ -112,12 +75,11 @@ module KG {
                         linear: section.linear,
                         xDomain: section.xDomain,
                         yDomain: section.yDomain,
-                        params: {
-                            yInterceptLabel: piecewiseLinear.yInterceptLabel
-                        }
+                        yInterceptLabel: piecewiseLinear.yInterceptLabel
                     });
-                    view.addObject(newLine.update(scope));
+                    view.addObject(newLine);
                     view = newLine.createSubObjects(view);
+                    newLine.render(view);
                     piecewiseLinear.yIntercept = newLine.linear.yIntercept;
                 } else if(index == piecewiseLinear.sections.length - 1){
                     var newLine = new Line({
@@ -126,23 +88,25 @@ module KG {
                         linear: section.linear,
                         xDomain: section.xDomain,
                         yDomain: section.yDomain,
-                        params: {
-                            label: piecewiseLinear.label,
-                            xInterceptLabel: piecewiseLinear.xInterceptLabel
-                        }
+                        label: {text: piecewiseLinear.label},
+                        xInterceptLabel: piecewiseLinear.xInterceptLabel
                     });
-                    view.addObject(newLine.update(scope));
+                    view.addObject(newLine);
                     view = newLine.createSubObjects(view);
                     piecewiseLinear.xIntercept = newLine.linear.xIntercept;
+                    newLine.render(view);
                 } else {
                     var newLine = new Line({
                         name: piecewiseLinear.name + '_section' + index,
                         className: piecewiseLinear.className,
                         xDomain: section.xDomain,
                         yDomain: section.yDomain,
-                        linear: section.linear
+                        linear: section.linear,
+                        xInterceptLabel: piecewiseLinear.xInterceptLabel,
+                        yInterceptLabel: piecewiseLinear.yInterceptLabel
                     });
-                    view.addObject(newLine.update(scope));
+                    view.addObject(newLine);
+                    viewLine.render(view);
                 }
             });
 

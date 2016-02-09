@@ -1,0 +1,55 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+        {% raw %}
+        <div class="subtitle">January 26</div>
+        <h2>Group Work: Trading from an Endowment</h2>
+        <hr/>
+        <p>Each team represents a "consumer" with identical Cobb-Douglas preferences <span class="math">u(w,r) = rw</span>, where good W is white poker chips and good R is red poker chips.</p>
+        <p>Send a member of each team up to collect your initial endowment. Each team starts with 12 poker chips of random colors.</p>
+        <hr/>
+        <ol>
+            <li style="padding-top:20px">
+                <p><b>Establish a baseline</b></p>
+                <p>Write down your team's initial endowment <span class="math">(w^E,r^E)</span> and initial utility <span class="math">u(w^E,r^E)=w^Er^E</span>.</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Optimize within your section</b></p>
+                <p>Get together within your section and try to make all three teams better off than they currently are, by reallocating the poker chips among the teams. Write down your reallocation and new total utility for each team in your section but don't actually trade tokens.</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Prepare for a market simulation.</b></p>
+                <p>With your team, figure out how you would trade chips if you could trade them at a particular ratio. In particular, figure out your team's optimal trades, and the utility resulting from those trades, if you could exchange white chips for red chips at each of the following ratios:</p>
+                <ul>
+                    <li>1:1 One white chip for one red chip</li>
+                    <li>1:2 One white chip for two red chips</li>
+                    <li>1:3 One white chip for three red chips</li>
+                </ul>
+                <p>In which cases would you trade your own white chips for red chips? In which cases would you trade your own red chips for white chips?</p>
+            </li>  {% endraw %}
+            <li style="padding-top:20px">
+                <p><b>Trading, Round 1.</b></p>
+                <p>Now suppose you can trade chips with other teams at a 1:1 ratio (one white chip for one red chip). Try to maximize your team's utility by trading poker chips with other teams; you can use <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture7/group_work_calculator_round1') }}">this calculator</a> to help you. Record your team's new consumption bundle, utility, and marginal rate of substitution.</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Trading, Round 2.</b></p>
+                <p>Now suppose you can trade chips with other teams at any ratio you like. Try to maximize your team's utility by trading poker chips with other teams; you can use <a href="{{ url_for('courses', path='stanford/W16-ECON-50/lecture7/group_work_calculator_round2') }}">this calculator</a> to help you.. Record your team's new consumption bundle, utility, and marginal rate of substitution.</p>
+            </li>
+        </ol>
+        </li>
+        </ol>
+
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

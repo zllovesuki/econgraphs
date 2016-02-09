@@ -25,7 +25,7 @@ module EconGraphs {
 
         public static title = 'Simple Budget Constraint';
 
-        constructor(definition: SimpleBudgetConstraintDefinition, modelPath: string) {
+        constructor(definition: SimpleBudgetConstraintDefinition, modelPath?: string) {
             super(definition,modelPath);
 
             var b = this;

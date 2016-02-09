@@ -11,6 +11,7 @@ module KG
         // If there's an obvious way the object can be dragged, can just set 'draggable' to 'true'
         // The view object class will use this to set xDrag and yDrag appropriately.
         draggable?: any;
+        triggerHighlight?: any;
 
         // xDrag and yDrag may be parameters ('params.x') or expressions that evaluate to booleans ('!model.snap')
         xDrag?: any;
@@ -30,6 +31,7 @@ module KG
         xDragParam: string;
         yDragParam: string;
         highlight: string;
+        triggerHighlight: string;
         setBehavior: (view: View, selection: D3.Selection) => View;
         highlightObject: (view: View) => boolean;
     }
@@ -41,6 +43,7 @@ module KG
         public yDrag;
         public xDragParam;
         public yDragParam;
+        public triggerHighlight;
         public highlight;
 
         constructor(definition:InteractionHandlerDefinition, modelPath?: string) {
@@ -116,7 +119,11 @@ module KG
                 selection.call(drag());
             }
 
-            if(interactionHandler.hasOwnProperty('highlight')) {
+            if(interactionHandler.hasOwnProperty('triggerHighlight')) {
+                selection.on('mouseover', function() {
+                    view.scope.updateParams({highlight: interactionHandler.triggerHighlight});
+                });
+            } else if(interactionHandler.hasOwnProperty('highlight')) {
                 selection.on('mouseover', function() {
                     view.scope.updateParams({highlight: interactionHandler.highlight});
                 });

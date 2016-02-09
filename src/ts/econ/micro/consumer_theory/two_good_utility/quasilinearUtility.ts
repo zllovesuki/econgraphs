@@ -49,23 +49,16 @@ module EconGraphs {
 
         }
 
-        /*lowestCostBundle(utilityConstraint:UtilityConstraint) {
+        lowestCostBundle(utilityConstraint:UtilityConstraint) {
             var u = this;
 
-            var denominator = Math.pow(u.alpha, s) * Math.pow(px, 1 - s) + Math.pow(1 - u.alpha, u.s) * Math.pow(py, 1 - u.s),
-                x_coefficient = Math.pow(px / u.alpha, -s) / denominator,
-                y_coefficient = Math.pow(py / (1 - u.alpha), -s) / denominator,
-                scale_factor = u.alpha*Math.pow(x_coefficient, u.r) + (1- u.alpha)*Math.pow(y_coefficient, u.r),
-
-                c = Math.pow(utility/scale_factor, 1/ u.r);
-
-            return c;
+            var x = (u.alpha / (1-u.alpha))*utilityConstraint.py/utilityConstraint.px;
 
             return {
-                x: Math.pow(theta,u.yShare)*utilityConstraint.u,
-                y: Math.pow(1/theta,u.xShare)*utilityConstraint.u
-            };
-        }*/
+                x: x,
+                y: (utilityConstraint.u - u.alpha*Math.log(x))/(1-u.alpha)
+            }
+        }
 
         formula(values) {
             var u = this;

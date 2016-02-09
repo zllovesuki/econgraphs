@@ -3,19 +3,12 @@
 module EconGraphs {
 
     export interface MarshallianDemandDefinition extends UtilityDemandDefinition{
-        x?: any;
-        y?: any;
         budget: {type: string; definition: BudgetConstraintDefinition}
-        snapToOptimalBundle?: any;
     }
 
     export interface IMarshallianDemand extends IUtilityDemand {
 
-        x: number;
-        y: number;
-        bundle: TwoGoodBundle;
         budget: BudgetConstraint | KG.Selector;
-        snapToOptimalBundle?: boolean;
 
         priceConsumptionCurveData: (pccParams?: UtilityDemandCurveParams) => KG.ICoordinates[];
         incomeConsumptionCurveData: (iccParams?: UtilityDemandCurveParams) => KG.ICoordinates[];
@@ -25,11 +18,7 @@ module EconGraphs {
 
     export class MarshallianDemand extends UtilityDemand implements IMarshallianDemand {
 
-        public x;
-        public y;
-        public bundle;
         public budget;
-        public snapToOptimalBundle;
 
         constructor(definition:MarshallianDemandDefinition, modelPath?:string) {
 
@@ -82,6 +71,11 @@ module EconGraphs {
         }
 
         quantityAtIncome(income,good) {
+
+            if(this.budget instanceof EndowmentBudgetConstraint) {
+                return null;
+            }
+
             var d = this;
             good = good || 'x';
 
@@ -104,7 +98,7 @@ module EconGraphs {
             pccParams = _.defaults(pccParams || {}, {
                 good: 'x',
                 min: 0,
-                max: 10,
+                max: 100,
                 numSamplePoints: 101
             });
 
@@ -116,7 +110,7 @@ module EconGraphs {
             //console.log('setting initial price to ',initialPrice);
 
             samplePoints.forEach(function(price) {
-                d.budget.setPrice(price,pccParams.good)
+                d.budget.setPrice(price,pccParams.good);
                 var optimalBundle = d.utility.optimalBundle(d.budget)
                 if(!isNaN(optimalBundle.x) && !isNaN(optimalBundle.y)) {curveData.push(optimalBundle)};
             });
@@ -129,6 +123,10 @@ module EconGraphs {
         }
 
         incomeConsumptionCurveData(iccParams?) {
+
+            if(this.budget instanceof EndowmentBudgetConstraint) {
+                return [];
+            }
 
             iccParams = _.defaults(iccParams || {}, {
                 min: 1,

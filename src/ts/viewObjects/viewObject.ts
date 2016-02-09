@@ -11,8 +11,7 @@ module KG
         show?: any;
         objectName?: string;
         className?: string;
-        highlight?: string;
-        interaction: InteractionHandlerDefinition;
+        interaction?: InteractionHandlerDefinition;
     }
 
     export interface IViewObject extends IModel
@@ -24,7 +23,6 @@ module KG
         name: string;
         objectName?: string;
         className?: string;
-        highlight: boolean;
 
         show: boolean;
         d3group: (view: View) => D3.Selection;
@@ -50,7 +48,6 @@ module KG
 
         public show;
         public className;
-        public highlight;
         public name;
         public objectName;
         public unmasked;
@@ -62,10 +59,6 @@ module KG
         public viewObjectClass;
 
         constructor(definition:ViewObjectDefinition, modelPath?: string) {
-
-            if(definition.hasOwnProperty('interaction') && definition.interaction.hasOwnProperty('highlight') && !definition.hasOwnProperty('highlight')) {
-                definition.highlight = 'params.' + definition.interaction.highlight;
-            }
 
             definition = _.defaults(definition, {
                 name: '',

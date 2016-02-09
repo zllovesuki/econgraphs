@@ -1,0 +1,39 @@
+{% extends 'graphs/micro/consumer_theory/utility_endowment_budget_controls_different_prices.html' %}
+
+{% block graphs %}
+    {% raw %}
+    <h1>Utility Maximization with Endowment: {{ model.utility.title }}</h1>
+    <hr/>
+    <div id="utility"></div>
+    {% endraw %}
+{% endblock %}
+
+{% block belowControls %}
+    <hr/>
+    <toggle param="snapToOptimal" class="utility"><span ng-if="params.snapToOptimal">Make bundle draggable</span><span ng-if="!params.snapToOptimal">Snap to optimal bundle</span></toggle>
+    <toggle param="showPreferred" class="preferred" show-hide="true">preferred set</toggle>
+
+{% endblock %}
+
+    {% block jsadjustments %}
+        <script>
+        scopeDefinition.views.push({
+            type: 'KG.Graph',
+            definition: {
+                element_id: 'utility',
+                square: true,
+                xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}', ticks: 0},
+                yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}', ticks: 0},
+                objects: [
+                        preferred,
+                    budgetSegmentSellX,
+                    budgetSegmentsSellY,
+                    endowmentPoint,
+                    bundlePoint,
+                            bundleOptimalX, bundleOptimalY,
+                    indifferenceCurve
+                ]
+            }
+        });
+        </script>
+    {% endblock %}
