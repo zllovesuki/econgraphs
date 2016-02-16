@@ -261,14 +261,14 @@
                     type: 'KG.Line',
                     definition: {
                         name: 'BL_C',
-                        show: 'params.showC',
-                        className: 'budget',
+                        show: 'params.showE',
+                        className: 'budget dashed',
                         linear: 'model.compensatedBudget.budgetSegments[0].linear',
                         interaction: {
                             highlight: 'initialPrice'
                         },
                         label: {
-                            text: 'BL_C'
+                            text: 'BL_E'
                         }
                     }
                 },
@@ -337,8 +337,8 @@
                             text: 'A'
                         },
                         interaction: {
-                            triggerHighlight: '',
-                            highlight: 'initialPrice initialUtility initialIncome BL1'
+                            triggerHighlight: 'bundleA',
+                            highlight: 'initialPrice initialUtility initialIncome BL1 bundleA'
                         },
                         droplines: {
                             //vertical: 'x_A',
@@ -361,8 +361,8 @@
                             text: 'C'
                         },
                         interaction: {
-                            triggerHighlight: '',
-                            highlight: 'BL2 finalUtility finalPrice'
+                            triggerHighlight: 'bundleC',
+                            highlight: 'BL2 finalUtility finalPrice bundleC initialIncome'
                         },
                         droplines: {
                             //vertical: 'x_C',
@@ -385,8 +385,8 @@
                             text: 'B'
                         },
                         interaction: {
-                            triggerHighlight: '',
-                            highlight: 'finalPrice initialUtility decomposition'
+                            triggerHighlight: 'bundleB',
+                            highlight: 'finalPrice initialUtility decomposition bundleB'
                         },
                         droplines: {
                             //vertical: 'x_B',
@@ -409,7 +409,8 @@
                             text: 'E'
                         },
                         interaction: {
-                            highlight: 'initialPrice finalUtility'
+                            triggerHighlight: 'bundleE',
+                            highlight: 'initialPrice finalUtility bundleE'
                         },
                         droplines: {
                             //vertical: 'x_E',
@@ -583,6 +584,6 @@
         </script>
     {% endblock %}
 
-    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js', update=true) }}"></script>
 
 {% endblock %}

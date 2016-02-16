@@ -52,11 +52,17 @@ module EconGraphs {
         lowestCostBundle(utilityConstraint:UtilityConstraint) {
             var u = this;
 
-            var x = (u.alpha / (1-u.alpha))*utilityConstraint.py/utilityConstraint.px;
+            var x = (u.alpha / (1-u.alpha))*utilityConstraint.py/utilityConstraint.px,
+                y = (utilityConstraint.u - u.alpha*Math.log(x))/(1-u.alpha);
+
+            if(y < 0) {
+                y = 0;
+                x = Math.exp(utilityConstraint.u/u.alpha);
+            }
 
             return {
                 x: x,
-                y: (utilityConstraint.u - u.alpha*Math.log(x))/(1-u.alpha)
+                y: y
             }
         }
 

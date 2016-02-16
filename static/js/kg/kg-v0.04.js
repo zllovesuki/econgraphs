@@ -4,6 +4,7 @@ var KG;
 (function (KG) {
     KG.CLASS_COLORS = {
         demand: 'blue',
+        utility: 'purple',
         supply: 'orange',
         growth: 'green',
         diff1: 'purple',
@@ -3339,7 +3340,9 @@ var KG;
                 text: '',
                 color: KG.colorForClassName(definition.className),
                 unmasked: true,
-                math: true
+                math: true,
+                xOffset: 0,
+                yOffset: 0
             });
             _super.call(this, definition, modelPath);
         }
@@ -3377,6 +3380,8 @@ var KG;
             else {
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }
+            x += divObj.xOffset;
+            y += divObj.yOffset;
             var div = divObj.d3selection(view);
             if (divObj.math) {
                 katex.render(divObj.text.toString(), div[0][0]);
@@ -5848,10 +5853,14 @@ var EconGraphs;
         };
         QuasilinearUtility.prototype.lowestCostBundle = function (utilityConstraint) {
             var u = this;
-            var x = (u.alpha / (1 - u.alpha)) * utilityConstraint.py / utilityConstraint.px;
+            var x = (u.alpha / (1 - u.alpha)) * utilityConstraint.py / utilityConstraint.px, y = (utilityConstraint.u - u.alpha * Math.log(x)) / (1 - u.alpha);
+            if (y < 0) {
+                y = 0;
+                x = Math.exp(utilityConstraint.u / u.alpha);
+            }
             return {
                 x: x,
-                y: (utilityConstraint.u - u.alpha * Math.log(x)) / (1 - u.alpha)
+                y: y
             };
         };
         QuasilinearUtility.prototype.formula = function (values) {
@@ -5912,6 +5921,17 @@ var EconGraphs;
                 curveData.push({ x: d.quantityAtPrice(price, demandParams.good), y: price });
             });
             return curveData.sort(KG.sortObjects('x'));
+        };
+        UtilityDemand.prototype.changeInSurplus = function (demandParams) {
+            if (demandParams.max < demandParams.min) {
+                var max = demandParams.min, min = demandParams.max;
+                demandParams.min = min;
+                demandParams.max = max;
+            }
+            var demandCurveData = this.demandCurveData(demandParams);
+            demandCurveData.push({ x: 0, y: demandParams.min });
+            demandCurveData.push({ x: 0, y: demandParams.max });
+            return demandCurveData;
         };
         return UtilityDemand;
     })(KG.Model);

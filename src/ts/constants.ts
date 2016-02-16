@@ -6,6 +6,7 @@ module KG
 {
     export var CLASS_COLORS = {
         demand: 'blue',
+        utility: 'purple',
         supply: 'orange',
         growth: 'green',
         diff1: 'purple',

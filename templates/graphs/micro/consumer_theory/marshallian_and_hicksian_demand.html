@@ -9,6 +9,19 @@
 {% endblock %}
 
 {% block belowControls %}
+    <toggle param="showA" class="demand" show-hide="true"><span class="math">\text{Initial State }(A)</span></toggle>
+                    <toggle param="showB" class="demand" show-hide="true"><span class="math">\text{Decomposition Bundle }(B)</span></toggle>
+                    <toggle param="showC" class="demand" show-hide="true"><span class="math">\text{Final State }(C)</span></toggle>
+    <toggle param="showE" class="demand" show-hide="true"><span class="math">\text{Equivalent State }(E)</span></toggle>
+    <hr/>
+    <toggle param="showMarshallian" class="demand" show-hide="true"><span class="math">\text{Marshallian Demand }(D^M_x)</span></toggle>
+    <toggle param="showCS" class="demand" show-hide="true"><span class="math">\text{Consumer Surplus }(CS)</span></toggle>
+    <hr/>
+    <toggle param="showHicksian1" class="demand" show-hide="true"><span class="math">\text{Initial Hicksian Demand }(D^H_x(U_1))</span></toggle>
+    <toggle param="showCV" class="demand" show-hide="true"><span class="math">\text{Compensating Variation }(CV)</span></toggle>
+    <hr/>
+    <toggle param="showHicksian2" class="demand" show-hide="true"><span class="math">\text{Final Hicksian Demand }(D^H_x(U_1))</span></toggle>
+    <toggle param="showEV" class="demand" show-hide="true"><span class="math">\text{Equivalent Variation }(EV)</span></toggle>
 
 {% endblock %}
 
@@ -16,13 +29,34 @@
 {% block jsadjustments %}
         <script>
 
+        scopeDefinition.params.showE = true;
+        scopeDefinition.params.showCS = false;
+        scopeDefinition.params.showCV = false;
+        scopeDefinition.params.showEV = false;
+
+        scopeDefinition.params.showMarshallian = true;
+        scopeDefinition.params.showHicksian1 = true;
+        scopeDefinition.params.showHicksian2 = true;
+
+
+        bundleA.definition.droplines = {vertical: 'x^A'};
+        bundleB.definition.droplines = {vertical: 'x^B'};
+        bundleC.definition.droplines = {vertical: 'x^C'};
+        bundleE.definition.droplines = {vertical: 'x^E'};
+
+        console.log(bundleA);
+
         var marshallianDemand = {
                     type: 'KG.Curve',
                     definition: {
                         name: 'demandCurveX',
                         className: 'demand',
                         data: 'model.marshallianDemand1.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
-                        label: {text: 'D^M'}
+                        label: {text: 'D^M'},
+                        show: 'params.showMarshallian',
+                        interaction: {
+                            highlight: 'initialIncome'
+                        }
                     }
                 },
                 hicksianDemand1 = {
@@ -31,7 +65,11 @@
                         name: 'hicksDemand1',
                         className: 'utility',
                         data: 'model.hicksianDemand1.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
-                        label: {text: 'D^H_x(U_1)'}
+                        label: {text: 'D^H_x(U_1)'},
+                        show: 'params.showHicksian1',
+                        interaction: {
+                            highlight: 'initialUtility'
+                        }
                     }
                 },
                 hicksianDemand2 = {
@@ -40,7 +78,11 @@
                         name: 'hicksDemand2',
                         className: 'utility',
                         data: 'model.hicksianDemand2.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
-                        label: {text: 'D^H_x(U_2)'}
+                        label: {text: 'D^H_x(U_2)'},
+                        show: 'params.showHicksian2',
+                        interaction: {
+                            highlight: 'finalUtility'
+                        }
                     }
                 },
                 demandBundleA = {
@@ -57,8 +99,8 @@
                             text: 'A'
                         },
                         interaction: {
-                            triggerHighlight: '',
-                            highlight: 'initialPrice initialUtility initialIncome BL1'
+                            triggerHighlight: 'bundleA',
+                            highlight: 'initialPrice initialUtility initialIncome BL1 bundleA'
                         },
                         droplines: {
                             vertical: 'x_A'
@@ -80,8 +122,8 @@
                             text: 'C'
                         },
                         interaction: {
-                            triggerHighlight: '',
-                            highlight: 'BL2 finalUtility finalPrice'
+                            triggerHighlight: 'bundleC',
+                            highlight: 'BL2 finalUtility finalPrice bundleC initialIncome'
                         },
                         droplines: {
                             vertical: 'x_C'
@@ -103,8 +145,8 @@
                             text: 'B'
                         },
                         interaction: {
-                            triggerHighlight: '',
-                            highlight: 'finalPrice initialUtility decomposition'
+                            triggerHighlight: 'bundleB',
+                            highlight: 'finalPrice initialUtility decomposition bundleB'
                         },
                         droplines: {
                             vertical: 'x_B'
@@ -126,7 +168,8 @@
                             text: 'E'
                         },
                         interaction: {
-                            highlight: 'initialPrice finalUtility'
+                            triggerHighlight: 'bundleE',
+                            highlight: 'initialPrice finalUtility bundleE'
                         },
                         droplines: {
                             vertical: 'x_E'
@@ -140,7 +183,10 @@
                         name: 'priceLineX1',
                         className: 'price',
                         y: 'model.px',
-                        yInterceptLabel: 'P_x^1'
+                        yInterceptLabel: 'P_x^1',
+                        interaction: {
+                            highlight: 'initialPrice'
+                        }
                     }
                 },
                 priceLineX2 = {
@@ -149,7 +195,49 @@
                         name: 'priceLineX2',
                         className: 'price',
                         y: 'model.px2',
-                        yInterceptLabel: 'P_x^2'
+                        yInterceptLabel: 'P_x^2',
+                        interaction: {
+                            highlight: 'finalPrice'
+                        }
+                    }
+                },
+                CS = {
+                    type: 'KG.Area',
+                    definition: {
+                        name: 'CSArea',
+                        className: 'demand',
+                        data: 'model.marshallianDemand1.changeInSurplus({min: model.px, max: model.px2})',
+                        show: 'params.showCS',
+                        label: {text: 'CS', xOffset: -50},
+                        interaction: {
+                            highlight: 'initialIncome'
+                        }
+                    }
+                },
+                CV = {
+                    type: 'KG.Area',
+                    definition: {
+                        name: 'CVArea',
+                        className: 'utility',
+                        data: 'model.hicksianDemand1.changeInSurplus({min: model.px, max: model.px2})',
+                        show: 'params.showCV',
+                        label: {text: 'CV', xOffset: -50},
+                        interaction: {
+                            highlight: 'initialUtility'
+                        }
+                    }
+                },
+                EV = {
+                    type: 'KG.Area',
+                    definition: {
+                        name: 'EVArea',
+                        className: 'utility',
+                        data: 'model.hicksianDemand2.changeInSurplus({min: model.px, max: model.px2})',
+                        show: 'params.showEV',
+                        label: {text: 'EV', xOffset: -50},
+                        interaction: {
+                            highlight: 'finalUtility'
+                        }
                     }
                 };
 
@@ -158,14 +246,14 @@
             definition: {
                 element_id: 'graph',
                 topGraph: {
-                    xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}'},
-                    yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Units of Good X}', ticks: 0},
+                    yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}', ticks: 0},
                     objects: [budgetLine1, budgetLine2, compensatedBudgetLine, decompositionBudgetLine, xIntercept1, xIntercept2, yIntercept, bundleA, bundleC, bundleB, bundleE, initialIndifferenceCurve, finalIndifferenceCurve]
                 },
                 bottomGraph: {
-                    xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_x'},
-                    yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good X}'},
-                    objects: [marshallianDemand, hicksianDemand1, hicksianDemand2, demandBundleA, demandBundleB, demandBundleC, demandBundleE, priceLineX1, priceLineX2]
+                    xAxisDef: {min: 0, max: 50, title: '\\text{Quantity Demanded of X at }P_x', ticks: 0},
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good X}', ticks: 0},
+                    objects: [marshallianDemand, hicksianDemand1, hicksianDemand2, demandBundleA, demandBundleB, demandBundleC, demandBundleE, priceLineX1, priceLineX2, CS, CV, EV]
                 },
                 objects: []
             }
