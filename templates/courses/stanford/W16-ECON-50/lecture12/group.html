@@ -1,0 +1,66 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+
+        <div class="subtitle">February 16</div>
+        <h2>Group Work: Production Functions</h2>
+        <hr/>
+        <p>Your group is making the production decisions for a firm with Cobb-Douglas production function <span class="math">q = L^a K^\frac{1}{2}</span>. For each of the following questions, enter the numbers on the spreadsheet <a href="https://docs.google.com/spreadsheets/d/12a6InIl3vTMtwfGSgk8IAwoVLcSMxm4K_ZJiX_mLU-Y/edit#gid=0">here</a>.</p>
+        <hr/>
+        <ol>
+            <li style="padding-top:20px">
+                <p><b>Choose your production function</b></p>
+                <p>For your group, let <span class="math">a</span> be the <b>fraction</b> of your group that has a birthday before July 1 (minimum 0.25), and let <span class="math">K</span> be the <b>number</b> of people in your group who have a birthday after July 1 (minimum 1).</p>
+                <p>Plug these values of <span class="math">a</span> and <span class="math">K</span> into your production function; for example, if one-third of your group was born before July 1, and 4 members of your group were born after July 1, then your production function would be <span class="math">q = L^a K^\frac{1}{2} = L^\frac{1}{3} \times 4^\frac{1}{2}</span>.</p>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Do some initial calculations</b></p>
+                <ul>
+                    <li>Calculate your total output if <span class="math">L = 10</span>, <span class="math">L = 20</span>, and <span class="math">L = 30</span>.</li>
+                    <li>Calculate the marginal product of labor <span class="math">(MP_L)</span> for the 10th, 20th, and 30th worker.</li>
+                    <li>Is the <span class="math">MP_L</span> diminishing?</li>
+                </ul>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Returns to scale</b></p>
+                <ul>
+                    <li>Calculate your total output if <span class="math">L = 20</span>, and you double your capital <span class="math">K</span>. Compare this to your total output if <span class="math">L = 10</span> with your original level of capital.</li>
+                    <li>Does your firm have constant, increasing, or decreasing returns to scale?</li>
+                </ul>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Technological progress</b></p>
+                <p>(For these questions, assume your level of capital is back to your initial level.)</p>
+                <ul>
+                    <li>Calculate your output when <span class="math">L = K</span> (for your level of capital).</li>
+                    <li>Calculate the <span class="math">MRTS_{L,K}</span> when <span class="math">L = K</span> (for your level of capital).</li>
+                    <li>Calculate the percentage change in <span class="math">MRTS_{L,K}</span> for a 1% change in the <span class="math">K/L</span> ratio; confirm that this is 1.</li>
+                    <li>Use <a href="http://desmos.com">desmos.com</a> to draw an isoquant for the quantity you found above.</li>
+                    <li>In Desmos, add another isoquant for the same quantity if you double your value of <span
+                                class="math">a</span>. What happens?
+                    </li>
+                    <li>Calculate your <span class="math">MRTS_{L,K}</span> at the new (doubled) level of <span class="math">\alpha</span> if you continue to produce the same quantity, and keep your capital/labor ratio constant (at 1).</li>
+                </ul>
+            </li>
+        </ol>
+        </li>
+        </ol>
+
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}
+
+<ol>
+
+            </ol>
