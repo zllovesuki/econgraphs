@@ -171,7 +171,7 @@ module EconGraphs {
             s.initialBundle = s.marshallianDemand1.bundle;
             s.finalBundle = s.marshallianDemand2.bundle;
 
-            console.log('initialBundle = ',s.initialBundle);
+            //console.log('initialBundle = ',s.initialBundle);
 
             s.initialUtility = s.utility.utility(s.initialBundle);
             s.finalUtility = s.utility.utility(s.finalBundle);
@@ -182,7 +182,7 @@ module EconGraphs {
             s.decompositionBundle = s.utility.lowestCostBundle(s.hicksianDemand1.utilityConstraint);
             s.compensatedBundle = s.utility.lowestCostBundle(s.hicksianDemand2.utilityConstraint);
 
-            console.log('decompositionBundle = (',s.decompositionBundle.x,',',s.decompositionBundle.y,')')
+            //console.log('decompositionBundle = (',s.decompositionBundle.x,',',s.decompositionBundle.y,')')
 
             s.decompositionBudget.setIncome(s.budget2.px*s.decompositionBundle.x + s.budget2.py*s.decompositionBundle.y);
             s.compensatedBudget.setIncome(s.budget1.px*s.compensatedBundle.x + s.budget1.py*s.compensatedBundle.y);
@@ -190,7 +190,7 @@ module EconGraphs {
             s.initialIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.initialUtility);
             s.finalIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.finalUtility);
 
-            console.log(s);
+            //console.log(s);
 
             return s;
         }

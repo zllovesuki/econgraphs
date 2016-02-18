@@ -39,6 +39,11 @@
   stroke: #1f77b4;
   fill: #aec7e8;
 }
+.longRunTotalCost {
+  color: #ff7f0e;
+  stroke: #ff7f0e;
+  fill: #ffbb78;
+}
 .totalCost {
   color: #d62728;
   stroke: #d62728;

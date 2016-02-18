@@ -1,0 +1,40 @@
+{% extends 'graphs/micro/producer_theory/cost_minimization_controls.html' %}
+
+{% block graphs %}
+    {% raw %}
+    <h1>Cost Minimization along an Isoquant: {{ model.title }}</h1>
+    <hr/>
+    <div id="costMinimization"></div>
+    {% endraw %}
+{% endblock %}
+
+{% block belowControls %}
+    {% raw %}
+    <toggle param="showOptimal" class="longRunTotalCost" show-hide="true">Cost-Minimizing Bundle</toggle>
+    <hr/>
+    <equation>TC(L,K) = wL + rK</equation>
+    <div class="math displayMath big budget" highlight="SRisocost">TC({{ model.shortRunLaborRequirement() | number:0 }},{{ params.K | number:0 }}) = {{ params.w | number:2 }} \times {{ model.shortRunLaborRequirement() | number:0 }} + {{ params.r | number:2 }} \times {{ params.K | number:0 }} = {{ model.shortRunTotalCost() | number:2 }}</div>
+    <div class="math displayMath big budget old" highlight="LRisocost" ng-show="params.showOptimal">TC({{ model.conditionalLaborDemand() | number:0 }},{{ model.conditionalCapitalDemand() | number:0 }}) = {{ params.w | number:2 }} \times {{ model.conditionalLaborDemand() | number:0 }} + {{ params.r | number:2 }} \times {{ model.conditionalCapitalDemand() | number:0 }} = {{ model.longRunTotalCost() | number:2 }}</div>
+    <p class="pull-right"><i>Note: there may be some rounding!</i></p>{% endraw %}
+{% endblock %}
+
+{% block jsadjustments %}
+    <script>
+        scopeDefinition.views.push({
+            type: 'KG.Graph',
+            definition: {
+                element_id: 'costMinimization',
+                square: true,
+                xAxisDef: {min: 0, max: 50, title: '\\text{Labor (L)}', ticks:0},
+                yAxisDef: {min: 0, max: 50, title: '\\text{Capital (K)}',ticks:0},
+                objects: [
+                    isocost,
+                    isoquant,
+                    longRunBundle,
+                    shortRunBundle,
+                    shortRunIsocost
+                ]
+            }
+        })</script>
+{% endblock %}
+

@@ -183,7 +183,7 @@ module KGMath.Functions {
             if(m.powers.length == 1) {
                 return m.coefficient * Math.pow(x,m.powers[0]);
             } else {
-                return Math.pow(m.level*Math.pow(x,-m.powers[0]),1/m.powers[1]);
+                return Math.pow(m.level*Math.pow(x,-m.powers[0])/m.coefficient,1/m.powers[1]);
             }
 
         }
@@ -194,7 +194,7 @@ module KGMath.Functions {
             if(this.powers.length == 1) {
                 return Math.pow(y/m.coefficient,1/m.powers[0]);
             } else {
-                return Math.pow(m.level*Math.pow(y,-m.powers[1]),1/m.powers[0]);
+                return Math.pow(m.level*Math.pow(y,-m.powers[1])/m.coefficient,1/m.powers[0]);
             }
         }
 

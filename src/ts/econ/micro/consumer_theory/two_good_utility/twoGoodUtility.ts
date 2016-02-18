@@ -68,7 +68,7 @@ module EconGraphs {
             u.utilityFunction.update(scope);
             u.muxFunction.update(scope);
             u.muyFunction.update(scope);
-            console.log('updated utility function to ',u);
+            //console.log('updated utility function to ',u);
             return u;
         }
 

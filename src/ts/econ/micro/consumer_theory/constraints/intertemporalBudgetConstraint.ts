@@ -44,7 +44,7 @@ module EconGraphs {
 
             super(definition,modelPath);
 
-            console.log(this);
+            //console.log(this);
 
         }
 

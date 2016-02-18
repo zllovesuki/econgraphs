@@ -51,7 +51,8 @@
                 <div ng-show="params.selectedUtility == 'CES'">
                     <equation>F(L,K) = (aL^\frac{\sigma - 1}{\sigma} + bK^\frac{\sigma - 1}{\sigma})^\frac{\sigma}{\sigma - 1} || = ({{ params.a | number:1 }}L^{ {{ model.utility.r | number:2 }} } + {{ params.b | number:1 }}K^{ {{ model.utility.r | number:2 }} })^{ {{ 1/model.utility.r | number: 2 }} }</equation>
                 </div>
-                <equation highlight="utility">F({{ params.L }},{{ params.K }}) = {{ model.utility.utility({x: params.L, y: params.K}) | number:2 }}</equation>
+                <div class="math displayMath big" highlight="q1">F({{ params.L }},{{ params.K }}) = {{ model.utility.utility({x: params.L, y: params.K}) | number:2 }}</div>
+                <div class="math displayMath big" highlight="q2" ng-show="params.showDouble">F({{ 2*params.L }},{{ 2*params.K }}) = {{ model.utility.utility({x: 2*params.L, y: 2*params.K}) | number:2 }}</div>
                 <hr/>
                 {% endraw %}
                 <toggle param="showMRS" class="utility" show-hide="true">MRTS line</toggle>
@@ -139,7 +140,7 @@
                         },
                         interaction: {
                             draggable: true,
-                            highlight: 'bundle'
+                            highlight: 'q1'
                         },
                         droplines: {
                             vertical: 'params.L',
@@ -155,7 +156,7 @@
                         className: 'utility',
                         fn: "model.utility.indifferenceCurveThroughBundleFn({x: params.L, y: params.K})",
                         interaction: {
-                            highlight: 'utility'
+                            highlight: 'q1'
                         },
                         label: {
                             text: ['q =','model.utility.utility({x: params.L, y: params.K}) | number:2']
@@ -174,7 +175,7 @@
                         show: 'params.showDouble',
                         interaction: {
                             draggable: false,
-                            highlight: 'bundle2'
+                            highlight: 'q2'
                         },
                         droplines: {
                             vertical: '2*params.L',
@@ -191,7 +192,7 @@
                         show: 'params.showDouble',
                         fn: "model.utility.indifferenceCurveThroughBundleFn({x: 2*params.L, y: 2*params.K})",
                         interaction: {
-                            highlight: 'utility2'
+                            highlight: 'q2'
                         },
                         label: {
                             text: ['q =','model.utility.utility({x: 2*params.L, y: 2*params.K}) | number:2']
@@ -391,6 +392,6 @@
     {% block jsadjustments %}
     {% endblock %}
 
-    <script src="{{ url_for('static', filename='js/kg/kg-v0.03.js', update='true') }}"></script>
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js', update='true') }}"></script>
 
 {% endblock %}

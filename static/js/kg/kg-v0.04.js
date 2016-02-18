@@ -443,7 +443,6 @@ var KG;
                 for (var key in def) {
                     if (def.hasOwnProperty(key)) {
                         if (skip(key)) {
-                            console.log('not updating ', key, ' within Model.update(scope)');
                         }
                         else if (obj[key] instanceof KG.Selector) {
                             obj[key] = obj[key].update(scope);
@@ -1066,7 +1065,7 @@ var KGMath;
                     return m.coefficient * Math.pow(x, m.powers[0]);
                 }
                 else {
-                    return Math.pow(m.level * Math.pow(x, -m.powers[0]), 1 / m.powers[1]);
+                    return Math.pow(m.level * Math.pow(x, -m.powers[0]) / m.coefficient, 1 / m.powers[1]);
                 }
             };
             // returns the x value corresponding to the given y value for m(x,y) = m.level
@@ -1076,7 +1075,7 @@ var KGMath;
                     return Math.pow(y / m.coefficient, 1 / m.powers[0]);
                 }
                 else {
-                    return Math.pow(m.level * Math.pow(y, -m.powers[1]), 1 / m.powers[0]);
+                    return Math.pow(m.level * Math.pow(y, -m.powers[1]) / m.coefficient, 1 / m.powers[0]);
                 }
             };
             return Monomial;
@@ -2806,7 +2805,7 @@ var KG;
                 area.above = (curve.area.indexOf('ABOVE') > -1);
                 area.below = (curve.area.indexOf('BELOW') > -1);
             }
-            console.log(area);
+            //console.log(area);
             curve.updateDataForView(view);
             var dataCoordinates = view.dataCoordinates(curve.data);
             var dataLength = dataCoordinates.length;
@@ -4256,7 +4255,7 @@ var KG;
             // Updates and redraws interactive objects (graphs and sliders) when a parameter changes
             function render(redraw) {
                 $scope.updateVersion++;
-                console.log('Updating scope to version ', $scope.updateVersion);
+                //console.log('Updating scope to version ',$scope.updateVersion);
                 $scope.model.update($scope, function () {
                     $scope.views.forEach(function (view) { view.update($scope).render(redraw); });
                     $scope.renderMath();
@@ -4303,7 +4302,7 @@ var KG;
                     }
                 });
                 if (!validChange) {
-                    console.log('not a valid change');
+                    //console.log('not a valid change');
                     $scope.params = oldParams;
                     $scope.$apply(redrawObjects);
                 }
@@ -5205,7 +5204,7 @@ var EconGraphs;
                 console.log('Must initiate an intemporal budget constraint with either r or both rBorrow and rLend');
             }
             _super.call(this, definition, modelPath);
-            console.log(this);
+            //console.log(this);
         }
         return IntertemporalBudgetConstraint;
     })(EconGraphs.EndowmentBudgetConstraint);
@@ -5452,7 +5451,7 @@ var EconGraphs;
             u.utilityFunction.update(scope);
             u.muxFunction.update(scope);
             u.muyFunction.update(scope);
-            console.log('updated utility function to ', u);
+            //console.log('updated utility function to ',u);
             return u;
         };
         /* Pure preferences */
@@ -5760,7 +5759,6 @@ var EconGraphs;
             else {
                 definition.r = definition.sub + ' > 0 ? ' + definition.sub + ' : ' + KG.divideDefs(definition.sub, KG.addDefs(1.01, definition.sub));
                 definition.s = KG.divideDefs(1, KG.subtractDefs(1, definition.r)); // s = 1/(1-r)
-                console.log('oops, must instantiate a CES utility function with either r or s');
             }
             definition.criticalPriceRatio = KG.divideDefs(definition.alpha, KG.subtractDefs(1, definition.alpha));
             definition.type = 'CES';
@@ -5798,6 +5796,7 @@ var EconGraphs;
         };
         CESUtility.prototype.expenditure = function (utilityConstraint) {
             var u = this, s = u.r / (u.r - 1);
+            //TODO this doesn't seem finished!
         };
         CESUtility.prototype.lowestCostBundle = function (utilityConstraint) {
             var u = this, s = 1 / (1 - u.r);
@@ -5806,7 +5805,7 @@ var EconGraphs;
                 px: utilityConstraint.px,
                 py: utilityConstraint.py
             });
-            console.log(costMinimizingBudgetConstraint);
+            //console.log(costMinimizingBudgetConstraint);
             return u.optimalBundle(costMinimizingBudgetConstraint);
         };
         CESUtility.prototype.formula = function (values) {
@@ -5963,7 +5962,7 @@ var EconGraphs;
                     y: d.budget.yValue(d.x)
                 };
             }
-            console.log('updated bundle to (', d.bundle.x, ',', d.bundle.y, ')');
+            //console.log('updated bundle to (',d.bundle.x,',',d.bundle.y,')');
             return d;
         };
         MarshallianDemand.prototype.price = function (good) {
@@ -6194,19 +6193,19 @@ var EconGraphs;
             s.marshallianDemand2.update(scope);
             s.initialBundle = s.marshallianDemand1.bundle;
             s.finalBundle = s.marshallianDemand2.bundle;
-            console.log('initialBundle = ', s.initialBundle);
+            //console.log('initialBundle = ',s.initialBundle);
             s.initialUtility = s.utility.utility(s.initialBundle);
             s.finalUtility = s.utility.utility(s.finalBundle);
             s.hicksianDemand1.utilityConstraint.u = s.initialUtility;
             s.hicksianDemand2.utilityConstraint.u = s.finalUtility;
             s.decompositionBundle = s.utility.lowestCostBundle(s.hicksianDemand1.utilityConstraint);
             s.compensatedBundle = s.utility.lowestCostBundle(s.hicksianDemand2.utilityConstraint);
-            console.log('decompositionBundle = (', s.decompositionBundle.x, ',', s.decompositionBundle.y, ')');
+            //console.log('decompositionBundle = (',s.decompositionBundle.x,',',s.decompositionBundle.y,')')
             s.decompositionBudget.setIncome(s.budget2.px * s.decompositionBundle.x + s.budget2.py * s.decompositionBundle.y);
             s.compensatedBudget.setIncome(s.budget1.px * s.compensatedBundle.x + s.budget1.py * s.compensatedBundle.y);
             s.initialIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.initialUtility);
             s.finalIndifferenceCurve = s.utility.indifferenceCurveAtUtilityFn(s.finalUtility);
-            console.log(s);
+            //console.log(s);
             return s;
         };
         return Slutsky;
@@ -6231,17 +6230,6 @@ var EconGraphs;
                 atcSlope: 'slope = ATC',
                 avcSlope: 'slope = AVC'
             });
-            definition.show = _.defaults(definition.show || {}, {
-                tc: true,
-                vc: false,
-                fc: false,
-                mc: true,
-                atc: true,
-                avc: false,
-                mcSlope: false,
-                atcSlope: false,
-                avcSlope: false
-            });
             definition = _.defaults(definition, {
                 quantityDraggable: true
             });
@@ -6261,98 +6249,6 @@ var EconGraphs;
             productionCost.averageCostFunction = productionCost.costFunction.average();
             productionCost.variableCostFunction = productionCost.costFunction.add(KG.subtractDefs(0, this.modelProperty('fixedCost')));
             productionCost.averageVariableCostFunction = productionCost.variableCostFunction.average();
-            if (productionCost.costFunction instanceof KGMath.Functions.Linear) {
-                productionCost.totalCostCurve = new KG.Line({
-                    name: 'totalCostLine',
-                    className: 'totalCost',
-                    lineDef: {
-                        slope: productionCost.modelProperty('marginalCostFunction.y'),
-                        intercept: productionCost.modelProperty('fixedCost')
-                    },
-                    label: {
-                        text: 'TC'
-                    }
-                });
-                productionCost.marginalCostCurve = new KG.HorizontalLine({
-                    name: 'marginalCostCurve',
-                    className: 'marginalCost',
-                    y: productionCost.modelProperty('marginalCostFunction.y'),
-                    label: {
-                        text: 'MC'
-                    }
-                });
-            }
-            else {
-                productionCost.totalCostCurve = new KG.FunctionPlot({
-                    name: 'totalCostCurve',
-                    fn: this.modelProperty('costFunction'),
-                    className: 'totalCost',
-                    numSamplePoints: 201,
-                    label: {
-                        text: 'TC'
-                    }
-                });
-                productionCost.marginalCostCurve = new KG.FunctionPlot({
-                    name: 'marginalCostCurve',
-                    className: 'marginalCost',
-                    fn: productionCost.modelProperty('marginalCostFunction'),
-                    arrows: 'NONE',
-                    label: {
-                        text: 'MC'
-                    },
-                    numSamplePoints: 501
-                });
-            }
-            productionCost.variableCostCurve = new KG.FunctionPlot({
-                name: 'variableCostCurve',
-                className: 'variableCost',
-                fn: productionCost.modelProperty('variableCostFunction'),
-                arrows: 'NONE',
-                label: {
-                    text: productionCost.modelProperty('labels.vc')
-                },
-                numSamplePoints: 501,
-                show: productionCost.show.vc
-            });
-            productionCost.averageCostCurve = new KG.FunctionPlot({
-                name: 'averageCostCurve',
-                className: 'averageCost',
-                fn: productionCost.modelProperty('averageCostFunction'),
-                arrows: 'NONE',
-                label: {
-                    text: productionCost.modelProperty('labels.atc')
-                },
-                numSamplePoints: 501,
-                show: productionCost.show.atc
-            });
-            productionCost.averageVariableCostCurve = new KG.FunctionPlot({
-                name: 'averageVariableCostCurve',
-                className: 'averageVariableCost',
-                fn: productionCost.modelProperty('averageVariableCostFunction'),
-                arrows: 'NONE',
-                label: {
-                    text: productionCost.modelProperty('labels.avc')
-                },
-                numSamplePoints: 501,
-                show: productionCost.show.avc
-            });
-            productionCost.fixedCostPoint = new KG.Point({
-                name: 'fixedCostPoint',
-                className: 'totalCost',
-                coordinates: { x: 0, y: productionCost.modelProperty('fixedCost') },
-                droplines: {
-                    horizontal: definition.labels.fc
-                },
-                yDrag: definition.fixedCostDragParam
-            });
-            productionCost.fixedCostLine = new KG.HorizontalLine({
-                name: 'fixedCostLine',
-                className: 'fixedCost',
-                y: productionCost.modelProperty('fixedCost'),
-                label: {
-                    text: definition.labels.fc
-                }
-            });
         }
         ProductionCost.prototype._update = function (scope) {
             var p = this;
@@ -6376,159 +6272,6 @@ var EconGraphs;
         };
         ProductionCost.prototype.mc = function (q) {
             return this.marginalCostFunction.yValue(q);
-        };
-        ProductionCost.prototype.marginalCostAtQuantitySlope = function (q, label, dragParam) {
-            var labelSubscript = label ? '_{' + label + '}' : '', xDrag = this.quantityDraggable ? dragParam : false;
-            return new KG.Line({
-                name: 'MCslopeLine' + label,
-                className: 'marginalCost dotted',
-                show: this.show.mcslope,
-                lineDef: {
-                    point: { x: q, y: this.tc(q) },
-                    slope: this.mc(q)
-                },
-                xDrag: xDrag,
-                label: {
-                    text: '\\text{slope} = MC'
-                }
-            });
-        };
-        ProductionCost.prototype.marginalCostAtVariableCostQuantitySlope = function (q, label, dragParam) {
-            var labelSubscript = label ? '_{' + label + '}' : '', xDrag = this.quantityDraggable ? dragParam : false;
-            return new KG.Line({
-                name: 'MCslopeLineVC' + label,
-                className: 'marginalCost dotted',
-                show: (this.show.mcslope && this.show.vc),
-                lineDef: {
-                    point: { x: q, y: this.modelProperty('vc(' + q + ')') },
-                    slope: this.mc(q)
-                },
-                xDrag: xDrag,
-                label: {
-                    text: '\\text{slope} = MC'
-                }
-            });
-        };
-        ProductionCost.prototype.averageCostAtQuantitySlope = function (q, label, dragParam) {
-            var labelSubscript = label ? '_{' + label + '}' : '', xDrag = this.quantityDraggable ? dragParam : false;
-            ;
-            return new KG.Line({
-                name: 'ATCslopeLine' + label,
-                className: 'averageCost dotted',
-                show: this.show.atcslope,
-                lineDef: {
-                    point: { x: 0, y: 0 },
-                    slope: this.modelProperty('atc(' + q + ')')
-                },
-                xDrag: xDrag,
-                label: {
-                    text: '\\text{slope} = ATC'
-                }
-            });
-        };
-        ProductionCost.prototype.averageVariableCostAtQuantitySlope = function (q, label, dragParam) {
-            var labelSubscript = label ? '_{' + label + '}' : '', xDrag = this.quantityDraggable ? dragParam : false;
-            ;
-            return new KG.Line({
-                name: 'AVCslopeLine' + label,
-                className: 'averageVariableCost dotted',
-                show: this.show.avcslope,
-                lineDef: {
-                    point: { x: 0, y: 0 },
-                    slope: this.modelProperty('avc(' + q + ')')
-                },
-                xDrag: xDrag,
-                label: {
-                    text: '\\text{slope} = AVC'
-                }
-            });
-        };
-        ProductionCost.prototype.totalCostAtQuantityPoint = function (q, label, dragParam) {
-            var labelSubscript = label ? '_{' + label + '}' : '', xDrag = this.quantityDraggable ? dragParam : false;
-            ;
-            return new KG.Point({
-                name: 'totalCostAtQ' + label,
-                coordinates: { x: q, y: this.modelProperty('tc(' + q + ')') },
-                className: 'totalCost',
-                xDrag: xDrag,
-                label: {
-                    text: label
-                },
-                droplines: {
-                    vertical: 'q' + labelSubscript,
-                    horizontal: 'TC(q' + labelSubscript + ')'
-                }
-            });
-        };
-        ProductionCost.prototype.variableCostAtQuantityPoint = function (q, label, dragParam) {
-            var labelSubscript = label ? '_{' + label + '}' : '', xDrag = this.quantityDraggable ? dragParam : false;
-            ;
-            return new KG.Point({
-                name: 'variableCostAtQ' + label,
-                coordinates: { x: q, y: this.modelProperty('vc(' + q + ')') },
-                className: 'variableCost',
-                show: this.show.vc,
-                xDrag: xDrag,
-                label: {
-                    text: label
-                },
-                droplines: {
-                    horizontal: 'VC(q' + labelSubscript + ')'
-                }
-            });
-        };
-        ProductionCost.prototype.marginalCostAtQuantityPoint = function (q, label, dragParam) {
-            var axisLabel = this.mc(q).toFixed(1);
-            if (label && label.length > 0) {
-                axisLabel = label;
-            }
-            var axisLabel = axisLabel || this.mc(q).toFixed(1), mcq = this.modelProperty('mc(' + q + ')'), xDrag = this.quantityDraggable ? dragParam : false;
-            ;
-            return new KG.Point({
-                name: 'marginalCostAtQ' + label,
-                coordinates: { x: q, y: mcq },
-                className: 'marginalCost',
-                xDrag: xDrag,
-                droplines: {
-                    horizontal: axisLabel
-                }
-            });
-        };
-        ProductionCost.prototype.averageCostAtQuantityPoint = function (q, label, dragParam) {
-            var axisLabel = this.atc(q).toFixed(1);
-            if (label && label.length > 0) {
-                axisLabel = label;
-            }
-            var atcq = this.modelProperty('atc(' + q + ')'), xDrag = this.quantityDraggable ? dragParam : false;
-            ;
-            return new KG.Point({
-                name: 'averageCostAtQ' + label,
-                coordinates: { x: q, y: atcq },
-                className: 'averageCost',
-                xDrag: xDrag,
-                droplines: {
-                    horizontal: axisLabel
-                },
-                show: this.show.atc
-            });
-        };
-        ProductionCost.prototype.averageVariableCostAtQuantityPoint = function (q, label, dragParam) {
-            var axisLabel = this.avc(q).toFixed(1);
-            if (label && label.length > 0) {
-                axisLabel = label;
-            }
-            var avcq = this.modelProperty('avc(' + q + ')'), xDrag = this.quantityDraggable ? dragParam : false;
-            ;
-            return new KG.Point({
-                name: 'averageVariableCostAtQ' + label,
-                coordinates: { x: q, y: avcq },
-                className: 'averageVariableCost',
-                xDrag: xDrag,
-                droplines: {
-                    horizontal: axisLabel
-                },
-                show: this.show.avc
-            });
         };
         return ProductionCost;
     })(KG.Model);
@@ -6614,6 +6357,176 @@ var EconGraphs;
         return QuadraticMarginalCost;
     })(EconGraphs.ProductionCost);
     EconGraphs.QuadraticMarginalCost = QuadraticMarginalCost;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var ProductionTechnology = (function (_super) {
+        __extends(ProductionTechnology, _super);
+        function ProductionTechnology(definition, modelPath) {
+            definition = _.defaults(definition, {
+                isoquantLabel: 'U'
+            });
+            _super.call(this, definition, modelPath);
+            var f = this;
+            ;
+            f.mplFunction = f.productionFunction.derivative(1);
+            f.mpkFunction = f.productionFunction.derivative(2);
+        }
+        ProductionTechnology.prototype._update = function (scope) {
+            var f = this;
+            f.productionFunction.update(scope);
+            f.mplFunction.update(scope);
+            f.mpkFunction.update(scope);
+            return f;
+        };
+        /* Technology measures */
+        ProductionTechnology.prototype.output = function (inputs) {
+            return this.productionFunction.value(KG.getBases(inputs));
+        };
+        ProductionTechnology.prototype.mpl = function (inputs) {
+            return this.mplFunction.value(KG.getBases(inputs));
+        };
+        ProductionTechnology.prototype.mpk = function (inputs) {
+            return this.mpkFunction.value(KG.getBases(inputs));
+        };
+        ProductionTechnology.prototype.mrts = function (inputs) {
+            return this.mpl(inputs) / this.mpk(inputs);
+        };
+        /* Isoquant curves */
+        ProductionTechnology.prototype.isoquantAtQuantityFn = function (q) {
+            var f = this;
+            var clone = _.clone(f.productionFunction);
+            clone.setLevel(q);
+            return clone;
+        };
+        ProductionTechnology.prototype.isoquantThroughBundleFn = function (inputs) {
+            var f = this, q = f.output(inputs);
+            return f.isoquantAtQuantityFn(q);
+        };
+        /* Bundle costs */
+        ProductionTechnology.prototype.bundleCost = function (inputs, inputPrices) {
+            var f = this;
+            inputPrices = _.defaults(inputPrices || {}, { w: f.w, r: f.r });
+            return inputPrices.w * inputs.x + inputPrices.r * inputs.y;
+        };
+        /* Long-run costs */
+        ProductionTechnology.prototype.lowestCostInputBundle = function (conditionalInputDemandParams) {
+            return { x: null, y: null }; // based on specific utility function; overridden by subclass
+        };
+        ProductionTechnology.prototype.conditionalLaborDemand = function (conditionalInputDemandParams) {
+            return this.lowestCostInputBundle(conditionalInputDemandParams).x;
+        };
+        ProductionTechnology.prototype.conditionalCapitalDemand = function (conditionalInputDemandParams) {
+            return this.lowestCostInputBundle(conditionalInputDemandParams).y;
+        };
+        ProductionTechnology.prototype.longRunTotalCost = function (conditionalInputDemandParams) {
+            var f = this, inputs = f.lowestCostInputBundle(conditionalInputDemandParams), inputPrices = conditionalInputDemandParams;
+            return f.bundleCost(inputs, inputPrices);
+        };
+        ProductionTechnology.prototype.longRunTotalCostFn = function (params) {
+            var f = this, LRTC = new KGMath.Functions.Base({});
+            params = _.defaults(params || {}, { w: f.w, r: f.r });
+            LRTC.yValue = function (q) {
+                params.q = q;
+                return f.longRunTotalCost(params);
+            };
+            return LRTC;
+        };
+        ProductionTechnology.prototype.longRunOptimalKLRatio = function (inputPrices) {
+            inputPrices = inputPrices || {};
+            var f = this;
+            inputPrices = _.defaults(inputPrices, { w: f.w, r: f.r });
+            return inputPrices.w / inputPrices.r; //overridden by subclass
+        };
+        /* Short-run costs */
+        ProductionTechnology.prototype.shortRunLaborRequirement = function (params) {
+            var f = this;
+            params = _.defaults(params || {}, { q: f.q, K: f.K });
+            return f.productionFunction.setLevel(params.q).xValue(params.K);
+        };
+        ProductionTechnology.prototype.shortRunTotalCost = function (params) {
+            var f = this;
+            params = _.defaults(params || {}, { w: f.w, r: f.r, q: f.q, K: f.K });
+            var inputs = { x: f.shortRunLaborRequirement(params), y: params.K };
+            return f.bundleCost(inputs, params);
+        };
+        ProductionTechnology.prototype.shortRunTotalCostFn = function (params) {
+            var f = this, SRTC = new KGMath.Functions.Base({});
+            params = _.defaults(params || {}, { w: f.w, r: f.r, K: f.K });
+            SRTC.yValue = function (q) {
+                params.q = q;
+                return f.shortRunTotalCost(params);
+            };
+            return SRTC;
+        };
+        /* Decorations */
+        ProductionTechnology.prototype.formula = function (values) {
+            return ''; // overridden by subclass
+        };
+        return ProductionTechnology;
+    })(KG.Model);
+    EconGraphs.ProductionTechnology = ProductionTechnology;
+    var SelectableProductionFunction = (function (_super) {
+        __extends(SelectableProductionFunction, _super);
+        function SelectableProductionFunction(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+        }
+        return SelectableProductionFunction;
+    })(KG.Model);
+    EconGraphs.SelectableProductionFunction = SelectableProductionFunction;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var CobbDouglasProduction = (function (_super) {
+        __extends(CobbDouglasProduction, _super);
+        function CobbDouglasProduction(definition, modelPath) {
+            definition.coefficient = definition.coefficient || 1;
+            definition.productionFunction = {
+                type: 'KGMath.Functions.CobbDouglas',
+                definition: {
+                    coefficient: definition.coefficient,
+                    xPower: definition.xPower,
+                    yPower: definition.yPower
+                }
+            };
+            var sumOfPowers = KG.addDefs(definition.xPower, definition.yPower);
+            definition.xShare = KG.divideDefs(definition.xPower, sumOfPowers);
+            definition.yShare = KG.divideDefs(definition.yPower, sumOfPowers);
+            _super.call(this, definition, modelPath);
+            this.title = CobbDouglasProduction.title;
+        }
+        CobbDouglasProduction.prototype.longRunOptimalKLRatio = function (inputPrices) {
+            var f = this;
+            inputPrices = _.defaults(inputPrices || {}, { w: f.w, r: f.r });
+            return (inputPrices.w / inputPrices.r) * f.yPower / f.xPower;
+        };
+        CobbDouglasProduction.prototype.lowestCostInputBundle = function (params) {
+            var f = this;
+            params = _.defaults(params || {}, {
+                w: f.w, r: f.r, q: f.q
+            });
+            var theta = f.longRunOptimalKLRatio({ w: params.w, r: params.r }), scaledQ = Math.pow(params.q / f.coefficient, 1 / (f.xPower + f.yPower));
+            return {
+                x: Math.pow(1 / theta, f.yShare) * scaledQ,
+                y: Math.pow(theta, f.xShare) * scaledQ
+            };
+        };
+        CobbDouglasProduction.prototype.formula = function (values) {
+            if (values) {
+                return this.coefficient + "x^{" + this.xPower.toFixed(2) + "}y^{" + this.yPower.toFixed(2) + "}";
+            }
+            else {
+                return "Ax^\\alpha y^{1 - \\alpha}";
+            }
+        };
+        CobbDouglasProduction.title = 'Cobb-Douglas';
+        return CobbDouglasProduction;
+    })(EconGraphs.ProductionTechnology);
+    EconGraphs.CobbDouglasProduction = CobbDouglasProduction;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 var EconGraphs;
@@ -6999,6 +6912,8 @@ var EconGraphs;
 /// <reference path="micro/producer_theory/costs/linearMarginalCost.ts"/>
 /// <reference path="micro/producer_theory/costs/constantMarginalCost.ts"/>
 /// <reference path="micro/producer_theory/costs/quadraticMarginalCost.ts"/>
+/// <reference path="micro/producer_theory/production/productionTechnology.ts"/>
+/// <reference path="micro/producer_theory/production/cobbDouglasProduction.ts"/>
 /* Market Structures */
 /// <reference path="micro/market_structures/monopoly/monopoly.ts"/>
 /// <reference path="micro/market_structures/oligopoly/cournotDuopoly.ts"/>
