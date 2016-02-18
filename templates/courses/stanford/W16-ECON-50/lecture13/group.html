@@ -1,0 +1,31 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+
+        <div class="subtitle">February 18</div>
+        <h2>Group Work: Short-run and Long-run production decisions</h2>
+        <hr/>
+        <p>Suppose <span class="math">w = r = 10</span> and <span class="math">f(L,K)=L^\frac{1}{4}K^\frac{1}{4}</span>.</p>
+        <hr/>
+        <ol>
+            <li style="padding-top:20px">Assign an amount of capital to each person at the table: <span class="math">\overline{K} = 9, 16, 25\text{ or } 36 </span>.</li>
+            <li style="padding-top:20px">Derive an expression for each person's <b>labor requirements</b> and <b>total cost</b> of producing <span class="math">q</span> units.</li>
+        <li style="padding-top:20px">Using that expression, calculate each person's <b>labor requirements</b> and <b>total cost</b> of producing <span class="math">q=3,4,5,\text{ or }6</span> units.</li>
+        <li style="padding-top:20px">Create a table showing total cost of producing <span class="math">q=3,4,5,\text{ and }6</span> units for <span class="math">\overline{K} = 9, 16, 25\text{ or } 36 </span>.</li>
+        <li style="padding-top:20px">Use this table to plot the four <b>short-run total cost curves</b> corresponding to the four levels of capital <span class="math">(\overline{K})</span>. What is the Y-intercept of each curve?</li>
+        <li style="padding-top:20px">For each level of <b>ouptut</b>, which is the optimal level of <b>capital</b>?</li>
+        <li style="padding-top:20px">Plot the <b>long-run total cost curve</b> if you can choose the level of capital freely, depending on how much you want to produce. What is the Y-intercept of this curve?</li>
+            </ol>
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

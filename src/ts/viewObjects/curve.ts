@@ -171,7 +171,7 @@ module KG {
                 area.below = (curve.area.indexOf('BELOW') > -1);
             }
 
-            console.log(area);
+            //console.log(area);
 
             curve.updateDataForView(view);
 

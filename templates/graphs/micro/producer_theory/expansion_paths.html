@@ -1,0 +1,61 @@
+{% extends 'graphs/micro/producer_theory/cost_minimization_controls.html' %}
+
+{% block graphs %}
+    {% raw %}
+    <h1>Expansion Paths: {{ model.title }}</h1>
+    <hr/>
+    <div id="costMinimization"></div>
+    {% endraw %}
+{% endblock %}
+
+{% block belowControls %}
+    {% raw %}
+                    <toggle param="showMap" show-hide="true">Isoquants</toggle>
+                    <toggle param="showLREP" class="longRunTotalCost" show-hide="true">Long Run Expansion Path</toggle>
+                    <toggle param="showSREP" class="totalCost" show-hide="true">Short Run Expansion Path for K = {{ params.K }}</toggle>
+                    <toggle param="showSuboptimal" class="totalCost" show-hide="true" ng-show="!params.showSREP">Point along Isoquant q = {{ params.q }} where K = {{ params.K }}</toggle>
+
+    {% endraw %}
+                {% endblock %}
+
+
+    {% block jsadjustments %}
+        <script>
+
+        isocost.definition.label.text = ['TC(','params.q',')'];
+        shortRunIsocost.definition.label.text = ['TC(','params.q',')\\text{ if } \\overline{K} = ','params.K'];
+        delete isocost.definition.show;
+        delete longRunBundle.definition.show;
+        delete longRunBundle.definition.droplines;
+        delete shortRunBundle.definition.droplines.vertical;
+
+
+        scopeDefinition.views.push({
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'costMinimization',
+                        square: true,
+                        xAxisDef: {min: 0, max: 50, title: '\\text{Labor (L)}', ticks:0},
+                        yAxisDef: {min: 0, max: 50, title: '\\text{Capital (K)}',ticks:0},
+                        objects: [
+                            isoquantMap[0],
+                                isoquantMap[1],
+                                isoquantMap[2],
+                                isoquantMap[3],
+                                isoquantMap[4],
+                                isoquantMap[5],
+                                isoquantMap[6],
+                                isoquantMap[7],
+                                isocost,
+                                isoquant,
+                                longRunBundle,
+                                expansionPath,
+                                shortRunExpansionPath,
+                                shortRunBundle,
+                                shortRunIsocost
+
+                        ]
+                    }
+                })</script>
+    {% endblock %}
+

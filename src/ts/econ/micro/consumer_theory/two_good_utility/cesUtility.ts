@@ -46,7 +46,7 @@ module EconGraphs {
             } else {
                 definition.r = definition.sub + ' > 0 ? ' + definition.sub + ' : ' + KG.divideDefs(definition.sub,KG.addDefs(1.01,definition.sub));
                 definition.s = KG.divideDefs(1,KG.subtractDefs(1,definition.r)); // s = 1/(1-r)
-                console.log('oops, must instantiate a CES utility function with either r or s')
+                //console.log('oops, must instantiate a CES utility function with either r or s')
             }
 
             definition.criticalPriceRatio = KG.divideDefs(definition.alpha, KG.subtractDefs(1, definition.alpha));
@@ -91,9 +91,7 @@ module EconGraphs {
         expenditure(utilityConstraint:UtilityConstraint) {
             var u = this,
                 s= u.r/(u.r - 1);
-
-
-
+            //TODO this doesn't seem finished!
         }
 
         lowestCostBundle(utilityConstraint:UtilityConstraint) {
@@ -106,7 +104,7 @@ module EconGraphs {
                 py: utilityConstraint.py
             });
 
-            console.log(costMinimizingBudgetConstraint);
+            //console.log(costMinimizingBudgetConstraint);
 
             return u.optimalBundle(costMinimizingBudgetConstraint);
         }

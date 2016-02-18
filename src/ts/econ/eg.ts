@@ -49,6 +49,9 @@
 /// <reference path="micro/producer_theory/costs/constantMarginalCost.ts"/>
 /// <reference path="micro/producer_theory/costs/quadraticMarginalCost.ts"/>
 
+/// <reference path="micro/producer_theory/production/productionTechnology.ts"/>
+/// <reference path="micro/producer_theory/production/cobbDouglasProduction.ts"/>
+
 /* Market Structures */
 
 /// <reference path="micro/market_structures/monopoly/monopoly.ts"/>

@@ -116,7 +116,7 @@ module KG
                 for(var key in def) {
                     if(def.hasOwnProperty(key)) {
                         if(skip(key)) {
-                            console.log('not updating ',key, ' within Model.update(scope)')
+                            //console.log('not updating ',key, ' within Model.update(scope)')
                         } else if(obj[key] instanceof KG.Selector) {
                             obj[key] = obj[key].update(scope);
                         } else if(obj[key] instanceof KG.Model) {

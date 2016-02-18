@@ -1,0 +1,464 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            <div class="col-md-8">
+                {% block graphs %}
+                {% endblock %}
+            </div>
+
+            <div class="col-md-4">
+                {% raw %}
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">production technology</div>
+                        <div class="col-xs-9 math displayMath">F(L,K) = AL^\alpha K^\beta</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="alphaSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\beta = {{params.beta | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="betaSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">A = {{params.A | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="ASlider"></div>
+                    </div>
+
+                </div>
+                <div class="well">
+                    <div class="row">
+                        <div class="subtitle col-xs-3">input prices and quantity</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="w" style="text-align:right;font-size:12pt;padding-top:10px">w = {{params.w | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="wSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="r" style="text-align:right;font-size:12pt;padding-top:10px">r = {{params.r | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="rSlider"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 math" highlight="isoquant" style="text-align:right;font-size:12pt;padding-top:10px">q = {{params.q | number}}:
+                        </div>
+                        <div class="col-xs-9" id="qSlider"></div>
+                    </div>
+                </div>
+                {% endraw %}
+                {% block belowControls %}
+                    <toggle param="showMap" show-hide="true">Isoquants</toggle>
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block model %}
+
+    <script>
+
+        var scopeDefinition = {
+            params: {
+                x: 5,
+                alpha: 0.5,
+                beta: 0.5,
+                A: 5,
+                w: 2,
+                r: 1,
+                q: 100,
+                K: 10,
+                showMap: false,
+                showLREP: false,
+                showSREP: false,
+                showOptimal: false,
+                showSubOptimal: true,
+                showIsocosts: true
+            },
+            graphParams: [],
+            restrictions: [
+                {
+                    restrictionType: 'range',
+                    expression: 'params.K',
+                    min: 1,
+                    max: 100,
+                    precision: 1
+                }
+            ],
+            model: {
+                type: 'EconGraphs.CobbDouglasProduction',
+                definition: {
+                    coefficient: 'params.A',
+                    xPower: 'params.alpha',
+                    yPower: 'params.beta',
+                    w: 'params.w',
+                    r: 'params.r',
+                    q: 'params.q',
+                    K: 'params.K'
+                }
+            },
+            views: [
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'betaSlider',
+                        param: 'beta',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'ASlider',
+                        param: 'A',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 10}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'wSlider',
+                        param: 'w',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 10}
+                    }
+                },
+                {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'rSlider',
+                        param: 'r',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 10}
+                    }
+                },
+                    {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'qSlider',
+                        param: 'q',
+                        precision: '1',
+                        axisDef: {min: 1, max: 200}
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+
+
+{% block js %}
+    <script>
+
+        var longRunLabor = 'model.conditionalLaborDemand()',
+                longRunCapital = 'model.conditionalCapitalDemand()',
+                shortRunLabor = 'model.shortRunLaborRequirement()',
+                shortRunCapital = 'params.K',
+                isocostSlope = '-params.w/params.r',
+                longRunTC = 'model.longRunTotalCost()',
+                shortRunTC = 'model.shortRunTotalCost()';
+
+
+        var isocost = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'BL',
+                        className: 'budget old',
+                        show: 'params.showOptimal && params.showIsocosts',
+                        lineDef: {
+                            point: {
+                                x: longRunLabor,
+                                y: longRunCapital
+                            },
+                            slope: isocostSlope
+                        },
+                        interaction: {
+                            highlight: 'LRisocost'
+                        },
+                        label: {
+                            text: ['TC \\approx ',longRunTC + '| number:0']
+                        }
+                    }
+                },
+                longRunBundle = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundle',
+                        className: 'longRunTotalCost',
+                        show: 'params.showOptimal',
+                        coordinates: {
+                            x: longRunLabor,
+                            y: longRunCapital
+                        },
+                        interaction: {
+                            highlight: 'bundle'
+                        },
+                        droplines: {
+                            vertical: longRunLabor + '| number:0',
+                            horizontal: longRunCapital + '| number:0'
+                        }
+
+                    }
+                },
+                isoquant = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'indifference_curve',
+                        className: 'utility',
+                        fn: "model.isoquantAtQuantityFn(params.q)",
+                        interaction: {
+                            highlight: 'isoquant'
+                        },
+                        label: {
+                            text: ['q = ','params.q']
+                        }
+                    }
+                },
+                isoquantMap = [25,50,75,100,125,150,175,200].map(function(level) {
+                    return {
+                        type: 'KG.FunctionPlot',
+                        definition: {
+                            name: 'isoquant_'+level,
+                            className: 'dataPathFamily',
+                            fn: "model.isoquantAtQuantityFn("+level+")",
+                            interaction: {
+                                highlight: 'quantity' + level
+                            },
+                            show: 'params.showMap',
+                            label: {
+                                text: ['q = ',level]
+                            }
+                        }
+                    }
+                }),
+                quantityMap = [25,50,75,100,125,150,175,200].map(function(level) {
+                    return {
+                        type: 'KG.VerticalLine',
+                        definition: {
+                            name: 'quantity_'+level,
+                            className: 'dataPathFamily',
+                            x: level,
+                            interaction: {
+                                highlight: 'quantity' + level
+                            },
+                            show: 'params.showMap',
+                            label: {
+                                text: ['q = ',level]
+                            }
+                        }
+                    }
+                }),
+                expansionPath = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'expansionPath',
+                        show: 'params.showLREP',
+                        className: 'longRunTotalCost',
+                        lineDef: {
+                            point: {x: 0, y: 0},
+                            slope: 'model.longRunOptimalKLRatio()'
+                        },
+                        label: {
+                            text: '\\text{Long-Run Expansion path}'
+                        }
+
+                    }
+                },
+                shortRunExpansionPath ={
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'shortRunExpansionPath',
+                        show: 'params.showSREP',
+                        className: 'totalCost',
+                        y: 'params.K',
+                        interaction: {
+                            yDrag: true,
+                            yDragParam: 'K'
+                        },
+                        yInterceptLabel: ['\\overline{K}=','params.K | number:0'],
+                        label: {
+                            text: '\\text{Short-Run Expansion Path}'
+                        }
+                    }
+                },
+                shortRunBundle = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'shortRunBundle',
+                        className: 'totalCost',
+                        show: 'params.showSuboptimal || params.showSREP',
+                        coordinates: {
+                            x: shortRunLabor,
+                            y: shortRunCapital
+                        },
+                        interaction: {
+                            yDrag: true,
+                            yDragParam: 'K',
+                            highlight: 'shortRunBundle'
+                        },
+                        droplines: {
+                            horizontal: 'params.K | number:0',
+                            vertical: shortRunLabor + '| number: 0'
+                        }
+                    }
+                },
+                shortRunIsocost = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'shortRunIsocost',
+                        className: 'budget',
+                        show: '(params.showSuboptimal || params.showSREP) && params.showIsocosts',
+                        lineDef: {
+                            point: {
+                                x: shortRunLabor,
+                                y: shortRunCapital
+                            },
+                            slope: isocostSlope
+                        },
+                        interaction: {
+                            highlight: 'SRisocost'
+                        },
+                        label: {
+                            text: ['TC \\approx ',shortRunTC + '| number:0']
+                        }
+                    }
+                },
+                longRunTotalCostCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'longRunTotalCostCurve',
+                        fn: 'model.longRunTotalCostFn({min:0})',
+                        className: 'longRunTotalCost',
+                        label: {text: 'LRTC(q)'}
+                    }
+                },
+                shortRunTotalCostCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'shortRunTotalCostCurve',
+                        fn: 'model.shortRunTotalCostFn({})',
+                        className: 'totalCost',
+                        label: {text: 'TC(q)'}
+                    }
+                },
+                fixedCostLabel = {
+                    type: 'KG.GraphDiv',
+                    definition: {
+                        name: 'fixedCostLabel',
+                        coordinates: {
+                            x: 'AXIS',
+                            y: 'params.r*params.K'
+                        },
+                        text: ['r\\overline{K} = ', 'params.r*params.K | number:0'],
+                        className: 'totalCost'
+                    }
+                },
+                quantityDropLine = {
+                    type: 'KG.VerticalDropline',
+                    definition: {
+                        name: 'quantityDropline',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'params.q',
+                            y: shortRunTC
+                        },
+                        interaction: {
+                            xDrag: true,
+                            xDragParam: 'q'
+                        },
+                        axisLabel: ['q = ','params.q']
+                    }
+                },
+                SRTCDropLine = {
+                    type: 'KG.HorizontalDropline',
+                    definition: {
+                        name: 'SRTCDropline',
+                        className: 'budget',
+                        coordinates: {
+                            x: 'params.q',
+                            y: shortRunTC
+                        },
+                        interaction: {
+
+                        },
+                        axisLabel: shortRunTC + '| number:0'
+                    }
+                },
+                LRTCDropLine = {
+                    type: 'KG.HorizontalDropline',
+                    definition: {
+                        name: 'LRTCDropline',
+                        className: 'budget old',
+                        coordinates: {
+                            x: 'params.q',
+                            y: longRunTC
+                        },
+                        interaction: {
+
+                        },
+                        axisLabel: longRunTC + '| number:0'
+                    }
+                },
+                shortRunTotalCostPoint ={
+                    type: "KG.Point",
+                    definition: {
+                        name: 'SRTCq',
+                        className: 'totalCost',
+                        coordinates: {
+                            x: 'params.q',
+                            y: shortRunTC
+                        },
+                        interaction: {
+                            xDrag: true,
+                            xDragParam: 'q'
+                        },
+                        highlight: 'SRTCq'
+                    }
+                },
+                longRunTotalCostPoint ={
+                    type: "KG.Point",
+                    definition: {
+                        name: 'LRTCq',
+                        className: 'longRunTotalCost',
+                        coordinates: {
+                            x: 'params.q',
+                            y: longRunTC
+                        },
+                        interaction: {
+                            xDrag: true,
+                            xDragParam: 'q'
+                        },
+                        highlight: 'LRTCq'
+                    }
+                }
+    </script>
+
+    {% block jsadjustments %}
+
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
+
+{% endblock %}

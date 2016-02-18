@@ -1,0 +1,83 @@
+{% extends 'graphs/micro/producer_theory/cost_minimization_controls.html' %}
+
+{% block graphs %}
+    {% raw %}
+    <h1>Expansion Paths and Total Cost</h1>
+    <hr/>
+    <div class="row">
+        <div class="col-md-6">
+            <div id="isoquants"></div>
+        </div>
+    <div class="col-md-6">
+            <div id="costCurves"></div>
+        </div>
+    </div>
+    {% endraw %}
+{% endblock %}
+
+
+    {% block jsadjustments %}
+        <script>
+
+        scopeDefinition.params.showSREP = true;
+        scopeDefinition.params.showLREP = true;
+        scopeDefinition.params.showOptimal = true;
+
+        scopeDefinition.views.push({
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'isoquants',
+                        square: true,
+                        xAxisDef: {min: 0, max: 50, title: '\\text{Labor (L)}', ticks:0},
+                        yAxisDef: {min: 0, max: 50, title: '\\text{Capital (K)}',ticks:0},
+                        objects: [
+                            isoquantMap[0],
+                                isoquantMap[1],
+                                isoquantMap[2],
+                                isoquantMap[3],
+                                isoquantMap[4],
+                                isoquantMap[5],
+                                isoquantMap[6],
+                                isoquantMap[7],
+                                isocost,
+                                isoquant,
+                                longRunBundle,
+                                expansionPath,
+                                shortRunExpansionPath,
+                                shortRunBundle,
+                                shortRunIsocost
+
+                        ]
+                    }
+                },
+                {
+                    type: 'KG.Graph',
+                    definition: {
+                        element_id: 'costCurves',
+                        square: true,
+                        xAxisDef: {min: 0, max: 200, title: '\\text{Quantity (q)}', ticks: 0},
+                        yAxisDef: {min: 0, max: 100, title: '\\text{Total Cost}', ticks: 0},
+                        objects: [
+                                quantityMap[0],
+                                quantityMap[1],
+                                quantityMap[2],
+                                quantityMap[3],
+                                quantityMap[4],
+                                quantityMap[5],
+                                quantityMap[6],
+                                quantityMap[7],
+                            longRunTotalCostCurve,
+                                shortRunTotalCostCurve,
+                                fixedCostLabel,
+                                quantityDropLine,
+                                SRTCDropLine,
+                                LRTCDropLine,
+                                shortRunTotalCostPoint,
+                                longRunTotalCostPoint
+
+                        ]
+                    }
+                }
+        )</script>
+    {% endblock %}
+
