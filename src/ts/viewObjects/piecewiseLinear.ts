@@ -106,7 +106,7 @@ module KG {
                         yInterceptLabel: piecewiseLinear.yInterceptLabel
                     });
                     view.addObject(newLine);
-                    viewLine.render(view);
+                    newLine.render(view);
                 }
             });
 

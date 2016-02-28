@@ -4,7 +4,7 @@ module EconGraphs {
 
     export interface MonopolyDefinition extends KG.ModelDefinition
     {
-        demand: {demandType: string; demandDef: DemandDefinition;};
+        demand: {demandType: string; demandDef: PriceQuantityRelationshipDefinition;};
         cost: {costType: string; costDef: (ProductionCostDefinition | ConstantMarginalCostDefinition | LinearMarginalCostDefinition);};
         choosePrice?: boolean;
         quantity?: any;
@@ -20,7 +20,7 @@ module EconGraphs {
     export interface IMonopoly extends KG.IModel
     {
 
-        demandFunction: Demand;
+        demandFunction: PriceQuantityRelationship;
         costFunction: ProductionCost;
 
         choosePrice: boolean;
@@ -81,43 +81,8 @@ module EconGraphs {
 
             var m = this;
 
-            var p = m.modelProperty('price'),
-                q = m.modelProperty('quantity'),
-                mcq = m.modelProperty('costFunction.mc(' + q + ')'),
-                mc0 = m.modelProperty('costFunction.mc(0)'),
-                acq = m.modelProperty('costFunction.atc(' + q + ')'),
-                profitLabel = m.modelProperty('profitLabel')
-
-            definition.demand.demandDef.curveLabel = definition.demand.demandDef.curveLabel || 'D = AR';
-
-            m.demandFunction = new EconGraphs[definition.demand.demandType](definition.demand.demandDef, this.modelPath + '.demandFunction');
-            m.costFunction = new EconGraphs[definition.cost.costType](definition.cost.costDef, this.modelPath + '.costFunction');
-
-            m.producerSurplus = new KG.Area({
-                data: [
-                    {x: 0, y: p},
-                    {x: q, y: p},
-                    {x: q, y: mcq},
-                    {x: 0, y: mc0}
-                ]
-            });
-
-            m.profitArea = new KG.Area({
-                name: 'profitArea',
-                className: 'growth',
-                show: m.modelProperty('showACandProfit'),
-                data: [
-                    {x: 0, y: p},
-                    {x: q, y: p},
-                    {x: q, y: acq},
-                    {x: 0, y: acq}
-                ],
-                label: {
-                    text: profitLabel
-                }
-            });
-
-
+            m.demandFunction = new EconGraphs[definition.demand.demandType](definition.demand.demandDef, m.modelPath + '.demandFunction');
+            m.costFunction = new EconGraphs[definition.cost.costType](definition.cost.costDef, m.modelPath + '.costFunction');
 
         }
 
@@ -125,9 +90,16 @@ module EconGraphs {
             var m = this;
             m.demandFunction.update(scope);
             m.costFunction.update(scope);
+            if(m.demandFunction instanceof LinearPriceQuantityRelationship && (m.costFunction instanceof LinearMarginalCost || m.costFunction instanceof ConstantMarginalCost)) {
+                m.MRMCIntersection = Math.max(0,m.demandFunction.marginalRevenueFunction.linearIntersection(m.costFunction.marginalCostFunction));
+                m.optimalQuantity = m.MRMCIntersection.x;
+                m.optimalPrice = m.demandFunction.priceAtQuantity(m.optimalQuantity);
+                m.optimalOffer = {x: m.optimalQuantity, y: m.optimalPrice};
+            }
             m.showACandProfit = (m.showProfit && m.costFunction.showAC);
-            if(m.snapToOptimalQuantity && m.demandFunction instanceof LinearDemand && (m.costFunction instanceof LinearMarginalCost || m.costFunction instanceof ConstantMarginalCost)) {
-                m.quantity = Math.max(0,m.demandFunction.marginalRevenueFunction.linearIntersection(m.costFunction.marginalCostFunction).x);
+            if(m.snapToOptimalQuantity) {
+                m.quantity = m.optimalQuantity;
+                m.price = m.optimalPrice;
             }
             if(m.choosePrice) {
                 m.quantity = m.demandFunction.quantityAtPrice(m.price);

@@ -12,14 +12,14 @@ module EconGraphs {
 
     export interface ILinearMarginalCost extends IProductionCost
     {
-        marginalCostInterceptPoint: KG.Point;
-        marginalCostControlPoint: KG.Point;
+        marginalCostIntercept: number;
+        marginalCostControlPointCoordinates: KG.ICoordinates;
     }
 
     export class LinearMarginalCost extends ProductionCost implements ILinearMarginalCost
     {
-        public marginalCostInterceptPoint;
-        public marginalCostControlPoint;
+        public marginalCostIntercept;
+        public marginalCostControlPointCoordinates;
 
         constructor(definition:LinearMarginalCostDefinition, modelPath?: string) {
 
@@ -30,23 +30,6 @@ module EconGraphs {
             };
 
             super(definition,modelPath);
-
-            var productionCost = this;
-
-            productionCost.marginalCostInterceptPoint = new KG.Point({
-                name: 'marginalCostInterceptPoint',
-                className: 'marginalCost',
-                coordinates: {x: 0, y: definition.marginalCostIntercept},
-                yDrag: definition.marginalCostIntercept
-            });
-
-            productionCost.marginalCostControlPoint = new KG.Point({
-                name: 'marginalCostControlPoint',
-                className: 'marginalCost',
-                coordinates: definition.marginalCostControlPointCoordinates,
-                yDrag: definition.marginalCostControlPointCoordinates.y
-            })
-
         }
 
     }

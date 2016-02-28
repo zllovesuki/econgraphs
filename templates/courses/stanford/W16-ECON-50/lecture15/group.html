@@ -1,0 +1,30 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+
+        <div class="subtitle">February 25</div>
+        <h2>Group Work: Deriving Supply for Cobb-Douglas Production Function</h2>
+        <hr/>
+        <p>Once again consider a firm with production technology <span class="math">f(L,K)=L^\frac{1}{4}K^\frac{1}{4}</span>. In the short run, capital is fixed at <span class="math">\overline{K} = 4</span>); in the long run capital and labor can be freely adjusted.</p>
+        <p>We've shown before that the short-run and long-run total costs for this production function are:</p>
+        <p class="math" align="center">TC(q) = 2\sqrt{wr}q^2</p>
+        <p class="math" align="center">STC(q) = r\overline{K} + wL(q) = 4r +  \frac{w}{4}q^4</p>
+        <ol>
+            <li style="padding-top:20px">Derive firm's <b>marginal cost function</b> in the short run and long run.</li>
+            <li style="padding-top:20px">Derive the firm's <b>supply function</b>, <span class="math">q(P)</span>, in the short run and the long run. Plot the long-run supply and short-run supply on the same graph.</li>
+            <li style="padding-top:20px">Derive expressions for the firm's <b>profit</b> in the short run and the long run, given the optimal supply decision.</li>
+            <li style="padding-top:20px">Find the firm's <b>profit-maximizing</b> demand for labor, <span class="math">L^*(w,r,P)</span>, as well as its <b>conditional</b> demand for labor, <span class="math">L^*(w,r,q)</span>. Plot these on two graphs, one for the long run and one for the short run.</li>
+        </ol>
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}

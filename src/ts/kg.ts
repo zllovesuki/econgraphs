@@ -39,7 +39,6 @@
 
 /// <reference path="controller.ts" />
 
-/// <reference path="sample/sample.ts" />
 /// <reference path="finance/fg.ts" />
 /// <reference path="econ/eg.ts" />
 /// <reference path="physics/pg.ts"/>

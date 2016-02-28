@@ -37,10 +37,6 @@ module EconGraphs {
         steadyStateK: number;
         steadyStateC: number;
 
-        steadyCapitalView: KG.LinePlot;
-        steadyConsumptionView: KG.Line;
-        steadyStateView: KG.Point;
-
         positiveConsumption: boolean;
         steadyStateOnGraph: boolean;
 
@@ -62,19 +58,13 @@ module EconGraphs {
         public g;
         public initialK;
         public initialC;
-        public initialPoint;
         public growthPath;
-        public growthPathView;
         public balancedGrowthPath;
-        public balancedGrowthPathView;
         public positiveConsumption;
         public steadyStateOnGraph;
         public steadyCapital;
         public steadyStateK;
         public steadyStateC;
-        public steadyCapitalView;
-        public steadyConsumptionView;
-        public steadyStateView;
         public cMax;
         public kMax;
 
@@ -90,64 +80,6 @@ module EconGraphs {
                     powers: [1]
                 }
             ]});
-            this.steadyCapitalView = new KG.FunctionPlot({
-                name: 'steadyCapital',
-                fn: this.modelProperty('steadyCapital'),
-                className: 'capital',
-                numSamplePoints:201,
-                label: {
-                    text: '\\dot k = 0'
-                }
-            });
-            this.steadyConsumptionView = new KG.VerticalLine({
-                name: 'steadyConsumption',
-                className: 'consumption',
-                x: this.modelProperty('steadyStateK'),
-                label: {
-                    text: '\\dot c = 0'
-                }
-            });
-            this.steadyStateView = new KG.Point({
-                name: 'steadyStatePoint',
-                coordinates: {
-                    x: this.modelProperty('steadyStateK'),
-                    y: this.modelProperty('steadyStateC')
-                },
-                symbol: 'cross',
-                size: 100,
-                label: {
-                    text: 'S',
-                    align: 'right',
-                    valign: 'bottom',
-                    color: 'grey'
-                }
-            });
-            this.initialPoint = new KG.Point({
-                name: 'initialPoint',
-                coordinates: {
-                    x: 'params.initialK',
-                    y: 'params.initialC'
-                },
-                className: 'growth',
-                size: 500,
-                label: {
-                    text: 'O'
-                },
-                xDrag: true,
-                yDrag: true
-            });
-            this.growthPathView = new KG.LinePlot({
-                name: 'growthPath',
-                data: this.modelProperty('growthPath'),
-                className: 'growth',
-                arrows: 'END'
-            });
-            this.balancedGrowthPathView = new KG.LinePlot({
-                name: 'balancedGrowthPath',
-                data: this.modelProperty('balancedGrowthPath'),
-                className: 'growth dashed',
-                interpolation: 'basis'
-            })
         }
 
         _update(scope) {

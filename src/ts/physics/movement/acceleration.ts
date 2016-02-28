@@ -93,10 +93,12 @@ module PhysicsGraphs {
                     x: 0,
                     y: definition.initialPosition
                 },
-                yDrag: definition.initialPosition,
+                interaction: {
+                    yDrag: definition.initialPosition,
+                },
                 label: {
-                    text: 'x_0'
-                }
+                        text: 'x_0'
+                    }
             });
 
             model.initialVelocityPoint = new KG.Point({
@@ -106,7 +108,9 @@ module PhysicsGraphs {
                     x: 0,
                     y: definition.initialVelocity
                 },
-                yDrag: definition.initialVelocity,
+                interaction: {
+                    yDrag: definition.initialVelocity
+                },
                 label: {
                     text: 'v_0'
                 }
