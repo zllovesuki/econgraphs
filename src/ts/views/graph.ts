@@ -19,9 +19,9 @@ module KG
         onGraph: (coordinates:ICoordinates) => boolean;
 
         // methods for converting model coordiantes to pixel coordinates
-        pixelCoordinates: (coordinates:ICoordinates) => ICoordinates;
-        modelCoordinates: (coordinates:ICoordinates) => ICoordinates;
-        dataCoordinates: (coordinateArray:ICoordinates[]) => ICoordinates[];
+        pixelCoordinates: (coordinates:ICoordinates,moveToClosest?:boolean) => ICoordinates;
+        modelCoordinates: (coordinates:ICoordinates,moveToClosest?:boolean) => ICoordinates;
+        dataCoordinates: (coordinateArray:ICoordinates[],moveToClosest?:boolean) => ICoordinates[];
 
         // convenience methods for corner coordinates of graph;
         corners: {
@@ -69,10 +69,15 @@ module KG
         }
 
         // Convert model coordinates to pixel coordinates for a single point
-        pixelCoordinates(coordinates:ICoordinates) {
+        pixelCoordinates(coordinates:ICoordinates,moveToClosest?:boolean) {
+            var xAxis = this.xAxis,
+                yAxis = this.yAxis;
             try {
-                coordinates.x = this.xAxis.scale(coordinates.x);
-                coordinates.y = this.yAxis.scale(coordinates.y);
+                coordinates.x = xAxis.scale(coordinates.x);
+                coordinates.y = yAxis.scale(coordinates.y);
+                if(moveToClosest) {
+                    coordinates.y = Math.max(0,coordinates.y);
+                }
             } catch(error) {
                 console.log(error)
             }
@@ -80,9 +85,11 @@ module KG
         }
 
         // Convert pixel coordinates to model coordinates for a single point
-        modelCoordinates(coordinates:ICoordinates) {
-            coordinates.x = this.xAxis.scale.invert(coordinates.x);
-            coordinates.y = this.yAxis.scale.invert(coordinates.y);
+        modelCoordinates(coordinates:ICoordinates,moveToClosest?:boolean) {
+            var xAxis = this.xAxis,
+                yAxis = this.yAxis;
+            coordinates.x = xAxis.scale.invert(coordinates.x);
+            coordinates.y = yAxis.scale.invert(coordinates.y);
             return coordinates;
         }
 
@@ -96,12 +103,14 @@ module KG
         }
 
         // Convert model coordinates to pixel coordinates for an array of points
-        dataCoordinates(coordinateArray:ICoordinates[]) {
+        dataCoordinates(coordinateArray:ICoordinates[], moveToClosest?:boolean) {
             var graph = this;
             var onGraphElements:boolean[] = coordinateArray.map(graph.onGraph, graph);
             var dataCoordinatesOnGraph = [];
             for(var i=0; i<coordinateArray.length; i++) {
-                if(onGraphElements[i] || onGraphElements[i-1] || onGraphElements[i+1]) {
+                if(moveToClosest) {
+                    dataCoordinatesOnGraph.push(graph.pixelCoordinates(coordinateArray[i],true))
+                } else if(onGraphElements[i] || onGraphElements[i-1] || onGraphElements[i+1]) {
                     dataCoordinatesOnGraph.push(graph.pixelCoordinates(coordinateArray[i]));
                 }
             }

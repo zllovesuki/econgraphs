@@ -74,7 +74,7 @@ module KG {
 
             area.updateDataForView(view);
 
-            var dataCoordinates:ICoordinates[] = view.dataCoordinates(area.data);
+            var dataCoordinates:ICoordinates[] = view.dataCoordinates(area.data, true);
 
             var group:D3.Selection = view.objectGroup(area.name, area.initGroupFn(), false);
 

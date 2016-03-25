@@ -80,11 +80,7 @@ module KG {
                 schema[pList[len-1]] = value;
             }
 
-            console.log(scope.model.utility);
-
-            set('model.utility', s.selectedObject);
-
-            console.log(scope.model.utility);
+            set(s.modelPath, s.selectedObject);
             return s.selectedObject;
         }
 

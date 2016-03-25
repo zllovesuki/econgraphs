@@ -14,6 +14,7 @@
 /// <reference path="micro/supply_and_demand/priceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/constantElasticityPriceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/linearPriceQuantityRelationship.ts"/>
+/// <reference path="micro/supply_and_demand/constantPriceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/individual_and_market_supply_and_demand.ts"/>
 
 /* Consumer Theory */
@@ -52,8 +53,11 @@
 /// <reference path="micro/producer_theory/production/productionTechnology.ts"/>
 /// <reference path="micro/producer_theory/production/cobbDouglasProduction.ts"/>
 
+/// <reference path="micro/producer_theory/profit/profitMax.ts"/>
+
 /* Market Structures */
 
+/// <reference path="micro/market_structures/competition/competitiveEquilibrium.ts"/>
 /// <reference path="micro/market_structures/monopoly/monopoly.ts"/>
 /// <reference path="micro/market_structures/oligopoly/cournotDuopoly.ts"/>
 

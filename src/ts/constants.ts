@@ -16,7 +16,9 @@ module KG
         asset: 'blue',
         'risk-free': 'green',
         budget: 'red',
-        riskPremium: 'orange'
+        riskPremium: 'orange',
+        profit: 'green',
+        loss: 'red'
     };
 
     export var COLORS = {
@@ -33,8 +35,8 @@ module KG
             light: "#98df8a"
         },
         red: {
-            dark: "d62728",
-            light: "ff9896"
+            dark: "#d62728",
+            light: "#ff9896"
         },
         purple: {
             dark: "#9467bd",

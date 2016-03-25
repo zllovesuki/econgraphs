@@ -172,6 +172,11 @@ module EconGraphs {
         }
     }
 
+    export interface LinearDemandDefinition extends LinearPriceQuantityRelationshipDefinition
+    {
+
+    }
+
     export class LinearDemand extends LinearPriceQuantityRelationship
     {
 
@@ -182,15 +187,6 @@ module EconGraphs {
             super(definition,modelPath);
             this.marginalRevenue = this.marginalDollarAmount;
             this.totalRevenue = this.totalDollarAmount;
-        }
-
-        _update(scope) {
-            super.update(scope);
-            console.log('marginal dollar amount: ',this.marginalDollarAmount);
-            console.log('marginal revenue: ',this.marginalRevenue);
-            this.marginalRevenue = this.marginalDollarAmount;
-            this.totalRevenue = this.totalDollarAmount;
-            return this;
         }
     }
 

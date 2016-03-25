@@ -1,0 +1,713 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            {% raw %}
+            <div class="col-md-4">
+                        <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">\alpha = {{params.alpha | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="alphaSlider"></div>
+                    </div>
+                        <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">I = {{params.income | number: 0}}:
+                        </div>
+                        <div class="col-xs-9" id="incomeSlider"></div>
+                    </div>
+                    </div>
+            <div class="col-md-4">
+                        <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">N_C = {{params.numConsumers | number: 0}}:
+                        </div>
+                        <div class="col-xs-9" id="ncSlider"></div>
+                    </div>
+                        <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">N_F = {{params.numFirms | number: 0}}:
+                        </div>
+                        <div class="col-xs-9" id="nfSlider"></div>
+                    </div>
+                    </div>
+            <div class="col-md-4">
+                        <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">w = {{params.w | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="wSlider"></div>
+                    </div>
+                        <div class="row">
+                        <div class="col-xs-3 math" style="text-align:right;font-size:12pt;padding-top:10px">r = {{params.r | number: 2}}:
+                        </div>
+                        <div class="col-xs-9" id="rSlider"></div>
+                    </div>
+                    </div>
+            {% endraw %}
+        </div>
+        <hr/>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div id="consumer">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div id="market"></div>
+            </div>
+            <div class="col-md-4">
+                <div id="firm"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block model %}
+
+    <script>
+    
+
+
+
+        var scopeDefinition = {
+            params: {
+                c: 1,
+                f: 40,
+                cMax: 8,
+                price: 5,
+                income: 100,
+                py: 3,
+                alpha: 0.5,
+                sub: 0,
+                w: 10,
+                r: 12.5,
+                k: 10,
+                showMap: false,
+                snapToOptimal: false,
+                numConsumers: 500,
+                numFirms: 100,
+                selectedCost: 'Linear',
+                selectedUtility: 'CobbDouglas'
+            },
+            graphParams: ['selectedCost','selectedUtility'],
+            restrictions: [],
+            model: {
+                type: 'EconGraphs.CompetitiveEquilibrium',
+                definition: {
+                    supply: {
+                        price: 'params.price',
+                        snapToOptimal: true,
+                        costFunction: {
+                            type: 'EconGraphs.LinearMarginalCost',
+                            definition: {
+                                fixedCost: 'params.r*params.k',
+                                marginalCostIntercept: 0,
+                                marginalCostControlPointCoordinates: {x: 100, y: 'params.w'}
+                            }
+                        },
+                        demandFunction: {
+                            type: 'EconGraphs.PerfectlyElasticDemand',
+                            definition: {
+                                price: 'params.price'
+                            }
+                        }
+                    },
+                    demand: {
+                        snapToOptimalBundle: true,
+                        budget:{
+                            type: 'EconGraphs.SimpleBudgetConstraint',
+                            definition: {
+                                income: 'params.income',
+                                px: 'params.price',
+                                py: 'params.py'
+                            }
+                        },
+                        utility: {
+                            type: 'EconGraphs.CobbDouglasUtility',
+                            definition: {
+                                xPower: 'params.alpha'
+                            }
+                        }
+                    },
+                    numConsumers: 'params.numConsumers',
+                    numFirms: 'params.numFirms'
+                }
+            },
+            views: [{
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'alphaSlider',
+                        param: 'alpha',
+                        precision: '0.01',
+                        axisDef: {min: 0, max: 1, tickValues: [0,0.5,1]}
+                    }
+                },
+            {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'incomeSlider',
+                        param: 'income',
+                        precision: '1',
+                        axisDef: {min: 1, max: 200}
+                    }
+                },
+            {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'ncSlider',
+                        param: 'numConsumers',
+                        precision: '1',
+                        axisDef: {min: 1, max: 2000}
+                    }
+                },
+            {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'nfSlider',
+                        param: 'numFirms',
+                        precision: '1',
+                        axisDef: {min: 1, max: 200}
+                    }
+                },
+            {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'wSlider',
+                        param: 'w',
+                        precision: '0.25',
+                        axisDef: {min: 1, max: 20}
+                    }
+                },
+            {
+                    type: 'KG.Slider',
+                    definition: {
+                        element_id: 'rSlider',
+                        param: 'r',
+                        precision: '0.25',
+                        axisDef: {min: 1, max: 20}
+                    }
+                }]
+        }
+    </script>
+{% endblock %}
+
+
+
+{% block js %}
+    <script>
+
+        /* Perfectly inelastic demand facing producers */
+
+        var horizontalDemandCurve = {
+            type: 'KG.HorizontalLine',
+            definition: {
+                name: 'marketPriceLine',
+                className: "price",
+                y: 'params.price',
+                yInterceptLabel: 'P',
+                interaction: {
+                    yDrag: true,
+                    yDragParam: 'price',
+                    highlight: 'price demand'
+                },
+                label: {
+                    text: 'D = AR = MR'
+                }
+            }
+        };
+
+
+        /* Linear marginal cost */
+
+        var linearMarginalCostCurve = {
+            type: 'KG.Line',
+            definition: {
+                name: 'linearMC',
+                className: "marginalCost",
+                linear: 'model.supply.costFunction.marginalCostFunction',
+                interaction: {
+                    highlight: 'marginalCost'
+                },
+                label: {
+                    text: 'MC(q)'
+                }
+            }
+        };
+
+        var linearMarginalCostControlPoint = {
+            type: 'KG.Point',
+            definition: {
+                name: 'linearMCcontrol',
+                className: 'marginalCost',
+                coordinates: {
+                    x: 0,
+                    y: 'params.c'
+                },
+                size: 20,
+                interaction: {
+                    highlight: 'marginalCost',
+                    yDrag: true,
+                    yDragParam: 'c'
+                }
+            }
+        };
+
+        var marginalCostControlPoint = {
+            type: 'KG.Point',
+            definition: {
+                name: 'marginalCostControlPoint',
+                className: 'marginalCost',
+                coordinates: {
+                    x: 90,
+                    y: 'params.cMax'
+                },
+                size: 20,
+                interaction: {
+                    highlight: 'marginalCost',
+                    yDrag: true,
+                    yDragParam: 'cMax'
+                }
+            }
+        };
+
+        var marginalCostSlopeIndicator = {
+            type: 'KG.Line',
+            definition: {
+                name: 'marginalCostSlopeIndicator',
+                className: 'marginalCost dotted',
+                lineDef: {
+                            point: {
+                                x: 'model.supply.quantity',
+                                y: 'model.supply.costFunction.tc(model.supply.quantity)'
+                            },
+                            slope: 'model.supply.costFunction.mc(model.supply.quantity)',
+                            xDomainDef: {
+                                min: 'model.supply.quantity - 10',
+                                max: 'model.supply.quantity + 20'
+                            }
+                        },
+                interaction: {
+                    highlight: 'marginalCost'
+                },
+                label: {
+                    text: '\\text{ slope }=MC(q)'
+                }
+            }
+        };
+
+        /* Average cost */
+
+        var averageTotalCost = {
+            type: 'KG.FunctionPlot',
+            definition: {
+                name: 'atcCurve',
+                className: 'averageCost',
+                fn: 'model.supply.costFunction.averageCostFunction',
+                numSamplePoints: 201,
+                label: {text: 'ATC(q)'}
+            }
+        };
+
+        var averageVariableCost = {
+            type: 'KG.FunctionPlot',
+            definition: {
+                name: 'avcCurve',
+                className: 'averageVariableCost',
+                fn: 'model.supply.costFunction.averageVariableCostFunction',
+                numSamplePoints: 201,
+                label: {text: 'AVC(q)'}
+            }
+        };
+
+        var profitArea = {
+            type: 'KG.Area',
+            definition: {
+                name: 'profitArea',
+                className: 'model.supply.profitWord()',
+                data: [
+                {x: 0, y: 'model.supply.costFunction.atc(model.supply.quantity)'},
+                {x:0, y: 'params.price'},
+                {x: 'model.supply.quantity',y:'params.price'},
+                {x: 'model.supply.quantity',y:'model.supply.costFunction.atc(model.supply.quantity)'}
+            ],
+                label: {text: ['\\text{','model.supply.profitWord()','}']}
+
+            }
+        };
+
+        /* Quantity points */
+
+        var priceQuantityCombination = {
+            type: 'KG.Point',
+            definition: {
+                name: 'priceQuantity',
+                className: 'supply',
+                coordinates: {
+                    x: 'model.supply.quantity',
+                    y: 'params.price'
+                },
+                interaction: {
+                    highlight: 'quantity'
+                }
+            }
+        };
+
+        var unitQuantityDropline = {
+            type: 'KG.VerticalDropline',
+            definition: {
+                name: 'totalQuantityDropline',
+                className: 'gray',
+                coordinates: {
+                    x: 'model.supply.quantity',
+                    y: "params.price"
+                },
+                interaction: {
+                    highlight: 'quantity'
+                },
+                axisLabel: 'q^*'
+            }
+        };
+
+        var atcPoint = {
+            type: 'KG.Point',
+            definition: {
+                name: 'atcPoint',
+                className: 'averageCost',
+                coordinates: {
+                    x: 'model.supply.quantity',
+                    y: 'model.supply.costFunction.atc(model.supply.quantity)'
+                },
+                droplines: {
+                    horizontal: 'ATC(q)'
+                },
+                interaction: {
+                    highlight: 'atc'
+                }
+
+            }
+        };
+
+    /* Total cost and revenue */
+
+
+        var totalCostCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'totalCostCurve',
+                        className: 'totalCost',
+                        fn: 'model.supply.costFunction.costFunction',
+                        label: {text: 'TC(q)'}
+                    }
+                },
+                totalRevenueCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'totalRevenueCurve',
+                        className: 'totalRevenue',
+                        fn: 'model.supply.demandFunction.totalRevenue',
+                        label: {text: 'TR(q)'},
+                        numSamplePoints: 301
+                    }
+                };
+
+        var totalCostPoint = {
+            type: 'KG.Point',
+            definition: {
+                name: 'totalCostPoint',
+                className: 'totalCost',
+                coordinates: {
+                    x: 'model.supply.quantity',
+                    y: 'model.supply.costFunction.tc(model.supply.quantity)'
+                },
+                interaction: {
+                    highlight: 'totalCost quantity',
+                    xDrag: '!params.snapToOptimal',
+                    xDragParam: 'quantity'
+                },
+                droplines: {
+                    horizontal: 'TC(q)'
+                }
+            }
+        };
+
+        var totalRevenuePoint = {
+            type: 'KG.Point',
+            definition: {
+                name: 'totalRevenuePoint',
+                className: 'totalRevenue',
+                coordinates: {
+                    x: 'model.supply.quantity',
+                    y: 'model.supply.demandFunction.totalRevenueAtQuantity(model.supply.quantity)'
+                },
+                interaction: {
+                    highlight: 'totalRevenue quantity',
+                    xDrag: '!params.snapToOptimal',
+                    xDragParam: 'quantity'
+                },
+                droplines: {
+                    horizontal: 'TR(q)'
+                }
+            }
+        };
+
+        var totalQuantityDropline = {
+            type: 'KG.VerticalDropline',
+            definition: {
+                name: 'totalQuantityDropline',
+                className: 'gray',
+                coordinates: {
+                    x: 'model.supply.quantity',
+                    y: "Math.min(model.supply.demandFunction.totalRevenueAtQuantity(model.supply.quantity),model.supply.costFunction.tc(model.supply.quantity))"
+                },
+                interaction: {
+                    highlight: 'quantity'
+                },
+                axisLabel: 'q^*'
+            }
+        };
+
+        var fixedCostControlPoint = {
+            type: 'KG.Point',
+            definition: {
+                name: 'fixedCostControlPoint',
+                className: 'totalCost',
+                coordinates: {
+                    x: 0,
+                    y: 'params.f'
+                },
+                size: 20,
+                interaction: {
+                    highlight: 'totalCost',
+                    yDrag: true,
+                    yDragParam: 'f'
+                }
+            }
+        };
+
+    var profitSegment = {
+            type: 'KG.Segment',
+            definition: {
+                name: 'profitSegment',
+                className: 'model.supply.profitWord()',
+                a: {
+                    x: 'model.supply.quantity',
+                    y: 'model.supply.demandFunction.totalRevenueAtQuantity(model.supply.quantity)'
+                },
+                b: {
+                    x: 'model.supply.quantity',
+                    y: 'model.supply.costFunction.tc(model.supply.quantity)'
+                },
+                label: {text: ['\\text{ ','model.supply.profitWord()','}'], align: 'left'},
+                arrows: 'BOTH',
+                trimPercent: 0.05
+            }
+        };
+
+    </script>
+
+
+
+    {% block individualFirmGraph %}
+
+        <script>
+
+            var firmGraphObjects = [
+                    unitQuantityDropline,
+                    profitArea,
+                    averageTotalCost,
+                    //averageVariableCost,
+                    linearMarginalCostCurve,
+                    priceQuantityCombination,
+                    horizontalDemandCurve,
+                    //linearMarginalCostControlPoint,
+                    //marginalCostControlPoint,
+                    atcPoint
+        ];
+
+        </script>
+
+    {% endblock %}
+
+    <script>
+    
+    var budgetLine = {
+                    type: 'KG.Line',
+                    definition: {
+                        name: 'BL',
+                        className: 'budget',
+                        linear: 'model.demand.budget.budgetSegments[0].linear',
+                        interaction: {
+                            highlight: 'budget'
+                        },
+                        label: {
+                            text: 'BL'
+                        }
+                    }
+                },
+                bundleOptimalX = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleX',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.demand.bundle.x',
+                            y: 'model.demand.bundle.y'
+                        },
+                        interaction: {
+                            highlight: 'x'
+                        },
+                        droplines: {
+                            vertical: 'x^*'
+                        }
+                    }
+                },
+                bundleOptimalY = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'bundleY',
+                        className: 'utility',
+                        coordinates: {
+                            x: 'model.demand.bundle.x',
+                            y: 'model.demand.bundle.y'
+                        },
+                        interaction: {
+                            highlight: 'y'
+                        }
+                        , droplines: {
+                            horizontal: 'y^*'
+                        }
+
+                    }
+                },
+                indifferenceCurve = {
+                    type: 'KG.FunctionPlot',
+                    definition: {
+                        name: 'indifference_curve',
+                        className: 'utility',
+                        fn: "model.demand.utility.utilityFunction.setLevel(model.demand.utility.utility(model.demand.bundle))",
+                        interaction: {
+                            highlight: 'utility'
+                        },
+                        label: {
+                            text: 'U^*'
+                        }
+                    }
+                };
+    
+    var demandCurveX = {
+                    type: 'KG.Curve',
+                    definition: {
+                        name: 'demandCurveX',
+                        className: 'demand',
+                        data: 'model.demand.demandCurveData({min: 0.1, max: 50, numSamplePoints: 201})',
+                        label: {text: 'D_x'}
+                    }
+                },
+                quantityDemandedAtPriceX = {
+                    type: 'KG.Point',
+                    definition: {
+                        name: 'quantityDemandedAtPriceX',
+                        className: 'demand',
+                        coordinates: {
+                            x: 'model.demand.bundle.x',
+                            y: 'params.price'
+                        },
+                        interaction: {
+                            highlight: 'x'
+                        },
+                        droplines: {
+                            vertical: 'x^*'
+                        }
+                    }
+                },
+                priceLineX = {
+                    type: 'KG.HorizontalLine',
+                    definition: {
+                        name: 'priceLineX',
+                        className: 'price',
+                        y: 'params.price',
+                        interaction: {
+                            yDrag: 'params.price',
+                            highlight: 'px'
+                        },
+                        yInterceptLabel: 'P_x'
+                    }
+                };
+
+    var marketDemandCurve = {
+        type: 'KG.FunctionPlot',
+        definition: {
+            name: 'marketDemandCurve',
+            className: 'demand',
+            fn: 'model.marketDemand',
+            yIsIndependent: true,
+            label: {text: 'D'},
+            numSamplePoints: 201
+        }
+    };
+
+    var marketSupplyCurve = {
+        type: 'KG.FunctionPlot',
+        definition: {
+            name: 'marketSupplyCurve',
+            className: 'supply',
+            fn: 'model.marketSupply',
+            yIsIndependent: true,
+            label: {text: 'S'},
+            numSamplePoints: 201
+        }
+    }
+
+        scopeDefinition.views.push({
+            type: 'KG.TwoVerticalGraphs',
+            definition: {
+                element_id: 'consumer',
+                xAxisDef: {min: 0, max: 50, title: '\\text{Individual Quantity of X}'},
+                    bottomGraph: {
+                    yAxisDef: {min: 0, max: 50, title: '\\text{Units of Good Y}'},
+                    objects: [budgetLine,bundleOptimalY, bundleOptimalX, indifferenceCurve]
+                },
+                topGraph: {
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Price of Good X}'},
+                    objects: [demandCurveX, quantityDemandedAtPriceX, priceLineX]
+                },
+                objects: []
+            }
+        },{
+            type: 'KG.TwoVerticalGraphs',
+            definition: {
+                element_id: 'firm',
+                xAxisDef: {min: 0, max: 100, title: '\\text{Firm Quantity}'},
+                bottomGraph: {
+                    yAxisDef: {min: 0, max: 500, title: '\\text{Total Costs (Dollars)}'},
+                    objects: [totalCostCurve,totalRevenueCurve,totalCostPoint,totalRevenuePoint, /*fixedCostControlPoint,*/ totalQuantityDropline, profitSegment]
+                },
+                topGraph: {
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Dollars per Unit}'},
+                    objects: firmGraphObjects
+                },
+                objects: []
+            }
+        },
+                {
+            type: 'KG.TwoVerticalGraphs',
+            definition: {
+                element_id: 'market',
+                xAxisDef: {min: 0, max: 10000, title: '\\text{Market Quantity}'},
+                topGraph: {
+                    yAxisDef: {min: 0, max: 10, title: '\\text{Market Price}'},
+                    objects: [priceLineX,marketDemandCurve, marketSupplyCurve]
+                },
+                objects: []
+            }
+        });
+
+
+
+    </script>
+
+    {% block jsadjustments %}
+
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
+
+{% endblock %}

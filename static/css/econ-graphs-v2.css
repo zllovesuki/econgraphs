@@ -127,6 +127,16 @@
 .dispreferred {
   fill: #ff9896;
 }
+.profit {
+  color: #2ca02c;
+  stroke: #2ca02c;
+  fill: #98df8a;
+}
+.loss {
+  color: #d62728;
+  stroke: #d62728;
+  fill: #ff9896;
+}
 /* Note: these fonts can b */
 @font-face {
   font-family: 'Open Sans';
@@ -158,6 +168,11 @@
   stroke: #1f77b4;
   fill: #1f77b4;
   color: #1f77b4;
+}
+.gray {
+  stroke: #7f7f7f;
+  fill: #7f7f7f;
+  color: #7f7f7f;
 }
 .orange {
   stroke: #ff7f0e;

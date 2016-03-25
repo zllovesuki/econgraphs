@@ -35,18 +35,24 @@ module KG
             // if top and bottom graphs share a common x axis, create axis elements
             if(definition.hasOwnProperty('xAxisDef')) {
                 definition.topGraph.xAxisDef = _.clone(definition.xAxisDef);
-                definition.topGraph.xAxisDef.title = '';
                 definition.topGraph.margins = _.defaults(definition.topGraph.margins || {}, {top: 20, left: 100, bottom: 20, right: 20});
-                definition.bottomGraph.xAxisDef = _.clone(definition.xAxisDef);
-                definition.bottomGraph.margins = _.defaults(definition.bottomGraph.margins || {}, {top: 20, left: 100, bottom: 70, right: 20});
+                if(definition.hasOwnProperty('bottomGraph')) {
+                    definition.topGraph.xAxisDef.title = '';
+                    definition.bottomGraph.xAxisDef = _.clone(definition.xAxisDef);
+                    definition.bottomGraph.margins = _.defaults(definition.bottomGraph.margins || {}, {top: 20, left: 100, bottom: 70, right: 20});
+                }
+
             }
 
             // establish definition for top and bottom graphs
             definition.topGraph.element_id = definition.element_id + '_top';
             this.topGraph = new Graph(definition.topGraph);
 
-            definition.bottomGraph.element_id = definition.element_id + '_bottom';
-            this.bottomGraph = new Graph(definition.bottomGraph);
+            if(definition.hasOwnProperty('bottomGraph')) {
+                definition.bottomGraph.element_id = definition.element_id + '_bottom';
+                this.bottomGraph = new Graph(definition.bottomGraph);
+            }
+
 
         }
 
@@ -59,7 +65,7 @@ module KG
                 width: Math.min(view.maxDimensions.width, element.clientWidth),
                 height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop()))};
             var graphHeight = view.dimensions.height/2;
-            var bottomGraphTranslation = KG.translateByPixelCoordinates({x:0, y:graphHeight});
+
 
             d3.select(element).select('div').remove();
 
@@ -67,16 +73,18 @@ module KG
             var frame = d3.select(element).append('div');
 
             frame.append('div').attr('id',view.topGraph.element_id );
-            frame.append('div').attr({'id': view.bottomGraph.element_id, 'style': bottomGraphTranslation});
-
-
             view.topGraph.maxDimensions.height = graphHeight;
-            view.bottomGraph.maxDimensions.height = graphHeight;
-
             view.topGraph.scope = view.scope;
-            view.bottomGraph.scope = view.scope;
             view.topGraph.redraw();
-            view.bottomGraph.redraw();
+
+
+            if(view.definition.hasOwnProperty('bottomGraph')) {
+                var bottomGraphTranslation = KG.translateByPixelCoordinates({x:0, y:graphHeight});view.bottomGraph.scope = view.scope;
+                frame.append('div').attr({'id': view.bottomGraph.element_id, 'style': bottomGraphTranslation});
+                view.bottomGraph.scope = view.scope;
+                view.bottomGraph.maxDimensions.height = graphHeight;
+                view.bottomGraph.redraw();
+            }
 
             return view;
         }
@@ -84,7 +92,7 @@ module KG
         drawObjects() {
             var view = this;
             view.topGraph.drawObjects();
-            view.bottomGraph.drawObjects();
+            if(view.definition.hasOwnProperty('bottomGraph')) {view.bottomGraph.drawObjects();}
             /*if(view.hasOwnProperty('objects')) {
                 view.objects.forEach(function(object) {object.createSubObjects(view)});
                 view.objects.forEach(function(object) {object.render(view)});

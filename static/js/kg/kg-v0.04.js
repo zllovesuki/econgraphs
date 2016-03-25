@@ -14,7 +14,9 @@ var KG;
         asset: 'blue',
         'risk-free': 'green',
         budget: 'red',
-        riskPremium: 'orange'
+        riskPremium: 'orange',
+        profit: 'green',
+        loss: 'red'
     };
     KG.COLORS = {
         blue: {
@@ -30,8 +32,8 @@ var KG;
             light: "#98df8a"
         },
         red: {
-            dark: "d62728",
-            light: "ff9896"
+            dark: "#d62728",
+            light: "#ff9896"
         },
         purple: {
             dark: "#9467bd",
@@ -720,9 +722,7 @@ var KG;
                 }
                 schema[pList[len - 1]] = value;
             }
-            console.log(scope.model.utility);
-            set('model.utility', s.selectedObject);
-            console.log(scope.model.utility);
+            set(s.modelPath, s.selectedObject);
             return s.selectedObject;
         };
         return Selector;
@@ -1276,6 +1276,14 @@ var KGMath;
                             c: ob * c - oc * b - delta
                         }
                     }).updateLine(), x = diffLine.xIntercept, y = thisLine.yValue(x);
+                    return { x: x, y: y };
+                };
+                this.quadraticIntersection = function (otherQuadratic, delta) {
+                    var thisLine = this;
+                    delta = delta || 0;
+                    var a = thisLine.coefficients.a, b = thisLine.coefficients.b, c = thisLine.coefficients.c, oa = otherQuadratic.coefficients.a, ob = otherQuadratic.coefficients.b, oc = otherQuadratic.coefficients.c;
+                    var qa = oa, qb = ob + a / b, qc = oc + c / b;
+                    var x = (-qb + Math.sqrt(qb * qb - 4 * qa * qc)) / (2 * qa), y = thisLine.yValue(x);
                     return { x: x, y: y };
                 };
                 var l = this;
@@ -3584,7 +3592,7 @@ var KG;
         Area.prototype.render = function (view) {
             var area = this;
             area.updateDataForView(view);
-            var dataCoordinates = view.dataCoordinates(area.data);
+            var dataCoordinates = view.dataCoordinates(area.data, true);
             var group = view.objectGroup(area.name, area.initGroupFn(), false);
             area.positionLabel(view);
             var dataLine = d3.svg.line()
@@ -3980,10 +3988,14 @@ var KG;
             return (this.xOnGraph(coordinates.x) && this.yOnGraph(coordinates.y));
         };
         // Convert model coordinates to pixel coordinates for a single point
-        Graph.prototype.pixelCoordinates = function (coordinates) {
+        Graph.prototype.pixelCoordinates = function (coordinates, moveToClosest) {
+            var xAxis = this.xAxis, yAxis = this.yAxis;
             try {
-                coordinates.x = this.xAxis.scale(coordinates.x);
-                coordinates.y = this.yAxis.scale(coordinates.y);
+                coordinates.x = xAxis.scale(coordinates.x);
+                coordinates.y = yAxis.scale(coordinates.y);
+                if (moveToClosest) {
+                    coordinates.y = Math.max(0, coordinates.y);
+                }
             }
             catch (error) {
                 console.log(error);
@@ -3991,9 +4003,10 @@ var KG;
             return coordinates;
         };
         // Convert pixel coordinates to model coordinates for a single point
-        Graph.prototype.modelCoordinates = function (coordinates) {
-            coordinates.x = this.xAxis.scale.invert(coordinates.x);
-            coordinates.y = this.yAxis.scale.invert(coordinates.y);
+        Graph.prototype.modelCoordinates = function (coordinates, moveToClosest) {
+            var xAxis = this.xAxis, yAxis = this.yAxis;
+            coordinates.x = xAxis.scale.invert(coordinates.x);
+            coordinates.y = yAxis.scale.invert(coordinates.y);
             return coordinates;
         };
         // Transform pixel coordinates
@@ -4004,12 +4017,15 @@ var KG;
             return KG.positionByPixelCoordinates(this.pixelCoordinates(coordinates), dimension);
         };
         // Convert model coordinates to pixel coordinates for an array of points
-        Graph.prototype.dataCoordinates = function (coordinateArray) {
+        Graph.prototype.dataCoordinates = function (coordinateArray, moveToClosest) {
             var graph = this;
             var onGraphElements = coordinateArray.map(graph.onGraph, graph);
             var dataCoordinatesOnGraph = [];
             for (var i = 0; i < coordinateArray.length; i++) {
-                if (onGraphElements[i] || onGraphElements[i - 1] || onGraphElements[i + 1]) {
+                if (moveToClosest) {
+                    dataCoordinatesOnGraph.push(graph.pixelCoordinates(coordinateArray[i], true));
+                }
+                else if (onGraphElements[i] || onGraphElements[i - 1] || onGraphElements[i + 1]) {
                     dataCoordinatesOnGraph.push(graph.pixelCoordinates(coordinateArray[i]));
                 }
             }
@@ -4032,16 +4048,20 @@ var KG;
             // if top and bottom graphs share a common x axis, create axis elements
             if (definition.hasOwnProperty('xAxisDef')) {
                 definition.topGraph.xAxisDef = _.clone(definition.xAxisDef);
-                definition.topGraph.xAxisDef.title = '';
                 definition.topGraph.margins = _.defaults(definition.topGraph.margins || {}, { top: 20, left: 100, bottom: 20, right: 20 });
-                definition.bottomGraph.xAxisDef = _.clone(definition.xAxisDef);
-                definition.bottomGraph.margins = _.defaults(definition.bottomGraph.margins || {}, { top: 20, left: 100, bottom: 70, right: 20 });
+                if (definition.hasOwnProperty('bottomGraph')) {
+                    definition.topGraph.xAxisDef.title = '';
+                    definition.bottomGraph.xAxisDef = _.clone(definition.xAxisDef);
+                    definition.bottomGraph.margins = _.defaults(definition.bottomGraph.margins || {}, { top: 20, left: 100, bottom: 70, right: 20 });
+                }
             }
             // establish definition for top and bottom graphs
             definition.topGraph.element_id = definition.element_id + '_top';
             this.topGraph = new KG.Graph(definition.topGraph);
-            definition.bottomGraph.element_id = definition.element_id + '_bottom';
-            this.bottomGraph = new KG.Graph(definition.bottomGraph);
+            if (definition.hasOwnProperty('bottomGraph')) {
+                definition.bottomGraph.element_id = definition.element_id + '_bottom';
+                this.bottomGraph = new KG.Graph(definition.bottomGraph);
+            }
         }
         TwoVerticalGraphs.prototype.redraw = function () {
             var view = this;
@@ -4051,24 +4071,29 @@ var KG;
                 width: Math.min(view.maxDimensions.width, element.clientWidth),
                 height: Math.min(view.maxDimensions.height, window.innerHeight - (10 + $('#' + view.element_id).offset().top - $(window).scrollTop())) };
             var graphHeight = view.dimensions.height / 2;
-            var bottomGraphTranslation = KG.translateByPixelCoordinates({ x: 0, y: graphHeight });
             d3.select(element).select('div').remove();
             // Create new div element to contain SVG
             var frame = d3.select(element).append('div');
             frame.append('div').attr('id', view.topGraph.element_id);
-            frame.append('div').attr({ 'id': view.bottomGraph.element_id, 'style': bottomGraphTranslation });
             view.topGraph.maxDimensions.height = graphHeight;
-            view.bottomGraph.maxDimensions.height = graphHeight;
             view.topGraph.scope = view.scope;
-            view.bottomGraph.scope = view.scope;
             view.topGraph.redraw();
-            view.bottomGraph.redraw();
+            if (view.definition.hasOwnProperty('bottomGraph')) {
+                var bottomGraphTranslation = KG.translateByPixelCoordinates({ x: 0, y: graphHeight });
+                view.bottomGraph.scope = view.scope;
+                frame.append('div').attr({ 'id': view.bottomGraph.element_id, 'style': bottomGraphTranslation });
+                view.bottomGraph.scope = view.scope;
+                view.bottomGraph.maxDimensions.height = graphHeight;
+                view.bottomGraph.redraw();
+            }
             return view;
         };
         TwoVerticalGraphs.prototype.drawObjects = function () {
             var view = this;
             view.topGraph.drawObjects();
-            view.bottomGraph.drawObjects();
+            if (view.definition.hasOwnProperty('bottomGraph')) {
+                view.bottomGraph.drawObjects();
+            }
             /*if(view.hasOwnProperty('objects')) {
                 view.objects.forEach(function(object) {object.createSubObjects(view)});
                 view.objects.forEach(function(object) {object.render(view)});
@@ -4842,17 +4867,59 @@ var EconGraphs;
             this.marginalRevenue = this.marginalDollarAmount;
             this.totalRevenue = this.totalDollarAmount;
         }
-        LinearDemand.prototype._update = function (scope) {
-            _super.prototype.update.call(this, scope);
-            console.log('marginal dollar amount: ', this.marginalDollarAmount);
-            console.log('marginal revenue: ', this.marginalRevenue);
-            this.marginalRevenue = this.marginalDollarAmount;
-            this.totalRevenue = this.totalDollarAmount;
-            return this;
-        };
         return LinearDemand;
     })(LinearPriceQuantityRelationship);
     EconGraphs.LinearDemand = LinearDemand;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../eg.ts"/>
+var EconGraphs;
+(function (EconGraphs) {
+    var ConstantPriceQuantityRelationship = (function (_super) {
+        __extends(ConstantPriceQuantityRelationship, _super);
+        function ConstantPriceQuantityRelationship(definition, modelPath) {
+            definition.type = 'HorizontalLine';
+            definition.def = { y: definition.price };
+            _super.call(this, definition, modelPath);
+            var priceQuantityRelationship = this;
+            priceQuantityRelationship.priceQuantityRelationshipFunction = new KGMath.Functions.HorizontalLine({ y: definition.price });
+            priceQuantityRelationship.elasticity = new EconGraphs.ConstantElasticity({ elasticity: Infinity });
+            priceQuantityRelationship.totalDollarAmount = new KGMath.Functions.Linear({ point: { x: 0, y: 0 }, slope: definition.price });
+            priceQuantityRelationship.marginalDollarAmount = new KGMath.Functions.HorizontalLine({ y: definition.price });
+        }
+        ConstantPriceQuantityRelationship.prototype.quantityAtPrice = function (p) {
+            return undefined;
+        };
+        ConstantPriceQuantityRelationship.prototype.priceAtQuantity = function (quantity) {
+            return this.price;
+        };
+        ConstantPriceQuantityRelationship.prototype.slopeAtPrice = function (price) {
+            return Infinity;
+        };
+        ConstantPriceQuantityRelationship.prototype.inverseSlopeAtPrice = function (price) {
+            return 0;
+        };
+        return ConstantPriceQuantityRelationship;
+    })(EconGraphs.PriceQuantityRelationship);
+    EconGraphs.ConstantPriceQuantityRelationship = ConstantPriceQuantityRelationship;
+    var PerfectlyElasticDemand = (function (_super) {
+        __extends(PerfectlyElasticDemand, _super);
+        function PerfectlyElasticDemand(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+            this.marginalRevenue = this.marginalDollarAmount;
+            this.totalRevenue = this.totalDollarAmount;
+        }
+        PerfectlyElasticDemand.prototype.quantityAtPrice = function (p) {
+            if (p < this.price) {
+                return Infinity;
+            }
+            if (p > this.price) {
+                return 0;
+            }
+            return this.quantity;
+        };
+        return PerfectlyElasticDemand;
+    })(ConstantPriceQuantityRelationship);
+    EconGraphs.PerfectlyElasticDemand = PerfectlyElasticDemand;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
 var EconGraphs;
@@ -6127,20 +6194,6 @@ var EconGraphs;
     var ProductionCost = (function (_super) {
         __extends(ProductionCost, _super);
         function ProductionCost(definition, modelPath) {
-            definition.labels = _.defaults(definition.labels || {}, {
-                tc: 'TC',
-                vc: 'VC',
-                fc: 'FC',
-                mc: 'MC',
-                atc: 'ATC',
-                avc: 'AVC',
-                mcSlope: 'slope = MC',
-                atcSlope: 'slope = ATC',
-                avcSlope: 'slope = AVC'
-            });
-            definition = _.defaults(definition, {
-                quantityDraggable: true
-            });
             _super.call(this, definition, modelPath);
             var productionCost = this;
             if (definition.hasOwnProperty('costFunctionDef')) {
@@ -6163,20 +6216,19 @@ var EconGraphs;
             p.costFunction.update(scope);
             p.fixedCost = p.tc(0);
             p.marginalCostFunction.update(scope);
-            p.fixedCostPoint.update(scope);
             return p;
         };
         ProductionCost.prototype.tc = function (q) {
             return this.costFunction.yValue(q);
         };
         ProductionCost.prototype.vc = function (q) {
-            return this.variableCostFunction.yValue(q);
+            return this.tc(q) - this.fixedCost;
         };
         ProductionCost.prototype.atc = function (q) {
-            return this.averageCostFunction.yValue(q);
+            return this.tc(q) / q;
         };
         ProductionCost.prototype.avc = function (q) {
-            return this.averageVariableCostFunction.yValue(q);
+            return this.vc(q) / q;
         };
         ProductionCost.prototype.mc = function (q) {
             return this.marginalCostFunction.yValue(q);
@@ -6407,6 +6459,107 @@ var EconGraphs;
         return CobbDouglasProduction;
     })(EconGraphs.ProductionTechnology);
     EconGraphs.CobbDouglasProduction = CobbDouglasProduction;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var ProfitMax = (function (_super) {
+        __extends(ProfitMax, _super);
+        function ProfitMax(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+        }
+        ProfitMax.prototype._update = function (scope) {
+            var pm = this;
+            var marginalRevenue = pm.demandFunction.marginalRevenue.update(scope);
+            var marginalCost = pm.costFunction.marginalCostFunction.update(scope);
+            if (marginalCost instanceof KGMath.Functions.Linear) {
+                pm.optimalQuantity = marginalRevenue.linearIntersection(marginalCost).x;
+            }
+            else if (marginalCost instanceof KGMath.Functions.Quadratic) {
+                pm.optimalQuantity = marginalRevenue.quadraticIntersection(marginalCost).x;
+            }
+            // shut down if revenues don't cover variable costs
+            if (isNaN(pm.optimalQuantity) || pm.optimalQuantity < 0 || pm.demandFunction.totalRevenueAtQuantity(pm.optimalQuantity) < pm.costFunction.vc(pm.optimalQuantity)) {
+                pm.optimalQuantity = 0;
+            }
+            if (pm.snapToOptimal) {
+                pm.quantity = pm.optimalQuantity;
+            }
+            pm.costFunction.quantity = pm.quantity;
+            pm.demandFunction.quantity = pm.quantity;
+            pm.price = pm.demandFunction.priceAtQuantity(pm.quantity);
+            return pm;
+        };
+        ProfitMax.prototype.profit = function (quantity) {
+            quantity = quantity || this.quantity;
+            return this.demandFunction.totalRevenueAtQuantity(quantity) - this.costFunction.tc(quantity);
+        };
+        ProfitMax.prototype.profitIsPositive = function (quantity) {
+            return (this.profit(quantity) >= 0);
+        };
+        ProfitMax.prototype.profitWord = function (quantity) {
+            var profit = this.profit(quantity);
+            console.log('profit: ', profit);
+            if (KG.isAlmostTo(profit, 0, 0.05, 100)) {
+                return '';
+            }
+            else {
+                return this.profitIsPositive(quantity) ? 'profit' : 'loss';
+            }
+        };
+        ProfitMax.prototype.profitAreaCoordinates = function (quantity) {
+            var pm = this;
+            quantity = quantity || pm.quantity;
+            var atc = pm.costFunction.atc(quantity), price = pm.price;
+            return [
+                { x: 0, y: atc },
+                { x: 0, y: price },
+                { x: quantity, y: price },
+                { x: quantity, y: atc }
+            ];
+        };
+        ProfitMax.prototype.quantityAtPrice = function (price) {
+            var pm = this;
+            var marginalCost = pm.costFunction.marginalCostFunction;
+            var q = marginalCost.xValue(price);
+            if (isNaN(q) || q < 0 || pm.demandFunction.totalRevenueAtQuantity(q) < pm.costFunction.vc(q)) {
+                q = 0;
+            }
+            return q;
+        };
+        return ProfitMax;
+    })(KG.Model);
+    EconGraphs.ProfitMax = ProfitMax;
+})(EconGraphs || (EconGraphs = {}));
+/// <reference path="../../../eg.ts"/>
+'use strict';
+var EconGraphs;
+(function (EconGraphs) {
+    var CompetitiveEquilibrium = (function (_super) {
+        __extends(CompetitiveEquilibrium, _super);
+        function CompetitiveEquilibrium(definition, modelPath) {
+            definition = _.defaults(definition, {
+                numConsumers: 100,
+                numFirms: 10
+            });
+            _super.call(this, definition, modelPath);
+            this.supply = new EconGraphs.ProfitMax(definition.supply);
+            this.demand = new EconGraphs.MarshallianDemand(definition.demand);
+            this.marketSupply = new KGMath.Functions.Base({});
+            this.marketDemand = new KGMath.Functions.Base({});
+        }
+        CompetitiveEquilibrium.prototype._update = function (scope) {
+            var ce = this;
+            ce.supply.update(scope);
+            ce.demand.update(scope);
+            ce.marketSupply.xValue = function (price) { return ce.supply.quantityAtPrice(price) * ce.numFirms; };
+            ce.marketDemand.xValue = function (price) { return ce.demand.quantityAtPrice(price) * ce.numConsumers; };
+            return ce;
+        };
+        return CompetitiveEquilibrium;
+    })(KG.Model);
+    EconGraphs.CompetitiveEquilibrium = CompetitiveEquilibrium;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
 var EconGraphs;
@@ -6678,6 +6831,7 @@ var EconGraphs;
 /// <reference path="micro/supply_and_demand/priceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/constantElasticityPriceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/linearPriceQuantityRelationship.ts"/>
+/// <reference path="micro/supply_and_demand/constantPriceQuantityRelationship.ts"/>
 /// <reference path="micro/supply_and_demand/individual_and_market_supply_and_demand.ts"/>
 /* Consumer Theory */
 /// <reference path="micro/consumer_theory/constraints/budgetConstraint.ts"/>
@@ -6708,7 +6862,9 @@ var EconGraphs;
 /// <reference path="micro/producer_theory/costs/quadraticMarginalCost.ts"/>
 /// <reference path="micro/producer_theory/production/productionTechnology.ts"/>
 /// <reference path="micro/producer_theory/production/cobbDouglasProduction.ts"/>
+/// <reference path="micro/producer_theory/profit/profitMax.ts"/>
 /* Market Structures */
+/// <reference path="micro/market_structures/competition/competitiveEquilibrium.ts"/>
 /// <reference path="micro/market_structures/monopoly/monopoly.ts"/>
 /// <reference path="micro/market_structures/oligopoly/cournotDuopoly.ts"/>
 /* Macro */

@@ -315,6 +315,30 @@ module KGMath.Functions {
             return {x: x, y: y};
         };
 
+        quadraticIntersection = function(otherQuadratic:Quadratic, delta?:number) {
+
+            var thisLine = this;
+
+            delta = delta || 0;
+
+            var a = thisLine.coefficients.a,
+                b = thisLine.coefficients.b,
+                c = thisLine.coefficients.c,
+                oa = otherQuadratic.coefficients.a,
+                ob = otherQuadratic.coefficients.b,
+                oc = otherQuadratic.coefficients.c;
+
+            var qa = oa,
+                qb = ob + a/b,
+                qc = oc + c/b;
+
+            var x = (-qb + Math.sqrt(qb*qb-4*qa*qc))/(2*qa),
+                y = thisLine.yValue(x);
+
+            return {x:x,y:y};
+
+        }
+
     }
 
     // Horizontal line definition: define the line by a single y coordinate.
