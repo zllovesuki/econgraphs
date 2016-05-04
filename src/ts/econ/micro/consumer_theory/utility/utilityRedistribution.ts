@@ -62,64 +62,7 @@ module EconGraphs {
 
             this.utility = new EconGraphs[definition.utilityType](definition.utilityDef, this.modelPath + '.utility');
 
-            this.lowUtilityChangeArrow = new KG.Arrow({
-                name: 'lowChangeSegment',
-                className: 'diff2',
-                begin: {
-                    x: 5,
-                    y: this.modelProperty('uLow')
-                },
-                end: {
-                    x: 5,
-                    y: this.modelProperty('uLowNew')
-                }
-            });
-            this.highUtilityChangeArrow = new KG.Arrow({
-                name: 'highChangeSegment',
-                className: 'diff1',
-                begin: {
-                    x: 10,
-                    y: this.modelProperty('uHigh')
-                },
-                end: {
-                    x: 10,
-                    y: this.modelProperty('uHighNew')
-                }
-            });
-            this.lowConsumptionChangeArrow = new KG.Arrow({
-                name: 'lowConsumptionChangeSegment',
-                className: 'diff2',
-                show: '(' + this.modelProperty('transfer') + ' > 0)',
-                begin: {
-                    x: this.modelProperty('cLow'),
-                    y: this.modelProperty('utility.utilityAtQuantity(100)')+'*0.05'
-                },
-                end: {
-                    x: this.modelProperty('cLowNew'),
-                    y: this.modelProperty('utility.utilityAtQuantity(100)')+'*0.05'
-                },
-                label: {
-                    text: 'T',
-                    valign: 'top'
-                }
-            });
-            this.highConsumptionChangeArrow = new KG.Arrow({
-                name: 'highConsumptionChangeSegment',
-                className: 'diff1',
-                show: '(' + this.modelProperty('transfer') + ' > 0)',
-                begin: {
-                    x: this.modelProperty('cHigh'),
-                    y: this.modelProperty('utility.utilityAtQuantity(100)')+'*0.1'
-                },
-                end: {
-                    x: this.modelProperty('cHighNew'),
-                    y: this.modelProperty('utility.utilityAtQuantity(100)')+'*0.1'
-                },
-                label: {
-                    text: 'T',
-                    valign: 'top'
-                }
-            });
+
 
         }
 

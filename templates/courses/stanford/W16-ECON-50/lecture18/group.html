@@ -1,0 +1,52 @@
+{% extends 'layouts/econ50-layout.html' %}
+
+{% block body %}
+
+    <div ng-controller="KineticGraphCtrl" class="container">
+
+        <div class="subtitle">March 8</div>
+        <h2>Group Work</h2>
+        <hr/>
+        <ol>
+            <li style="padding-top:20px">
+                <p><b>Monopoly Price Controls</b></p>
+                <p>A monopoly has a cost structure <span class="math">TC(Q) = 22.5 + \frac{1}{2}Q^2</span>. (That total cost includes the opportunity cost of leaving the industry.)</p>
+                <p>The monopoly  faces the inverse demand curve <span class="math">P(Q) = 12 - Q</span>.</p>
+                <p>We found last time that this monopoly (which has <span class="math">MC(Q) = Q</span>) would charge $8 and produce 4 units.</p>
+                <p>Let's think of "total surplus" in this market being the monopoly's producer surplus plus consumer surplus.</p>
+                <p>Now suppose a regulator, seeking to increase surplus in the market, imposes a price ceiling <span class="math">\overline P</span>.</p>
+                <ol style="list-style: lower-alpha">
+                    <li>Find consumer surplus and producer surplus in the absence of any price controls.</li>
+                    <li>Conditional on the monopoly continuing to produce, what level of <span class="math">\overline P</span> would maximize total surplus? Sketch a graph showing the demand curve, MC curve, CS, and PS.</li>
+                    <li>Add to your graph a curve showing the monopoly's average cost. Would the monopolist choose to stay in business if it were regulated to charge no more than that price?</li>
+                    <li>Write the monopolist’s marginal revenue function as a function of the quantity it produces and the price ceiling; i.e., <span class="math">MR(Q | \overline P)</span>.</li>
+                    <li>Find the monopolist’s optimal choice <span class="math">Q^*(\overline P)</span> and its profit <span class="math">\pi(\overline P)</span></li>
+                    <li>Given the monopolist's optimal choice, write an expression for the consumer surplus resulting from the price ceiling, <span class="math">CS(\overline P)</span>.</li>
+                    <li>What is the "optimal" price ceiling from society's point of view, given how the monopolist will choose to respond to a price ceiling (potentially leaving the market)?</li>
+                </ol>
+            </li>
+            <li style="padding-top:20px">
+                <p><b>Equilibrium with Taxes</b></p>
+                <p>Suppose supply is given by <span class="math">Q^S(P_F) = P_F^2</span> and demand is given by <span class="math">Q^D(P_C) = \frac{1000}{P_C}</span>.</p>
+                <ol style="list-style: lower-alpha">
+                    <li>What is the price elasticity of demand? The price elasticity of supply?</li>
+                    <li>What is the equilibrium price and quantity in this market if there are no taxes or subsidies (so <span class="math">P_F = P_C = P</span>)?</li>
+                    <li>Suppose the government imposes a 16% tax on this good, so <span class="math">P_C = 1.16P_F</span>. Find the new equilibrium quantity, as well as <span class="math">P_C</span> and <span class="math">P_F</span>. (You can round your prices to the nearest nickel, and your quantity to the nearest integer, if you like.) Draw a graph showing the new equilibrium, with CS, PS, government revenue, and deadweight loss.</li>
+                    <li>How do the prices paid by consumers and firms in the presence of the tax relate to the elasticity of demand and supply?</li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.02.js') }}"></script>
+
+{% endblock %}
+
+
+

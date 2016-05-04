@@ -13,74 +13,20 @@ module EconGraphs {
         marginalCostFunctionDef?: any;
         fixedCostDragParam?: string;
         quantityDraggable?: boolean;
-        labels?: {
-            fc: string;
-            vc: string;
-            mc: string;
-            atc: string;
-            tc: string;
-            avc: string;
-            mcSlope: string;
-            atcSlope: string;
-            avcSlope: string;
-        }
-        show?: {
-            tc: any;
-            fc: any;
-            vc: any;
-            mc: any;
-            atc: any;
-            avc: any;
-            mcSlope: any;
-            atcSlope: any;
-            avcSlope: any;
-        }
     }
 
     export interface IProductionCost extends KG.IModel
     {
         fixedCost: number;
         costFunction: KGMath.Functions.Base;
-        totalCostCurve: KG.ViewObject;
         marginalCostFunction: KGMath.Functions.Base;
-        marginalCostCurve: KG.ViewObject;
         averageCostFunction: KGMath.Functions.Base;
-        averageCostCurve: KG.ViewObject;
         variableCostFunction: KGMath.Functions.Base;
-        variableCostCurve: KG.ViewObject;
         averageVariableCostFunction: KGMath.Functions.Base;
-        averageVariableCostCurve: KG.ViewObject;
-        fixedCostPoint: KG.Point;
-        fixedCostLine: KG.HorizontalLine;
 
         tc: (q:number) => number;
         atc: (q:number) => number;
         mc: (q:number) => number;
-
-        quantityDraggable: boolean;
-
-        labels: {
-            vc: string;
-            fc: string;
-            mc: string;
-            atc: string;
-            tc: string;
-            avc: string;
-            mcSlope: string;
-            atcSlope: string;
-            avcSlope: string;
-        }
-        show: {
-            tc: boolean;
-            vc: boolean;
-            fc: boolean;
-            mc: boolean;
-            atc: boolean;
-            avc: boolean;
-            mcSlope: boolean;
-            atcSlope: boolean;
-            avcSlope: boolean;
-        }
     }
 
     export class ProductionCost extends KG.Model implements IProductionCost
@@ -88,38 +34,13 @@ module EconGraphs {
         public costFunction;
         public totalCostCurve;
         public marginalCostFunction;
-        public marginalCostCurve;
         public averageCostFunction;
-        public averageCostCurve;
         public variableCostFunction;
-        public variableCostCurve;
         public averageVariableCostFunction;
-        public averageVariableCostCurve;
         public fixedCost;
-        public fixedCostPoint;
         public fixedCostLine;
-        public quantityDraggable;
-
-        public labels;
-        public show;
 
         constructor(definition:ProductionCostDefinition, modelPath?: string) {
-
-            definition.labels = _.defaults(definition.labels || {},{
-                tc: 'TC',
-                vc: 'VC',
-                fc: 'FC',
-                mc: 'MC',
-                atc: 'ATC',
-                avc: 'AVC',
-                mcSlope: 'slope = MC',
-                atcSlope: 'slope = ATC',
-                avcSlope: 'slope = AVC'
-            });
-
-            definition = _.defaults(definition,{
-                quantityDraggable: true,
-            });
 
             super(definition,modelPath);
 
@@ -146,7 +67,6 @@ module EconGraphs {
             p.costFunction.update(scope);
             p.fixedCost = p.tc(0);
             p.marginalCostFunction.update(scope);
-            p.fixedCostPoint.update(scope);
             return p;
         }
 
@@ -155,22 +75,20 @@ module EconGraphs {
         }
 
         vc(q) {
-            return this.variableCostFunction.yValue(q);
+            return this.tc(q) - this.fixedCost;
         }
 
         atc(q) {
-            return this.averageCostFunction.yValue(q);
+            return this.tc(q)/q;
         }
 
         avc(q) {
-            return this.averageVariableCostFunction.yValue(q);
+            return this.vc(q)/q;
         }
 
         mc(q) {
             return this.marginalCostFunction.yValue(q);
         }
-
-
 
     }
 

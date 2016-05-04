@@ -88,12 +88,6 @@ module EconGraphs {
 
         }
 
-        expenditure(utilityConstraint:UtilityConstraint) {
-            var u = this,
-                s= u.r/(u.r - 1);
-            //TODO this doesn't seem finished!
-        }
-
         lowestCostBundle(utilityConstraint:UtilityConstraint) {
             var u = this,
                 s = 1/(1-u.r);

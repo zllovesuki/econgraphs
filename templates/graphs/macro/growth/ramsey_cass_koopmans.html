@@ -1,4 +1,4 @@
-{% extends 'layouts/eg-layout.html' %}
+{% extends 'layouts/econgraphs.html' %}
 
 {% block body %}
     {% raw %}
@@ -97,6 +97,10 @@
 
         </div>
     </div>
+{% endraw %}
+    {% endblock %}
+
+    {% block model %}
     <script>
         var scopeDefinition = {
             params: {
@@ -158,7 +162,60 @@
                         dimensions: {width: 700, height: 700},
                         xAxisDef: {min: 0, max: 'params.kMax', title: "\\text{Capital }(k)"},
                         yAxisDef: {min: 0, max: 'params.cMax', title: "\\text{Consumption }(c)"},
-                        objects: ['model.steadyConsumptionView', 'model.steadyCapitalView', 'model.initialPoint', 'model.growthPathView', 'model.balancedGrowthPathView']
+                        objects: [{
+                            type: 'KG.VerticalLine',
+                            definition: {
+                                name: 'steadyConsumption',
+                                className: 'consumption',
+                                x: 'model.steadyStateK',
+                                label: {
+                                    text: '\\dot c = 0'
+                                }
+                            }
+                        }, {
+                            type: 'KG.FunctionPlot',
+                            definition: {
+                                name: 'steadyCapital',
+                                fn: 'model.steadyCapital',
+                                className: 'capital',
+                                numSamplePoints: 201,
+                                label: {
+                                    text: '\\dot k = 0'
+                                }
+                            }
+                        }, {
+                            type: 'KG.Point',
+                            definition: {
+                                name: 'initialPoint',
+                                coordinates: {
+                                    x: 'params.initialK',
+                                    y: 'params.initialC'
+                                },
+                                className: 'growth',
+                                interaction: {
+                                    draggable: true
+                                },
+                                label: {
+                                    text: 'O'
+                                }
+                            }
+                        }, {
+                            type: 'KG.Curve',
+                            definition: {
+                                name: 'growthPath',
+                                data: 'model.growthPath',
+                                className: 'growth',
+                                arrows: 'END'
+                            }
+                        }, {
+                            type: 'KG.Curve',
+                            definition: {
+                                name: 'balancedGrowthPath',
+                                data: 'model.balancedGrowthPath',
+                                className: 'growth dashed',
+                                interpolation: 'basis'
+                            }
+                        }]
                     }
                 },
                 {
@@ -218,6 +275,4 @@
             ]
         }
     </script>
-
-        {% endraw %}
 {% endblock %}

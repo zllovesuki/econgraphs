@@ -172,4 +172,22 @@ module EconGraphs {
         }
     }
 
+    export interface LinearDemandDefinition extends LinearPriceQuantityRelationshipDefinition
+    {
+
+    }
+
+    export class LinearDemand extends LinearPriceQuantityRelationship
+    {
+
+        public marginalRevenue:KGMath.Functions.Linear;
+        public totalRevenue:KGMath.Functions.Quadratic;
+
+        constructor(definition:LinearPriceQuantityRelationshipDefinition, modelPath?:string) {
+            super(definition,modelPath);
+            this.marginalRevenue = this.marginalDollarAmount;
+            this.totalRevenue = this.totalDollarAmount;
+        }
+    }
+
 }

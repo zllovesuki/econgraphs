@@ -10,8 +10,6 @@ module EconGraphs {
         q2?: any;
         c1: any;
         c2: any;
-        snapToOptimal1: boolean;
-        snapToOptimal2: boolean;
         showProfit: boolean;
     }
 
@@ -22,8 +20,6 @@ module EconGraphs {
         residualDemand2Intercept: number;
         firm1: Monopoly;
         firm2: Monopoly;
-        snapToOptimal1: boolean;
-        snapToOptimal2: boolean;
         marketDemand: LinearDemand;
         price: number;
     }
@@ -55,23 +51,17 @@ module EconGraphs {
                 def: {
                     point1: {
                         x: 0,
-                        y: cournot.modelProperty('marketDemandPriceIntercept')
+                        y: definition.marketDemandPriceIntercept
                     },
                     point2: {
-                        x: cournot.modelProperty('marketDemandQuantityIntercept'),
+                        x: definition.marketDemandQuantityIntercept,
                         y: 0
                     }
-                },
-                curveLabel: 'P(q_1 + q_2)',
-                quantityLabel: 'q_1 + q_2',
-                priceInterceptDrag: 'params.marketDemandPriceIntercept',
-                quantityInterceptDrag: 'params.marketDemandQuantityIntercept'
+                }
             },this.modelProperty('marketDemand'));
 
             cournot.firm1 = new Monopoly({
                 quantity: definition.q1,
-                snapToOptimalQuantity: definition.snapToOptimal1,
-                showProfit: 'params.showProfit',
                 cost: {
                     costType: 'ConstantMarginalCost',
                     costDef: {
@@ -85,9 +75,7 @@ module EconGraphs {
                     demandDef: {
                         elasticityMethod: 'point',
                         quantity: definition.q1,
-                        quantityDrag: definition.q1,
                         type: 'Linear',
-                        quantityLabel: '1',
                         def: {
                             slope: cournot.modelProperty('marketDemand.demandFunction.slope'),
                             intercept: cournot.modelProperty('residualDemand1Intercept')
@@ -98,8 +86,6 @@ module EconGraphs {
 
             cournot.firm2 = new Monopoly({
                 quantity: definition.q2,
-                snapToOptimalQuantity: definition.snapToOptimal2,
-                showProfit: 'params.showProfit',
                 cost: {
                     costType: 'ConstantMarginalCost',
                     costDef: {
@@ -113,7 +99,6 @@ module EconGraphs {
                     demandDef: {
                         elasticityMethod: 'point',
                         quantity: cournot.modelProperty('firm2.quantity'),
-                        quantityDrag: definition.q2,
                         type: 'Linear',
                         def: {
                             slope: cournot.modelProperty('marketDemand.demandFunction.slope'),

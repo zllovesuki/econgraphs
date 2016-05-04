@@ -124,6 +124,8 @@ module EconGraphs {
             return this.totalRevenueAtQuantity(quantity);
         }
 
+
+
     }
 
 }
