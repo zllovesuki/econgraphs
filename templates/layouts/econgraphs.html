@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="KineticGraphs">
+<html>
 <head>
     <title>EconGraphs</title>
     <meta name="viewport" content="width=device-width,initial-scale=0.5" />
@@ -7,7 +7,7 @@
     <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/econ-graphs-v2.css') }}" rel="stylesheet"/>
 </head>
-<body>
+<body ng-app="KineticGraphs">
 {% block navbar %}
 {% if args['course'] == 'econ50' %}
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -32,6 +32,9 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
+    <div style="height:50px"> </div>
+    {% elif args['embed'] == 'true' %}
+    <!-- embedded in an iframe -->
     {% else %}
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
@@ -54,8 +57,9 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
+    <div style="height:50px"> </div>
 {% endif %}
-<div style="height:50px"> </div>
+
 {% endblock %}
 <div class="ng-cloak">
 {% block body %}
