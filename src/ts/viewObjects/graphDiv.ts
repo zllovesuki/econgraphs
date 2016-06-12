@@ -105,6 +105,8 @@ module KG
                 if(!view.xAxis.domain.contains(divObj.coordinates.x)) {
                     divObj.className = 'invisible';
                 }
+                console.log(view.dimensions.height);
+                console.log(y);
             } else {
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
             }

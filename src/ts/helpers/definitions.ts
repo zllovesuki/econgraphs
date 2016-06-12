@@ -39,19 +39,15 @@ module KG
             switch(fn) {
                 case "+":
                     return def1 + def2;
-                    break;
                 case "-":
                     return def1 - def2;
-                    break;
                 case "/":
                     return def1 / def2;
-                    break;
                 case "*":
                     return def1 * def2;
                 case "^":
                     return Math.pow(def1,def2);
             }
-
         } else if(fn === '^') {
             return "Math.pow("+def1+","+def2+")"
         } else {

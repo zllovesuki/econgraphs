@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>EconGraphs</title>
     <meta name="viewport" content="width=device-width,initial-scale=0.5" />
@@ -7,7 +7,7 @@
     <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/econ-graphs-v2.css') }}" rel="stylesheet"/>
 </head>
-<body ng-app="KineticGraphs">
+<body ng-app="KineticGraphs" ng-controller="KineticGraphCtrl">
 {% block navbar %}
 {% if args['course'] == 'econ50' %}
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -36,6 +36,21 @@
     {% elif args['embed'] == 'true' %}
     <!-- embedded in an iframe -->
     {% else %}
+    <div id="embedModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Embed this graph</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Copy the following URL to your clipboard:</p>
+                    <textarea style="width:100%">http://econgraphs.org{{ request.path }}?embed=true{% for arg in request.args %}&{{ arg }}={{ request.args[arg] }}{% endfor %}
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -52,6 +67,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                <li><a data-toggle="modal" data-target="#embedModal" style="cursor:pointer">Embed</a></li>
                 <li><a href="{{ url_for('about') }}">About</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -64,6 +80,7 @@
 <div class="ng-cloak">
 {% block body %}
 {% endblock %}
+<div class="watermark">Copyright (c) Christopher Makler / <a href="http://econgraphs.org">econgraphs.org</a></div>
 </div>
 {% block model %}
     <script>
@@ -90,6 +107,12 @@
 {% block js %}
     <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
 {% endblock %}
+
+<script>
+  function copyToClipboard(text) {
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+  }
+</script>
 
 </body>
 </html>

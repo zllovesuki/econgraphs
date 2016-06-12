@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html ng-app="KineticGraphs">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>One Risky Asset, One Risk-Free Asset</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/katex.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/finance-graphs-v2.css') }}" rel="stylesheet"/>
+</head>
+<body>
+{% raw %}
+<div ng-controller="KineticGraphCtrl">
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>One Risky Asset, One Risk-Free Asset</h2>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-12" id="graph"></div>
+            </div>
+        </div>
+        <div class="col-sm-4 well">
+            <p class="math">\text{Fraction invested in risky asset: }{{ params.riskyWeight | percentage:0 }}</p>
+            <div id="weightSlider"></div>
+            <hr/>
+            <p class="math">\text{Maximum leverage: }{{ params.maxLeverage/100 | percentage:0 }}</p>
+            <div id="leverageSlider"></div>
+            <hr/>
+            <p class="math">\text{Portfolio }P:</p>
+            <equation>\mu = {{ params.riskyWeight | number:2 }} \times {{ params.mean | number:2 }} + (1 - {{ params.riskyWeight | number:2 }}) \times {{ params.riskFreeReturn }} || = {{ (1-params.riskyWeight)*params.riskFreeReturn + params.riskyWeight*params.mean | number:2 }}</equation>
+
+            <equation>\sigma = {{ params.riskyWeight | number:2 }} \times {{ params.stDev | number:2 }} + (1 - {{ params.riskyWeight | number:2 }}) \times 0 || = {{ params.riskyWeight*params.stDev | number:2 }}</equation>
+        </div>
+    </div>
+
+
+</div>
+<script>
+
+    var riskyAsset = {
+        type: 'KG.Point',
+        definition: {
+                name: 'riskyAssetPoint',
+                coordinates: {x: 'params.stDev', y: 'params.mean'},
+                className: 'asset',
+                interaction: {
+                    draggable: true,
+                    highlight: 'asset'
+                },
+                label: {
+                    text: 'A'
+                }
+            }
+    }, portfolio = {
+        type: 'KG.Point',
+        definition: {
+            name: 'portfolioPoint',
+            className: 'asset',
+            coordinates: {x: 'params.riskyWeight*params.stDev', y: '(1-params.riskyWeight)*params.riskFreeReturn + params.riskyWeight*params.mean'},
+            interaction: {
+                highlight: 'portfolio'
+            },
+            symbol: 'cross',
+                size: 20,
+                interaction: {
+                    highlight: 'portfolio'
+                },
+                label: {
+                    text: 'P',
+                    align: 'right',
+                    valign: 'bottom'
+                }
+
+        }
+    }, riskFreeAsset = {
+        type: 'KG.Point',
+        definition: {
+                name: 'riskFreeAsset',
+                coordinates: {x: 0, y:'params.riskFreeReturn'},
+                className: 'riskfree',
+                interaction: {
+                    yDrag: true,
+                    highlight: 'riskFreeReturn'
+                },
+                droplines: {
+                    horizontal: ['RF =','params.riskFreeReturn | number: 3']
+                }
+            }
+    }, potentialPortfolios = {
+        type: 'KG.Segment',
+        definition: {
+                name: 'potentialPortfolios',
+                className: 'green',
+                    a: {x: 0, y:'params.riskFreeReturn'},
+                    b: {x: 'params.stDev*(100 + params.maxLeverage)/100', y:'params.riskFreeReturn + (params.mean-params.riskFreeReturn)*(100 + params.maxLeverage)/100'}
+
+            }
+    },
+            riskReturnLine = {
+        type: 'KG.Line',
+        definition: {
+                name: 'twoPointSegment',
+                className: 'green dotted',
+                arrows: 'OPEN',
+                lineDef: {
+                    point1: {x: 0, y:'params.riskFreeReturn'},
+                    point2: {x: 'params.stDev', y:'params.mean'}
+                }
+            }
+    };
+
+    var scopeDefinition = {
+        params: {
+            mean: 0.2,
+            stDev: 0.3,
+            riskyWeight: 0.5,
+            maxLeverage: 0,
+            riskFreeReturn: 0.05,
+            xMax: 1,
+            yMax: 0.5,
+            maxRF: 0.2
+        },
+        graphParams: ['maxLeverage'],
+        restrictions: [],
+        views: [
+            {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'graph',
+                    dimensions: {width: 700, height: 700},
+                    xAxisDef: {min: 0, max: 'params.xMax', title: "\\text{Standard Deviation }(\\sigma)"},
+                    yAxisDef: {min: 0, max: 'params.yMax', title: "\\text{Mean }(\\mu)"},
+                    objects: [riskReturnLine, riskyAsset, riskFreeAsset, portfolio, potentialPortfolios]
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'leverageSlider',
+                    param: 'maxLeverage',
+                    axisDef: {min: 0, max: 100, tickValues: [0, 50, 100]}
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'weightSlider',
+                    param: 'riskyWeight',
+                    precision: '0.01',
+                    axisDef: {min: 0, max: '1 + params.maxLeverage/100'}
+                }
+            }
+        ]
+    }
+
+{% endraw %}
+
+{% for key in args %}
+
+            if(scopeDefinition.params.hasOwnProperty('{{ key }}')) {
+                var val = '{{ args[key] }}';
+                var typedVal = isNaN(+val) ? val : +val;
+                scopeDefinition.params['{{ key }}'] = typedVal;
+            }
+
+        {% endfor %}
+    </script>
+<script src="{{ url_for('static', filename='js/lib/libraries.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kg/kg-v0.03.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lib/numeric.js') }}"></script>
+
+</body>
+</html>

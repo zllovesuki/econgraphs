@@ -8,19 +8,23 @@ module KGMath.Simulations {
     export interface IBase extends KG.IModel {
         numDraws: number;
         distribution: KGMath.Distributions.Base;
-        newDraw: (numDraws?:number, returnSum?:boolean) => number[];
-        subDraw: (numSubDraws?:number, returnSum?:boolean) => number[];
-        draws: number[];
-        sumDraws: number[];
+        drawOne: () => any;
+        drawShocks: (numDraws:number) => any[];
+        transformShock: (shock:any) => any;
+        newDraw: (newShocks?: boolean, numDraws?:number, returnSum?:boolean) => any[];
+        subDraw: (numSubDraws?:number, returnSum?:boolean) => any[];
+        shocks: any[];
+        draws: any[];
+        sumDraws: any[];
     }
 
     export class Base extends KG.Model {
 
         public numDraws;
         public distribution;
+        public shocks;
         public draws;
         public sumDraws;
-
 
         constructor(definition,modelPath?) {
 
@@ -31,13 +35,34 @@ module KGMath.Simulations {
 
             super(definition,modelPath);
 
-            this.newDraw(definition.numDraws);
-
         }
 
-        newDraw(numDraws?: number, returnSum?:boolean) {
+        _update(scope) {
+            var sim = this;
+            sim.newDraw(false, sim.numDraws, false);
+            return sim;
+        }
+        
+        drawOne() {
+            return this.distribution.randomDraw();
+        }
+
+        drawShocks(numDraws) {
+            var sim = this, shocks = [];
+            for(var i=0;i<numDraws;i++) {
+                shocks.push(sim.drawOne());
+            }
+            return shocks;
+        }
+
+        transformShock(shock) {
+            return shock;
+        }
+
+        newDraw(newShocks?: boolean, numDraws?: number, returnSum?:boolean) {
             var sim = this;
 
+            newShocks = !!newShocks;
             returnSum = !!returnSum;
 
             // establish the number of draws
@@ -45,20 +70,34 @@ module KGMath.Simulations {
                 sim.numDraws = numDraws;
             }
 
-            // initialize draws
-            var sum = 0;
-            sim.draws = [];
+            if(newShocks) {
+                sim.shocks = sim.drawShocks(sim.numDraws);
+            }
+
+            sim.draws = sim.shocks.map(function(s) {return sim.transformShock(s)});
+
             sim.sumDraws = [];
 
-            var currentDraw;
+            var drawIsNumber = (typeof sim.draws[0] == 'number');
+
+            // assume each draw is either a number or an array of numbers, for now
+            var sum = drawIsNumber ? 0 : sim.draws[0].map(function() {return 0});
+
             for(var i=0;i<sim.numDraws;i++) {
-                currentDraw = sim.distribution.draw();
-                sim.draws.push(currentDraw);
-                sum += currentDraw;
+                if(drawIsNumber) {
+                    // draw is a number
+                    sum += sim.draws[i];
+                } else {
+                    // draw is an array
+                    for(var j=0; j<sim.draws[i].length; j++) {
+                        sum[j] += sim.draws[i][j];
+                    }
+                }
                 sim.sumDraws.push(sum);
             }
 
             return returnSum ? sim.sumDraws : sim.draws;
+
         }
 
         subDraw(numDraws: number, returnSum?: boolean) {

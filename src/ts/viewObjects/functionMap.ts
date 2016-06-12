@@ -40,14 +40,12 @@ module KG {
             var fmap = this;
 
             fmap.levels.forEach(function(level,index) {
-                var curve = new KG.FunctionPlot(
+                view.addObject(new KG.FunctionPlot(
                     {
                         name: fmap.name + '_' + index,
                         className: fmap.className,
                         fn: fmap.fn.setLevel(level)
-                    });
-                var updatedCurve = curve;
-                view.addObject(updatedCurve);
+                    }));
             });
 
             return view;

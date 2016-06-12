@@ -1,0 +1,307 @@
+{% extends 'layouts/econgraphs.html' %}
+
+{% block body %}
+
+    {% raw %}
+    <div ng-controller="KineticGraphCtrl">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>Correlation and Diversification</h1>
+            </div>
+            <div class="col-sm-6">
+                <p>Each blue dot in the left two graphs represents the returns to two assets for one state of the world.</p>
+                <p>The green dots in the center graph represents the return to a weighted portfolio of those assets in each state of the world.</p>
+            </div>
+        </div>
+
+        <hr/>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-xs-6 math" style="text-align:right;font-size:12pt;padding-top:10px">\text{Correlation }(\rho): {{ params.rho > 0 ? '+' : '' }}{{ params.rho | number:2 }}</div>
+                    <div class="col-xs-6" id="rhoSlider"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!--<div class="row">
+                    <div class="col-xs-6 math" style="text-align:right;font-size:12pt;padding-top:10px">\text{Max Leverage }:</div>
+                    <div class="col-xs-6" id="maxLeverageSlider"></div>
+                </div>-->
+                <p style="text-align:center">Drag the portfolio left and right to change weights:</p>
+            </div>
+            <div class="col-md-4">
+                <p style="text-align:center">Drag the means and standard deviations of the assets:</p>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-4" id="graph">
+
+            </div>
+
+            <div class="col-sm-4" id="portfolio">
+
+            </div>
+            <div class="col-sm-4" id="meanvariance">
+
+            </div>
+        </div>
+    </div>
+
+    {% endraw %}
+{% endblock %}
+
+{% block model %}
+
+    <script>
+
+        var scopeDefinition = {
+            params: {
+                mean1: 0.1,
+                stDev1: 0.05,
+                mean2: 0.3,
+                stDev2: 0.1,
+                rho: 0.5,
+                weight: 0.5,
+                maxLeverage: 0
+            },
+            graphParams: [],
+            restrictions: [/*{
+                expression: 'params.weight',
+                restrictionType: 'range',
+                min: '-params.maxLeverage',
+                max: '1+params.maxLeverage',
+                precision: 0.01
+            }*/],
+            model: {
+                type: 'KGMath.Simulations.TwoCorrelated',
+                definition: {
+                    mean1: 'params.mean1',
+                    stDev1: 'params.stDev1',
+                    mean2: 'params.mean2',
+                    stDev2: 'params.stDev2',
+                    rho: 'params.rho',
+                    numDraws: 100,
+                    maxLeverage: 'params.maxLeverage'
+                }
+            },
+            views: [
+                {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'graph',
+                    dimensions: {width: 400, height: 400},
+                    xAxisDef: {min: -0.1, max: 0.5, title: "\\text{Asset 2 return}"},
+                    yAxisDef: {min: -0.1, max: 0.5, title: "\\text{Asset 1 return}"},
+                    objects: [
+
+                    ]
+                }
+            },
+                {
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'portfolio',
+                    dimensions: {width: 400, height: 400},
+                    xAxisDef: {min: '0-params.maxLeverage', max: '1+params.maxLeverage', title: "\\text{Percent of Portfolio in Asset 2}"},
+                    yAxisDef: {min: -0.1, max: 0.5, title: "\\text{Return}"},
+                    objects: [
+{
+        type: 'KG.VerticalDropline',
+        definition: {
+            name: 'weightControl',
+            className: 'green',
+            coordinates: {
+                x: 'params.weight',
+                y: 1
+            },
+            axisLabel: ["1-params.weight | percentage:0","\\text{ Asset 1, }","params.weight | percentage:0","\\text{Asset 2}"],
+            interaction: {
+              draggable: 'true'
+            }
+        }
+    }
+                    ]
+                }
+            },{
+                type: 'KG.Graph',
+                definition: {
+                    element_id: 'meanvariance',
+                    dimensions: {width: 400, height: 400},
+                    xAxisDef: {min: 0, max: 0.2, title: "\\text{Standard deviation }(\\sigma)"},
+                    yAxisDef: {min: -0.1, max: 0.5, title: "\\text{Mean return }(\\mu)"},
+                    objects: [
+{
+        type: 'KG.Point',
+        definition: {
+            name: 'asset1',
+            className: 'demand',
+            coordinates: {
+                x: 'params.stDev1',
+                y: 'params.mean1'
+            },
+            label: {
+                text: 'A_1'
+            },
+            interaction: {
+              draggable: 'true'
+            }
+        }
+    },{
+        type: 'KG.Point',
+        definition: {
+            name: 'asset2',
+            className: 'demand',
+            coordinates: {
+                x: 'params.stDev2',
+                y: 'params.mean2'
+            },
+            label: {
+                text: 'A_2'
+            },
+            interaction: {
+              draggable: 'true'
+            }
+        }
+    },
+            {
+                type: 'KG.Point',
+                definition: {
+                    name: 'portfolio',
+                    className: 'growth',
+                    coordinates: {
+                        x: 'model.weightedStDev(params.weight)',
+                        y: 'model.weightedMean(params.weight)'
+                    },
+                    label: {
+                        text: 'P'
+                    }
+                }
+            },
+            {
+                type: 'KG.Curve',
+                definition: {
+                    name: 'efficientFrontier',
+                    className: 'dataPathFamily',
+                    data: 'model.weightFrontier(params.maxLeverage)'
+                }
+            }
+                    ]
+                }
+            },
+            {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'rhoSlider',
+                    param: 'rho',
+                    shape: 'bar',
+                    axisDef: {min: -1, max: 1, tickValues: [-1, 0, 1]}
+                }
+            },
+                    {
+                type: 'KG.Slider',
+                definition: {
+                    element_id: 'maxLeverageSlider',
+                    param: 'maxLeverage',
+                    axisDef: {min: 0, max: 1}
+                }
+            }
+            ]
+        };
+
+    for(var i = 0; i < 100; i++) {
+
+        var draw1 = "model.draws["+i+"][0]",
+                draw2 = "model.draws["+i+"][1]";
+
+        var a1a2 = {
+            type: 'KG.Point',
+            definition: {
+                name: 'a1a2_' + i,
+                className: 'demand',
+                size: 10,
+                coordinates: {x: draw2, y: draw1},
+                interaction: {
+                    highlight: 'draw_' + i
+                }
+            }
+        };
+
+        var a1 = {
+            type: 'KG.Point',
+            definition: {
+                name: 'a1_' + i,
+                className: 'demand',
+                size: 10,
+                coordinates: {x: 0, y: draw1},
+                interaction: {
+                    highlight: 'draw_' + i
+                }
+            }
+        };
+
+        var a2 = {
+            type: 'KG.Point',
+            definition: {
+                name: 'a2_' + i,
+                className: 'demand',
+                size: 10,
+                coordinates: {x: 1, y: draw2},
+                interaction: {
+                    highlight: 'draw_' + i
+                }
+            }
+        };
+
+        var portfolioSegment = {
+            type: 'KG.Line',
+            definition: {
+                name: 's_'+i,
+                className: 'dataPathFamily',
+                lineDef: {
+                    point1: {x: 0, y: draw1},
+                    point2: {x: 1, y: draw2}
+                },
+                interaction: {
+                    highlight: 'draw_' + i
+                },
+                    xDomainDef: {min: '-params.maxLeverage',max: '1+params.maxLeverage'}
+            }
+        };
+
+        var p = {
+            type: 'KG.Point',
+            definition: {
+                name: 'p_' + i,
+                className: 'green',
+                size: 10,
+                coordinates: {x: 'params.weight', y: 'params.weight*' + draw2 + '+ (1 - params.weight)*' + draw1},
+                interaction: {
+                    highlight: 'draw_' + i
+                }
+            }
+        };
+
+        scopeDefinition.views[0].definition.objects.push(a1a2);
+        scopeDefinition.views[1].definition.objects.push(portfolioSegment);
+        scopeDefinition.views[1].definition.objects.push(a1);
+        scopeDefinition.views[1].definition.objects.push(a2);
+        scopeDefinition.views[1].definition.objects.push(p);
+
+    }
+
+
+
+
+
+
+    </script>
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="{{ url_for('static', filename='js/kg/kg-v0.04.js') }}"></script>
+
+{% endblock %}

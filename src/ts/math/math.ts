@@ -17,6 +17,7 @@
 /// <reference path="distributions/normal"/>
 
 /// <reference path="simulations/base"/>
+/// <reference path="simulations/twoCorrelated"/>
 
 
 module KGMath {

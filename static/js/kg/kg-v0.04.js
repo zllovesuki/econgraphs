@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 /// <reference path="kg.ts"/>
 'use strict';
 var KG;
@@ -303,13 +308,10 @@ var KG;
             switch (fn) {
                 case "+":
                     return def1 + def2;
-                    break;
                 case "-":
                     return def1 - def2;
-                    break;
                 case "/":
                     return def1 / def2;
-                    break;
                 case "*":
                     return def1 * def2;
                 case "^":
@@ -508,16 +510,11 @@ var KG;
             return this; // overridden by child classes
         };
         return Model;
-    })();
+    }());
     KG.Model = Model;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
 'use strict';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var KG;
 (function (KG) {
     var Domain = (function (_super) {
@@ -572,7 +569,7 @@ var KG;
             }
         };
         return Domain;
-    })(KG.Model);
+    }(KG.Model));
     KG.Domain = Domain;
     function samplePointsForDomain(def) {
         var domain = new Domain(def.min, def.max), sampleAdjustment = isNaN(def.min) ? 0 : def.min % 10, // roughly adjusts to choose integer sample points
@@ -671,7 +668,7 @@ var KG;
         Restriction.SET_TYPE = "set";
         Restriction.BOOLEAN_TYPE = "boolean";
         return Restriction;
-    })(KG.Model);
+    }(KG.Model));
     KG.Restriction = Restriction;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -726,7 +723,7 @@ var KG;
             return s.selectedObject;
         };
         return Selector;
-    })(KG.Model);
+    }(KG.Model));
     KG.Selector = Selector;
 })(KG || (KG = {}));
 var KGMath;
@@ -830,7 +827,7 @@ var KGMath;
                 }
             };
             return Base;
-        })(KG.Model);
+        }(KG.Model));
         Functions.Base = Base;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -882,7 +879,7 @@ var KGMath;
                 return points;
             };
             return Implicit;
-        })(KG.Model);
+        }(KG.Model));
         Functions.Implicit = Implicit;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -931,7 +928,7 @@ var KGMath;
                 return points;
             };
             return Relation;
-        })(KG.Model);
+        }(KG.Model));
         Functions.Relation = Relation;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -952,11 +949,11 @@ var KGMath;
         var Monomial = (function (_super) {
             __extends(Monomial, _super);
             function Monomial(definition, modelPath) {
+                _super.call(this, definition, modelPath);
                 this.monomialDefs = {
                     coefficient: definition.coefficient.toString(),
                     powers: definition.powers.map(function (p) { return p.toString(); })
                 };
-                _super.call(this, definition, modelPath);
                 this.univariate = (definition.powers.length == 1);
             }
             // Establish setters
@@ -1079,7 +1076,7 @@ var KGMath;
                 }
             };
             return Monomial;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.Monomial = Monomial;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1098,7 +1095,7 @@ var KGMath;
                 _super.call(this, monomialDef, modelPath);
             }
             return CobbDouglas;
-        })(Functions.Monomial);
+        }(Functions.Monomial));
         Functions.CobbDouglas = CobbDouglas;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1248,7 +1245,7 @@ var KGMath;
                 return null;
             };
             return Polynomial;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.Polynomial = Polynomial;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1468,7 +1465,7 @@ var KGMath;
                 return points.sort(KG.sortObjects('x'));
             };
             return Linear;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.Linear = Linear;
         var HorizontalLine = (function (_super) {
             __extends(HorizontalLine, _super);
@@ -1484,7 +1481,7 @@ var KGMath;
                 return this.y;
             };
             return HorizontalLine;
-        })(Linear);
+        }(Linear));
         Functions.HorizontalLine = HorizontalLine;
         var VerticalLine = (function (_super) {
             __extends(VerticalLine, _super);
@@ -1500,7 +1497,7 @@ var KGMath;
                 return this.x;
             };
             return VerticalLine;
-        })(Linear);
+        }(Linear));
         Functions.VerticalLine = VerticalLine;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1723,7 +1720,7 @@ var KGMath;
                 }
             };
             return Quadratic;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.Quadratic = Quadratic;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1779,7 +1776,7 @@ var KGMath;
                 }
             };
             return Min;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.Min = Min;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1853,7 +1850,7 @@ var KGMath;
                 ];
             };
             return MinAxBy;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.MinAxBy = MinAxBy;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1902,7 +1899,7 @@ var KGMath;
                 });
             };
             return CRRA;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.CRRA = CRRA;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -1994,7 +1991,7 @@ var KGMath;
                 return d;
             };
             return CES;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.CES = CES;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -2013,8 +2010,8 @@ var KGMath;
         var Quasilinear = (function (_super) {
             __extends(Quasilinear, _super);
             function Quasilinear(definition, modelPath) {
-                this.coefficientDefs = definition.coefficients.map(function (c) { return c.toString(); });
                 _super.call(this, definition, modelPath);
+                this.coefficientDefs = definition.coefficients.map(function (c) { return c.toString(); });
             }
             // Establish setters
             Quasilinear.prototype.setCoefficients = function (coefficients) {
@@ -2098,7 +2095,7 @@ var KGMath;
                 return Math.exp(alogx / q.coefficients[0]);
             };
             return Quasilinear;
-        })(Functions.Base);
+        }(Functions.Base));
         Functions.Quasilinear = Quasilinear;
     })(Functions = KGMath.Functions || (KGMath.Functions = {}));
 })(KGMath || (KGMath = {}));
@@ -2121,7 +2118,7 @@ var KGMath;
                 return 0; //overridden by subclass
             };
             return Base;
-        })(KG.Model);
+        }(KG.Model));
         Distributions.Base = Base;
     })(Distributions = KGMath.Distributions || (KGMath.Distributions = {}));
 })(KGMath || (KGMath = {}));
@@ -2148,7 +2145,7 @@ var KGMath;
                 return d3.random.normal(this.mean, this.sd)();
             };
             return Normal;
-        })(Distributions.Base);
+        }(Distributions.Base));
         Distributions.Normal = Normal;
     })(Distributions = KGMath.Distributions || (KGMath.Distributions = {}));
 })(KGMath || (KGMath = {}));
@@ -2164,24 +2161,52 @@ var KGMath;
                     distribution: { type: 'KGMath.Distributions.Normal', definition: {} }
                 });
                 _super.call(this, definition, modelPath);
-                this.newDraw(definition.numDraws);
             }
-            Base.prototype.newDraw = function (numDraws, returnSum) {
+            Base.prototype._update = function (scope) {
                 var sim = this;
+                sim.newDraw(false, sim.numDraws, false);
+                return sim;
+            };
+            Base.prototype.drawOne = function () {
+                return this.distribution.randomDraw();
+            };
+            Base.prototype.drawShocks = function (numDraws) {
+                var sim = this, shocks = [];
+                for (var i = 0; i < numDraws; i++) {
+                    shocks.push(sim.drawOne());
+                }
+                return shocks;
+            };
+            Base.prototype.transformShock = function (shock) {
+                return shock;
+            };
+            Base.prototype.newDraw = function (newShocks, numDraws, returnSum) {
+                var sim = this;
+                newShocks = !!newShocks;
                 returnSum = !!returnSum;
                 // establish the number of draws
                 if (numDraws) {
                     sim.numDraws = numDraws;
                 }
-                // initialize draws
-                var sum = 0;
-                sim.draws = [];
+                if (newShocks) {
+                    sim.shocks = sim.drawShocks(sim.numDraws);
+                }
+                sim.draws = sim.shocks.map(function (s) { return sim.transformShock(s); });
                 sim.sumDraws = [];
-                var currentDraw;
+                var drawIsNumber = (typeof sim.draws[0] == 'number');
+                // assume each draw is either a number or an array of numbers, for now
+                var sum = drawIsNumber ? 0 : sim.draws[0].map(function () { return 0; });
                 for (var i = 0; i < sim.numDraws; i++) {
-                    currentDraw = sim.distribution.draw();
-                    sim.draws.push(currentDraw);
-                    sum += currentDraw;
+                    if (drawIsNumber) {
+                        // draw is a number
+                        sum += sim.draws[i];
+                    }
+                    else {
+                        // draw is an array
+                        for (var j = 0; j < sim.draws[i].length; j++) {
+                            sum[j] += sim.draws[i][j];
+                        }
+                    }
                     sim.sumDraws.push(sum);
                 }
                 return returnSum ? sim.sumDraws : sim.draws;
@@ -2191,8 +2216,62 @@ var KGMath;
                 return returnSum ? this.draws.slice(0, numDraws) : this.sumDraws.slice(0, numDraws);
             };
             return Base;
-        })(KG.Model);
+        }(KG.Model));
         Simulations.Base = Base;
+    })(Simulations = KGMath.Simulations || (KGMath.Simulations = {}));
+})(KGMath || (KGMath = {}));
+var KGMath;
+(function (KGMath) {
+    var Simulations;
+    (function (Simulations) {
+        var TwoCorrelated = (function (_super) {
+            __extends(TwoCorrelated, _super);
+            function TwoCorrelated(definition, modelPath) {
+                // if mean and/or standard deviation for the first random variable are unspecified,
+                // default to mean of 0 and standard deviation of 1
+                definition = _.defaults(definition, {
+                    mean1: 0,
+                    stDev1: 1
+                });
+                // if mean and/or standard deviation for the second random variable are unspecified,
+                // default to be the same as the first distribution
+                definition = _.defaults(definition, {
+                    mean2: definition.mean1,
+                    stDev2: definition.stDev1
+                });
+                _super.call(this, definition, modelPath);
+                this.shocks = this.drawShocks(100);
+            }
+            TwoCorrelated.prototype.drawOne = function () {
+                return [this.distribution.randomDraw(), this.distribution.randomDraw()];
+            };
+            // use formula from http://math.stackexchange.com/questions/446093/generate-correlated-normal-random-variables
+            // to draw two correlated random variables
+            TwoCorrelated.prototype.transformShock = function (shock) {
+                var sim = this;
+                var x1 = shock[0], x2 = shock[1], x3 = sim.rho * x1 + Math.sqrt(1 - sim.rho * sim.rho) * x2;
+                var y1 = sim.mean1 + sim.stDev1 * x1, y2 = sim.mean2 + sim.stDev2 * x3;
+                return [y1, y2];
+            };
+            TwoCorrelated.prototype.weightedMean = function (w) {
+                var sim = this, mu1 = sim.mean1, mu2 = sim.mean2, w2 = w || 0, w1 = 1 - w2;
+                return w1 * mu1 + w2 * mu2;
+            };
+            TwoCorrelated.prototype.weightedStDev = function (w) {
+                var sim = this, s1 = sim.stDev1, s2 = sim.stDev2, r = sim.rho, w2 = w || 0, w1 = 1 - w2;
+                return Math.sqrt(w1 * w1 * s1 * s1 + w2 * w2 * s2 * s2 + 2 * w1 * w2 * s1 * s2 * r);
+            };
+            TwoCorrelated.prototype.weightFrontier = function (maxLeverage) {
+                var sim = this, data = [], maxLeverage = maxLeverage || 0, min = -maxLeverage, max = 1 + maxLeverage, step = 0.01 * (max - min), w = min;
+                for (var i = 0; i < 100; i++) {
+                    data.push({ x: sim.weightedStDev(w), y: sim.weightedMean(w) });
+                    w += step;
+                }
+                return data;
+            };
+            return TwoCorrelated;
+        }(Simulations.Base));
+        Simulations.TwoCorrelated = TwoCorrelated;
     })(Simulations = KGMath.Simulations || (KGMath.Simulations = {}));
 })(KGMath || (KGMath = {}));
 /// <reference path="../kg.ts"/>
@@ -2212,6 +2291,7 @@ var KGMath;
 /// <reference path="distributions/base"/>
 /// <reference path="distributions/normal"/>
 /// <reference path="simulations/base"/>
+/// <reference path="simulations/twoCorrelated"/>
 /// <reference path="../kg.ts"/>
 'use strict';
 var KG;
@@ -2297,7 +2377,7 @@ var KG;
             return view.scope.isHighlighted(this.highlight);
         };
         return InteractionHandler;
-    })(KG.Model);
+    }(KG.Model));
     KG.InteractionHandler = InteractionHandler;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2382,7 +2462,7 @@ var KG;
             };
         };
         return ViewObject;
-    })(KG.Model);
+    }(KG.Model));
     KG.ViewObject = ViewObject;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2402,7 +2482,7 @@ var KG;
             }
         }
         return ViewObjectWithDomain;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.ViewObjectWithDomain = ViewObjectWithDomain;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2435,7 +2515,7 @@ var KG;
             return view;
         };
         return ViewObjectGroup;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.ViewObjectGroup = ViewObjectGroup;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2591,7 +2671,7 @@ var KG;
             return view;
         };
         return Point;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.Point = Point;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2692,7 +2772,7 @@ var KG;
             return view;
         };
         return Dropline;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.Dropline = Dropline;
     var VerticalDropline = (function (_super) {
         __extends(VerticalDropline, _super);
@@ -2704,7 +2784,7 @@ var KG;
             _super.call(this, definition, modelPath);
         }
         return VerticalDropline;
-    })(Dropline);
+    }(Dropline));
     KG.VerticalDropline = VerticalDropline;
     var HorizontalDropline = (function (_super) {
         __extends(HorizontalDropline, _super);
@@ -2716,7 +2796,7 @@ var KG;
             _super.call(this, definition, modelPath);
         }
         return HorizontalDropline;
-    })(Dropline);
+    }(Dropline));
     KG.HorizontalDropline = HorizontalDropline;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2925,7 +3005,7 @@ var KG;
         Curve.END_ARROW_STRING = 'END';
         Curve.BOTH_ARROW_STRING = 'BOTH';
         return Curve;
-    })(KG.ViewObjectWithDomain);
+    }(KG.ViewObjectWithDomain));
     KG.Curve = Curve;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2952,7 +3032,7 @@ var KG;
             return s;
         };
         return Segment;
-    })(KG.Curve);
+    }(KG.Curve));
     KG.Segment = Segment;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -2969,7 +3049,7 @@ var KG;
             this.viewObjectClass = 'arrow';
         }
         return Arrow;
-    })(KG.Segment);
+    }(KG.Segment));
     KG.Arrow = Arrow;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3244,7 +3324,7 @@ var KG;
             }
         };
         return Line;
-    })(KG.ViewObjectWithDomain);
+    }(KG.ViewObjectWithDomain));
     KG.Line = Line;
     var VerticalLine = (function (_super) {
         __extends(VerticalLine, _super);
@@ -3252,7 +3332,7 @@ var KG;
             _super.call(this, definition, modelPath);
         }
         return VerticalLine;
-    })(Line);
+    }(Line));
     KG.VerticalLine = VerticalLine;
     var HorizontalLine = (function (_super) {
         __extends(HorizontalLine, _super);
@@ -3260,7 +3340,7 @@ var KG;
             _super.call(this, definition, modelPath);
         }
         return HorizontalLine;
-    })(Line);
+    }(Line));
     KG.HorizontalLine = HorizontalLine;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3332,7 +3412,7 @@ var KG;
             return view;
         };
         return PiecewiseLinear;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.PiecewiseLinear = PiecewiseLinear;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3383,6 +3463,8 @@ var KG;
                 if (!view.xAxis.domain.contains(divObj.coordinates.x)) {
                     divObj.className = 'invisible';
                 }
+                console.log(view.dimensions.height);
+                console.log(y);
             }
             else {
                 y = view.margins.top + view.yAxis.scale(divObj.coordinates.y);
@@ -3434,7 +3516,7 @@ var KG;
         };
         GraphDiv.AXIS_COORDINATE_INDICATOR = 'AXIS';
         return GraphDiv;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.GraphDiv = GraphDiv;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3449,7 +3531,7 @@ var KG;
             this.viewObjectClass = 'dataPath';
         }
         return LinePlot;
-    })(KG.Curve);
+    }(KG.Curve));
     KG.LinePlot = LinePlot;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3492,7 +3574,7 @@ var KG;
             return view;
         };
         return PathFamily;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.PathFamily = PathFamily;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3516,7 +3598,7 @@ var KG;
             return p;
         };
         return FunctionPlot;
-    })(KG.Curve);
+    }(KG.Curve));
     KG.FunctionPlot = FunctionPlot;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3538,18 +3620,16 @@ var KG;
         FunctionMap.prototype.createSubObjects = function (view) {
             var fmap = this;
             fmap.levels.forEach(function (level, index) {
-                var curve = new KG.FunctionPlot({
+                view.addObject(new KG.FunctionPlot({
                     name: fmap.name + '_' + index,
                     className: fmap.className,
                     fn: fmap.fn.setLevel(level)
-                });
-                var updatedCurve = curve;
-                view.addObject(updatedCurve);
+                }));
             });
             return view;
         };
         return FunctionMap;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.FunctionMap = FunctionMap;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -3610,8 +3690,31 @@ var KG;
             return view;
         };
         return Area;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.Area = Area;
+})(KG || (KG = {}));
+/// <reference path="../kg.ts"/>
+'use strict';
+var KG;
+(function (KG) {
+    var Scatter = (function (_super) {
+        __extends(Scatter, _super);
+        function Scatter(definition, modelPath) {
+            definition = _.defaults(definition, {
+                data: [],
+                size: 25,
+                symbol: 'circle'
+            });
+            _super.call(this, definition, modelPath);
+        }
+        Scatter.prototype._update = function (scope) {
+            var scatter = this;
+            console.log(scatter);
+            return scatter;
+        };
+        return Scatter;
+    }(KG.ViewObject));
+    KG.Scatter = Scatter;
 })(KG || (KG = {}));
 /// <reference path='kg.ts'/>
 'use strict';
@@ -3841,7 +3944,7 @@ var KG;
             return KG.isAlmostTo(point.x, this.xAxis.domain.min, 0.05, this.xAxis.domain.max - this.xAxis.domain.min);
         };
         return View;
-    })(KG.Model);
+    }(KG.Model));
     KG.View = View;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts" />
@@ -3877,7 +3980,7 @@ var KG;
             return d3.scale.linear(); // overridden by child class
         };
         return Axis;
-    })(KG.Model);
+    }(KG.Model));
     KG.Axis = Axis;
     var XAxis = (function (_super) {
         __extends(XAxis, _super);
@@ -3913,7 +4016,7 @@ var KG;
             katex.render(this.title.toString(), title[0][0]);
         };
         return XAxis;
-    })(Axis);
+    }(Axis));
     KG.XAxis = XAxis;
     var YAxis = (function (_super) {
         __extends(YAxis, _super);
@@ -3949,7 +4052,7 @@ var KG;
             katex.render(this.title.toString(), title[0][0]);
         };
         return YAxis;
-    })(Axis);
+    }(Axis));
     KG.YAxis = YAxis;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -4032,7 +4135,7 @@ var KG;
             return dataCoordinatesOnGraph;
         };
         return Graph;
-    })(KG.View);
+    }(KG.View));
     KG.Graph = Graph;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -4103,7 +4206,7 @@ var KG;
             return view;
         };
         return TwoVerticalGraphs;
-    })(KG.View);
+    }(KG.View));
     KG.TwoVerticalGraphs = TwoVerticalGraphs;
 })(KG || (KG = {}));
 /// <reference path="../kg.ts"/>
@@ -4115,11 +4218,16 @@ var KG;
         function Slider(definition, modelPath) {
             definition.maxDimensions = _.defaults(definition.maxDimensions || {}, { width: 500, height: 50 });
             definition.margins = _.defaults(definition.margins || {}, { top: 25, left: 25, bottom: 25, right: 25 });
+            definition.shape = definition.shape || 'circle';
             definition.mask = false;
             _super.call(this, definition, modelPath);
             this.xAxis = new KG.XAxis(definition.axisDef);
             this.objects = [
-                new SliderControl({ name: definition.element_id + 'Ctrl', param: 'params.' + definition.param })
+                new SliderControl({
+                    name: definition.element_id + 'Ctrl',
+                    param: 'params.' + definition.param,
+                    shape: definition.shape
+                })
             ];
         }
         Slider.prototype._update = function (scope) {
@@ -4131,7 +4239,7 @@ var KG;
             return true;
         };
         return Slider;
-    })(KG.View);
+    }(KG.View));
     KG.Slider = Slider;
     var SliderControl = (function (_super) {
         __extends(SliderControl, _super);
@@ -4140,8 +4248,8 @@ var KG;
                 xDrag: true,
                 xDragParam: definition.param,
                 highlight: definition.param.replace('params.', '')
-            },
-                definition.coordinates = { x: definition.param, y: 0 };
+            };
+            definition.coordinates = { x: definition.param, y: 0 };
             _super.call(this, definition, modelPath);
             this.viewObjectSVGtype = 'g';
             this.viewObjectClass = 'sliderControl';
@@ -4164,21 +4272,38 @@ var KG;
             controlSquare.attr({
                 'x': view.xAxis.scale(control.param) - 25
             });
-            var controlCircle = controlGroup.selectAll('circle').data([0]);
-            controlCircle.enter().append('circle').attr({
-                'class': control.classAndVisibility(),
-                'r': view.dimensions.height / 5,
-                'cy': 0
-            });
-            controlCircle.attr({
-                'cx': view.xAxis.scale(control.param)
-            });
+            if (control.shape == 'circle') {
+                var controlShape = controlGroup.selectAll('circle').data([0]);
+                controlShape.enter().append('circle').attr({
+                    'class': control.classAndVisibility(),
+                    r: view.dimensions.height / 5,
+                    cy: 0
+                });
+                controlShape.attr({
+                    cx: view.xAxis.scale(control.param)
+                });
+            }
+            if (control.shape == 'bar') {
+                var controlShape = controlGroup.selectAll('path').data([0]);
+                var minX = view.xAxis.scale(Math.max(0, view.xAxis.domain.min)), maxX = view.xAxis.scale(control.param), minY = -view.dimensions.height * 0.5, maxY = view.dimensions.height * 0;
+                var bar = d3.svg.area()
+                    .interpolate('linear')
+                    .x(function (d) { return d.x; })
+                    .y0(minY)
+                    .y1(maxY);
+                controlShape.enter().append('path').attr({
+                    'class': control.classAndVisibility()
+                });
+                controlShape.attr({
+                    'd': bar([{ x: minX }, { x: maxX }])
+                });
+            }
             control.interactionHandler.setBehavior(view, controlSquare);
-            control.interactionHandler.setBehavior(view, controlCircle);
+            control.interactionHandler.setBehavior(view, controlShape);
             return control;
         };
         return SliderControl;
-    })(KG.ViewObject);
+    }(KG.ViewObject));
     KG.SliderControl = SliderControl;
 })(KG || (KG = {}));
 /// <reference path="kg.ts" />
@@ -4338,7 +4463,7 @@ var KG;
             $scope.init(scopeDefinition);
         }
         return Controller;
-    })();
+    }());
     KG.Controller = Controller;
 })(KG || (KG = {}));
 /// <reference path="../fg.ts"/>
@@ -4351,7 +4476,7 @@ var FinanceGraphs;
             _super.call(this, definition, modelPath);
         }
         return Asset;
-    })(KG.Model);
+    }(KG.Model));
     FinanceGraphs.Asset = Asset;
 })(FinanceGraphs || (FinanceGraphs = {}));
 /// <reference path="../fg.ts"/>
@@ -4528,12 +4653,45 @@ var FinanceGraphs;
             var portfolio = this;
         };
         return Portfolio;
-    })(KG.Model);
+    }(KG.Model));
     FinanceGraphs.Portfolio = Portfolio;
+})(FinanceGraphs || (FinanceGraphs = {}));
+/// <reference path="../fg.ts"/>
+'use strict';
+var FinanceGraphs;
+(function (FinanceGraphs) {
+    var NetPresentValue = (function (_super) {
+        __extends(NetPresentValue, _super);
+        function NetPresentValue(definition, modelPath) {
+            _super.call(this, definition, modelPath);
+            var npv = this;
+            npv.presentValueFunction = new KGMath.Functions.Base({});
+            npv.presentValueFunction.yValue = function (x) { return npv.presentValue(x); };
+        }
+        NetPresentValue.prototype.presentFlowValue = function (year, r, baseYear) {
+            var npv = this;
+            if (r == undefined) {
+                r = npv.r;
+            }
+            baseYear = baseYear || 0;
+            return npv.freeCashFlows[year] * Math.pow(1 + 0.01 * r, baseYear - year);
+        };
+        NetPresentValue.prototype.presentValue = function (r, baseYear) {
+            var npv = this;
+            var v = 0;
+            for (var i = 0; i < npv.freeCashFlows.length; i++) {
+                v += npv.presentFlowValue(i, r, baseYear);
+            }
+            return v;
+        };
+        return NetPresentValue;
+    }(KG.Model));
+    FinanceGraphs.NetPresentValue = NetPresentValue;
 })(FinanceGraphs || (FinanceGraphs = {}));
 /// <reference path="../kg.ts"/>
 /// <reference path="capm/asset.ts"/>
 /// <reference path="capm/portfolio.ts"/>
+/// <reference path="value/net_present_value.ts"/>
 /// <reference path="../../eg.ts"/>
 var EconGraphs;
 (function (EconGraphs) {
@@ -4597,7 +4755,7 @@ var EconGraphs;
             return this.calculateElasticity();
         };
         return Elasticity;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.Elasticity = Elasticity;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -4627,7 +4785,7 @@ var EconGraphs;
             return e;
         };
         return MidpointElasticity;
-    })(EconGraphs.Elasticity);
+    }(EconGraphs.Elasticity));
     EconGraphs.MidpointElasticity = MidpointElasticity;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -4653,7 +4811,7 @@ var EconGraphs;
             return e;
         };
         return PointElasticity;
-    })(EconGraphs.Elasticity);
+    }(EconGraphs.Elasticity));
     EconGraphs.PointElasticity = PointElasticity;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -4666,7 +4824,7 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
         }
         return ConstantElasticity;
-    })(EconGraphs.Elasticity);
+    }(EconGraphs.Elasticity));
     EconGraphs.ConstantElasticity = ConstantElasticity;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -4751,7 +4909,7 @@ var EconGraphs;
             return this.totalRevenueAtQuantity(quantity);
         };
         return PriceQuantityRelationship;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.PriceQuantityRelationship = PriceQuantityRelationship;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -4784,7 +4942,7 @@ var EconGraphs;
             return 1 / this.inverseSlopeAtPrice(price);
         };
         return ConstantElasticityPriceQuantityRelationship;
-    })(EconGraphs.PriceQuantityRelationship);
+    }(EconGraphs.PriceQuantityRelationship));
     EconGraphs.ConstantElasticityPriceQuantityRelationship = ConstantElasticityPriceQuantityRelationship;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -4899,7 +5057,7 @@ var EconGraphs;
             return this.inverseSlope;
         };
         return LinearPriceQuantityRelationship;
-    })(EconGraphs.PriceQuantityRelationship);
+    }(EconGraphs.PriceQuantityRelationship));
     EconGraphs.LinearPriceQuantityRelationship = LinearPriceQuantityRelationship;
     var LinearDemand = (function (_super) {
         __extends(LinearDemand, _super);
@@ -4909,7 +5067,7 @@ var EconGraphs;
             this.totalRevenue = this.totalDollarAmount;
         }
         return LinearDemand;
-    })(LinearPriceQuantityRelationship);
+    }(LinearPriceQuantityRelationship));
     EconGraphs.LinearDemand = LinearDemand;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -4940,7 +5098,7 @@ var EconGraphs;
             return 0;
         };
         return ConstantPriceQuantityRelationship;
-    })(EconGraphs.PriceQuantityRelationship);
+    }(EconGraphs.PriceQuantityRelationship));
     EconGraphs.ConstantPriceQuantityRelationship = ConstantPriceQuantityRelationship;
     var PerfectlyElasticDemand = (function (_super) {
         __extends(PerfectlyElasticDemand, _super);
@@ -4959,7 +5117,7 @@ var EconGraphs;
             return this.quantity;
         };
         return PerfectlyElasticDemand;
-    })(ConstantPriceQuantityRelationship);
+    }(ConstantPriceQuantityRelationship));
     EconGraphs.PerfectlyElasticDemand = PerfectlyElasticDemand;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -5009,7 +5167,7 @@ var EconGraphs;
             return d;
         };
         return IndividualAndMarketSandD;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.IndividualAndMarketSandD = IndividualAndMarketSandD;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5065,7 +5223,7 @@ var EconGraphs;
             return Math.max(segments.map(function (segment) { return segment.yDomain.max; }));
         };
         return BudgetConstraint;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.BudgetConstraint = BudgetConstraint;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5152,7 +5310,7 @@ var EconGraphs;
             //console.log('set income to ',income);
         };
         return BudgetSegment;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.BudgetSegment = BudgetSegment;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5191,7 +5349,7 @@ var EconGraphs;
         };
         SimpleBudgetConstraint.title = 'Simple Budget Constraint';
         return SimpleBudgetConstraint;
-    })(EconGraphs.BudgetConstraint);
+    }(EconGraphs.BudgetConstraint));
     EconGraphs.SimpleBudgetConstraint = SimpleBudgetConstraint;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5258,7 +5416,7 @@ var EconGraphs;
             }
         };
         return EndowmentBudgetConstraint;
-    })(EconGraphs.BudgetConstraint);
+    }(EconGraphs.BudgetConstraint));
     EconGraphs.EndowmentBudgetConstraint = EndowmentBudgetConstraint;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5285,7 +5443,7 @@ var EconGraphs;
             //console.log(this);
         }
         return IntertemporalBudgetConstraint;
-    })(EconGraphs.EndowmentBudgetConstraint);
+    }(EconGraphs.EndowmentBudgetConstraint));
     EconGraphs.IntertemporalBudgetConstraint = IntertemporalBudgetConstraint;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5297,7 +5455,7 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
         }
         return UtilityConstraint;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.UtilityConstraint = UtilityConstraint;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5318,7 +5476,7 @@ var EconGraphs;
             return u;
         };
         return Utility;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.Utility = Utility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5354,7 +5512,7 @@ var EconGraphs;
             return this.utilityFunction.xValue(u);
         };
         return OneGoodUtility;
-    })(EconGraphs.Utility);
+    }(EconGraphs.Utility));
     EconGraphs.OneGoodUtility = OneGoodUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5395,7 +5553,7 @@ var EconGraphs;
             }
         };
         return ConstantRRA;
-    })(EconGraphs.OneGoodUtility);
+    }(EconGraphs.OneGoodUtility));
     EconGraphs.ConstantRRA = ConstantRRA;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5424,7 +5582,7 @@ var EconGraphs;
             return ra;
         };
         return RiskAversion;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.RiskAversion = RiskAversion;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5448,7 +5606,7 @@ var EconGraphs;
             return r;
         };
         return UtilityRedistribution;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.UtilityRedistribution = UtilityRedistribution;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5569,7 +5727,7 @@ var EconGraphs;
             return curveData.sort(KG.sortObjects('x'));
         };
         return TwoGoodUtility;
-    })(EconGraphs.Utility);
+    }(EconGraphs.Utility));
     EconGraphs.TwoGoodUtility = TwoGoodUtility;
     var SelectableTwoGoodUtility = (function (_super) {
         __extends(SelectableTwoGoodUtility, _super);
@@ -5577,7 +5735,7 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
         }
         return SelectableTwoGoodUtility;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.SelectableTwoGoodUtility = SelectableTwoGoodUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5627,7 +5785,7 @@ var EconGraphs;
         };
         CobbDouglasUtility.title = 'Cobb-Douglas';
         return CobbDouglasUtility;
-    })(EconGraphs.TwoGoodUtility);
+    }(EconGraphs.TwoGoodUtility));
     EconGraphs.CobbDouglasUtility = CobbDouglasUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5680,7 +5838,7 @@ var EconGraphs;
         };
         ComplementsUtility.title = 'Perfect Complements';
         return ComplementsUtility;
-    })(EconGraphs.TwoGoodUtility);
+    }(EconGraphs.TwoGoodUtility));
     EconGraphs.ComplementsUtility = ComplementsUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5758,7 +5916,7 @@ var EconGraphs;
         };
         SubstitutesUtility.title = 'Perfect Substitutes';
         return SubstitutesUtility;
-    })(EconGraphs.TwoGoodUtility);
+    }(EconGraphs.TwoGoodUtility));
     EconGraphs.SubstitutesUtility = SubstitutesUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5838,7 +5996,7 @@ var EconGraphs;
         };
         CESUtility.title = 'CES';
         return CESUtility;
-    })(EconGraphs.TwoGoodUtility);
+    }(EconGraphs.TwoGoodUtility));
     EconGraphs.CESUtility = CESUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5889,7 +6047,7 @@ var EconGraphs;
         };
         QuasilinearUtility.title = 'Quasilinear';
         return QuasilinearUtility;
-    })(EconGraphs.TwoGoodUtility);
+    }(EconGraphs.TwoGoodUtility));
     EconGraphs.QuasilinearUtility = QuasilinearUtility;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -5949,7 +6107,7 @@ var EconGraphs;
             return demandCurveData;
         };
         return UtilityDemand;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.UtilityDemand = UtilityDemand;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6071,7 +6229,7 @@ var EconGraphs;
             return curveData;
         };
         return MarshallianDemand;
-    })(EconGraphs.UtilityDemand);
+    }(EconGraphs.UtilityDemand));
     EconGraphs.MarshallianDemand = MarshallianDemand;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6117,7 +6275,7 @@ var EconGraphs;
             return quantity;
         };
         return HicksianDemand;
-    })(EconGraphs.UtilityDemand);
+    }(EconGraphs.UtilityDemand));
     EconGraphs.HicksianDemand = HicksianDemand;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6225,7 +6383,7 @@ var EconGraphs;
             return s;
         };
         return Slutsky;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.Slutsky = Slutsky;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6275,7 +6433,7 @@ var EconGraphs;
             return this.marginalCostFunction.yValue(q);
         };
         return ProductionCost;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.ProductionCost = ProductionCost;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6293,7 +6451,7 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
         }
         return LinearMarginalCost;
-    })(EconGraphs.ProductionCost);
+    }(EconGraphs.ProductionCost));
     EconGraphs.LinearMarginalCost = LinearMarginalCost;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6310,7 +6468,7 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
         }
         return ConstantMarginalCost;
-    })(EconGraphs.ProductionCost);
+    }(EconGraphs.ProductionCost));
     EconGraphs.ConstantMarginalCost = ConstantMarginalCost;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6328,7 +6486,7 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
         }
         return QuadraticMarginalCost;
-    })(EconGraphs.ProductionCost);
+    }(EconGraphs.ProductionCost));
     EconGraphs.QuadraticMarginalCost = QuadraticMarginalCost;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6439,7 +6597,7 @@ var EconGraphs;
             return ''; // overridden by subclass
         };
         return ProductionTechnology;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.ProductionTechnology = ProductionTechnology;
     var SelectableProductionFunction = (function (_super) {
         __extends(SelectableProductionFunction, _super);
@@ -6447,7 +6605,7 @@ var EconGraphs;
             _super.call(this, definition, modelPath);
         }
         return SelectableProductionFunction;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.SelectableProductionFunction = SelectableProductionFunction;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6498,7 +6656,7 @@ var EconGraphs;
         };
         CobbDouglasProduction.title = 'Cobb-Douglas';
         return CobbDouglasProduction;
-    })(EconGraphs.ProductionTechnology);
+    }(EconGraphs.ProductionTechnology));
     EconGraphs.CobbDouglasProduction = CobbDouglasProduction;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6570,7 +6728,7 @@ var EconGraphs;
             return q;
         };
         return ProfitMax;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.ProfitMax = ProfitMax;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6599,7 +6757,7 @@ var EconGraphs;
             return ce;
         };
         return CompetitiveEquilibrium;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.CompetitiveEquilibrium = CompetitiveEquilibrium;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6645,7 +6803,7 @@ var EconGraphs;
             return m;
         };
         return Monopoly;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.Monopoly = Monopoly;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../../eg.ts"/>
@@ -6735,7 +6893,7 @@ var EconGraphs;
             return cournot;
         };
         return CournotDuopoly;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.CournotDuopoly = CournotDuopoly;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../../eg.ts"/>
@@ -6858,7 +7016,7 @@ var EconGraphs;
             return points;
         };
         return RamseyCassKoopmans;
-    })(KG.Model);
+    }(KG.Model));
     EconGraphs.RamseyCassKoopmans = RamseyCassKoopmans;
 })(EconGraphs || (EconGraphs = {}));
 /// <reference path="../kg.ts"/>
@@ -6991,7 +7149,7 @@ var PhysicsGraphs;
             model.zeroVelocityLine = new KG.HorizontalLine({ y: 0, name: 'zeroVelocity', className: 'dotted totalCost' });
         }
         return Acceleration;
-    })(KG.Model);
+    }(KG.Model));
     PhysicsGraphs.Acceleration = Acceleration;
 })(PhysicsGraphs || (PhysicsGraphs = {}));
 /// <reference path="../kg.ts"/>
@@ -7023,6 +7181,7 @@ var PhysicsGraphs;
 /// <reference path="viewObjects/functionPlot.ts"/>
 /// <reference path="viewObjects/functionMap.ts"/>
 /// <reference path="viewObjects/area.ts"/>
+/// <reference path="viewObjects/scatter.ts"/>
 /// <reference path="view.ts" />
 /// <reference path="views/axis.ts" />
 /// <reference path="views/graph.ts" />

@@ -1,7 +1,7 @@
 module KGMath.Distributions {
 
     export interface NormalDefinition extends BaseDefinition {
-        mean: any;
+        mean?: any;
         variance?: any;
         sd?: any;
     }

@@ -37,11 +37,11 @@ module KGMath.Functions {
         public monomialDefs: any;
 
         constructor(definition:MonomialDefinition, modelPath?: string) {
+            super(definition, modelPath);
             this.monomialDefs = {
                 coefficient: definition.coefficient.toString(),
                 powers: definition.powers.map(function(p) {return p.toString()})
             };
-            super(definition, modelPath);
             this.univariate = (definition.powers.length == 1);
         }
 

@@ -32,8 +32,8 @@ module KGMath.Functions {
         public coefficientDefs: any;
 
         constructor(definition:QuasilinearDefinition, modelPath?: string) {
-            this.coefficientDefs = definition.coefficients.map(function(c) {return c.toString()});
             super(definition, modelPath);
+            this.coefficientDefs = definition.coefficients.map(function(c) {return c.toString()});
         }
 
         // Establish setters

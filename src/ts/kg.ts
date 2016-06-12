@@ -30,6 +30,7 @@
 /// <reference path="viewObjects/functionPlot.ts"/>
 /// <reference path="viewObjects/functionMap.ts"/>
 /// <reference path="viewObjects/area.ts"/>
+/// <reference path="viewObjects/scatter.ts"/>
 
 /// <reference path="view.ts" />
 /// <reference path="views/axis.ts" />
