@@ -57,6 +57,41 @@
             <label><input ng-model="params.showDraws" type="checkbox"/> Show all draws</label>
             <hr/>
             <div id="legend"/>
+            <table class="table table-striped hover">
+                <tr>
+                    <td colspan="3">After {{ params.T }} years</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Dollar Value</td>
+                    <td>Annualized Return</td>
+                </tr>
+                <tr>
+                    <td>5%</td>
+                    <td>${{ lastData.pct05 | number:2 }}</td>
+                    <td>{{ lastData.ret05 | number:2 }}%</td>
+                </tr>
+                <tr>
+                    <td>25%</td>
+                    <td>${{ lastData.pct25 | number:2 }}</td>
+                    <td>{{ lastData.ret25 | number:2 }}%</td>
+                </tr>
+                <tr>
+                    <td>50%</td>
+                    <td>${{ lastData.pct50 | number:2 }}</td>
+                    <td>{{ lastData.ret50 | number:2 }}%</td>
+                </tr>
+                <tr>
+                    <td>75%</td>
+                    <td>${{ lastData.pct75 | number:2 }}</td>
+                    <td>{{ lastData.ret75 | number:2 }}%</td>
+                </tr>
+                <tr>
+                    <td>95%</td>
+                    <td>${{ lastData.pct95 | number:2 }}</td>
+                    <td>{{ lastData.ret95 | number:2 }}%</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>

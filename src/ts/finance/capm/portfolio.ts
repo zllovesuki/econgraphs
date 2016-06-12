@@ -33,12 +33,21 @@ module FinanceGraphs
         threeAssetData: KG.ICoordinates[][];
         correlationMatrix: number[][];
         covarianceMatrix: number[][];
+        inverseCovarianceMatrix: number[][];
         positiveDefinite: boolean;
         optimalPortfolioMean: number;
         optimalPortfolioStDev: number;
         optimalPortfolioWeightArray;
         riskFreeReturn: number;
         riskReturnSlope: number;
+
+        mean: (weightArray: number[]) => number;
+        stDev: (weightArray: number[]) => number;
+        meanArray: () => number[];
+        stDevArray: () => number[];
+        data2: () => KG.ICoordinates[][];
+        data3: () => KG.ICoordinates[][];
+
     }
 
     export class Portfolio extends KG.Model implements IPortfolio {
@@ -54,6 +63,7 @@ module FinanceGraphs
         public maxLeverage;
         public correlationMatrix;
         public covarianceMatrix;
+        public inverseCovarianceMatrix;
         public twoAssetData;
         public threeAssetData;
         public riskFreeAsset;
@@ -109,16 +119,81 @@ module FinanceGraphs
                 return matrix;
             }
 
-            function checkPositiveDefinite() {
-                p.positiveDefinite = true;
-                var eigenvalues = numeric.eig(calculateCovarianceMatrix()).lambda.x;
-                eigenvalues.forEach(function(e){if(e<0) { p.positiveDefinite = false;}})
-                return p.positiveDefinite;
+            function calculateInverseCovarianceMatrix() {
+                var matrix = numeric.inv(calculateCovarianceMatrix());
+                p.inverseCovarianceMatrix = matrix;
+                return matrix;
             }
 
-            if(checkPositiveDefinite()){
+            function constrainedOptimalWeightArray(unconstrainedArray,maxLeverage) {
+                var asset1weight = unconstrainedArray[0],
+                    asset2weight = unconstrainedArray[1],
+                    asset3weight = unconstrainedArray[2];
+
+                var max = 1 + 0.01*maxLeverage,
+                    min = -0.01*maxLeverage;
+
+                var numBelowMin = ((asset1weight < min) ? 1 : 0) + ((asset2weight < min) ? 1 : 0) + ((asset3weight < min) ? 1 : 0),
+                    numAboveMax = ((asset1weight > max) ? 1 : 0) + ((asset2weight > max) ? 1 : 0) + ((asset3weight > max) ? 1 : 0);
+
+                return unconstrainedArray;
+
+                /*
+                if(numBelowMin == 0 && numAboveMax == 0) {
+                    // all weights are within range
+                    return unconstrainedArray;
+                }
+
+                if(numBelowMin == 1 && numAboveMax == 0) {
+                    // one asset is too short; bring it up to minimum and rebalance
+                }
+
+                if(numBelowMin == 0 && numAboveMax == 1) {
+                    // one asset is too leveraged; bring it down to maximum and rebalance
+                }
+
+                if(numBelowMin == 1 && numAboveMax == 1) {
+                    // one asset is too short and one asset is too leveraged; assume buy zero of the other
+                }
+                */
+
+            }
+
+            var inverseCovarianceMatrix = calculateInverseCovarianceMatrix();
+            var oneArray = [1,1,1],
+                meanArray = p.meanArray();
+
+            // ingersoll, euqation 5
+            var A = numeric.dot(oneArray,numeric.dot(inverseCovarianceMatrix,oneArray)),
+                B = numeric.dot(oneArray,numeric.dot(inverseCovarianceMatrix,meanArray)),
+                C = numeric.dot(meanArray,numeric.dot(inverseCovarianceMatrix,meanArray)),
+                D = A*C-B*B;
+
+            console.log('A = ',A);
+            console.log('B = ',B);
+            console.log('C = ',C);
+            console.log('D = ',D);
+
+
+            if(D > 0) {
+
+                // ingersoll, equation 19
+                var R = p.riskFreeReturn,
+                    meansMinusR = meanArray.map(function(z) {return z - R }),
+                    unconstrainedOptimalWeightArray = numeric.dot(1/(B - A*R),numeric.dot(inverseCovarianceMatrix,meansMinusR));
+
+                p.optimalPortfolioWeightArray = constrainedOptimalWeightArray(unconstrainedOptimalWeightArray,p.maxLeverage);
+
+
+                // ingersoll, equation 20
+                p.optimalPortfolioMean = p.mean(p.optimalPortfolioWeightArray);
+                p.optimalPortfolioStDev = p.stDev(p.optimalPortfolioWeightArray);
+
                 p.twoAssetData = p.data2();
                 p.threeAssetData = p.data3();
+
+            } else {
+                console.log('not positive definite');
             }
 
             return p;
@@ -148,7 +223,7 @@ module FinanceGraphs
 
         // Generate dataset of portfolio means and variances for various weights of two assets
         data2() {
-            var portfolio = this, maxLeverage = portfolio.maxLeverage, d = [];
+            var portfolio = this, d = [];
             d.push(portfolio.twoAssetPortfolio(1,2,[0,0,0]));
             d.push(portfolio.twoAssetPortfolio(0,2,[0,0,0]));
             d.push(portfolio.twoAssetPortfolio(0,1,[0,0,0]));
@@ -176,7 +251,7 @@ module FinanceGraphs
             var portfolio = this, maxLeverage = portfolio.maxLeverage, d=[], otherAssets = 0;
             weightArray.forEach(function(w) {otherAssets += w});
             var min = -maxLeverage*0.01, max = 1 + maxLeverage*0.01, dataPoints = 2*(10 + maxLeverage*0.2);
-            var colorScale = d3.scale.linear().domain([0,1]).range(["red","blue"])
+            var colorScale = d3.scale.linear().domain([0,1]).range(["red","blue"]);
             for(var i=0; i<dataPoints + 1; i++) //w1 is weight of asset 1;
             {
                 weightArray[asset1] = min + i*(max - min)/dataPoints;
@@ -193,15 +268,21 @@ module FinanceGraphs
                     if(s > 0){
                         var slope = (m - portfolio.riskFreeReturn)/s;
                         if(slope > portfolio.riskReturnSlope) {
-                            portfolio.optimalPortfolioMean = m;
-                            portfolio.optimalPortfolioStDev = s;
+                            //portfolio.optimalPortfolioMean = m;
+                            //portfolio.optimalPortfolioStDev = s;
                             portfolio.riskReturnSlope = slope;
-                            portfolio.optimalPortfolioWeightArray = _.clone(weightArray);
+                            //portfolio.optimalPortfolioWeightArray = _.clone(weightArray);
                         }
                     }
                 }
             }
             return d;
+        }
+
+        // Calculate unconstrained optimal portfolio
+        unconstrainedOptimalWeights() {
+            var portfolio = this;
+
         }
 
     }
