@@ -345,6 +345,10 @@ app.controller('Controller', function ($scope) {
         return data_array;
     };
 
+    function ret(basis, T) {
+        return 100*(Math.pow(basis,1/T) - 1);
+    }
+
     function update() {
         $scope.params.beta = parseFloat($scope.params.beta);
         $scope.params.rf = parseFloat($scope.params.rf);
@@ -354,7 +358,15 @@ app.controller('Controller', function ($scope) {
         var d = new Date().getTime();
         $scope.data = generateData($scope.params, $scope.epsilon);
         console.log("generateData time ", (new Date().getTime() - d)/1000, "s");
+        $scope.lastData = $scope.plotdata($scope.data, false)[$scope.params.T*12];
+        $scope.lastData.ret05 = ret($scope.lastData.pct05,$scope.params.T);
+        $scope.lastData.ret25 = ret($scope.lastData.pct25,$scope.params.T);
+        $scope.lastData.ret50 = ret($scope.lastData.pct50,$scope.params.T);
+        $scope.lastData.ret75 = ret($scope.lastData.pct75,$scope.params.T);
+        $scope.lastData.ret95 = ret($scope.lastData.pct95,$scope.params.T);
+        $scope.lastData.mean = ret($scope.lastData.mean,$scope.params.T);
         makeChart($scope.plotdata($scope.data, $scope.params.showDraws),$scope.params.max);
+
 
     }
     //$scope.data = generateData($scope.params, $scope.epsilon);
