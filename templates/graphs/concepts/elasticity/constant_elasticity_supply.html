@@ -4,7 +4,7 @@
 {% raw %}
     <div ng-controller="KineticGraphCtrl">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-sm-8">
                 <h1>Supply with Constant Price Elasticity</h1>
                 <hr/>
                 <p>This diagram shows a supply curve with a constant elasticity of <span highlight="elasticity">{{ model.elasticity | number:2}}</span>, passing through <span highlight="A">point A</span>.</p>
@@ -13,7 +13,7 @@
                 <hr/>
                 <div id="graph"></div>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div class="well">
                     <p style="float:right;color:red">{{error}}</p>
                     <div class="row">

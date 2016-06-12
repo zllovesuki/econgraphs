@@ -4,7 +4,7 @@
 {% raw %}
     <div ng-controller="KineticGraphCtrl">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <h1>Supply Elasticity along a Linear Supply Curve (Point Method)</h1>
                 <hr/>
                 <p>Drag the <span highlight="controls">control points</span> of the supply curve to change its <span highlight="slope">slope</span>.</p>
@@ -12,7 +12,7 @@
                 <hr/>
                 <div id="graph"></div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <p class="math displayMath big" highlight="slope">\color{ {{ color('green') }} }{\frac{\Delta Q^S}{\Delta P} = \frac{ {{
                     params.supplyCurveQ2 | number:0 }} - {{ params.supplyCurveQ1 | number:0 }} }{ {{ params.supplyCurveP2 | number: 0 }} -  {{params.supplyCurveP1 | number:0}} } =\frac{ {{
                     params.supplyCurveQ2 - params.supplyCurveQ1 | number:0 }} }{ {{ params.supplyCurveP2 - params.supplyCurveP1 | number:0}} } = {{

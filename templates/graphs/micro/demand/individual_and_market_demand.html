@@ -7,16 +7,16 @@
         <h1>Individual and Market Demand</h1>
         <hr/>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div id="individualDemandGraph"></div>
                 <p>This graph shows how much an average individual demands of a good at different prices. For simplicity, we assume that this the the kind of good that consumers spend a constant fraction <span class="math">( \alpha )</span> of their income <span class="math">(I)</span> on this good.</p>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div id="marketDemandGraph"></div>
                 <p>This graph shows the overall market demand for this good if there are <span class="math">N</span> consumers who on average have the demand curve shown on the left. Thus, at any price <span class="math price">P</span>, if the quantity demanded by each individual is (on average) <span class="math">q^D(P)</span>, then the total amount demanded by all <span class="math">N</span> consumers is:</p>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-sm-4">
 
                 <div class="well">
                     <div class="subtitle">demand shifters</div>
@@ -45,10 +45,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div class="demand math displayMath" highlight="individualQuantityDemanded">q^D(P) = \frac{\alpha I}{P} = \frac{ {{ params.alpha | number:2 }} \times {{ params.income }} }{ {{ model.price | number:2}} } = {{ model.individualQuantityDemanded | number:2 }}</div>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div class="demand math displayMath" highlight="marketQuantityDemanded">Q^D(P) = N \times q^D(P) = {{ params.nc }} \times {{ model.individualQuantityDemanded | number:2 }} = {{ model.marketQuantityDemanded | number:0 }}</div>
             </div>
         </div>

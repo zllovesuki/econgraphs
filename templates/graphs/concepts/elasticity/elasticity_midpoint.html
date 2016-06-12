@@ -8,10 +8,10 @@
         <p>Drag points A and B to see how the elasticity changes. (Point M is the midpoint between A and B.)</p>
         <hr/>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <div id="graph"></div>
             </div>
-            <div class="col-md-6 big">
+            <div class="col-sm-6 big">
                 <p class="math displayMath" highlight="xDiff">\color{ {{ color('diff2') }} }{\% \Delta Q = \frac{ Q_B - Q_A }{ Q_M } =
                     \frac{ {{params.x1 | number:0}} - {{params.x2 | number:0 }} }{ {{model.xAvg | number:0 }} } =
                     {{model.xPercentDiff | percentage:0 }}}</p>
