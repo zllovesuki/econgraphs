@@ -4,16 +4,16 @@
 
     <div ng-controller="KineticGraphCtrl">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 {% block graphs %}
                 {% endblock %}
             </div>
 
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 {% raw %}
                 <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-11">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-11">
                         <div class="well">
                     <div class="row">
                         <div class="subtitle col-xs-3">utility</div>
@@ -41,8 +41,8 @@
                 </div>
 
                 <div class="row">
-                        <div class="col-md-1"></div>
-                        <div class="col-md-5 well">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-5 well">
                             <p class="subtitle">Lower Budget Segment: Borrow</p>
                             <div class="row">
                                 <div class="col-xs-3 math" highlight="rBorrow" style="text-align:right;font-size:12pt;padding-top:10px">r^B = {{params.rBorrow | number: 2}}\%:
@@ -50,8 +50,8 @@
                                 <div class="col-xs-9" id="rBorrowSlider"></div>
                             </div>
                         </div>
-                    <div class="col-md-1"></div>
-                        <div class="col-md-5 well">
+                    <div class="col-sm-1"></div>
+                        <div class="col-sm-5 well">
                             <p class="subtitle">Upper Budget Segment: Lend</p>
                             <div class="row">
                                 <div class="col-xs-3 math" highlight="rLend" style="text-align:right;font-size:12pt;padding-top:10px">r^L = {{params.rLend | number: 2}}\%:

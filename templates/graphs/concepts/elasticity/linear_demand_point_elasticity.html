@@ -4,7 +4,7 @@
 {% raw %}
     <div ng-controller="KineticGraphCtrl">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <h1>Demand Elasticity along a Linear Demand Curve (Point Method)</h1>
                 <hr/>
                 <p>Drag the endpoints of the demand curve to change its <span highlight="slope">slope</span>.</p>
@@ -12,7 +12,7 @@
                 <hr/>
                 <div id="graph"></div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <p class="math displayMath big" highlight="slope">\color{ {{ color('green') }} }{\frac{dQ^D}{dP} = -\frac{ {{
                     params.demandQuantityIntercept | number:0 }} }{ {{ params.demandPriceIntercept | number:0}} } = {{
                     model.priceQuantityRelationshipFunction.inverseSlope | number:2 }}}</p>
